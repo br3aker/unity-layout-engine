@@ -3,19 +3,50 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        public static LayoutGroupScope HorizontalScrollScope(float elemWidth, float scrollPos, int indent = 1) {
+//        public static LayoutGroupScope HorizontalScrollScope(float elemWidth, float scrollPos, int indent = 1) {
+//            var eventType = Event.current.type;
+//
+//            LayoutGroup group;
+//            if (eventType == EventType.Layout) {
+//                group = new HorizontalScrollGroup(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+//                SubscribedForLayout.Enqueue(group);
+//            }
+//            else {
+//                group = SubscribedForLayout.Dequeue();
+//            }
+//            
+//            return new LayoutGroupScope(group, indent, eventType);
+//        }
+
+        public static void BeginHorizontalScroll(float elemWidth, float scrollPos) {
+            BeginHorizontalScroll(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+        }
+        public static void BeginHorizontalScroll(float elemWidth, float scrollPos, GUIStyle style) {
             var eventType = Event.current.type;
 
             LayoutGroup group;
             if (eventType == EventType.Layout) {
-                group = new HorizontalScrollGroup(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+                group = new HorizontalScrollGroup(elemWidth, scrollPos, TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
                 group = SubscribedForLayout.Dequeue();
+                group.PushLayoutRequest();
+            }
+
+            ActiveGroupStack.Push(group);
+            TopGroup = group;
+        }
+        public static void EndHorizontalScroll() {
+            var eventType = Event.current.type;
+
+            if (eventType == EventType.Layout) {
+                TopGroup.PushLayoutRequest();
             }
             
-            return new LayoutGroupScope(group, indent, eventType);
+            TopGroup.EndGroup();
+            TopGroup = TopGroup.Parent;
+            ActiveGroupStack.Pop();
         }
 
         private class HorizontalScrollGroup : HorizontalLayoutGroup {
@@ -23,7 +54,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _containerWidth;
             private readonly float _scrollPos;
 
-            public HorizontalScrollGroup(float elemWidth, float scrollPos, GUIStyle style) : base(style) {
+            public HorizontalScrollGroup(float elemWidth, float scrollPos, LayoutGroup parent, GUIStyle style) : base(parent, style) {
                 _elemWidth = elemWidth;
                 _containerWidth = EditorGUIUtility.currentViewWidth;
                 _scrollPos = scrollPos;

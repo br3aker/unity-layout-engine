@@ -1,24 +1,42 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        public static LayoutGroupScope VerticalScope(int indent = 1) {
+        public static void BeginVerticalScope() {
+            BeginVerticalScope(ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
+        }
+        public static void BeginVerticalScope(GUIStyle style) {
             var eventType = Event.current.type;
 
             LayoutGroup group;
             if (eventType == EventType.Layout) {
-                group = new VerticalLayoutGroup(ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
+                group = new VerticalLayoutGroup(TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
                 group = SubscribedForLayout.Dequeue();
+                group.PushLayoutRequest();
+            }
+
+            ActiveGroupStack.Push(group);
+            TopGroup = group;
+        }
+        public static void EndVerticalScope() {
+            var eventType = Event.current.type;
+
+            if (eventType == EventType.Layout) {
+                TopGroup.PushLayoutRequest();
             }
             
-            return new LayoutGroupScope(group, indent, eventType);
+            TopGroup.EndGroup();
+            TopGroup = TopGroup.Parent;
+            ActiveGroupStack.Pop();
         }
+        
 
         private class VerticalLayoutGroupData : LayoutGroupDataBase {
             private readonly float _verticalContentOffset;
@@ -34,12 +52,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 _entries.Enqueue(new LayoutEntry{Height = height});
             }
         }
-
         private class VerticalLayoutGroup : LayoutGroup {
             private readonly float _contentVerticalGap;
 
 
-            public VerticalLayoutGroup(GUIStyle style) : base(style) {
+            public VerticalLayoutGroup(LayoutGroup parent, GUIStyle style) : base(parent, style) {
                 _contentVerticalGap = style.contentOffset.y;
                 LayoutData = new VerticalLayoutGroupData(_contentVerticalGap);
             }

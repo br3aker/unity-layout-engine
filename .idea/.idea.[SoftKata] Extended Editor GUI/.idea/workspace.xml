@@ -2,105 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="80fd49fb-3d1a-4ce0-921d-9a17d737ba9e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Development.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/JetBrains.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/JetBrains/JetBrains.Rider.Unity.Editor.Plugin.Repacked.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/JetBrains/JetBrains.Rider.Unity.Editor.Plugin.Repacked.dll.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Assembly definition.asmdef" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Assembly definition.asmdef.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Dark GUISkin.guiskin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Dark GUISkin.guiskin.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Light GUISkin.guiskin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Light GUISkin.guiskin.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Foldout.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Foldout/arrow_off.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Foldout/arrow_off.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Foldout/arrow_on.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Foldout/arrow_on.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_error.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_focused.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_focused.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_normal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Input field/input_field_normal.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Object field.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Object field/open_object_picker.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Object field/open_object_picker.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_off.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_off.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_on.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_on.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_on_disabled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Resources/Dark/Toggle/toggle_on_disabled.png.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/AutoLayout.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/AutoLayout.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/ExtendedReorderableList.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/ExtendedReorderableList.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/KeyboardShortcutListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/KeyboardShortcutListener.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/ObjectField.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Custom controls/ObjectField.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUI.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUI.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUIControls.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUIControls.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/SaveDataTypes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/SaveDataTypes.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Utility.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Utility.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Delete this later.unity" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Delete this later.unity.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/AudioManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/ClusterInputManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/InputManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/NetworkManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/Physics2DSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/PresetManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/TimeManager.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/UnityConnectSettings.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/VFXManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.[SoftKata] Extended Editor GUI/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.[SoftKata] Extended Editor GUI/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -123,52 +33,133 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/AutoLayout.cs">
+        <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+            <state relative-caret-position="135">
+              <caret line="9" column="84" selection-start-line="9" selection-start-column="84" selection-end-line="9" selection-end-column="84" />
               <folding>
-                <marker date="1576822950784" expanded="false" signature="6:52" ph="..." />
-                <marker date="1576822950784" expanded="true" signature="91:1919" ph="{...}" />
-                <marker date="1576822950784" expanded="true" signature="136:1917" ph="{...}" />
-                <marker date="1576822950784" expanded="false" signature="809:932" ph="{...}" />
-                <marker date="1576822950784" expanded="false" signature="1038:1424" ph="{...}" />
-                <marker date="1576822950784" expanded="true" signature="1074:1137" ph="{...}" />
-                <marker date="1576822950784" expanded="false" signature="1497:1628" ph="{...}" />
-                <marker date="1576822950784" expanded="false" signature="1686:1774" ph="{...}" />
-                <marker date="1576822950784" expanded="false" signature="1836:1911" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="6:134" ph="..." />
+                <marker date="1576862720875" expanded="true" signature="173:3261" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="218:3259" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="268:366" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="429:905" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="558:691" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="691:822" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="952:1243" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="1050:1111" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="1322:1824" ph="{...}" />
+                <marker date="1576862720875" expanded="true" signature="1555:1626" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="1696:1814" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="1881:3253" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2038:2193" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2264:2326" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2383:2677" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2417:2605" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2736:3243" ph="{...}" />
+                <marker date="1576862720875" expanded="false" signature="2798:2910" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="297">
+              <caret line="23" column="79" selection-start-line="23" selection-start-column="79" selection-end-line="23" selection-end-column="79" />
+              <folding>
+                <marker date="1576862720095" expanded="true" signature="6:119" ph="..." />
+                <marker date="1576862720095" expanded="true" signature="158:2865" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="203:2863" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="205:842" ph="/* public static LayoutGroupScope VerticalScrollScope(float height, float scrollPos, int indent = 1) { ... */" />
+                <marker date="1576862720095" expanded="true" signature="922:1046" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="1142:1637" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="1271:1423" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="1423:1554" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="1686:1977" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="1784:1845" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="2043:2857" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="2265:2354" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="2411:2741" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="2445:2669" ph="{...}" />
+                <marker date="1576862720095" expanded="true" signature="2801:2847" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="542">
+              <caret line="81" column="41" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
+              <folding>
+                <marker date="1576862849562" expanded="true" signature="6:135" ph="..." />
+                <marker date="1576862849562" expanded="true" signature="189:3623" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="196:888" ph="Window initialization &amp; lifetime management" />
+                <marker date="1576862849562" expanded="false" signature="316:493" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="527:733" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="667:727" ph="{...}" />
+                <marker date="1576862849562" expanded="false" signature="763:815" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="847:873" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="915:1341" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="1674:3621" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="2364:2589" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="2479:2567" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="3215:3440" ph="{...}" />
+                <marker date="1576862849562" expanded="true" signature="3330:3418" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs">
+        <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="51" column="4" selection-start-line="51" selection-start-column="4" selection-end-line="51" selection-end-column="4" />
+            <state relative-caret-position="255">
+              <caret line="17" column="68" selection-start-line="17" selection-start-column="68" selection-end-line="17" selection-end-column="68" />
               <folding>
-                <marker date="1576825894987" expanded="true" signature="6:135" ph="..." />
-                <marker date="1576825894987" expanded="true" signature="189:3494" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="196:896" ph="Window initialization &amp; lifetime management" />
-                <marker date="1576825894987" expanded="false" signature="316:493" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="527:741" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="675:735" ph="{...}" />
-                <marker date="1576825894987" expanded="false" signature="771:823" ph="{...}" />
-                <marker date="1576825894987" expanded="false" signature="855:881" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="923:1349" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="1682:3492" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="1877:3486" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="1926:2674" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="2339:2660" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="2407:2642" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="2522:2620" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="2723:3476" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="3141:3462" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="3209:3444" ph="{...}" />
-                <marker date="1576825894987" expanded="true" signature="3324:3422" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="6:37" ph="..." />
+                <marker date="1576862847067" expanded="true" signature="76:3057" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="121:3055" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="123:766" ph="/* public static LayoutGroupScope HorizontalScrollScope(float elemWidth, float scrollPos, int indent = 1) { ... */" />
+                <marker date="1576862847067" expanded="true" signature="851:976" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1076:1576" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1205:1362" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1362:1493" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1626:1917" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1724:1785" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="1987:3049" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="2251:2415" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="2472:2933" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="2506:2919" ph="{...}" />
+                <marker date="1576862847067" expanded="true" signature="2993:3039" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="280">
+              <caret line="21" column="68" selection-start-line="21" selection-start-column="68" selection-end-line="21" selection-end-column="68" />
+              <folding>
+                <marker date="1576862545864" expanded="false" signature="6:52" ph="..." />
+                <marker date="1576862545864" expanded="true" signature="91:2281" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="136:2279" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="138:762" ph="/* public static LayoutGroupScope HorizontalFadeScope(AnimBool animBool, int indent = 1) { ... */" />
+                <marker date="1576862545864" expanded="true" signature="825:934" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1012:1502" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1141:1288" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1288:1419" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1550:1841" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1648:1709" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="1915:2273" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="2079:2128" ph="{...}" />
+                <marker date="1576862545864" expanded="true" signature="2199:2263" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -232,22 +223,22 @@
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/ContentAreaController.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/ContentDistributor.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUI.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/AutoLayout.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Utility.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutFadeGroup.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/HorizontalFadeLayoutGroup.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs" />
-        <option value="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs" />
-        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs" />
+        <option value="$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -305,17 +296,27 @@
               <item name="Extended IMGUI" type="1045f7f1:UnityExplorerNode" />
               <item name="Scripts" type="1045f7f1:UnityExplorerNode" />
             </path>
+            <path>
+              <item name="" type="e068e287:UnityExplorerRootNode" />
+              <item name="Assets" type="8711f2a6:AssetsRoot" />
+              <item name="Plugins" type="1045f7f1:UnityExplorerNode" />
+              <item name="Editor" type="1045f7f1:UnityExplorerNode" />
+              <item name="SoftKata" type="1045f7f1:UnityExplorerNode" />
+              <item name="Extended IMGUI" type="1045f7f1:UnityExplorerNode" />
+              <item name="Scripts" type="1045f7f1:UnityExplorerNode" />
+              <item name="Auto layout" type="1045f7f1:UnityExplorerNode" />
+            </path>
           </expand>
           <select />
         </subPane>
         <option name="show-hidden-items" value="false" />
         <option name="show-project-names" value="true" />
       </pane>
+      <pane id="AssemblyExplorer" />
       <pane id="FileSystemExplorer" />
       <pane id="SolutionExplorer">
         <option name="show-all-files" value="false" />
       </pane>
-      <pane id="AssemblyExplorer" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -368,12 +369,13 @@
       <workItem from="1576708033293" duration="7627000" />
       <workItem from="1576757585308" duration="48802000" />
       <workItem from="1576821993738" duration="5108000" />
-      <workItem from="1576854738041" duration="1344000" />
+      <workItem from="1576854738041" duration="3954000" />
+      <workItem from="1576859352779" duration="3691000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140293000" />
+    <option name="totallyTimeSpent" value="146594000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -385,9 +387,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2228145" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2249467" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Change Signature" order="0" side_tool="true" />
@@ -1854,38 +1856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/80/241e57ee/BaseAnimValue`1.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="120" column="13" selection-start-line="120" selection-start-column="13" selection-end-line="120" selection-end-column="13" />
-          <folding>
-            <marker date="1576516208472" expanded="true" signature="0:304" ph="/* Decompiled with JetBrains decompiler ... */" />
-            <marker date="1576516208472" expanded="true" signature="402:3614" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="407:499" ph="///   &lt;para&gt;Abstract base class for Animated Values.&lt;/para&gt; ... " />
-            <marker date="1576516208472" expanded="true" signature="540:3612" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="837:950" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1010:1170" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1254:1392" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1452:1739" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1768:1839" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1784:1833" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="1866:2208" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="2242:2382" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="2258:2376" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="2421:2695" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="2736:3103" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3126:3193" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3142:3187" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3214:3424" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3230:3276" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3286:3418" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3444:3570" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3460:3508" ph="{...}" />
-            <marker date="1576516208472" expanded="true" signature="3518:3564" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/b4/6a05827b/GUIScrollGroup.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1348">
@@ -2099,34 +2069,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/0f/83f21384/AnimBool.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
-          <folding>
-            <marker date="1576775669879" expanded="true" signature="0:297" ph="/* Decompiled with JetBrains decompiler ... */" />
-            <marker date="1576775669879" expanded="true" signature="395:2524" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="400:468" ph="///   &lt;para&gt;Lerp from 0 - 1.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="531:2522" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="589:746" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="788:800" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="806:963" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="1015:1027" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="1033:1190" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="1262:1274" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="1280:1437" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="1521:1533" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="1539:1631" ph="///   &lt;para&gt;Retuns the float value of the tween.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="1654:1746" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="1670:1740" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="1752:1940" ph="///   &lt;para&gt;Type specific implementation of BaseAnimValue_1.GetValue.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="1979:2157" ph="{...}" />
-            <marker date="1576775669879" expanded="true" signature="2163:2415" ph="///   &lt;para&gt;Returns a value between from and to depending on the current value of the bools animation.&lt;/para&gt; ... " />
-            <marker date="1576775669879" expanded="true" signature="2459:2518" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/b0/ffc8379c/GUILayoutUtility.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="295">
@@ -2264,13 +2206,546 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/e2/553e42b7/GUIUtility.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="445" column="25" selection-start-line="445" selection-start-column="25" selection-end-line="445" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/c6/b4212421/GUILayoutFadeGroup.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/8e/88386993/GUIClip.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2625">
+          <caret line="177" column="25" selection-start-line="177" selection-start-column="25" selection-end-line="177" selection-end-column="25" />
+          <folding>
+            <marker date="1570101148268" expanded="true" signature="0:317" ph="/* Decompiled with JetBrains decompiler ... */" />
+            <marker date="1570101148268" expanded="false" signature="325:399" ph="..." />
+            <marker date="1570101148268" expanded="true" signature="422:10389" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="618:10387" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="828:1034" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="923:1028" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="1072:1356" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="1245:1350" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="1575:1690" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="2310:2400" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="2531:2637" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="2760:2861" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="2996:3108" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="3244:3360" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="3507:3621" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="3760:3869" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="4020:4140" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="4283:4398" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="4555:4671" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="5039:5133" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="5257:5310" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="5521:5621" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="5788:5883" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6201:6295" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6327:6369" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6416:6470" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6512:6564" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6617:6677" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6725:6792" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6847:6909" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="6959:7019" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="7080:7148" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="7204:7270" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="7324:7394" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="9985:10383" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="10094:10211" ph="{...}" />
+            <marker date="1570101148268" expanded="true" signature="10240:10377" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/ab/b8c8be80/GUI.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="2428" column="17" lean-forward="true" selection-start-line="2428" selection-start-column="17" selection-end-line="2428" selection-end-column="17" />
+          <folding>
+            <marker date="1569934575860" expanded="true" signature="0:313" ph="/* Decompiled with JetBrains decompiler ... */" />
+            <marker date="1569934575860" expanded="false" signature="321:451" ph="..." />
+            <marker date="1569934575860" expanded="true" signature="474:147915" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="479:602" ph="///   &lt;para&gt;The GUI class is the interface for Unity's GUI with manual positioning.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="723:147913" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="1633:1690" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="1696:1785" ph="///   &lt;para&gt;Global tinting color for the GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="1815:2002" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="1831:1927" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="1937:1996" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2008:2133" ph="///   &lt;para&gt;Global tinting color for all background elements rendered by the GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="2173:2380" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2189:2295" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2305:2374" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2386:2489" ph="///   &lt;para&gt;Tinting color for all text rendered by the GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="2526:2727" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2542:2645" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2655:2721" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="2733:2854" ph="///   &lt;para&gt;Returns true if any controls changed the value of the input data.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="3002:3077" ph="///   &lt;para&gt;Is the GUI enabled?&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="3225:3340" ph="///   &lt;para&gt;The sorting depth of the currently executing GUI behaviour.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="4343:4468" ph="///   &lt;para&gt;Set the name of the next control.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="4643:4744" ph="///   &lt;para&gt;Get the name of named control that has focus.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="4918:5083" ph="///   &lt;para&gt;Move keyboard focus to a named control.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="5898:6056" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="6285:6455" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="6461:6662" ph="///   &lt;para&gt;Make a window draggable.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="6711:6768" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="6774:6994" ph="///   &lt;para&gt;Bring a specific window to front of the floating windows.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="7113:7332" ph="///   &lt;para&gt;Bring a specific window to back of the floating windows.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="7450:7652" ph="///   &lt;para&gt;Make a window become the active window.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="7764:7850" ph="///   &lt;para&gt;Remove focus from all windows.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="8424:8503" ph="///   &lt;para&gt;The global skin to use.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="8534:8721" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="8550:8629" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="8639:8715" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="8774:8928" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="8969:9149" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9155:9236" ph="///   &lt;para&gt;The GUI transform matrix.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="9271:9405" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9287:9339" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9349:9399" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9411:9564" ph="///   &lt;para&gt;The tooltip of the control the mouse is currently over, or which has keyboard focus. (Read Only).&lt;/pa ... " />
+            <marker date="1569934575860" expanded="true" signature="9597:9749" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9613:9677" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9687:9743" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9791:9876" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9807:9870" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9915:10048" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9931:9981" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="9991:10042" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="10054:10563" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="10620:10700" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="10706:11215" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="11274:11355" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="11361:11870" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="11934:12000" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="12006:12515" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="12588:12657" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="12663:13172" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="13247:13317" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="13323:13832" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="13912:14000" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="14006:14799" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="14864:14941" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="14947:15740" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="15826:15895" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="15901:16694" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="16822:16903" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="16909:17702" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="17855:17966" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="17972:19498" ph="///   &lt;para&gt;Draws a border with rounded corners within a rectangle. The texture is used to pattern the border.  N ... " />
+            <marker date="1569934575860" expanded="true" signature="19721:19900" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="19906:21432" ph="///   &lt;para&gt;Draws a border with rounded corners within a rectangle. The texture is used to pattern the border.  N ... " />
+            <marker date="1569934575860" expanded="true" signature="21658:21842" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="22073:23161" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="22220:22313" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="22324:23155" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="22704:22980" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="23349:24963" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="23458:24938" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="23725:23975" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="24273:24618" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="24969:25538" ph="///   &lt;para&gt;Draw a texture within a rectangle with the given texture coordinates.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="25632:25714" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="25720:26289" ph="///   &lt;para&gt;Draw a texture within a rectangle with the given texture coordinates.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="26425:26943" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="26690:26935" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="26949:27439" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="27494:27570" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="27576:28066" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="28123:28200" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="28206:28696" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="28758:28820" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="28826:29316" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="29387:29454" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="29460:29950" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="30023:30091" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="30097:30587" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="30665:30904" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="30910:31567" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="31625:31714" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="31720:32377" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="32437:32527" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="32533:33190" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="33255:33330" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="33336:33993" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="34067:34144" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="34150:34807" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="34883:34961" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="34967:35624" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="35705:35872" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="35964:36064" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="36070:36707" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="36771:36887" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="36893:37530" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="37596:37713" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="37719:38356" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="38427:38529" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="38535:39172" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="39252:39356" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="39362:39999" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="40081:40186" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="40192:40829" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="40916:41006" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="41143:42045" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="41330:42039" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="41434:41538" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="42051:42730" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="42793:43010" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="43016:43695" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="43773:43997" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="44003:44682" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="44761:44965" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="44971:45650" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="45744:45955" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="45961:46717" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="46803:46901" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="46907:47663" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="47789:47894" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="47900:48656" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="48783:48868" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="48874:49630" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="49778:50396" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="50482:50645" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="50651:51327" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="51389:51604" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="51610:52286" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="52363:52585" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="52591:53267" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="53345:53548" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="53554:54230" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="54323:54533" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="54698:54800" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="54990:55104" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="55315:56192" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="56450:57986" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="56521:57980" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="57295:57726" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="57584:57714" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="58194:61624" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="58290:61286" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="58388:59233" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="58684:58879" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="58970:59175" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="59325:59488" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="59582:59840" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="60003:60138" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="60514:60965" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="60557:60953" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="60661:60775" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="61121:61218" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="61630:62285" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="62355:62451" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="62457:63112" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="63184:63281" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="63287:63942" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="64019:64101" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="64107:64762" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="64848:64932" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="64938:65593" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="65681:65766" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="65772:66427" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="66520:66695" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="66828:66935" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="66941:67746" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="67821:67922" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="67928:68733" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="68810:68912" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="68918:69723" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="69805:69892" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="69898:70703" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="70794:70883" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="70889:71694" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="71787:71877" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="71883:72688" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="72786:72907" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="73071:73175" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="73370:73737" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="73743:74668" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="74761:74874" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="74880:75805" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="75900:76014" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="76020:76945" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="77044:77142" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="77148:78073" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="78213:78316" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="78322:79247" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="79389:79493" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="79499:80424" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="80571:80786" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="80997:81285" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="81451:81822" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="81956:83114" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82027:83091" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82125:82233" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82321:82576" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82457:82545" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82666:82736" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="82861:82968" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="83198:83598" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="83735:83812" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="83906:83983" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="84278:87863" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="84422:84646" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="85491:87419" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="85887:87411" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="85993:86126" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="86231:86397" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="86504:86588" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="87167:87382" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="87448:87834" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="88184:89546" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="88492:89516" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="88556:88800" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="89286:89477" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="89552:90488" ph="///   &lt;para&gt;A horizontal slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="90617:90768" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="90774:91710" ph="///   &lt;para&gt;A horizontal slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="91884:91991" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="91997:92931" ph="///   &lt;para&gt;A vertical slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="93058:93206" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="93212:94146" ph="///   &lt;para&gt;A vertical slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="94318:94426" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="94630:94879" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="94885:95796" ph="///   &lt;para&gt;Make a horizontal scrollbar. Scrollbars are what you use to scroll through a document. Most likely, y ... " />
+            <marker date="1569934575860" expanded="true" signature="95946:96183" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="96189:97100" ph="///   &lt;para&gt;Make a horizontal scrollbar. Scrollbars are what you use to scroll through a document. Most likely, y ... " />
+            <marker date="1569934575860" expanded="true" signature="97272:97504" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="97594:98254" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="97705:98228" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="97834:97950" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="98007:98122" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="98260:99161" ph="///   &lt;para&gt;Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you ... " />
+            <marker date="1569934575860" expanded="true" signature="99309:99536" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="99542:100443" ph="///   &lt;para&gt;Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you ... " />
+            <marker date="1569934575860" expanded="true" signature="100613:100843" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="101103:102852" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="101309:101694" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="101705:102094" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="102988:103102" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="103108:103724" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="103773:103849" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="103855:104471" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="104533:104615" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="104621:105237" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="105301:105384" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="105390:106006" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="106075:106143" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="106149:106765" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="106830:106898" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="106904:107520" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="107598:107672" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="107678:108294" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="108374:108449" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="108455:109071" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="109156:109230" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="109365:109850" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="109554:109779" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="109856:109924" ph="///   &lt;para&gt;End a group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="109958:110031" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="110080:110188" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="110222:110286" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="110292:111566" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="111681:111856" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="111862:113136" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="113315:113518" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="113524:114798" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="114983:115140" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="115146:116420" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="116669:116854" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="117136:117312" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="117591:122709" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="117733:118121" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="117823:117923" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="118013:118113" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="118323:118427" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="118827:122703" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="119761:120055" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="120133:120799" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="120483:120787" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="121063:121371" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="121386:121808" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="121867:122220" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="122235:122695" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="122715:122877" ph="///   &lt;para&gt;Ends a scrollview started with a call to BeginScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="122916:122959" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="122965:123127" ph="///   &lt;para&gt;Ends a scrollview started with a call to BeginScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="123188:124202" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="124258:124416" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="124422:124589" ph="///   &lt;para&gt;Scrolls all enclosing scrollviews so they try to make position visible.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="124636:124698" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="124767:124958" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="125052:125200" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="125296:125445" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="125571:125705" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="125846:125984" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="126127:126266" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="126412:126534" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="126658:126805" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="126931:127079" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="127210:127343" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="127489:127626" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="127774:127912" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="128065:128188" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="128387:128530" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="128706:128837" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="129080:129835" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="129214:129587" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="129250:129489" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="129332:129418" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="129841:130069" ph="///   &lt;para&gt;If you want to have the entire window background to act as a drag area, use the version of DragWindow ... " />
+            <marker date="1569934575860" expanded="true" signature="130105:130177" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="130258:130736" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="130775:131187" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="132773:132878" ph="///   &lt;para&gt;Determines how toolbar button size is calculated.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="132912:133304" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="132925:133116" ph="///   &lt;para&gt;Calculates the button size by dividing the available width by the number of buttons. The minimum size ... " />
+            <marker date="1569934575860" expanded="true" signature="133136:133277" ph="///   &lt;para&gt;The width of each toolbar button is calculated based on the width of its content.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="133310:133460" ph="///   &lt;para&gt;Callback to draw GUI within a window (used with GUI.Window).&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="133556:134050" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="133654:133838" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="133867:134044" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="134056:134171" ph="///   &lt;para&gt;Disposable helper class for managing BeginGroup / EndGroup.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="134211:139596" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="134224:134857" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="134896:134946" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="134954:135587" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="135639:135695" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="135703:136336" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="136390:136447" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="136455:137088" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="137147:137206" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="137214:137847" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="137902:137959" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="137967:138600" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="138668:138731" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="138739:139372" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="139442:139506" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="139550:139590" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="139602:139727" ph="///   &lt;para&gt;Disposable helper class for managing BeginScrollView / EndScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="139772:146945" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="139785:140950" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="141033:141175" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="141183:142348" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="142524:142708" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="142716:143881" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="144063:144245" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="144253:145418" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="145668:145892" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="146174:146410" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="146418:146577" ph="///   &lt;para&gt;The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.&lt;/ ... " />
+            <marker date="1569934575860" expanded="true" signature="146643:146778" ph="///   &lt;para&gt;Whether this ScrollView should handle scroll wheel events. (default: true).&lt;/para&gt; ... " />
+            <marker date="1569934575860" expanded="true" signature="146872:146939" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="146985:147315" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147029:147078" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147141:147226" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147270:147309" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147361:147909" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147476:147597" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147663:147737" ph="{...}" />
+            <marker date="1569934575860" expanded="true" signature="147766:147903" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUI.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="36" column="40" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
+          <folding>
+            <marker date="1576810923113" expanded="true" signature="6:37" ph="..." />
+            <marker date="1576810923113" expanded="true" signature="76:5695" ph="{...}" />
+            <marker date="1576810923113" expanded="true" signature="128:634" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="373:486" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="410:476" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="532:628" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="569:618" ph="{...}" />
+            <marker date="1576810923113" expanded="true" signature="675:5693" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="1029:1222" ph="{...}" />
+            <marker date="1576810923113" expanded="true" signature="1123:1212" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="1263:1862" ph="{...}" />
+            <marker date="1576810923113" expanded="true" signature="1499:1852" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="1898:2224" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="2034:2214" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="2264:2905" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="2514:2895" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="2942:3314" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3095:3304" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3360:3703" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3494:3693" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3743:3922" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3829:3912" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="3963:4321" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="4112:4311" ph="{...}" />
+            <marker date="1576810923113" expanded="false" signature="4709:5687" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutFadeGroup.cs" />
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Utility.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
+          <folding>
+            <marker date="1576822946725" expanded="false" signature="6:101" ph="..." />
+            <marker date="1576822946725" expanded="true" signature="140:1285" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="174:1283" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="275:485" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="551:633" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="686:753" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="829:940" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="880:930" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="1039:1277" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="1080:1160" ph="{...}" />
+            <marker date="1576822946725" expanded="true" signature="1219:1267" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/0f/83f21384/AnimBool.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-433">
+          <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+          <folding>
+            <marker date="1576775669879" expanded="true" signature="0:297" ph="/* Decompiled with JetBrains decompiler ... */" />
+            <marker date="1576775669879" expanded="true" signature="395:2524" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="400:468" ph="///   &lt;para&gt;Lerp from 0 - 1.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="531:2522" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="589:746" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="788:800" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="806:963" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="1015:1027" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="1033:1190" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="1262:1274" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="1280:1437" ph="///   &lt;para&gt;Constructor.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="1521:1533" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="1539:1631" ph="///   &lt;para&gt;Retuns the float value of the tween.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="1654:1746" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="1670:1740" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="1752:1940" ph="///   &lt;para&gt;Type specific implementation of BaseAnimValue_1.GetValue.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="1979:2157" ph="{...}" />
+            <marker date="1576775669879" expanded="true" signature="2163:2415" ph="///   &lt;para&gt;Returns a value between from and to depending on the current value of the bools animation.&lt;/para&gt; ... " />
+            <marker date="1576775669879" expanded="true" signature="2459:2518" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/44/4ec8b6a1/EditorGUILayout.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="4930" column="26" selection-start-line="4930" selection-start-column="26" selection-end-line="4930" selection-end-column="26" />
+        <state relative-caret-position="160">
+          <caret line="4925" column="23" selection-start-line="4925" selection-start-column="23" selection-end-line="4925" selection-end-column="23" />
           <folding>
             <marker date="1576791971749" expanded="true" signature="0:289" ph="/* Decompiled with JetBrains decompiler ... */" />
-            <marker date="1576791971749" expanded="false" signature="297:376" ph="..." />
             <marker date="1576791971749" expanded="true" signature="399:318640" ph="{...}" />
             <marker date="1576791971749" expanded="true" signature="404:491" ph="///   &lt;para&gt;Auto laid out version of EditorGUI.&lt;/para&gt; ... " />
             <marker date="1576791971749" expanded="true" signature="529:318638" ph="{...}" />
@@ -2943,657 +3418,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/e2/553e42b7/GUIUtility.cs">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/80/241e57ee/BaseAnimValue`1.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="445" column="25" selection-start-line="445" selection-start-column="25" selection-end-line="445" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/645B5729-CB30-4920-886A-95AAF544DA6F/c6/b4212421/GUILayoutFadeGroup.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/8e/88386993/GUIClip.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2625">
-          <caret line="177" column="25" selection-start-line="177" selection-start-column="25" selection-end-line="177" selection-end-column="25" />
+        <state relative-caret-position="362">
+          <caret line="120" column="13" selection-start-line="120" selection-start-column="13" selection-end-line="120" selection-end-column="13" />
           <folding>
-            <marker date="1570101148268" expanded="true" signature="0:317" ph="/* Decompiled with JetBrains decompiler ... */" />
-            <marker date="1570101148268" expanded="false" signature="325:399" ph="..." />
-            <marker date="1570101148268" expanded="true" signature="422:10389" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="618:10387" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="828:1034" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="923:1028" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="1072:1356" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="1245:1350" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="1575:1690" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="2310:2400" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="2531:2637" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="2760:2861" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="2996:3108" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="3244:3360" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="3507:3621" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="3760:3869" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="4020:4140" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="4283:4398" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="4555:4671" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="5039:5133" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="5257:5310" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="5521:5621" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="5788:5883" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6201:6295" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6327:6369" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6416:6470" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6512:6564" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6617:6677" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6725:6792" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6847:6909" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="6959:7019" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="7080:7148" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="7204:7270" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="7324:7394" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="9985:10383" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="10094:10211" ph="{...}" />
-            <marker date="1570101148268" expanded="true" signature="10240:10377" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0B29CC29-92CC-4F69-9F40-E87B134C5121/ab/b8c8be80/GUI.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="2428" column="17" lean-forward="true" selection-start-line="2428" selection-start-column="17" selection-end-line="2428" selection-end-column="17" />
-          <folding>
-            <marker date="1569934575860" expanded="true" signature="0:313" ph="/* Decompiled with JetBrains decompiler ... */" />
-            <marker date="1569934575860" expanded="false" signature="321:451" ph="..." />
-            <marker date="1569934575860" expanded="true" signature="474:147915" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="479:602" ph="///   &lt;para&gt;The GUI class is the interface for Unity's GUI with manual positioning.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="723:147913" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="1633:1690" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="1696:1785" ph="///   &lt;para&gt;Global tinting color for the GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="1815:2002" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="1831:1927" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="1937:1996" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2008:2133" ph="///   &lt;para&gt;Global tinting color for all background elements rendered by the GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="2173:2380" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2189:2295" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2305:2374" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2386:2489" ph="///   &lt;para&gt;Tinting color for all text rendered by the GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="2526:2727" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2542:2645" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2655:2721" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="2733:2854" ph="///   &lt;para&gt;Returns true if any controls changed the value of the input data.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="3002:3077" ph="///   &lt;para&gt;Is the GUI enabled?&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="3225:3340" ph="///   &lt;para&gt;The sorting depth of the currently executing GUI behaviour.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="4343:4468" ph="///   &lt;para&gt;Set the name of the next control.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="4643:4744" ph="///   &lt;para&gt;Get the name of named control that has focus.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="4918:5083" ph="///   &lt;para&gt;Move keyboard focus to a named control.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="5898:6056" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="6285:6455" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="6461:6662" ph="///   &lt;para&gt;Make a window draggable.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="6711:6768" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="6774:6994" ph="///   &lt;para&gt;Bring a specific window to front of the floating windows.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="7113:7332" ph="///   &lt;para&gt;Bring a specific window to back of the floating windows.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="7450:7652" ph="///   &lt;para&gt;Make a window become the active window.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="7764:7850" ph="///   &lt;para&gt;Remove focus from all windows.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="8424:8503" ph="///   &lt;para&gt;The global skin to use.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="8534:8721" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="8550:8629" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="8639:8715" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="8774:8928" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="8969:9149" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9155:9236" ph="///   &lt;para&gt;The GUI transform matrix.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="9271:9405" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9287:9339" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9349:9399" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9411:9564" ph="///   &lt;para&gt;The tooltip of the control the mouse is currently over, or which has keyboard focus. (Read Only).&lt;/pa ... " />
-            <marker date="1569934575860" expanded="true" signature="9597:9749" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9613:9677" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9687:9743" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9791:9876" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9807:9870" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9915:10048" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9931:9981" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="9991:10042" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="10054:10563" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="10620:10700" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="10706:11215" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="11274:11355" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="11361:11870" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="11934:12000" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="12006:12515" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="12588:12657" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="12663:13172" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="13247:13317" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="13323:13832" ph="///   &lt;para&gt;Make a text or texture label on screen.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="13912:14000" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="14006:14799" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="14864:14941" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="14947:15740" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="15826:15895" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="15901:16694" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="16822:16903" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="16909:17702" ph="///   &lt;para&gt;Draw a texture within a rectangle.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="17855:17966" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="17972:19498" ph="///   &lt;para&gt;Draws a border with rounded corners within a rectangle. The texture is used to pattern the border.  N ... " />
-            <marker date="1569934575860" expanded="true" signature="19721:19900" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="19906:21432" ph="///   &lt;para&gt;Draws a border with rounded corners within a rectangle. The texture is used to pattern the border.  N ... " />
-            <marker date="1569934575860" expanded="true" signature="21658:21842" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="22073:23161" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="22220:22313" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="22324:23155" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="22704:22980" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="23349:24963" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="23458:24938" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="23725:23975" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="24273:24618" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="24969:25538" ph="///   &lt;para&gt;Draw a texture within a rectangle with the given texture coordinates.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="25632:25714" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="25720:26289" ph="///   &lt;para&gt;Draw a texture within a rectangle with the given texture coordinates.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="26425:26943" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="26690:26935" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="26949:27439" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="27494:27570" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="27576:28066" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="28123:28200" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="28206:28696" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="28758:28820" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="28826:29316" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="29387:29454" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="29460:29950" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="30023:30091" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="30097:30587" ph="///   &lt;para&gt;Create a Box on the GUI Layer.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="30665:30904" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="30910:31567" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="31625:31714" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="31720:32377" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="32437:32527" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="32533:33190" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="33255:33330" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="33336:33993" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="34067:34144" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="34150:34807" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="34883:34961" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="34967:35624" ph="///   &lt;para&gt;Make a single press button. The user clicks them and something happens immediately.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="35705:35872" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="35964:36064" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="36070:36707" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="36771:36887" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="36893:37530" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="37596:37713" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="37719:38356" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="38427:38529" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="38535:39172" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="39252:39356" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="39362:39999" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="40081:40186" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="40192:40829" ph="///   &lt;para&gt;Make a button that is active as long as the user holds it down.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="40916:41006" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="41143:42045" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="41330:42039" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="41434:41538" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="42051:42730" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="42793:43010" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="43016:43695" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="43773:43997" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="44003:44682" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="44761:44965" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="44971:45650" ph="///   &lt;para&gt;Make a single-line text field where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="45744:45955" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="45961:46717" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="46803:46901" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="46907:47663" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="47789:47894" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="47900:48656" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="48783:48868" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="48874:49630" ph="///   &lt;para&gt;Make a text field where the user can enter a password.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="49778:50396" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="50482:50645" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="50651:51327" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="51389:51604" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="51610:52286" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="52363:52585" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="52591:53267" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="53345:53548" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="53554:54230" ph="///   &lt;para&gt;Make a Multi-line text area where the user can edit a string.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="54323:54533" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="54698:54800" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="54990:55104" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="55315:56192" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="56450:57986" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="56521:57980" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="57295:57726" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="57584:57714" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="58194:61624" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="58290:61286" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="58388:59233" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="58684:58879" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="58970:59175" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="59325:59488" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="59582:59840" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="60003:60138" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="60514:60965" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="60557:60953" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="60661:60775" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="61121:61218" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="61630:62285" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="62355:62451" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="62457:63112" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="63184:63281" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="63287:63942" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="64019:64101" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="64107:64762" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="64848:64932" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="64938:65593" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="65681:65766" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="65772:66427" ph="///   &lt;para&gt;Make an on/off toggle button.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="66520:66695" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="66828:66935" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="66941:67746" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="67821:67922" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="67928:68733" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="68810:68912" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="68918:69723" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="69805:69892" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="69898:70703" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="70794:70883" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="70889:71694" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="71787:71877" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="71883:72688" ph="///   &lt;para&gt;Make a toolbar.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="72786:72907" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="73071:73175" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="73370:73737" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="73743:74668" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="74761:74874" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="74880:75805" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="75900:76014" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="76020:76945" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="77044:77142" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="77148:78073" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="78213:78316" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="78322:79247" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="79389:79493" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="79499:80424" ph="///   &lt;para&gt;Make a grid of buttons.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="80571:80786" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="80997:81285" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="81451:81822" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="81956:83114" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82027:83091" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82125:82233" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82321:82576" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82457:82545" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82666:82736" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="82861:82968" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="83198:83598" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="83735:83812" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="83906:83983" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="84278:87863" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="84422:84646" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="85491:87419" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="85887:87411" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="85993:86126" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="86231:86397" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="86504:86588" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="87167:87382" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="87448:87834" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="88184:89546" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="88492:89516" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="88556:88800" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="89286:89477" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="89552:90488" ph="///   &lt;para&gt;A horizontal slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="90617:90768" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="90774:91710" ph="///   &lt;para&gt;A horizontal slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="91884:91991" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="91997:92931" ph="///   &lt;para&gt;A vertical slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="93058:93206" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="93212:94146" ph="///   &lt;para&gt;A vertical slider the user can drag to change a value between a min and a max.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="94318:94426" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="94630:94879" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="94885:95796" ph="///   &lt;para&gt;Make a horizontal scrollbar. Scrollbars are what you use to scroll through a document. Most likely, y ... " />
-            <marker date="1569934575860" expanded="true" signature="95946:96183" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="96189:97100" ph="///   &lt;para&gt;Make a horizontal scrollbar. Scrollbars are what you use to scroll through a document. Most likely, y ... " />
-            <marker date="1569934575860" expanded="true" signature="97272:97504" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="97594:98254" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="97705:98228" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="97834:97950" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="98007:98122" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="98260:99161" ph="///   &lt;para&gt;Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you ... " />
-            <marker date="1569934575860" expanded="true" signature="99309:99536" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="99542:100443" ph="///   &lt;para&gt;Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you ... " />
-            <marker date="1569934575860" expanded="true" signature="100613:100843" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="101103:102852" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="101309:101694" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="101705:102094" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="102988:103102" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="103108:103724" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="103773:103849" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="103855:104471" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="104533:104615" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="104621:105237" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="105301:105384" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="105390:106006" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="106075:106143" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="106149:106765" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="106830:106898" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="106904:107520" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="107598:107672" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="107678:108294" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="108374:108449" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="108455:109071" ph="///   &lt;para&gt;Begin a group. Must be matched with a call to EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="109156:109230" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="109365:109850" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="109554:109779" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="109856:109924" ph="///   &lt;para&gt;End a group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="109958:110031" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="110080:110188" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="110222:110286" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="110292:111566" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="111681:111856" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="111862:113136" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="113315:113518" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="113524:114798" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="114983:115140" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="115146:116420" ph="///   &lt;para&gt;Begin a scrolling view inside your GUI.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="116669:116854" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="117136:117312" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="117591:122709" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="117733:118121" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="117823:117923" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="118013:118113" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="118323:118427" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="118827:122703" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="119761:120055" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="120133:120799" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="120483:120787" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="121063:121371" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="121386:121808" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="121867:122220" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="122235:122695" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="122715:122877" ph="///   &lt;para&gt;Ends a scrollview started with a call to BeginScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="122916:122959" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="122965:123127" ph="///   &lt;para&gt;Ends a scrollview started with a call to BeginScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="123188:124202" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="124258:124416" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="124422:124589" ph="///   &lt;para&gt;Scrolls all enclosing scrollviews so they try to make position visible.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="124636:124698" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="124767:124958" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="125052:125200" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="125296:125445" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="125571:125705" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="125846:125984" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="126127:126266" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="126412:126534" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="126658:126805" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="126931:127079" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="127210:127343" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="127489:127626" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="127774:127912" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="128065:128188" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="128387:128530" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="128706:128837" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="129080:129835" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="129214:129587" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="129250:129489" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="129332:129418" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="129841:130069" ph="///   &lt;para&gt;If you want to have the entire window background to act as a drag area, use the version of DragWindow ... " />
-            <marker date="1569934575860" expanded="true" signature="130105:130177" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="130258:130736" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="130775:131187" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="132773:132878" ph="///   &lt;para&gt;Determines how toolbar button size is calculated.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="132912:133304" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="132925:133116" ph="///   &lt;para&gt;Calculates the button size by dividing the available width by the number of buttons. The minimum size ... " />
-            <marker date="1569934575860" expanded="true" signature="133136:133277" ph="///   &lt;para&gt;The width of each toolbar button is calculated based on the width of its content.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="133310:133460" ph="///   &lt;para&gt;Callback to draw GUI within a window (used with GUI.Window).&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="133556:134050" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="133654:133838" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="133867:134044" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="134056:134171" ph="///   &lt;para&gt;Disposable helper class for managing BeginGroup / EndGroup.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="134211:139596" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="134224:134857" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="134896:134946" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="134954:135587" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="135639:135695" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="135703:136336" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="136390:136447" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="136455:137088" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="137147:137206" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="137214:137847" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="137902:137959" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="137967:138600" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="138668:138731" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="138739:139372" ph="///   &lt;para&gt;Create a new GroupScope and begin the corresponding group.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="139442:139506" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="139550:139590" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="139602:139727" ph="///   &lt;para&gt;Disposable helper class for managing BeginScrollView / EndScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="139772:146945" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="139785:140950" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="141033:141175" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="141183:142348" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="142524:142708" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="142716:143881" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="144063:144245" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="144253:145418" ph="///   &lt;para&gt;Create a new ScrollViewScope and begin the corresponding ScrollView.&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="145668:145892" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="146174:146410" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="146418:146577" ph="///   &lt;para&gt;The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.&lt;/ ... " />
-            <marker date="1569934575860" expanded="true" signature="146643:146778" ph="///   &lt;para&gt;Whether this ScrollView should handle scroll wheel events. (default: true).&lt;/para&gt; ... " />
-            <marker date="1569934575860" expanded="true" signature="146872:146939" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="146985:147315" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147029:147078" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147141:147226" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147270:147309" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147361:147909" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147476:147597" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147663:147737" ph="{...}" />
-            <marker date="1569934575860" expanded="true" signature="147766:147903" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/ExtendedEditorGUI.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="36" column="40" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
-          <folding>
-            <marker date="1576810923113" expanded="true" signature="6:37" ph="..." />
-            <marker date="1576810923113" expanded="true" signature="76:5695" ph="{...}" />
-            <marker date="1576810923113" expanded="true" signature="128:634" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="373:486" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="410:476" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="532:628" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="569:618" ph="{...}" />
-            <marker date="1576810923113" expanded="true" signature="675:5693" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="1029:1222" ph="{...}" />
-            <marker date="1576810923113" expanded="true" signature="1123:1212" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="1263:1862" ph="{...}" />
-            <marker date="1576810923113" expanded="true" signature="1499:1852" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="1898:2224" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="2034:2214" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="2264:2905" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="2514:2895" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="2942:3314" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3095:3304" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3360:3703" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3494:3693" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3743:3922" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3829:3912" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="3963:4321" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="4112:4311" ph="{...}" />
-            <marker date="1576810923113" expanded="false" signature="4709:5687" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="20" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
-          <folding>
-            <marker date="1576822850976" expanded="true" signature="6:119" ph="..." />
-            <marker date="1576822850976" expanded="true" signature="158:1674" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="203:1672" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="311:814" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="440:636" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="636:724" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="880:1666" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="1074:1163" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="1220:1550" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="1254:1478" ph="{...}" />
-            <marker date="1576822850976" expanded="true" signature="1610:1656" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="50" column="56" lean-forward="true" selection-start-line="50" selection-start-column="56" selection-end-line="50" selection-end-column="56" />
-          <folding>
-            <marker date="1576823404569" expanded="false" signature="6:85" ph="..." />
-            <marker date="1576823404569" expanded="true" signature="124:2956" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="169:2954" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="223:1360" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="468:1012" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="634:701" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="1048:1350" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="1110:1177" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="1415:2070" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="1793:1898" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="1986:2060" ph="{...}" />
-            <marker date="1576823404569" expanded="false" signature="2105:2151" ph="{...}" />
-            <marker date="1576823404569" expanded="true" signature="2205:2948" ph="{...}" />
-            <marker date="1576823404569" expanded="false" signature="2598:2729" ph="{...}" />
-            <marker date="1576823404569" expanded="false" signature="2892:2938" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutFadeGroup.cs" />
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="147" selection-start-line="35" selection-start-column="147" selection-end-line="35" selection-end-column="147" />
-          <folding>
-            <marker date="1576814008118" expanded="true" signature="6:37" ph="..." />
-            <marker date="1576814008118" expanded="true" signature="76:1850" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="121:1848" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="234:738" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="363:560" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="560:648" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="808:1842" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="1044:1208" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="1265:1726" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="1299:1712" ph="{...}" />
-            <marker date="1576814008118" expanded="true" signature="1786:1832" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Utility.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="28" column="58" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
-          <folding>
-            <marker date="1576822946725" expanded="false" signature="6:101" ph="..." />
-            <marker date="1576822946725" expanded="true" signature="140:1285" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="174:1283" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="275:485" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="551:633" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="686:753" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="829:940" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="880:930" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="1039:1277" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="1080:1160" ph="{...}" />
-            <marker date="1576822946725" expanded="true" signature="1219:1267" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding>
-            <marker date="1576827022036" expanded="false" signature="6:52" ph="..." />
-            <marker date="1576827022036" expanded="true" signature="91:1146" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="136:1144" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="232:734" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="361:556" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="556:644" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="808:1138" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="944:993" ph="{...}" />
-            <marker date="1576827022036" expanded="true" signature="1064:1128" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="39" column="45" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
-          <folding>
-            <marker date="1576827025896" expanded="true" signature="57:2751" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="102:2749" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="175:674" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="304:479" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="479:584" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="755:1027" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="880:1017" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="1087:2743" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="1266:1406" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="1464:1518" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="1587:2096" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="1621:2041" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="2155:2639" ph="{...}" />
-            <marker date="1576827025896" expanded="true" signature="2217:2329" ph="{...}" />
-            <marker date="1576827025896" expanded="false" signature="2687:2733" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding>
-            <marker date="1576827085842" expanded="true" signature="6:119" ph="..." />
-            <marker date="1576827085842" expanded="true" signature="158:1202" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="203:1200" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="297:799" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="426:621" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="621:709" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="869:1194" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="1003:1052" ph="{...}" />
-            <marker date="1576827085842" expanded="true" signature="1112:1184" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="47" column="46" lean-forward="true" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
-          <folding>
-            <marker date="1576827078062" expanded="true" signature="6:85" ph="..." />
-            <marker date="1576827078062" expanded="true" signature="124:2700" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="169:2698" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="240:718" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="369:540" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="540:628" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="788:1290" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1021:1092" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1162:1280" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1348:2692" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1477:1632" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1703:1765" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1822:2116" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="1856:2044" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="2175:2682" ph="{...}" />
-            <marker date="1576827078062" expanded="true" signature="2237:2349" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="0:304" ph="/* Decompiled with JetBrains decompiler ... */" />
+            <marker date="1576856736727" expanded="false" signature="312:364" ph="..." />
+            <marker date="1576856736727" expanded="true" signature="402:3614" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="407:499" ph="///   &lt;para&gt;Abstract base class for Animated Values.&lt;/para&gt; ... " />
+            <marker date="1576856736727" expanded="true" signature="540:3612" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="837:950" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1010:1170" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1254:1392" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1452:1739" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1768:1839" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1784:1833" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="1866:2208" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="2242:2382" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="2258:2376" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="2421:2695" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="2736:3103" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3126:3193" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3142:3187" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3214:3424" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3230:3276" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3286:3418" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3444:3570" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3460:3508" ph="{...}" />
+            <marker date="1576856736727" expanded="true" signature="3518:3564" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -3616,30 +3469,191 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/LayoutGroupBase.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="44" column="16" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="16" />
+          <folding>
+            <marker date="1576861875571" expanded="false" signature="6:85" ph="..." />
+            <marker date="1576861875571" expanded="true" signature="124:3136" ph="{...}" />
+            <marker date="1576861875571" expanded="true" signature="169:3134" ph="{...}" />
+            <marker date="1576861875571" expanded="true" signature="171:1430" ph="/* public class LayoutGroupScope : IDisposable { ... */" />
+            <marker date="1576861875571" expanded="true" signature="1484:2248" ph="{...}" />
+            <marker date="1576861875571" expanded="true" signature="1527:1581" ph="{...}" />
+            <marker date="1576861875571" expanded="false" signature="1971:2076" ph="{...}" />
+            <marker date="1576861875571" expanded="false" signature="2164:2238" ph="{...}" />
+            <marker date="1576861875571" expanded="false" signature="2294:3128" ph="{...}" />
+            <marker date="1576861875571" expanded="true" signature="2728:2909" ph="{...}" />
+            <marker date="1576861875571" expanded="false" signature="3072:3118" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalFadeLayoutGroup.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="647">
+          <caret line="54" column="72" lean-forward="true" selection-start-line="54" selection-start-column="72" selection-end-line="54" selection-end-column="72" />
+          <folding>
+            <marker date="1576862276328" expanded="true" signature="6:119" ph="..." />
+            <marker date="1576862276328" expanded="true" signature="158:2160" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="203:2158" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="205:827" ph="/* public static LayoutGroupScope VerticalFadeScope(AnimBool animBool, int indent = 1) { ... */" />
+            <marker date="1576862276328" expanded="true" signature="904:1392" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1033:1178" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1178:1309" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1438:1729" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1536:1597" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1799:2152" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="1961:2010" ph="{...}" />
+            <marker date="1576862276328" expanded="true" signature="2070:2142" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalLayoutGroupBase.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="33" column="41" lean-forward="true" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
+          <folding>
+            <marker date="1576862398951" expanded="true" signature="57:3626" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="102:3624" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="104:704" ph="/* public static LayoutGroupScope HorizontalScope(int indent = 1) { ... */" />
+            <marker date="1576862398951" expanded="true" signature="778:1256" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="907:1042" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1042:1173" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1305:1596" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1403:1464" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1669:1874" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1727:1864" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="1934:3618" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="2141:2281" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="2339:2393" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="2462:2971" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="2496:2916" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="3030:3514" ph="{...}" />
+            <marker date="1576862398951" expanded="true" signature="3092:3204" ph="{...}" />
+            <marker date="1576862398951" expanded="false" signature="3562:3608" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalLayoutGroupBase.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="84" selection-start-line="9" selection-start-column="84" selection-end-line="9" selection-end-column="84" />
+          <folding>
+            <marker date="1576862720875" expanded="true" signature="6:134" ph="..." />
+            <marker date="1576862720875" expanded="true" signature="173:3261" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="218:3259" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="268:366" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="429:905" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="558:691" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="691:822" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="952:1243" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="1050:1111" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="1322:1824" ph="{...}" />
+            <marker date="1576862720875" expanded="true" signature="1555:1626" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="1696:1814" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="1881:3253" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2038:2193" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2264:2326" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2383:2677" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2417:2605" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2736:3243" ph="{...}" />
+            <marker date="1576862720875" expanded="false" signature="2798:2910" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Vertical groups/VerticalScrollGroup.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="23" column="79" selection-start-line="23" selection-start-column="79" selection-end-line="23" selection-end-column="79" />
+          <folding>
+            <marker date="1576862720095" expanded="true" signature="6:119" ph="..." />
+            <marker date="1576862720095" expanded="true" signature="158:2865" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="203:2863" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="205:842" ph="/* public static LayoutGroupScope VerticalScrollScope(float height, float scrollPos, int indent = 1) { ... */" />
+            <marker date="1576862720095" expanded="true" signature="922:1046" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="1142:1637" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="1271:1423" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="1423:1554" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="1686:1977" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="1784:1845" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="2043:2857" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="2265:2354" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="2411:2741" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="2445:2669" ph="{...}" />
+            <marker date="1576862720095" expanded="true" signature="2801:2847" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalFadeLayoutGroup.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="21" column="68" selection-start-line="21" selection-start-column="68" selection-end-line="21" selection-end-column="68" />
+          <folding>
+            <marker date="1576862545864" expanded="false" signature="6:52" ph="..." />
+            <marker date="1576862545864" expanded="true" signature="91:2281" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="136:2279" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="138:762" ph="/* public static LayoutGroupScope HorizontalFadeScope(AnimBool animBool, int indent = 1) { ... */" />
+            <marker date="1576862545864" expanded="true" signature="825:934" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1012:1502" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1141:1288" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1288:1419" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1550:1841" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1648:1709" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="1915:2273" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="2079:2128" ph="{...}" />
+            <marker date="1576862545864" expanded="true" signature="2199:2263" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Development/ExtendedGuiPreviewWindow.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="51" column="4" selection-start-line="51" selection-start-column="4" selection-end-line="51" selection-end-column="4" />
+        <state relative-caret-position="542">
+          <caret line="81" column="41" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
           <folding>
-            <marker date="1576825894987" expanded="true" signature="6:135" ph="..." />
-            <marker date="1576825894987" expanded="true" signature="189:3494" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="196:896" ph="Window initialization &amp; lifetime management" />
-            <marker date="1576825894987" expanded="false" signature="316:493" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="527:741" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="675:735" ph="{...}" />
-            <marker date="1576825894987" expanded="false" signature="771:823" ph="{...}" />
-            <marker date="1576825894987" expanded="false" signature="855:881" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="923:1349" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="1682:3492" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="1877:3486" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="1926:2674" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="2339:2660" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="2407:2642" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="2522:2620" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="2723:3476" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="3141:3462" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="3209:3444" ph="{...}" />
-            <marker date="1576825894987" expanded="true" signature="3324:3422" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="6:135" ph="..." />
+            <marker date="1576862849562" expanded="true" signature="189:3623" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="196:888" ph="Window initialization &amp; lifetime management" />
+            <marker date="1576862849562" expanded="false" signature="316:493" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="527:733" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="667:727" ph="{...}" />
+            <marker date="1576862849562" expanded="false" signature="763:815" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="847:873" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="915:1341" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="1674:3621" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="2364:2589" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="2479:2567" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="3215:3440" ph="{...}" />
+            <marker date="1576862849562" expanded="true" signature="3330:3418" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Plugins/Editor/SoftKata/Extended IMGUI/Scripts/Auto layout/Horizontal groups/HorizontalScrollGroup.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="68" selection-start-line="17" selection-start-column="68" selection-end-line="17" selection-end-column="68" />
+          <folding>
+            <marker date="1576862847067" expanded="true" signature="6:37" ph="..." />
+            <marker date="1576862847067" expanded="true" signature="76:3057" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="121:3055" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="123:766" ph="/* public static LayoutGroupScope HorizontalScrollScope(float elemWidth, float scrollPos, int indent = 1) { ... */" />
+            <marker date="1576862847067" expanded="true" signature="851:976" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1076:1576" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1205:1362" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1362:1493" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1626:1917" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1724:1785" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="1987:3049" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="2251:2415" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="2472:2933" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="2506:2919" ph="{...}" />
+            <marker date="1576862847067" expanded="true" signature="2993:3039" ph="{...}" />
           </folding>
         </state>
       </provider>

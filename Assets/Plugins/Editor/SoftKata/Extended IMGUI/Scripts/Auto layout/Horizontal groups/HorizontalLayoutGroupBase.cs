@@ -2,25 +2,51 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        public static LayoutGroupScope HorizontalScope(int indent = 1) {
+//        public static LayoutGroupScope HorizontalScope(int indent = 1) {
+//            var eventType = Event.current.type;
+//
+//            LayoutGroup group;
+//            if (eventType == EventType.Layout) {
+//                group = new HorizontalLayoutGroup(ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+//                SubscribedForLayout.Enqueue(group);
+//            }
+//            else {
+//                group = SubscribedForLayout.Dequeue();
+//                
+//            }
+//            
+//            return new LayoutGroupScope(group, indent, eventType);
+//        }
+        
+        public static void BeginHorizontalScope(GUIStyle style) {
             var eventType = Event.current.type;
 
             LayoutGroup group;
             if (eventType == EventType.Layout) {
-                group = new HorizontalLayoutGroup(ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+                group = new HorizontalLayoutGroup(TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
                 group = SubscribedForLayout.Dequeue();
-                
+                group.PushLayoutRequest();
+            }
+
+            ActiveGroupStack.Push(group);
+            TopGroup = group;
+        }
+        public static void EndHorizontalScope() {
+            var eventType = Event.current.type;
+
+            if (eventType == EventType.Layout) {
+                TopGroup.PushLayoutRequest();
             }
             
-            return new LayoutGroupScope(group, indent, eventType);
+            TopGroup.EndGroup();
+            TopGroup = TopGroup.Parent;
+            ActiveGroupStack.Pop();
         }
-        
+
         internal class HorizontalLayoutGroupData : LayoutGroupDataBase {
-            protected float _horizontalContentOffset;
-            
             public override void AddEntry(float height) {
                 _height = Mathf.Max(_height, height);
                 _entries.Enqueue(new LayoutEntry{Height = height});
@@ -32,7 +58,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected float _entryWidth;
             
-            public HorizontalLayoutGroup(GUIStyle style) : base(style) {
+            public HorizontalLayoutGroup(LayoutGroup parent, GUIStyle style) : base(parent, style) {
                 _contentHorizontalGap = style.contentOffset.x;
                 LayoutData = new HorizontalLayoutGroupData();
             }
