@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Pentin Dmitry\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Pentin Dmitry\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_[SoftKata] Extended Editor GUI.-1889115741.00" t="ExcludeRecursive" />
+    <e p="D:\GameDev\Projects\Unity\Projects\Main Projects\[SoftKata] Extended Editor GUI" t="IncludeRecursive">
+      <e p="[SoftKata] Extended Editor GUI.sln" t="IncludeFlat" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Development" t="Include">
+          <e p="ExtendedGuiPreviewWindow.cs" t="Include" />
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Editor" t="Include">
+            <e p="SoftKata" t="Include">
+              <e p="Extended IMGUI" t="Include">
+                <e p="Assembly definition.asmdef" t="Include" />
+                <e p="Scripts" t="Include">
+                  <e p="Auto layout" t="Include">
+                    <e p="AutoLayout.cs" t="Include" />
+                    <e p="Horizontal groups" t="Include">
+                      <e p="HorizontalFadeLayoutGroup.cs" t="Include" />
+                      <e p="HorizontalLayoutGroupBase.cs" t="Include" />
+                      <e p="HorizontalScrollGroup.cs" t="Include" />
+                    </e>
+                    <e p="LayoutGroupBase.cs" t="Include" />
+                    <e p="Vertical groups" t="Include">
+                      <e p="VerticalFadeLayoutGroup.cs" t="Include" />
+                      <e p="VerticalLayoutGroupBase.cs" t="Include" />
+                      <e p="VerticalScrollGroup.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Custom controls" t="Include">
+                    <e p="ExtendedReorderableList.cs" t="Include" />
+                    <e p="KeyboardShortcutListener.cs" t="Include" />
+                    <e p="ObjectField.cs" t="Include" />
+                  </e>
+                  <e p="ExtendedEditorGUI.cs" t="Include" />
+                  <e p="ExtendedEditorGUIControls.cs" t="Include" />
+                  <e p="SaveDataTypes.cs" t="Include" />
+                  <e p="Utility.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="AutoLayoutEngine.csproj" t="IncludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
