@@ -5,42 +5,6 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-//        public class LayoutGroupScope : IDisposable {
-//            private LayoutGroup _group;
-//            
-//            private EventType _creationEventType;
-//
-//            private float _indentOffset;
-//
-//            internal LayoutGroupScope(LayoutGroup group, int indent, EventType currentEventType) {
-//                _group = group;
-//                _creationEventType = currentEventType;
-//                
-//                if (Event.current.type != EventType.Layout) {
-//                    _group.PushLayoutRequest();
-//                }
-//                ActiveGroupStack.Push(_group);
-//                
-//                var deltaIndent = indent * IndentStep;
-//                _indentOffset += deltaIndent;
-//                Indent += deltaIndent;
-//                
-//                group.Parent = TopGroup;
-//                TopGroup = _group;
-//            }
-//
-//            public void Dispose() {
-//                if (Event.current.type == EventType.Layout) {
-//                    _group.PushLayoutRequest();
-//                }
-//                Indent -= _indentOffset;
-//
-//                TopGroup = _group.Parent;
-//                _group.EndGroup();
-//                ActiveGroupStack.Pop();
-//            }
-//        }
-
         internal abstract class LayoutGroupDataBase {
             protected struct LayoutEntry {
                 internal float Height;

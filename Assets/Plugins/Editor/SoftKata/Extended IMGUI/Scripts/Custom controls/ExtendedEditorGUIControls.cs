@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         private const int FOLDOUT_DEFAULT_MARGIN = 12;
         private static GUIContent _tempContent = new GUIContent();
+        
+        // This is slow but it at least works
+        //internal static readonly FieldInfo LastControlId = typeof(EditorGUIUtility).GetField("s_LastControlID", BindingFlags.Static | BindingFlags.NonPublic);
 
 
         private static void ClearTempContent() {
@@ -143,6 +147,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     return newVal;
                 GUI.changed = changed;
             }
+
             return value;
         }
         public static float FloatPostfixInputField(Rect rect, SerializedProperty value, string postfixContent, GUIContent errorMessage = null) {

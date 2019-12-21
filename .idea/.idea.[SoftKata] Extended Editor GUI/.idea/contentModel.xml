@@ -31,12 +31,12 @@
                     </e>
                   </e>
                   <e p="Custom controls" t="Include">
+                    <e p="ExtendedEditorGUIControls.cs" t="Include" />
                     <e p="ExtendedReorderableList.cs" t="Include" />
                     <e p="KeyboardShortcutListener.cs" t="Include" />
                     <e p="ObjectField.cs" t="Include" />
                   </e>
                   <e p="ExtendedEditorGUI.cs" t="Include" />
-                  <e p="ExtendedEditorGUIControls.cs" t="Include" />
                   <e p="SaveDataTypes.cs" t="Include" />
                   <e p="Utility.cs" t="Include" />
                 </e>

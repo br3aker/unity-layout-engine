@@ -3,21 +3,6 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-//        public static LayoutGroupScope HorizontalScrollScope(float elemWidth, float scrollPos, int indent = 1) {
-//            var eventType = Event.current.type;
-//
-//            LayoutGroup group;
-//            if (eventType == EventType.Layout) {
-//                group = new HorizontalScrollGroup(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
-//                SubscribedForLayout.Enqueue(group);
-//            }
-//            else {
-//                group = SubscribedForLayout.Dequeue();
-//            }
-//            
-//            return new LayoutGroupScope(group, indent, eventType);
-//        }
-
         public static void BeginHorizontalScroll(float elemWidth, float scrollPos) {
             BeginHorizontalScroll(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
         }

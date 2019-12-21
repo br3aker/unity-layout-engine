@@ -3,31 +3,17 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-//        public static LayoutGroupScope HorizontalFadeScope(AnimBool animBool, int indent = 1) {
-//            var eventType = Event.current.type;
-//
-//            LayoutGroup group;
-//            if (eventType == EventType.Layout) {
-//                group = new HorizontalFadeLayoutGroup(animBool.faded, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
-//                SubscribedForLayout.Enqueue(group);
-//            }
-//            else {
-//                group = SubscribedForLayout.Dequeue();
-//            }
-//            
-//            return new LayoutGroupScope(group, indent, eventType);
-//        }
-
-        public static void BeginHorizontalFade(float amount) {
-            BeginHorizontalFade(amount, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+        public static bool BeginHorizontalFade(float amount) {
+            return BeginHorizontalFade(amount, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
         }
-        public static void BeginHorizontalFade(float amount, GUIStyle style) {
+        public static bool BeginHorizontalFade(float amount, GUIStyle style) {
             var eventType = Event.current.type;
 
             LayoutGroup group;
             if (eventType == EventType.Layout) {
                 group = new HorizontalFadeLayoutGroup(amount, TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
+                
             }
             else {
                 group = SubscribedForLayout.Dequeue();
@@ -36,6 +22,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             ActiveGroupStack.Push(group);
             TopGroup = group;
+
+            return amount > 0;
         }
         public static void EndHorizontalFade() {
             var eventType = Event.current.type;
