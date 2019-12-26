@@ -14,7 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             LayoutGroupBase group;
             if (eventType == EventType.Layout) {
-                group = new VerticalLayoutGroup(TopGroup, style);
+                group = new VerticalLayoutGroup(style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
@@ -48,7 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly float _contentVerticalGap;
 
 
-            public VerticalLayoutGroup(LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public VerticalLayoutGroup(GUIStyle style) : base(style) {
                 _contentVerticalGap = style.contentOffset.y;
                 LayoutData = new VerticalLayoutGroupData(_contentVerticalGap);
             }

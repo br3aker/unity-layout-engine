@@ -14,7 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             LayoutGroupBase group;
             if (eventType == EventType.Layout) {
-                group = new VerticalFadeLayoutGroup(amount, TopGroup, style);
+                group = new VerticalFadeLayoutGroup(amount, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
@@ -34,7 +34,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private class VerticalFadeLayoutGroup : VerticalLayoutGroup {
             private readonly float _amount;
 
-            public VerticalFadeLayoutGroup(float amount, LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public VerticalFadeLayoutGroup(float amount, GUIStyle style) : base(style) {
                 _amount = amount;
             }
 

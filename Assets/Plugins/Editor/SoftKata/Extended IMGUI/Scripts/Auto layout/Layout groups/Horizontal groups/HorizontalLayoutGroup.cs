@@ -7,7 +7,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             LayoutGroupBase group;
             if (eventType == EventType.Layout) {
-                group = new HorizontalLayoutGroup(TopGroup, style);
+                group = new HorizontalLayoutGroup(style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
@@ -34,7 +34,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected float _entryWidth;
             
-            public HorizontalLayoutGroup(LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public HorizontalLayoutGroup(GUIStyle style) : base(style) {
                 _contentHorizontalGap = style.contentOffset.x;
                 LayoutData = new HorizontalLayoutGroupData();
             }

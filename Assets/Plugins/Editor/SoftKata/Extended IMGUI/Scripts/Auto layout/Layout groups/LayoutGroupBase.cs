@@ -45,8 +45,8 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float _nextEntryX;
             protected float _nextEntryY;
 
-            protected LayoutGroupBase(LayoutGroupBase parent, GUIStyle style) {
-                Parent = parent;
+            protected LayoutGroupBase(GUIStyle style) {
+                Parent = TopGroup;
 
                 _eventType = EventType.Layout;
                 

@@ -7,23 +7,27 @@ namespace SoftKata.ExtendedEditorGUI {
             return BeginHorizontalFade(amount, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalFadeGroup);
         }
         public static bool BeginHorizontalFade(float amount, GUIStyle style) {
-            var eventType = Event.current.type;
+            if (amount > 0) {
+                var eventType = Event.current.type;
 
-            LayoutGroupBase group;
-            if (eventType == EventType.Layout) {
-                group = new HorizontalFadeLayoutGroup(amount, TopGroup, style);
-                SubscribedForLayout.Enqueue(group);
-                
+                LayoutGroupBase group;
+                if (eventType == EventType.Layout) {
+                    group = new HorizontalFadeLayoutGroup(amount, style);
+                    SubscribedForLayout.Enqueue(group);
+
+                }
+                else {
+                    group = SubscribedForLayout.Dequeue();
+                    group.PushLayoutRequest();
+                }
+
+                ActiveGroupStack.Push(group);
+                TopGroup = group;
+
+                return true;
             }
-            else {
-                group = SubscribedForLayout.Dequeue();
-                group.PushLayoutRequest();
-            }
 
-            ActiveGroupStack.Push(group);
-            TopGroup = group;
-
-            return amount > 0;
+            return false;
         }
         public static void EndHorizontalFade() {
             EndLayoutGroup();
@@ -32,7 +36,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private class HorizontalFadeLayoutGroup : HorizontalLayoutGroup {
             private readonly float _amount;
 
-            public HorizontalFadeLayoutGroup(float amount, LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public HorizontalFadeLayoutGroup(float amount, GUIStyle style) : base(style) {
                 _amount = amount;
             }
             

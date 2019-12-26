@@ -12,7 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             LayoutGroupBase group;
             if (eventType == EventType.Layout) {
-                group = new HorizontalScrollGroup(elemWidth, scrollPos, TopGroup, style);
+                group = new HorizontalScrollGroup(elemWidth, scrollPos, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
@@ -38,6 +38,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly int groupId;
             
             private float _elemWidth;
+            private bool _positionedTop;
             
             public float ScrollPos;
 
@@ -49,8 +50,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private float _sliderHeight;
 
-            public HorizontalScrollGroup(float elemWidth, float scrollPos, LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public HorizontalScrollGroup(float elemWidth, float scrollPos, GUIStyle style) : base(style) {
                 _elemWidth = elemWidth;
+
+                _positionedTop = (int)style.alignment < 3;
                 
                 groupId = GUIUtility.GetControlID(HorizontalScrollGroupHash, FocusType.Passive);
                 
@@ -60,23 +63,31 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected override void PushLayoutEntries() {
                 var contentWidth = _elemWidth * LayoutData.Count + _contentHorizontalGap * (LayoutData.Count - 1);
-                FullRect = Parent?.GetRect(LayoutData.TotalHeight + _sliderHeight) ?? RequestIndentedRect(LayoutData.TotalHeight+ _sliderHeight);
+                FullRect = Parent?.GetRect(LayoutData.TotalHeight + _sliderHeight) ?? RequestIndentedRect(LayoutData.TotalHeight + _sliderHeight);
                 _nextEntryX = Mathf.Lerp(0, FullRect.width - contentWidth, ScrollPos);
                 _entryWidth = _elemWidth;
                     
                 _containerToContentWidthRatio = FullRect.width  / contentWidth;
                 _sliderWidth = FullRect.width * _containerToContentWidthRatio;
 
+                float sliderVerticalPosition = 0f;
+                if (_positionedTop) {
+                    _nextEntryY = _sliderHeight;
+                }
+                else {
+                    sliderVerticalPosition = FullRect.height - _sliderHeight;
+                }
+
                 _sliderRect = new Rect(
                     (FullRect.width - _sliderWidth) * ScrollPos,
-                    FullRect.height - _sliderHeight,
+                    sliderVerticalPosition,
                     _sliderWidth,
                     _sliderHeight
                 );
                     
                 _sliderBackgroundRect = new Rect(
                     0f,
-                    FullRect.height - _sliderHeight,
+                    sliderVerticalPosition,
                     FullRect.width,
                     _sliderHeight
                 );

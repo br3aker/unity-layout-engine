@@ -47,9 +47,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     private void VerticalFadeScopeTest() {
         _folded.target = EditorGUI.Foldout(AutoLayout.RequestLayoutRect(16), _folded.target, _folded.faded.ToString(), true);
-        
-        if(AutoLayout.BeginHorizontalFade(_folded.faded))
-        {
+
+        if (AutoLayout.BeginHorizontalFade(_folded.faded)) {
             AutoLayout.BeginVerticalGroup();
             {
                 AutoLayout.BeginVerticalScroll(250, _testVerticalScrollPosition);
@@ -77,13 +76,14 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                                 ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
                             }
                         }
+
                         AutoLayout.EndVerticalGroup();
                     }
                 }
                 _testHorizontalScrollPosition = AutoLayout.EndHorizontalScroll();
             }
             AutoLayout.EndVerticalGroup();
+            AutoLayout.EndHorizontalFade();
         }
-        AutoLayout.EndHorizontalFade();
     }
 }

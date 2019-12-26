@@ -12,7 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             LayoutGroupBase group;
             if (eventType == EventType.Layout) {
-                group = new VerticalScrollGroup(height, scrollPos, TopGroup, style);
+                group = new VerticalScrollGroup(height, scrollPos, style);
                 SubscribedForLayout.Enqueue(group);
             }
             else {
@@ -38,6 +38,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly int groupId;
             
             private readonly float _height;
+            private bool _positionedLeft;
 
             public float ScrollPos;
 
@@ -50,8 +51,10 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _sliderWidth;
             
 
-            public VerticalScrollGroup(float height, float scrollPos, LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
+            public VerticalScrollGroup(float height, float scrollPos, GUIStyle style) : base(style) {
                 _height = height;
+
+                _positionedLeft = (int) style.alignment % 3 == 0;
 
                 groupId = GUIUtility.GetControlID(VerticalScrollGroupHash, FocusType.Passive);
                 
@@ -67,15 +70,23 @@ namespace SoftKata.ExtendedEditorGUI {
                 _containerToContentHeightRatio = _height / LayoutData.TotalHeight;
                 _sliderHeight = _height * _containerToContentHeightRatio;
 
+                float sliderHorizontalPosition = 0f;
+                if (_positionedLeft) {
+                    _nextEntryX = _sliderWidth;
+                }
+                else {
+                    sliderHorizontalPosition = FullRect.width - _sliderWidth;
+                }
+                
                 _sliderRect = new Rect(
-                    FullRect.width - _sliderWidth,
+                    sliderHorizontalPosition,
                     (_height - _sliderHeight) * ScrollPos,
                     _sliderWidth,
                     _sliderHeight
                 );
                     
                 _sliderBackgroundRect = new Rect(
-                    FullRect.width - _sliderWidth,
+                    sliderHorizontalPosition,
                     0f,
                     _sliderWidth,
                     _height
