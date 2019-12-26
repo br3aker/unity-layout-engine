@@ -19,21 +19,18 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void OnEnable() {
         ExtendedEditorGUI.RegisterUsage();
 
-        _folded = new AnimBool();
-        _debugColors = new Color[1000];
-        for (int i = 0; i < _debugColors.Length; i++) {
-            _debugColors[i] = Random.ColorHSV();
-        }
+        _folded = new AnimBool(true);
     }
     private void OnDestroy() {
         ExtendedEditorGUI.UnregisterUsage();
     }
+    #endregion
+
     
     private void Update() {
         Repaint();
     }
-    #endregion
-
+    
     private void OnGUI() {
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         VerticalFadeScopeTest();
@@ -42,12 +39,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
 
     private float _testVerticalScrollPosition;
-    private float _scrollGroupContainerSize = 250;
     
     private float _testHorizontalScrollPosition;
-    private float _scrollGroupElementWidth = 90;
     
-    private Color[] _debugColors;
 
     private AnimBool _folded;
 
@@ -56,95 +50,39 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         
         if(AutoLayout.BeginHorizontalFade(_folded.faded))
         {
-            AutoLayout.BeginVerticalScope();
+            AutoLayout.BeginVerticalGroup();
             {
-                _testVerticalScrollPosition = EditorGUI.Slider(AutoLayout.RequestLayoutRect(16), _testVerticalScrollPosition, 0, 1);
-                _scrollGroupContainerSize = EditorGUI.FloatField(AutoLayout.RequestLayoutRect(16), _scrollGroupContainerSize);
-                AutoLayout.BeginVerticalScroll(_scrollGroupContainerSize, _testVerticalScrollPosition);
+                AutoLayout.BeginVerticalScroll(250, _testVerticalScrollPosition);
                 {
-                    foreach (var color in _debugColors) {
+                    for (int i = 0; i < 100; i++) {
                         var rect = AutoLayout.RequestLayoutRect(30);
                         if (rect.IsValid()) {
-                            EditorGUI.DrawRect(rect, color);
+                            ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
                         }
                     }
                 }
-                AutoLayout.EndVerticalScroll();
+                _testVerticalScrollPosition = AutoLayout.EndVerticalScroll();
             }
-            AutoLayout.EndVerticalScope();
+            AutoLayout.EndVerticalGroup();
 
-            AutoLayout.BeginVerticalScope();
+            AutoLayout.BeginVerticalGroup();
             {
-                _testHorizontalScrollPosition = EditorGUI.Slider(AutoLayout.RequestLayoutRect(16),_testHorizontalScrollPosition, 0, 1);
-                _scrollGroupElementWidth = EditorGUI.FloatField(AutoLayout.RequestLayoutRect(16), _scrollGroupElementWidth);
-                AutoLayout.BeginHorizontalScroll(_scrollGroupElementWidth, _testHorizontalScrollPosition);
+                AutoLayout.BeginHorizontalScroll(100, _testHorizontalScrollPosition);
                 {
-                    foreach (var color in _debugColors) {
-                        var rect = AutoLayout.RequestLayoutRect(80);
-                        if (rect.IsValid()) {
-                            EditorGUI.DrawRect(rect, color);
+                    for (int i = 0; i < 25; i++) {
+                        AutoLayout.BeginVerticalGroup();
+                        for (int j = 0; j < 4; j++) {
+                            var rect = AutoLayout.RequestLayoutRect(16);
+                            if (rect.IsValid()) {
+                                ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
+                            }
                         }
+                        AutoLayout.EndVerticalGroup();
                     }
                 }
-                AutoLayout.EndHorizontalScroll();
+                _testHorizontalScrollPosition = AutoLayout.EndHorizontalScroll();
             }
-            AutoLayout.EndVerticalScope();
-            
-            AutoLayout.BeginVerticalScope();
-            {
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 14.42f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 4512f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 352.51f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 0f, "post", null);
-            }
-            AutoLayout.EndVerticalScope();
-        }
-        AutoLayout.EndHorizontalFade();
-        
-        if(AutoLayout.BeginVerticalFade(_folded.faded))
-        {
-            AutoLayout.BeginVerticalScope();
-            {
-                _testVerticalScrollPosition = EditorGUI.Slider(AutoLayout.RequestLayoutRect(16), _testVerticalScrollPosition, 0, 1);
-                _scrollGroupContainerSize = EditorGUI.FloatField(AutoLayout.RequestLayoutRect(16), _scrollGroupContainerSize);
-                AutoLayout.BeginVerticalScroll(_scrollGroupContainerSize, _testVerticalScrollPosition);
-                {
-                    foreach (var color in _debugColors) {
-                        var rect = AutoLayout.RequestLayoutRect(30);
-                        if (rect.IsValid()) {
-                            EditorGUI.DrawRect(rect, color);
-                        }
-                    }
-                }
-                AutoLayout.EndVerticalScroll();
-            }
-            AutoLayout.EndVerticalScope();
-
-            AutoLayout.BeginVerticalScope();
-            {
-                _testHorizontalScrollPosition = EditorGUI.Slider(AutoLayout.RequestLayoutRect(16),_testHorizontalScrollPosition, 0, 1);
-                _scrollGroupElementWidth = EditorGUI.FloatField(AutoLayout.RequestLayoutRect(16), _scrollGroupElementWidth);
-                AutoLayout.BeginHorizontalScroll(_scrollGroupElementWidth, _testHorizontalScrollPosition);
-                {
-                    foreach (var color in _debugColors) {
-                        var rect = AutoLayout.RequestLayoutRect(80);
-                        if (rect.IsValid()) {
-                            EditorGUI.DrawRect(rect, color);
-                        }
-                    }
-                }
-                AutoLayout.EndHorizontalScroll();
-            }
-            AutoLayout.EndVerticalScope();
-            
-            AutoLayout.BeginVerticalScope();
-            {
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 14.42f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 4512f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 352.51f, "post", null);
-                ExtendedEditorGUI.FloatPostfixInputField(AutoLayout.RequestLayoutRect(16), 0f, "post", null);
-            }
-            AutoLayout.EndVerticalScope();
+            AutoLayout.EndVerticalGroup();
         }
         AutoLayout.EndHorizontalFade();
     }

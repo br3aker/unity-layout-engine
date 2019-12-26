@@ -39,12 +39,16 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle VerticalFadeGroup;
             public GUIStyle VerticalScrollGroup;
             public GUIStyle HorizontalGroup;
+            public GUIStyle HorizontalFadeGroup;
+            public GUIStyle HorizontalScrollGroup;
 
             public LayoutGroupData(GUISkin skin) {
                 VerticalGroup = skin.GetStyle("Layout group/Vertical group");
                 VerticalFadeGroup = skin.GetStyle("Layout group/Vertical fade group");
                 VerticalScrollGroup = skin.GetStyle("Layout group/Vertical scroll group");
                 HorizontalGroup = skin.GetStyle("Layout group/Horizontal group");
+                HorizontalFadeGroup = skin.GetStyle("Layout group/Horizontal fade group");
+                HorizontalScrollGroup = skin.GetStyle("Layout group/Horizontal scroll group");
             }
         }
         internal struct ToggleData {

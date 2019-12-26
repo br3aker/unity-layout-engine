@@ -4,12 +4,12 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
         public static bool BeginHorizontalFade(float amount) {
-            return BeginHorizontalFade(amount, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+            return BeginHorizontalFade(amount, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalFadeGroup);
         }
         public static bool BeginHorizontalFade(float amount, GUIStyle style) {
             var eventType = Event.current.type;
 
-            LayoutGroup group;
+            LayoutGroupBase group;
             if (eventType == EventType.Layout) {
                 group = new HorizontalFadeLayoutGroup(amount, TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
@@ -26,21 +26,13 @@ namespace SoftKata.ExtendedEditorGUI {
             return amount > 0;
         }
         public static void EndHorizontalFade() {
-            var eventType = Event.current.type;
-
-            if (eventType == EventType.Layout) {
-                TopGroup.PushLayoutRequest();
-            }
-            
-            TopGroup.EndGroup();
-            TopGroup = TopGroup.Parent;
-            ActiveGroupStack.Pop();
+            EndLayoutGroup();
         }
 
         private class HorizontalFadeLayoutGroup : HorizontalLayoutGroup {
             private readonly float _amount;
 
-            public HorizontalFadeLayoutGroup(float amount, LayoutGroup parent, GUIStyle style) : base(parent, style) {
+            public HorizontalFadeLayoutGroup(float amount, LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
                 _amount = amount;
             }
             

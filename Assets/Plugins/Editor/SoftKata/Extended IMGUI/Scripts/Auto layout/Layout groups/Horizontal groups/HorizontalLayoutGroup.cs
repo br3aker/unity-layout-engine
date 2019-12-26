@@ -5,7 +5,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void BeginHorizontalScope(GUIStyle style) {
             var eventType = Event.current.type;
 
-            LayoutGroup group;
+            LayoutGroupBase group;
             if (eventType == EventType.Layout) {
                 group = new HorizontalLayoutGroup(TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
@@ -19,15 +19,7 @@ namespace SoftKata.ExtendedEditorGUI {
             TopGroup = group;
         }
         public static void EndHorizontalScope() {
-            var eventType = Event.current.type;
-
-            if (eventType == EventType.Layout) {
-                TopGroup.PushLayoutRequest();
-            }
-            
-            TopGroup.EndGroup();
-            TopGroup = TopGroup.Parent;
-            ActiveGroupStack.Pop();
+            EndLayoutGroup();
         }
 
         internal class HorizontalLayoutGroupData : LayoutGroupDataBase {
@@ -37,12 +29,12 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        private class HorizontalLayoutGroup : LayoutGroup {
+        private class HorizontalLayoutGroup : LayoutGroupBase {
             protected float _contentHorizontalGap;
 
             protected float _entryWidth;
             
-            public HorizontalLayoutGroup(LayoutGroup parent, GUIStyle style) : base(parent, style) {
+            public HorizontalLayoutGroup(LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
                 _contentHorizontalGap = style.contentOffset.x;
                 LayoutData = new HorizontalLayoutGroupData();
             }
@@ -51,20 +43,17 @@ namespace SoftKata.ExtendedEditorGUI {
                 return FullRect.width;
             }
             
-            internal override void PushLayoutRequest() {
-                if (LayoutData) {
-                    float containerHeight = LayoutData.TotalHeight;
-                    FullRect = Parent?.GetRect(containerHeight) ?? RequestIndentedRect(containerHeight);
+            protected override void PushLayoutEntries() {
+                float containerHeight = LayoutData.TotalHeight;
+                FullRect = Parent?.GetRect(containerHeight) ?? RequestIndentedRect(containerHeight);
 
-                    int entriesCount = LayoutData.Count;
-                    _entryWidth = (FullRect.width - _contentHorizontalGap * (entriesCount - 1)) / entriesCount;
-                    FullRect.width = GetContainerWidth();
-                }
-                GUI.BeginClip(FullRect);
+                int entriesCount = LayoutData.Count;
+                _entryWidth = (FullRect.width - _contentHorizontalGap * (entriesCount - 1)) / entriesCount;
+                FullRect.width = GetContainerWidth();
             }
 
             internal override Rect GetRect(float height) {
-                if (Event.current.type == EventType.Layout) {
+                if (_eventType == EventType.Layout) {
                     LayoutData.AddEntry(height);
                     return LayoutDummyRect;
                 }
@@ -74,10 +63,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 _nextEntryX += _entryWidth + _contentHorizontalGap;
 
                 return _nextEntryX > 0f && entryRect.x < FullRect.width ? entryRect : InvalidDummyRect;
-            }
-
-            internal override void EndGroup() {
-                GUI.EndClip();
             }
         }
     }

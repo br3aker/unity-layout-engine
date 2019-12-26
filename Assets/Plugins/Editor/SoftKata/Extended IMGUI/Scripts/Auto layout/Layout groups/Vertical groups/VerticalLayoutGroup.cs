@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        public static void BeginVerticalScope() {
-            BeginVerticalScope(ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
+        public static void BeginVerticalGroup() {
+            BeginVerticalGroup(ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
         }
-        public static void BeginVerticalScope(GUIStyle style) {
+        public static void BeginVerticalGroup(GUIStyle style) {
             var eventType = Event.current.type;
 
-            LayoutGroup group;
+            LayoutGroupBase group;
             if (eventType == EventType.Layout) {
                 group = new VerticalLayoutGroup(TopGroup, style);
                 SubscribedForLayout.Enqueue(group);
@@ -25,16 +25,8 @@ namespace SoftKata.ExtendedEditorGUI {
             ActiveGroupStack.Push(group);
             TopGroup = group;
         }
-        public static void EndVerticalScope() {
-            var eventType = Event.current.type;
-
-            if (eventType == EventType.Layout) {
-                TopGroup.PushLayoutRequest();
-            }
-            
-            TopGroup.EndGroup();
-            TopGroup = TopGroup.Parent;
-            ActiveGroupStack.Pop();
+        public static void EndVerticalGroup() {
+            EndLayoutGroup();
         }
         
 
@@ -52,11 +44,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 _entries.Enqueue(new LayoutEntry{Height = height});
             }
         }
-        private class VerticalLayoutGroup : LayoutGroup {
+        private class VerticalLayoutGroup : LayoutGroupBase {
             private readonly float _contentVerticalGap;
 
 
-            public VerticalLayoutGroup(LayoutGroup parent, GUIStyle style) : base(parent, style) {
+            public VerticalLayoutGroup(LayoutGroupBase parent, GUIStyle style) : base(parent, style) {
                 _contentVerticalGap = style.contentOffset.y;
                 LayoutData = new VerticalLayoutGroupData(_contentVerticalGap);
             }
@@ -65,23 +57,20 @@ namespace SoftKata.ExtendedEditorGUI {
                 return LayoutData.TotalHeight;
             }
 
-            internal override void PushLayoutRequest() {
-                if (LayoutData) {
-                    var containerHeight = GetContainerHeight();
-                    FullRect = Parent?.GetRect(containerHeight) ?? RequestIndentedRect(containerHeight);
-                }
-                
-                GUI.BeginClip(FullRect);
+            protected override void PushLayoutEntries() {
+                var containerHeight = GetContainerHeight();
+                FullRect = Parent?.GetRect(containerHeight) ?? RequestIndentedRect(containerHeight);
             }
 
             internal override Rect GetRect(float height) {
-                if (Event.current.type == EventType.Layout) {
+                if (_eventType == EventType.Layout) {
                     LayoutData.AddEntry(height);
                     return LayoutDummyRect;
                 }
                 
                 var entryRect = LayoutData.FetchNextRect(_nextEntryX, _nextEntryY, IsFixedWidth ? FixedWidth : FullRect.width, height);
                 _nextEntryY += height + _contentVerticalGap;
+                
                 return _nextEntryY > 0f && entryRect.y < FullRect.height ? entryRect : InvalidDummyRect;
             }
         }

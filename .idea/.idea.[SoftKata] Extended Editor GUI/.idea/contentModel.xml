@@ -18,16 +18,18 @@
                 <e p="Scripts" t="Include">
                   <e p="Auto layout" t="Include">
                     <e p="AutoLayout.cs" t="Include" />
-                    <e p="Horizontal groups" t="Include">
-                      <e p="HorizontalFadeLayoutGroup.cs" t="Include" />
-                      <e p="HorizontalLayoutGroupBase.cs" t="Include" />
-                      <e p="HorizontalScrollGroup.cs" t="Include" />
-                    </e>
-                    <e p="LayoutGroupBase.cs" t="Include" />
-                    <e p="Vertical groups" t="Include">
-                      <e p="VerticalFadeLayoutGroup.cs" t="Include" />
-                      <e p="VerticalLayoutGroupBase.cs" t="Include" />
-                      <e p="VerticalScrollGroup.cs" t="Include" />
+                    <e p="Layout groups" t="Include">
+                      <e p="Horizontal groups" t="Include">
+                        <e p="HorizontalFadeLayoutGroup.cs" t="Include" />
+                        <e p="HorizontalLayoutGroup.cs" t="Include" />
+                        <e p="HorizontalScrollGroup.cs" t="Include" />
+                      </e>
+                      <e p="LayoutGroupBase.cs" t="Include" />
+                      <e p="Vertical groups" t="Include">
+                        <e p="VerticalFadeLayoutGroup.cs" t="Include" />
+                        <e p="VerticalLayoutGroup.cs" t="Include" />
+                        <e p="VerticalScrollGroup.cs" t="Include" />
+                      </e>
                     </e>
                   </e>
                   <e p="Custom controls" t="Include">
