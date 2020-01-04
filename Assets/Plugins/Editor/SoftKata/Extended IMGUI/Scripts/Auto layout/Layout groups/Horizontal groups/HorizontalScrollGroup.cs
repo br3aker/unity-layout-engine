@@ -2,145 +2,80 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        public static void BeginHorizontalScroll(float elemWidth, float scrollPos) {
-            BeginHorizontalScroll(elemWidth, scrollPos, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalScrollGroup);
-        }
-        public static void BeginHorizontalScroll(float elemWidth, float scrollPos, GUIStyle style) {
-            var eventType = Event.current.type;
+        internal class HorizontalScrollGroup : HorizontalLayoutGroupBase {
+            private float _containerWidth;
+            
+            internal float ScrollPos;
 
-            LayoutGroupBase group;
+            private bool _needsScroll;
+
+            public HorizontalScrollGroup(float width, float scrollPos, GUIStyle style) : base(style) {
+                _containerWidth = width;
+                ScrollPos = scrollPos;
+            }
+
+            protected override void CalculateLayoutData() {
+                if (CurrentEventType == EventType.Layout) {
+                    TotalWidth += ContentOffset * (EntriesCount - 1);
+                    if (TotalWidth > _containerWidth) {
+                        _needsScroll = true;
+                        NextEntryX = Mathf.Lerp(0f, _containerWidth - TotalWidth, ScrollPos);
+
+                        // this action is not very clear, TotalWidth is used at layout entries data registration
+                        // probably needs to be renamed
+                        TotalWidth = _containerWidth;
+                    }
+                }
+            }
+
+            internal override Rect GetRect(float height) {
+                return GetRect(height, EditorGUIUtility.currentViewWidth);
+            }
+
+            protected override Rect GetActualRect(float height, float width) {
+                if (NextEntryX + width < 0 || NextEntryX > TotalWidth) {
+                    return InvalidRect;
+                }
+                return new Rect(
+                    NextEntryX,
+                    NextEntryY,
+                    width,
+                    height
+                );
+            }
+        }
+
+        public static bool BeginHorizontalScrollGroup(float width, float scrollValue, GUIStyle style) {
+            var eventType = Event.current.type;
+            LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                group = new HorizontalScrollGroup(elemWidth, scrollPos, style);
-                SubscribedForLayout.Enqueue(group);
+                layoutGroup = new HorizontalScrollGroup(width, scrollValue, style);
+                SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
-                group = SubscribedForLayout.Dequeue();
-                group.PushLayoutRequest();
+                layoutGroup = SubscribedForLayout.Dequeue();
+                layoutGroup.RetrieveLayoutData(eventType);
             }
+            
+            ActiveGroupStack.Push(layoutGroup);
+            TopGroup = layoutGroup;
 
-            ActiveGroupStack.Push(group);
-            TopGroup = group;
+            return layoutGroup.IsGroupValid;
         }
-        public static float EndHorizontalScroll() {
-            var rawTopGroup = EndLayoutGroup();
-            var topHorizontalGroup = rawTopGroup as HorizontalScrollGroup;
-            if (topHorizontalGroup == null) {
-                throw new Exception($"Group ending method [Horizontal Scroll] mismatch with actual registered top group: [{rawTopGroup.GetType()}]");
-            }
-
-            return topHorizontalGroup.ScrollPos;
+        public static bool BeginHorizontalScrollGroup(float width, float scrollValue) {
+            return BeginHorizontalScrollGroup(width, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalScrollGroup);
         }
 
-        private class HorizontalScrollGroup : HorizontalLayoutGroup {
-            private static readonly int HorizontalScrollGroupHash = nameof(HorizontalScrollGroup).GetHashCode();
-            private readonly int groupId;
-            
-            private float _elemWidth;
-            private bool _positionedTop;
-            
-            public float ScrollPos;
-
-            private float _containerToContentWidthRatio;
-            private float _sliderWidth;
-            
-            private Rect _sliderRect;
-            private Rect _sliderBackgroundRect;
-
-            private float _sliderHeight;
-
-            public HorizontalScrollGroup(float elemWidth, float scrollPos, GUIStyle style) : base(style) {
-                _elemWidth = elemWidth;
-
-                _positionedTop = (int)style.alignment < 3;
-                
-                groupId = GUIUtility.GetControlID(HorizontalScrollGroupHash, FocusType.Passive);
-                
-                ScrollPos = scrollPos;
-                _sliderHeight = style.border.bottom;
+        public static float EndHorizontalScrollGroup() {
+            var lastGroup = EndLayoutGroup() as HorizontalScrollGroup;
+            if (lastGroup == null) {
+                throw new Exception("Layout group type mismatch");
             }
 
-            protected override void PushLayoutEntries() {
-                var contentWidth = _elemWidth * LayoutData.Count + _contentHorizontalGap * (LayoutData.Count - 1);
-                FullRect = Parent?.GetRect(LayoutData.TotalHeight + _sliderHeight) ?? RequestIndentedRect(LayoutData.TotalHeight + _sliderHeight);
-                _nextEntryX = Mathf.Lerp(0, FullRect.width - contentWidth, ScrollPos);
-                _entryWidth = _elemWidth;
-                    
-                _containerToContentWidthRatio = FullRect.width  / contentWidth;
-                _sliderWidth = FullRect.width * _containerToContentWidthRatio;
-
-                float sliderVerticalPosition = 0f;
-                if (_positionedTop) {
-                    _nextEntryY = _sliderHeight;
-                }
-                else {
-                    sliderVerticalPosition = FullRect.height - _sliderHeight;
-                }
-
-                _sliderRect = new Rect(
-                    (FullRect.width - _sliderWidth) * ScrollPos,
-                    sliderVerticalPosition,
-                    _sliderWidth,
-                    _sliderHeight
-                );
-                    
-                _sliderBackgroundRect = new Rect(
-                    0f,
-                    sliderVerticalPosition,
-                    FullRect.width,
-                    _sliderHeight
-                );
-            }
-            
-            protected override void EndGroupRoutine() {
-                switch (_eventType) {
-                    case EventType.MouseDown:
-                        if (GUIUtility.hotControl == 0) {
-                            if (_sliderRect.Contains(Event.current.mousePosition)) {
-                                GUIUtility.hotControl = groupId;
-                                GUIUtility.keyboardControl = 0;
-
-                                Event.current.Use();
-                            }
-                            else if (_sliderBackgroundRect.Contains(Event.current.mousePosition)) {
-                                ScrollPos = Event.current.mousePosition.x / FullRect.width;
-                                
-                                GUIUtility.hotControl = groupId;
-                                GUIUtility.keyboardControl = 0;
-                                
-                                Event.current.Use();
-                            }
-                        }
-
-                        break;
-                    case EventType.MouseUp:
-                        if (GUIUtility.hotControl == groupId) {
-                            GUIUtility.hotControl = 0;
-                            Event.current.Use();
-                        }
-                        break;
-                    case EventType.MouseDrag:
-                        if (GUIUtility.hotControl == groupId) {
-                            var delta = Event.current.delta.x;
-                            var currentX = Mathf.Clamp((_sliderRect.x + delta) - FullRect.x, 0f, FullRect.width - _sliderWidth);
-
-                            ScrollPos = currentX / (FullRect.width - _sliderWidth);
-                        }
-                        break;
-                    case EventType.ScrollWheel:
-                        if (FullRect.Contains(Event.current.mousePosition)) {
-                            GUIUtility.keyboardControl = 0;
-                            ScrollPos = Mathf.Clamp01(ScrollPos + Event.current.delta.y / FullRect.width);
-                            Event.current.Use();
-                        }
-                        break;
-                    case EventType.Repaint:
-                        EditorGUI.DrawRect(_sliderBackgroundRect, Color.black);
-                        EditorGUI.DrawRect(_sliderRect, Color.magenta);
-                        break;
-                }
-            }
+            return lastGroup.ScrollPos;
         }
     }
 }

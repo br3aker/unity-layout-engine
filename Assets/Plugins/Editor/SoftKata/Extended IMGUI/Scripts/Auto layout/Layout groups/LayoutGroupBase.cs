@@ -2,79 +2,67 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class AutoLayout {
-        internal abstract class LayoutGroupDataBase {
-            protected struct LayoutEntry {
-                internal float Height;
-            }
-            
-            protected float _height;
-            
-            protected Queue<LayoutEntry> _entries = new Queue<LayoutEntry>();
-
-            public int Count => _entries.Count;
-            public virtual float TotalHeight => _height;
-
-            public abstract void AddEntry(float height);
-
-            public Rect FetchNextRect(float x, float y, float width, float height) {
-                _entries.Dequeue();
-                return new Rect(x, y, width, height);
-            }
-
-            public static implicit operator bool(LayoutGroupDataBase layoutGroupData) {
-                return layoutGroupData._entries.Count > 0;
-            }
-        }
-
         internal abstract class LayoutGroupBase {
-            protected readonly bool IsFixedWidth;
-            protected readonly float FixedWidth;
-            
-            
-            internal LayoutGroupBase Parent { get; private set; }
+            internal LayoutGroupBase Parent { get; }
 
-            protected EventType _eventType;
+            protected EventType CurrentEventType = EventType.Layout;
+            
+            // group metadata
+            protected float TotalHeight;
+            protected float TotalWidth;
+            
+            protected int EntriesCount;
+            internal bool IsGroupValid = true;
 
+            // total rect of the group
             internal Rect FullRect;
-            protected LayoutGroupDataBase LayoutData;
-            private bool _notEmptyGroup;
-
-            protected float _nextEntryX;
-            protected float _nextEntryY;
+            
+            // entries layout data
+            protected float NextEntryX = 0f;
+            protected float NextEntryY = 0f;
 
             protected LayoutGroupBase(GUIStyle style) {
                 Parent = TopGroup;
-
-                _eventType = EventType.Layout;
-                
-                FixedWidth = style.fixedWidth;
-                IsFixedWidth = !Mathf.Approximately(FixedWidth, 0f);
             }
 
             internal void PushLayoutRequest() {
-                _eventType = Event.current.type;
-                _notEmptyGroup = LayoutData;
-                if (_notEmptyGroup) {
-                    PushLayoutEntries();
-                    GUI.BeginClip(FullRect);
+                IsGroupValid = EntriesCount > 0;
+                if (IsGroupValid) {
+                    CalculateLayoutData();
+                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? AutoLayout.RequestRectRaw(TotalHeight);
                 }
             }
 
-            protected abstract void PushLayoutEntries();
+            internal void RetrieveLayoutData(EventType currentEventType) {
+                if (IsGroupValid) {
+                    CurrentEventType = currentEventType;
+                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? AutoLayout.RequestRectRaw(TotalHeight);
+                    IsGroupValid = FullRect.IsValid();
+                    if (IsGroupValid) {
+                        GUI.BeginClip(FullRect);
+                        FullRect.y = 0;
+                        FullRect.x = 0;
+                    }
+                }
+            }
+
+            protected abstract void CalculateLayoutData();
 
             internal abstract Rect GetRect(float height);
+            internal abstract Rect GetRect(float height, float width);
 
-            internal void EndGroup() {
-                if (_notEmptyGroup) {
-                    EndGroupRoutine();
+            internal void EndGroup(EventType currentEventType) {
+                if (IsGroupValid) {
+                    EndGroupRoutine(currentEventType);
                     GUI.EndClip();
                 }
             }
 
-            protected virtual void EndGroupRoutine() { }
+            protected virtual void EndGroupRoutine(EventType currentEventType) { }
         }
         
         internal static LayoutGroupBase EndLayoutGroup() {
@@ -84,8 +72,10 @@ namespace SoftKata.ExtendedEditorGUI {
             if (eventType == EventType.Layout) {
                 currentGroup.PushLayoutRequest();
             }
+            else {
+                currentGroup.EndGroup(eventType);
+            }
             
-            currentGroup.EndGroup();
             TopGroup = currentGroup.Parent;
             ActiveGroupStack.Pop();
 
