@@ -59,7 +59,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             ActiveGroupStack.Push(layoutGroup);
-            TopGroup = layoutGroup;
+            _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }

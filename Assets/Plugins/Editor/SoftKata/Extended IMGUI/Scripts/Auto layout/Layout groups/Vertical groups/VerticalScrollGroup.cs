@@ -18,17 +18,15 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                if (CurrentEventType == EventType.Layout) {
-                    TotalHeight += ContentOffset * (EntriesCount - 1);
-                    
-                    if (TotalHeight > _containerHeight) {
-                        _needsScroll = true;
-                        NextEntryY = Mathf.Lerp(0f, _containerHeight - TotalHeight, ScrollPos);
+                TotalHeight += ContentOffset * (EntriesCount - 1);
+                
+                if (TotalHeight > _containerHeight) {
+                    _needsScroll = true;
+                    NextEntryY = Mathf.Lerp(0f, _containerHeight - TotalHeight, ScrollPos);
 
-                        // this action is not very clear, TotalHeight is used at layout entries data registration
-                        // probably needs to be renamed
-                        TotalHeight = _containerHeight;
-                    }
+                    // this action is not very clear, TotalHeight is used at layout entries data registration
+                    // probably needs to be renamed
+                    TotalHeight = _containerHeight;
                 }
             }
 
@@ -62,7 +60,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             ActiveGroupStack.Push(layoutGroup);
-            TopGroup = layoutGroup;
+            _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }

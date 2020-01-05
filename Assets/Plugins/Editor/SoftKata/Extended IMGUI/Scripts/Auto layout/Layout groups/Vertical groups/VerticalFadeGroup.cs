@@ -36,11 +36,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 );
             }
         }
-
-        // TODO [bug/major]: fast-switching animated bools breaks this group
+        
         public static bool BeginVerticalFadeGroup(float faded, GUIStyle style) {
-//            if  (Mathf.Approximately(faded, 0f)) return false;
-
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
@@ -53,9 +50,10 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             ActiveGroupStack.Push(layoutGroup);
-            TopGroup = layoutGroup;
+            _topGroup = layoutGroup;
 
-            return !Mathf.Approximately(faded, 0f) && layoutGroup.IsGroupValid;
+//            return !Mathf.Approximately(faded, 0f) && layoutGroup.IsGroupValid;
+            return layoutGroup.IsGroupValid;
         }
         public static bool BeginVerticalFadeGroup(float faded) {
             return BeginVerticalFadeGroup(faded, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
