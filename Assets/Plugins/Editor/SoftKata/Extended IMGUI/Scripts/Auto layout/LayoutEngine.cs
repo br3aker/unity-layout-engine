@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public static partial class AutoLayout {
+    public static partial class LayoutEngine {
         private static readonly Rect LayoutDummyRect = new Rect(0f, 0f, 1f, 1f);
         private static readonly Rect InvalidRect = new Rect(0f, 0f, -1f, -1f);
 
@@ -13,33 +13,16 @@ namespace SoftKata.ExtendedEditorGUI {
         private static LayoutGroupBase _topGroup;
 
         private static int _groupCount = 0;
-        private static int _indentLevel = 0;
+        private static int _globalIndentLevel = 0;
 
-        public static int GetTotalGroupCount() {
-            return SubscribedForLayout.Count;
-        }
-
-        public struct LayoutGroupDebugData {
-            public bool Valid;
+        public struct LayoutDebugData {
             public string Data;
+            public bool IsValid;
         }
-        public static LayoutGroupDebugData[] GetLayoutGroupsData() {
-            using (var enumerator = SubscribedForLayout.GetEnumerator()) {
-                LayoutGroupDebugData[] data = new LayoutGroupDebugData[SubscribedForLayout.Count];
-                for (int i = 0; i < SubscribedForLayout.Count; i++) {
-                    enumerator.MoveNext();
-                    var group = enumerator.Current;
-                    data[i] = new LayoutGroupDebugData {
-                        Valid = group.IsGroupValid,
-                        Data = $"{new string('\t', group.debugDataIndent)}{group.GetType().Name} | Child group count: {group._childrenCount}"
-                    };
-                }
+        private static List<LayoutDebugData> _debugDataList = new List<LayoutDebugData>();
+        private static LayoutDebugData[] _debugDataOut;
 
-                return data;
-            }
-        }
-
-        private static Rect RequestRectRaw(float height, float width = 0f) {
+        internal static Rect RequestRectRaw(float height, float width = 0f) {
             return GUILayoutUtility.GetRect(width, height);
         }
         public static Rect RequestLayoutRect(int height) {
@@ -58,6 +41,15 @@ namespace SoftKata.ExtendedEditorGUI {
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }
+        }
+
+        public static LayoutDebugData[] GetEngineGroupHierarchyData() {
+            if (Event.current.type == EventType.Layout) {
+                _debugDataOut = _debugDataList.ToArray();
+                _debugDataList.Clear();
+            }
+
+            return _debugDataOut;
         }
     }
 }

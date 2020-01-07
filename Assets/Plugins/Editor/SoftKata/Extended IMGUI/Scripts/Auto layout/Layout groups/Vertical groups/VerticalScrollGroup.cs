@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 namespace SoftKata.ExtendedEditorGUI {
-    public static partial class AutoLayout {
+    public static partial class LayoutEngine {
         internal class VerticalScrollGroup : VerticalLayoutGroupBase {
             private float _containerHeight;
             
@@ -57,9 +57,9 @@ namespace SoftKata.ExtendedEditorGUI {
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RegisterDebugData();
             }
             
-            ActiveGroupStack.Push(layoutGroup);
             _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;

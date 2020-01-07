@@ -126,7 +126,7 @@ namespace SoftKata.ExtendedEditorGUI {
             // Error message
             if (isError) {
                 var errorMessageStyle = styles.UnderlineErrorMessage;
-                var errorRect = AutoLayout.RequestLayoutRect(errorMessageStyle.GetContentHeight());
+                var errorRect = LayoutEngine.RequestLayoutRect(errorMessageStyle.GetContentHeight());
                 errorRect.x = rect.x;
                 
                 EditorGUI.LabelField(
@@ -205,7 +205,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return expanded.boolValue = FoldoutUnderline(rect, expanded.boolValue, label);
         }
         public static bool FoldoutUnderline(bool expanded, GUIContent label) {
-            var autoRect = AutoLayout.RequestLayoutRect(Resources.Foldout.UnderlineLabelStyle.GetContentHeight());
+            var autoRect = LayoutEngine.RequestLayoutRect(Resources.Foldout.UnderlineLabelStyle.GetContentHeight());
             return FoldoutUnderline(autoRect, expanded, label);
         }
         public static bool FoldoutUnderline(SerializedProperty expanded, GUIContent label) {

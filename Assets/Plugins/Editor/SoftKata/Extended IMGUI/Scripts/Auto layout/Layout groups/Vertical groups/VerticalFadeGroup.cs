@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 namespace SoftKata.ExtendedEditorGUI {
-    public static partial class AutoLayout {
+    public static partial class LayoutEngine {
         internal class VerticalFadeGroup : VerticalLayoutGroupBase {
             private float _faded;
 
@@ -47,12 +47,11 @@ namespace SoftKata.ExtendedEditorGUI {
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RegisterDebugData();
             }
             
-            ActiveGroupStack.Push(layoutGroup);
             _topGroup = layoutGroup;
 
-//            return !Mathf.Approximately(faded, 0f) && layoutGroup.IsGroupValid;
             return layoutGroup.IsGroupValid;
         }
         public static bool BeginVerticalFadeGroup(float faded) {
