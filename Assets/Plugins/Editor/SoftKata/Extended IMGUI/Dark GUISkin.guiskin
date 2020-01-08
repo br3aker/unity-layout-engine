@@ -1556,7 +1556,7 @@ MonoBehaviour:
     m_Normal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.29411766, g: 0.29411766, b: 0.29411766, a: 1}
+      m_TextColor: {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -1596,10 +1596,10 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Padding:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -1613,7 +1613,7 @@ MonoBehaviour:
     m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 4}
+    m_ContentOffset: {x: 10, y: 4}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0

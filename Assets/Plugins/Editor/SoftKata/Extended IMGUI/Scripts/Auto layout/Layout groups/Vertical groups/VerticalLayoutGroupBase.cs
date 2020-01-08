@@ -14,10 +14,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalHeight += ContentOffset * (EntriesCount - 1);
             }
 
-            internal override Rect GetRect(float height) {
-                return GetRect(height, EditorGUIUtility.currentViewWidth);
-            }
-
             internal sealed override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
@@ -34,6 +30,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 var entryRect = GetActualRect(height, width);
                 NextEntryY += height + ContentOffset;
                 return entryRect;
+            }
+
+            internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
+                EntriesCount += count;
+                TotalHeight += elementHeight * count;
+                TotalWidth = Mathf.Max(TotalWidth, elementWidth);;
             }
 
             protected virtual Rect GetActualRect(float height, float width) {

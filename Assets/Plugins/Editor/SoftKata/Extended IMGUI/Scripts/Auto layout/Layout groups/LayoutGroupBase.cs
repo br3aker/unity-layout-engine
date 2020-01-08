@@ -27,35 +27,55 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float NextEntryX = 0f;
             protected float NextEntryY = 0f;
 
-            private int _localIndentLevel;
+            // padding settings
+            private RectOffset _padding;
+            
+            // Debug data
+            private int _debugIndentLevel;
+            
 
             protected LayoutGroupBase(GUIStyle style) {
                 Parent = _topGroup;
 
+                // Child groups indexing
                 _groupIndex = _groupCount++;
-
-                _localIndentLevel = _globalIndentLevel;
-                _globalIndentLevel++;
+                
+                // group layout settings
+                _padding = style.padding;
+                
+                // Debug data
+                _debugIndentLevel = _globalIndentLevel++;
             }
 
-            internal void PushLayoutRequest() {
+            internal void RegisterLayoutRequest() {
                 _childrenCount = _groupCount - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
                     CalculateLayoutData();
-                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight);
+                    TotalHeight += _padding.vertical;
+                    TotalWidth += _padding.horizontal;
+                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight, TotalWidth);
                 }
             }
 
             internal void RetrieveLayoutData(EventType currentEventType) {
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight);
+                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight, TotalWidth);
                     IsGroupValid = FullRect.IsValid();
                     if (IsGroupValid) {
+                        EditorGUI.DrawRect(FullRect, Color.red);
+                        
+                        FullRect = _padding.Remove(FullRect);
                         GUI.BeginClip(FullRect);
                         FullRect.y = 0;
                         FullRect.x = 0;
+                        
+                        var color = Color.cyan;
+                        color.a = 100f / 255;
+                        EditorGUI.DrawRect(FullRect, color);
+                        EditorGUI.LabelField(FullRect, FullRect.ToString());
+                        
                         return;
                     }
                 }
@@ -70,17 +90,17 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected abstract void CalculateLayoutData();
 
-            internal abstract Rect GetRect(float height);
+            internal Rect GetRect(float height) {
+                return GetRect(height, EditorGUIUtility.currentViewWidth);
+            }
             internal abstract Rect GetRect(float height, float width);
+            internal abstract void RegisterRectArray(float elementHeight, float elementWidth, int count);
 
             internal void EndGroup(EventType currentEventType) {
-                _globalIndentLevel--;
                 if (IsGroupValid) {
                     EndGroupRoutine(currentEventType);
                     GUI.EndClip();
                 }
-                
-                IsGroupValid = true;
             }
 
             protected virtual void EndGroupRoutine(EventType currentEventType) { }
@@ -98,7 +118,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal void RegisterDebugData() {
-                string tabSpacing = new string('\t', _localIndentLevel);
+                _globalIndentLevel--;
+                string tabSpacing = new string('\t', _debugIndentLevel);
                 string childrenCount = _childrenCount > 0 ? $" | Children count: {_childrenCount}" : "";
                 string data = $"{tabSpacing}{GetType().Name}{childrenCount}";
                 _debugDataList.Add(
@@ -115,7 +136,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             var currentGroup = _topGroup;
             if (eventType == EventType.Layout) {
-                currentGroup.PushLayoutRequest();
+                currentGroup.RegisterLayoutRequest();
             }
             else {
                 currentGroup.EndGroup(eventType);

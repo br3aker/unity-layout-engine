@@ -22,9 +22,15 @@ namespace SoftKata.ExtendedEditorGUI {
         private static List<LayoutDebugData> _debugDataList = new List<LayoutDebugData>();
         private static LayoutDebugData[] _debugDataOut;
 
-        internal static Rect RequestRectRaw(float height, float width = 0f) {
-            return GUILayoutUtility.GetRect(width, height);
+        
+        internal static Rect RequestRectRaw(float height, float width = -1f) {
+            var rect = GUILayoutUtility.GetRect(width, height);
+            if (width > 0f) {
+                rect.width = width;
+            }
+            return rect;
         }
+        
         public static Rect RequestLayoutRect(int height) {
             return _topGroup?.GetRect(height) ?? RequestRectRaw(height);
         }
@@ -33,6 +39,18 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public static Rect RequestLayoutRect(GUIStyle style) {
             return RequestLayoutRect(style.GetContentHeight());
+        }
+
+        public static void RegisterElementsArray(float elementHeight, int count) {
+            RegisterElementsArray(elementHeight, EditorGUIUtility.currentViewWidth, count);
+        }
+        public static void RegisterElementsArray(float elementHeight, float elementWidth, int count) {
+            if (_topGroup != null) {
+                _topGroup.RegisterRectArray(elementHeight, elementWidth, count);
+            }
+            else {
+                RequestRectRaw(elementHeight * count);
+            }
         }
         
 

@@ -18,7 +18,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool IsValid(this Rect rect) {
             return rect.height > 0f && rect.width > 0f;
         }
-        
+
         public static void ResetToDefaults<T>(this IList<T> list) {
             for (int i = 0; i < list.Count; i++) {
                 list[i] = default;

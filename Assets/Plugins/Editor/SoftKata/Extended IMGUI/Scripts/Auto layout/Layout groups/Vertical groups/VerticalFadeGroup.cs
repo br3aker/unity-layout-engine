@@ -20,10 +20,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-            internal override Rect GetRect(float height) {
-                return GetRect(height, EditorGUIUtility.currentViewWidth);
-            }
-
             protected override Rect GetActualRect(float height, float width) {
                 if (NextEntryY > TotalHeight) {
                     return InvalidRect;
