@@ -10,6 +10,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public HorizontalLayoutGroupBase(GUIStyle style) : base(style) {
                 ContentOffset += style.contentOffset.x;
             }
+
             protected override void CalculateLayoutData() {
                 TotalWidth += ContentOffset * (EntriesCount - 1);
             }
@@ -19,6 +20,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     EntriesCount++;
                     TotalWidth += width;
                     TotalHeight = Mathf.Max(TotalHeight, height);
+//                    return InvalidRect;
                     return LayoutDummyRect;
                 }
 

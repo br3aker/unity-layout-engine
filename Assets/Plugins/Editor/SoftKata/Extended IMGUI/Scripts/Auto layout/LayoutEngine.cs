@@ -13,6 +13,8 @@ namespace SoftKata.ExtendedEditorGUI {
         private static LayoutGroupBase _topGroup;
 
         private static int _groupCount = 0;
+        
+        // TODO [remove]: this is only used for debug 
         private static int _globalIndentLevel = 0;
 
         public struct LayoutDebugData {

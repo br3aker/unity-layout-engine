@@ -10,6 +10,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public VerticalLayoutGroupBase(GUIStyle style) : base(style) {
                 ContentOffset = style.contentOffset.y;
             }
+
             protected override void CalculateLayoutData() {
                 TotalHeight += ContentOffset * (EntriesCount - 1);
             }
@@ -19,6 +20,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     EntriesCount++;
                     TotalHeight += height;
                     TotalWidth = Mathf.Max(TotalWidth, width);
+//                    return InvalidRect;
                     return LayoutDummyRect;
                 }
 

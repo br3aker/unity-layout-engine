@@ -42,7 +42,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         
         var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
-        var horizontalScroll = EditorGUILayout.Slider("Horizontal scroll: ", _horizontalScrollPosition, 0f, 1f);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
 //            VerticalGroupTest();
@@ -56,7 +55,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             VerticalScrollGroupTest();
 //            VerticalScrollGroupChunkLayoutRequestTest();
 //            VerticalScrollGroupHorizontalInternalsTest();
-//            HorizontalScrollGroupTest();
+            HorizontalScrollGroupTest();
 //            HorizontalScrollGroupVerticalInternalsTest();
 //            ScrollGridTest();
 //            VerticalFadeGroupTest();
@@ -65,14 +64,15 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalFadeGroupScrollGridTest();
 //            NestedFadeGroupsTest();
         }
-        
-        DrawLayoutEngineDebugData();
+
+//        EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
+//        EditorGUILayout.LabelField($"Keyboard control id: {EditorGUIUtility.keyboardControl}");
+//        
+//        DrawLayoutEngineDebugData();
 
         if (Event.current.type != EventType.Layout) {
             _verticalElementsCount = verticalCount;
             _horizontalElementsCount = horizontalCount;
-
-            _horizontalScrollPosition = horizontalScroll;
         }
     }
 
@@ -195,7 +195,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void VerticalScrollGroupTest() {
         if (LayoutEngine.BeginVerticalScrollGroup(150, _verticalScrollPosition)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16, 300);
+                var rect = LayoutEngine.RequestLayoutRect(16, 350);
                 if (rect.IsValid()) {
                     EditorGUI.TextField(rect, "");
                 }
@@ -236,11 +236,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void HorizontalScrollGroupTest() {
-        LayoutEngine.BeginHorizontalScrollGroup(EditorGUIUtility.currentViewWidth, _horizontalScrollPosition);
+        int elems = 0;
+        LayoutEngine.BeginHorizontalScrollGroup(350, _horizontalScrollPosition);
         for (int i = 0; i < _horizontalElementsCount; i++) {
             var rect = LayoutEngine.RequestLayoutRect(16, 120);
             if (rect.IsValid()) {
-                ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
+                EditorGUI.TextField(rect, "");
+                elems++;
             }
         }
         _horizontalScrollPosition = LayoutEngine.EndHorizontalScrollGroup();
