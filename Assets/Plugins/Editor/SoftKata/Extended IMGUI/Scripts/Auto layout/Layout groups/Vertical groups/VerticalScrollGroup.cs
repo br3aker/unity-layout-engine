@@ -61,14 +61,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-            protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryY + height < 0 || NextEntryY > _containerHeight) {
-                    return InvalidRect;
-                }
-
-                return new Rect(NextEntryX, NextEntryY, width, height);
-            }
-
             protected override void EndGroupRoutine(EventType currentEventType) {
                 if (!_needsScroll) return;
                 

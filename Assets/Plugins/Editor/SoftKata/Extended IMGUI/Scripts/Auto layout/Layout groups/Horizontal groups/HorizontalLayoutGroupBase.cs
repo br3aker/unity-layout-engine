@@ -11,16 +11,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 ContentOffset += style.contentOffset.x;
             }
 
-            protected override void CalculateLayoutData() {
-                TotalWidth += ContentOffset * (EntriesCount - 1);
-            }
-
             internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
                     TotalWidth += width;
                     TotalHeight = Mathf.Max(TotalHeight, height);
-//                    return InvalidRect;
+                    return InvalidRect;
                     return LayoutDummyRect;
                 }
 
@@ -40,12 +36,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected virtual Rect GetActualRect(float height, float width) {
-                return new Rect(
-                    NextEntryX,
-                    NextEntryY,
-                    width,
-                    height
-                );
+                if (NextEntryX + width < 0 || NextEntryX > FullRect.width) {
+                    return InvalidRect;
+                }
+                
+                return new Rect(NextEntryX, NextEntryY, width, height);
             }
         }
 

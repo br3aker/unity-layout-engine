@@ -48,8 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                TotalHeight += _scrollBarFullHeight + _scrollBarContentOffset; 
-                TotalWidth += ContentOffset * (EntriesCount - 1);
+                TotalHeight += _scrollBarFullHeight + _scrollBarContentOffset;
 
                 if (!_scrollbarPositionedAtBottom) {
                     NextEntryY = _scrollBarContentOffset + _scrollBarFullHeight;
@@ -66,18 +65,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     // probably needs to be renamed
                     TotalWidth = _containerWidth;
                 }
-            }
-
-            protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryX + width < 0 || NextEntryX > TotalWidth) {
-                    return InvalidRect;
-                }
-                return new Rect(
-                    NextEntryX,
-                    NextEntryY,
-                    width,
-                    height
-                );
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {

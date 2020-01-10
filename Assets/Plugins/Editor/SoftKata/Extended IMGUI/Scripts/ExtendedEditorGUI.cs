@@ -38,6 +38,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle VerticalGroup;
             public GUIStyle VerticalFadeGroup;
             public GUIStyle VerticalScrollGroup;
+            public GUIStyle VerticalSeparatorGroup;
             public GUIStyle HorizontalGroup;
             public GUIStyle HorizontalFadeGroup;
             public GUIStyle HorizontalScrollGroup;
@@ -46,6 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 VerticalGroup = skin.GetStyle("Layout group/Vertical group");
                 VerticalFadeGroup = skin.GetStyle("Layout group/Vertical fade group");
                 VerticalScrollGroup = skin.GetStyle("Layout group/Vertical scroll group");
+                VerticalSeparatorGroup = skin.GetStyle("Layout group/Vertical separator group");
                 HorizontalGroup = skin.GetStyle("Layout group/Horizontal group");
                 HorizontalFadeGroup = skin.GetStyle("Layout group/Horizontal fade group");
                 HorizontalScrollGroup = skin.GetStyle("Layout group/Horizontal scroll group");

@@ -13,11 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                if (CurrentEventType == EventType.Layout) {
-                    TotalHeight += ContentOffset * (EntriesCount - 1);
-
-                    TotalHeight *= _faded;
-                }
+                TotalHeight *= _faded;
             }
 
             protected override Rect GetActualRect(float height, float width) {

@@ -52,10 +52,10 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VH_GridGroupTest();
 //            HV_GridGroupTest();
 //            UnityImplementationScrollTest();
-            VerticalScrollGroupTest();
+//            VerticalScrollGroupTest();
 //            VerticalScrollGroupChunkLayoutRequestTest();
 //            VerticalScrollGroupHorizontalInternalsTest();
-            HorizontalScrollGroupTest();
+//            HorizontalScrollGroupTest();
 //            HorizontalScrollGroupVerticalInternalsTest();
 //            ScrollGridTest();
 //            VerticalFadeGroupTest();
@@ -63,6 +63,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalFadeGroupGridTest();
 //            VerticalFadeGroupScrollGridTest();
 //            NestedFadeGroupsTest();
+            VerticalSeparatorGroupTest();
         }
 
 //        EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
@@ -257,22 +258,29 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
     
     private void ScrollGridTest() {
-        var verticalScrollBackup = _verticalScrollPosition;
-        if (LayoutEngine.BeginVerticalScrollGroup(250, _verticalScrollPosition)) {
-            for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalScrollGroup(EditorGUIUtility.currentViewWidth,
-                    _horizontalScrollPosition)) {
-                    for (int j = 0; j < _horizontalElementsCount; j++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, 120);
-                        if (rect.IsValid()) {
-                            EditorGUI.TextField(rect, "");
+        int elems = 0;
+        int validGroups = 0;
+        if (LayoutEngine.BeginVerticalScrollGroup(150, _verticalScrollPosition)) {
+            if (LayoutEngine.BeginHorizontalScrollGroup(EditorGUIUtility.currentViewWidth - 100, _horizontalScrollPosition)) {
+                for (int i = 0; i < _horizontalElementsCount; i++) {
+                    if (LayoutEngine.BeginVerticalGroup()) {
+                        validGroups++;
+                        for (int j = 0; j < _verticalElementsCount; j++) {
+                            var rect = LayoutEngine.RequestLayoutRect(16, 240);
+                            if (rect.IsValid()) {
+                                elems++;
+                                EditorGUI.TextField(rect, "");
+                            }
                         }
                     }
+                    LayoutEngine.EndVerticalGroup();
                 }
-                _horizontalScrollPosition = LayoutEngine.EndHorizontalScrollGroup();
             }
+            _horizontalScrollPosition = LayoutEngine.EndHorizontalScrollGroup();
         }
         _verticalScrollPosition = LayoutEngine.EndVerticalScrollGroup();
+        EditorGUILayout.LabelField($"Rendered controls: {elems}");
+        EditorGUILayout.LabelField($"Valid groups: {validGroups}");
     }
 
     private AnimBool _verticalFaded1;
@@ -343,5 +351,17 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             LayoutEngine.EndVerticalFadeGroup();
         }
         LayoutEngine.EndVerticalFadeGroup();
+    }
+
+    private void VerticalSeparatorGroupTest() {
+        if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                var rect = LayoutEngine.RequestLayoutRect(16,300);
+                if (rect.IsValid()) {
+                    EditorGUI.TextField(rect, "");
+                }
+            }
+        }
+        LayoutEngine.EndVerticalSeparatorGroup();
     }
 }

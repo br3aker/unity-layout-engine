@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal abstract class LayoutGroupBase {
+        internal abstract class  LayoutGroupBase {
             protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroupBase).GetHashCode();
             
             internal LayoutGroupBase Parent { get; }
@@ -32,7 +33,10 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float NextEntryY = 0f;
 
             // padding settings
-            private RectOffset _margins;
+            protected readonly RectOffset Margin;
+            protected readonly RectOffset Padding;
+
+            private readonly Vector2 _contentOffset;
             
             // Debug data
             private int _debugIndentLevel;
@@ -45,7 +49,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 _groupIndex = _groupCount++;
                 
                 // group layout settings
-                _margins = style.margin;
+                Margin = style.margin;
+                Padding = style.padding;
+
+                _contentOffset = style.contentOffset;
 
                 _defaultEntryWidth = EditorGUIUtility.currentViewWidth;
                 
@@ -59,9 +66,18 @@ namespace SoftKata.ExtendedEditorGUI {
                 _childrenCount = _groupCount - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
+                    TotalHeight += 
+                        Margin.vertical
+                        + Padding.vertical
+                        + _contentOffset.y * (EntriesCount - 1);
+                    
+                    TotalWidth += 
+                        Margin.horizontal
+                        + Padding.horizontal
+                        + _contentOffset.x * (EntriesCount - 1);
+                    
                     CalculateLayoutData();
-                    TotalHeight += _margins.vertical;
-                    TotalWidth += _margins.horizontal;
+                    
                     FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight, TotalWidth);
                 }
             }
@@ -74,16 +90,16 @@ namespace SoftKata.ExtendedEditorGUI {
                     if (IsGroupValid) {
 //                        EditorGUI.DrawRect(FullRect, Color.red);
                         
-                        FullRect = _margins.Remove(FullRect);
+                        FullRect = Margin.Remove(FullRect);
                         GUI.BeginClip(FullRect);
-                        FullRect.y = 0;
-                        FullRect.x = 0;
+                        NextEntryX += Padding.left;
+                        NextEntryY += Padding.top;
                         
-//                        var color = Color.cyan;
-//                        color.a = 100f / 255;
-//                        EditorGUI.DrawRect(FullRect, color);
+//                        FullRect.y = 0;
+//                        FullRect.x = 0;
+//                        EditorGUI.DrawRect(FullRect, Color.cyan);
 //                        EditorGUI.LabelField(FullRect, FullRect.ToString());
-                        
+
                         return;
                     }
                 }
@@ -96,7 +112,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
 
-            protected abstract void CalculateLayoutData();
+            protected virtual void CalculateLayoutData() { }
 
             internal Rect GetRect(float height) {
                 return GetRect(height, _defaultEntryWidth);
@@ -124,7 +140,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryX = 0;
                 NextEntryY = 0;
             }
-
+            
             internal void RegisterDebugData() {
                 string tabSpacing = new string('\t', _debugIndentLevel);
                 string childrenCount = _childrenCount > 0 ? $" | Children count: {_childrenCount}" : "";
