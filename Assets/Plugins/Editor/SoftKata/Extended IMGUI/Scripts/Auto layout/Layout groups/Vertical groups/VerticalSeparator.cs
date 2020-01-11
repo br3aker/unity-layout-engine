@@ -27,10 +27,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorRect = new Rect(
-                    0, 0,
-                    _separatorWidth, TotalHeight
-                );
+                var separatorRect = new Rect(0, 0, _separatorWidth, TotalHeight);
                 
                 EditorGUI.DrawRect(separatorRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
@@ -60,5 +57,14 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void EndVerticalSeparatorGroup() {
             EndLayoutGroup();
         }
+
+//        public static void DrawSeparatorForCurrentGroup(GUIStyle style) {
+//            if (Event.current.type != EventType.Repaint) return;
+//            
+//        }
+//
+//        public static void DrawSeparatorForCurrentGroup() {
+//            DrawSeparatorForCurrentGroup(ExtendedEditorGUI.Resources.LayoutGroup.VerticalSeparatorGroup);
+//        } 
     }
 }

@@ -63,13 +63,14 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalFadeGroupGridTest();
 //            VerticalFadeGroupScrollGridTest();
 //            NestedFadeGroupsTest();
-            VerticalSeparatorGroupTest();
+//            VerticalSeparatorGroupTest();
+            VerticalHierarchyGroupTest();
         }
 
-//        EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
-//        EditorGUILayout.LabelField($"Keyboard control id: {EditorGUIUtility.keyboardControl}");
-//        
-//        DrawLayoutEngineDebugData();
+        EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
+        EditorGUILayout.LabelField($"Keyboard control id: {EditorGUIUtility.keyboardControl}");
+        
+        DrawLayoutEngineDebugData();
 
         if (Event.current.type != EventType.Layout) {
             _verticalElementsCount = verticalCount;
@@ -363,5 +364,36 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
         }
         LayoutEngine.EndVerticalSeparatorGroup();
+    }
+    private void VerticalHierarchyGroupTest() {
+        _verticalFaded1.target = EditorGUI.Foldout(LayoutEngine.RequestLayoutRect(16), _verticalFaded1.target, "Hierarchy group", true);
+        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
+            
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                var rect = LayoutEngine.RequestLayoutRect(16, 300);
+                if (rect.IsValid()) {
+                    EditorGUI.TextField(rect, "");
+                }
+            }
+            
+            _verticalFaded2.target = EditorGUI.Foldout(LayoutEngine.RequestLayoutRect(16), _verticalFaded2.target, "Nested fade group", true);
+            if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded)) {
+                if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+                    EditorGUI.LabelField(LayoutEngine.RequestLayoutRect(16), "Double nested label");
+                    EditorGUI.LabelField(LayoutEngine.RequestLayoutRect(16), "Double nested label");
+                    EditorGUI.LabelField(LayoutEngine.RequestLayoutRect(16), "Double nested label");
+                }
+                LayoutEngine.EndVerticalHierarchyGroup();
+            }
+            LayoutEngine.EndVerticalFadeGroup();
+                
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                var rect = LayoutEngine.RequestLayoutRect(16, 300);
+                if (rect.IsValid()) {
+                    EditorGUI.TextField(rect, "");
+                }
+            }
+        }
+        LayoutEngine.EndVerticalFadeGroup();
     }
 }

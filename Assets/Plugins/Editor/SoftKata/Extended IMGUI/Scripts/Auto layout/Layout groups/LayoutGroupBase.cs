@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal abstract class  LayoutGroupBase {
+        internal abstract class LayoutGroupBase {
             protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroupBase).GetHashCode();
             
             internal LayoutGroupBase Parent { get; }
@@ -46,7 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 Parent = _topGroup;
 
                 // Child groups indexing
-                _groupIndex = _groupCount++;
+                _groupIndex = SubscribedForLayout.Count;
                 
                 // group layout settings
                 Margin = style.margin;
@@ -63,7 +64,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal void RegisterLayoutRequest() {
                 _globalIndentLevel--;
                 
-                _childrenCount = _groupCount - _groupIndex - 1;
+                _childrenCount = SubscribedForLayout.Count - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
                     TotalHeight += 
@@ -118,15 +119,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 return GetRect(height, _defaultEntryWidth);
             }
             internal abstract Rect GetRect(float height, float width);
+
             internal abstract void RegisterRectArray(float elementHeight, float elementWidth, int count);
 
+            
             internal void EndGroup(EventType currentEventType) {
                 if (IsGroupValid) {
                     EndGroupRoutine(currentEventType);
                     GUI.EndClip();
                 }
             }
-
             protected virtual void EndGroupRoutine(EventType currentEventType) { }
 
             internal void ResetGroup() {
@@ -142,13 +144,13 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             internal void RegisterDebugData() {
-                string tabSpacing = new string('\t', _debugIndentLevel);
+                string tabSpacing = new string('\t', _groupIndex);
                 string childrenCount = _childrenCount > 0 ? $" | Children count: {_childrenCount}" : "";
                 string data = $"{tabSpacing}{GetType().Name}{childrenCount}";
                 _debugDataList.Add(
                     new LayoutDebugData {
                         IsValid = IsGroupValid,
-                        Data = data 
+                        Data = data
                     }
                 );
             }

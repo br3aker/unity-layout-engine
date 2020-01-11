@@ -15,18 +15,8 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void CalculateLayoutData() {
                 TotalHeight *= _faded;
             }
-
-            protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryY > TotalHeight) {
-                    return InvalidRect;
-                }
-                return new Rect(
-                    NextEntryX,
-                    NextEntryY,
-                    width,
-                    height
-                );
-            }
+            
+            
         }
         
         public static bool BeginVerticalFadeGroup(float faded, GUIStyle style) {

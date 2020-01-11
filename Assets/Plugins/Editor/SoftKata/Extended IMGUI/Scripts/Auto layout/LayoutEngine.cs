@@ -57,7 +57,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
 
         public static void ScrapGroups(int count) {
-            _groupCount -= count;
+//            _groupCount -= count;
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }
