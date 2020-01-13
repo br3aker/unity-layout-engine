@@ -5,17 +5,15 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class VerticalLayoutGroupBase : LayoutGroupBase {
-            protected float ContentOffset;
-
-            public VerticalLayoutGroupBase(GUIStyle style) : base(style) {
-                ContentOffset = style.contentOffset.y;
-            }
+            public VerticalLayoutGroupBase(GUIStyle style) : this(EditorGUIUtility.currentViewWidth, style) { }
+            
+            public VerticalLayoutGroupBase(float defaultEntryWidth, GUIStyle style) : base(defaultEntryWidth, style) { }
 
             internal sealed override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
-                    TotalHeight += height;
-                    TotalWidth = Mathf.Max(TotalWidth, width);
+                    TotalContainerHeight += height;
+                    TotalContainerWidth = Mathf.Max(TotalContainerWidth, width);
                     return InvalidRect;
                     return LayoutDummyRect;
                 }
@@ -26,14 +24,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 
                 var entryRect = GetActualRect(height, width);
-                NextEntryY += height + ContentOffset;
+                NextEntryY += height + ContentOffset.y;
                 return entryRect;
             }
 
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
                 EntriesCount += count;
-                TotalHeight += elementHeight * count;
-                TotalWidth = Mathf.Max(TotalWidth, elementWidth);
+                TotalContainerHeight += elementHeight * count;
+                TotalContainerWidth = Mathf.Max(TotalContainerWidth, elementWidth);
             }
 
             protected virtual Rect GetActualRect(float height, float width) {

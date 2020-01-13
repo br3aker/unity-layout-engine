@@ -45,19 +45,19 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                TotalHeight += ContentOffset * (EntriesCount - 1);
-                TotalWidth += _scrollBarFullWidth + _scrollBarContentOffset;
+                TotalContainerHeight += ContentOffset.y * (EntriesCount - 1);
+                TotalContainerWidth += _scrollBarFullWidth + _scrollBarContentOffset;
 
-                if (TotalHeight > _containerHeight) {
+                if (TotalContainerHeight > _containerHeight) {
                     _needsScroll = true;
-                    NextEntryY = Mathf.Lerp(0f, _containerHeight - TotalHeight, ScrollPos);
+                    NextEntryY = Mathf.Lerp(0f, _containerHeight - TotalContainerHeight, ScrollPos);
 
-                    float containerToContentHeightRatio = _containerHeight / TotalHeight;
+                    float containerToContentHeightRatio = _containerHeight / TotalContainerHeight;
                     _scrollBarHeight = Mathf.Max(_containerHeight * containerToContentHeightRatio, _scrollBarMinimalHeight);
                     
                     // this action is not very clear, TotalHeight is used at layout entries data registration
                     // probably needs to be renamed
-                    TotalHeight = _containerHeight;
+                    TotalContainerHeight = _containerHeight;
                 }
             }
 

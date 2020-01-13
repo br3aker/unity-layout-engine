@@ -43,6 +43,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle HorizontalGroup;
             public GUIStyle HorizontalFadeGroup;
             public GUIStyle HorizontalScrollGroup;
+            public GUIStyle HorizontalRestrictedGroup;
 
             public LayoutGroupData(GUISkin skin) {
                 VerticalGroup = skin.GetStyle("Layout group/Vertical group");
@@ -53,6 +54,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 HorizontalGroup = skin.GetStyle("Layout group/Horizontal group");
                 HorizontalFadeGroup = skin.GetStyle("Layout group/Horizontal fade group");
                 HorizontalScrollGroup = skin.GetStyle("Layout group/Horizontal scroll group");
+                HorizontalRestrictedGroup = skin.GetStyle("Layout group/Horizontal restricted group");
             }
         }
         internal struct ToggleData {

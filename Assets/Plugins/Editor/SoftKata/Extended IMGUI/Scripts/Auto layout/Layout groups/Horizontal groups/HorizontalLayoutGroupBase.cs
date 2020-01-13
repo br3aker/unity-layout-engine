@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,17 +6,15 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class HorizontalLayoutGroupBase : LayoutGroupBase {
-            protected float ContentOffset;
-
-            public HorizontalLayoutGroupBase(GUIStyle style) : base(style) {
-                ContentOffset += style.contentOffset.x;
-            }
+            public HorizontalLayoutGroupBase(GUIStyle style) : this(EditorGUIUtility.currentViewWidth, style) { }
+            
+            public HorizontalLayoutGroupBase(float defaultEntryWidth, GUIStyle style) : base(defaultEntryWidth, style) {}
 
             internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
-                    TotalWidth += width;
-                    TotalHeight = Mathf.Max(TotalHeight, height);
+                    TotalContainerWidth += width;
+                    TotalContainerHeight = Mathf.Max(TotalContainerHeight, height);
                     return InvalidRect;
                     return LayoutDummyRect;
                 }
@@ -25,14 +24,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 var entryRect = GetActualRect(height, width);
-                NextEntryX += width + ContentOffset;
+                NextEntryX += width + ContentOffset.x;
                 return entryRect;
             }
             
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
                 EntriesCount += count;
-                TotalHeight = Mathf.Max(TotalHeight, elementHeight);
-                TotalWidth += elementWidth * count;
+                TotalContainerHeight = Mathf.Max(TotalContainerHeight, elementHeight);
+                TotalContainerWidth += elementWidth * count;
             }
 
             protected virtual Rect GetActualRect(float height, float width) {

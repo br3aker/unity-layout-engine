@@ -19,7 +19,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             protected override void CalculateLayoutData() {
-                TotalWidth += _separatorWidth;
+                TotalContainerWidth += _separatorWidth;
                 NextEntryX += _separatorWidth;
             }
 
@@ -27,7 +27,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorRect = new Rect(0, 0, _separatorWidth, TotalHeight);
+                var separatorRect = new Rect(0, 0, _separatorWidth, TotalContainerHeight);
                 
                 EditorGUI.DrawRect(separatorRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 

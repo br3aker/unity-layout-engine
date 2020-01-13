@@ -18,13 +18,13 @@ namespace SoftKata.ExtendedEditorGUI {
             protected EventType CurrentEventType = EventType.Layout;
             
             // group layouting data
-            protected float TotalHeight;
-            protected float TotalWidth;
+            protected float TotalContainerHeight;
+            protected float TotalContainerWidth;
             
             protected int EntriesCount;
             internal bool IsGroupValid = true;
 
-            private float _defaultEntryWidth;
+            private readonly float _defaultEntryWidth;
 
             // total rect of the group
             internal Rect FullRect;
@@ -37,13 +37,13 @@ namespace SoftKata.ExtendedEditorGUI {
             protected readonly RectOffset Margin;
             protected readonly RectOffset Padding;
 
-            private readonly Vector2 _contentOffset;
+            protected readonly Vector2 ContentOffset;
             
             // Debug data
             private int _debugIndentLevel;
             
 
-            protected LayoutGroupBase(GUIStyle style) {
+            protected LayoutGroupBase(float defaultEntryWidth, GUIStyle style) {
                 Parent = _topGroup;
 
                 // Child groups indexing
@@ -53,9 +53,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 Margin = style.margin;
                 Padding = style.padding;
 
-                _contentOffset = style.contentOffset;
+                ContentOffset = style.contentOffset;
 
-                _defaultEntryWidth = EditorGUIUtility.currentViewWidth;
+                _defaultEntryWidth = defaultEntryWidth;
                 
                 // Debug data
                 _debugIndentLevel = _globalIndentLevel++;
@@ -67,38 +67,38 @@ namespace SoftKata.ExtendedEditorGUI {
                 _childrenCount = SubscribedForLayout.Count - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
-                    TotalHeight += 
+                    TotalContainerHeight += 
                         Margin.vertical
                         + Padding.vertical
-                        + _contentOffset.y * (EntriesCount - 1);
+                        + ContentOffset.y * (EntriesCount - 1);
                     
-                    TotalWidth += 
+                    TotalContainerWidth += 
                         Margin.horizontal
                         + Padding.horizontal
-                        + _contentOffset.x * (EntriesCount - 1);
+                        + ContentOffset.x * (EntriesCount - 1);
                     
                     CalculateLayoutData();
                     
-                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight, TotalWidth);
+                    FullRect = Parent?.GetRect(TotalContainerHeight, TotalContainerWidth) ?? LayoutEngine.RequestRectRaw(TotalContainerHeight, TotalContainerWidth);
                 }
             }
 
             internal void RetrieveLayoutData(EventType currentEventType) {
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    FullRect = Parent?.GetRect(TotalHeight, TotalWidth) ?? LayoutEngine.RequestRectRaw(TotalHeight, TotalWidth);
+                    FullRect = Parent?.GetRect(TotalContainerHeight, TotalContainerWidth) ?? LayoutEngine.RequestRectRaw(TotalContainerHeight, TotalContainerWidth);
                     IsGroupValid = FullRect.IsValid();
                     if (IsGroupValid) {
-//                        EditorGUI.DrawRect(FullRect, Color.red);
+                        EditorGUI.DrawRect(FullRect, Color.red);
                         
                         FullRect = Margin.Remove(FullRect);
                         GUI.BeginClip(FullRect);
                         NextEntryX += Padding.left;
                         NextEntryY += Padding.top;
                         
-//                        FullRect.y = 0;
-//                        FullRect.x = 0;
-//                        EditorGUI.DrawRect(FullRect, Color.cyan);
+                        FullRect.y = 0;
+                        FullRect.x = 0;
+                        EditorGUI.DrawRect(FullRect, Color.cyan);
 //                        EditorGUI.LabelField(FullRect, FullRect.ToString());
 
                         return;
@@ -136,8 +136,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 IsGroupValid = true;
 
-                TotalHeight = 0;
-                TotalWidth = 0;
+                TotalContainerHeight = 0;
+                TotalContainerWidth = 0;
                 
                 NextEntryX = 0;
                 NextEntryY = 0;

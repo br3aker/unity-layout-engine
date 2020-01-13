@@ -26,7 +26,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             protected override void CalculateLayoutData() {
-                TotalWidth += _connectionLineWidth;
+                TotalContainerWidth += _connectionLineWidth;
                 NextEntryX += _connectionLineWidth;
             }
 
@@ -54,7 +54,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 var verticalLineRect = new Rect(
                     0, 0,
-                    _connectionLineWidth, TotalHeight - _lastEntryHeight / 2
+                    _connectionLineWidth, TotalContainerHeight - _lastEntryHeight / 2
                 );
                 
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);

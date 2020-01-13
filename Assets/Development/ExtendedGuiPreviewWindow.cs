@@ -64,7 +64,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalFadeGroupScrollGridTest();
 //            NestedFadeGroupsTest();
 //            VerticalSeparatorGroupTest();
-            VerticalHierarchyGroupTest();
+//            VerticalHierarchyGroupTest();
+            FixedHorizontalGroupTest();
         }
 
         EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
@@ -325,6 +326,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void NestedFadeGroupsTest() {
         _verticalFaded1.target = EditorGUI.Foldout(LayoutEngine.RequestLayoutRect(16), _verticalFaded1.target, "Vertical foldout example", true);
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
+            HorizontalGroupTest();
             var foldoutRect1 = LayoutEngine.RequestLayoutRect(16);
             if (foldoutRect1.IsValid()) {
                 _verticalFaded2.target = EditorGUI.Foldout(foldoutRect1, _verticalFaded2.target, "Oh my", true);
@@ -375,8 +377,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     EditorGUI.TextField(rect, "");
                 }
             }
-            
-            _verticalFaded2.target = EditorGUI.Foldout(LayoutEngine.RequestLayoutRect(16), _verticalFaded2.target, "Nested fade group", true);
+
+            var nestedFoldoutRect = LayoutEngine.RequestLayoutRect(16);
+            if (nestedFoldoutRect.IsValid()) {
+                _verticalFaded2.target = EditorGUI.Foldout(nestedFoldoutRect, _verticalFaded2.target, "Nested fade group", true);
+            }
             if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded)) {
                 if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                     EditorGUI.LabelField(LayoutEngine.RequestLayoutRect(16), "Double nested label");
@@ -395,5 +400,23 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
         }
         LayoutEngine.EndVerticalFadeGroup();
+    }
+
+    private void FixedHorizontalGroupTest() {
+        if (LayoutEngine.BeginRestrictedHorizontalGroup(300)) {
+            var rect1 = LayoutEngine.RequestLayoutRect(16);
+            if (rect1.IsValid()) {
+                EditorGUI.TextField(rect1, rect1.width.ToString());
+            }
+            var rect2 = LayoutEngine.RequestLayoutRect(16, 100);
+            if (rect2.IsValid()) {
+                EditorGUI.TextField(rect2, rect2.width.ToString());
+            }
+            var rect3 = LayoutEngine.RequestLayoutRect(16);
+            if (rect3.IsValid()) {
+                EditorGUI.TextField(rect3, rect3.width.ToString());
+            }
+        }
+        LayoutEngine.EndRestrictedHorizontalGroup();
     }
 }
