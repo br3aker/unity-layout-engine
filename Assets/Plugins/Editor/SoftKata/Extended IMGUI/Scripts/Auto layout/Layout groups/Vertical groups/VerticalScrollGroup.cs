@@ -15,7 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _groupId;
             
             // Scrollbar settings
-            private float _scrollBarContentOffset;
+            private float _scrollBarPositionOffset;
             
             private float _scrollBarFullWidth;
             private float _scrollBarMinimizedWidthDelta;
@@ -26,13 +26,9 @@ namespace SoftKata.ExtendedEditorGUI {
             private Color _backgroundColor;
             private Color _scrollbarColor;
 
-            public VerticalScrollGroup(float height, float scrollPos, GUIStyle style) : base(style) {
+            public VerticalScrollGroup(bool discardMargin, float height, float scrollPos, GUIStyle style) : base(discardMargin, style) {
                 _containerHeight = height;
                 ScrollPos = scrollPos;
-
-                _groupId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-                
-                _scrollBarContentOffset = style.contentOffset.x;
                 
                 _scrollBarFullWidth = style.border.right;
                 _scrollBarMinimizedWidthDelta = _scrollBarFullWidth - style.border.left;
@@ -42,11 +38,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Colors
                 _backgroundColor = style.normal.textColor;
                 _scrollbarColor = style.onNormal.textColor;
+
+
+                DefaultEntryWidth -= _scrollBarFullWidth;
+                
+                _groupId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
             protected override void CalculateLayoutData() {
-                TotalContainerHeight += ContentOffset.y * (EntriesCount - 1);
-                TotalContainerWidth += _scrollBarFullWidth + _scrollBarContentOffset;
+                TotalContainerWidth += _scrollBarFullWidth + _scrollBarPositionOffset;
 
                 if (TotalContainerHeight > _containerHeight) {
                     _needsScroll = true;
@@ -64,17 +64,17 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void EndGroupRoutine(EventType currentEventType) {
                 if (!_needsScroll) return;
                 
-                float sliderHorizontalPosition = FullRect.width - _scrollBarFullWidth;
+                float scrollbarZoneHorizontalPosition = FullRect.width - _scrollBarFullWidth;
 
                 var scrollbarRect = new Rect(
-                    sliderHorizontalPosition,
+                    scrollbarZoneHorizontalPosition,
                     (FullRect.height - _scrollBarHeight) * ScrollPos,
                     _scrollBarFullWidth,
                     _scrollBarHeight
                 );
 
                 var scrollbarBackgroundRect = new Rect(
-                    sliderHorizontalPosition,
+                    scrollbarZoneHorizontalPosition,
                     FullRect.y,
                     _scrollBarFullWidth,
                     FullRect.height
@@ -145,25 +145,24 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginVerticalScrollGroup(float height, float scrollValue, GUIStyle style) {
+        public static bool BeginVerticalScrollGroup(bool discardMarginAndPadding, float height, float scrollValue, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalScrollGroup(height, scrollValue, style);
+                layoutGroup = new VerticalScrollGroup(discardMarginAndPadding, height, scrollValue, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
-                layoutGroup.RegisterDebugData();
             }
             
             _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginVerticalScrollGroup(float height, float scrollValue) {
-            return BeginVerticalScrollGroup(height, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.VerticalScrollGroup);
+        public static bool BeginVerticalScrollGroup(float height, float scrollValue, bool discardMarginAndPadding = false) {
+            return BeginVerticalScrollGroup(discardMarginAndPadding, height, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.VerticalScrollGroup);
         }
 
         public static float EndVerticalScrollGroup() {

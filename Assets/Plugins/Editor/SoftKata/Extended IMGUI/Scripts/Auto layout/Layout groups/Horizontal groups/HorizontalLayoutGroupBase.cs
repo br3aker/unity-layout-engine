@@ -6,21 +6,24 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class HorizontalLayoutGroupBase : LayoutGroupBase {
-            public HorizontalLayoutGroupBase(GUIStyle style) : this(EditorGUIUtility.currentViewWidth, style) { }
-            
-            public HorizontalLayoutGroupBase(float defaultEntryWidth, GUIStyle style) : base(defaultEntryWidth, style) {}
+            public HorizontalLayoutGroupBase(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
             internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
                     TotalContainerWidth += width;
                     TotalContainerHeight = Mathf.Max(TotalContainerHeight, height);
+                    
                     return InvalidRect;
                     return LayoutDummyRect;
                 }
 
                 if (!IsGroupValid) {
                     return InvalidRect;
+                }
+                
+                if (width < 0f) {
+                    width = DefaultEntryWidth;
                 }
 
                 var entryRect = GetActualRect(height, width);
@@ -34,7 +37,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalContainerWidth += elementWidth * count;
             }
 
-            protected virtual Rect GetActualRect(float height, float width) {
+            protected Rect GetActualRect(float height, float width) {
                 if (NextEntryX + width < 0 || NextEntryX > FullRect.width) {
                     return InvalidRect;
                 }
@@ -43,25 +46,24 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginHorizontalGroup(GUIStyle style) {
+        public static bool BeginHorizontalGroup(bool discardMarginAndPadding, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new HorizontalLayoutGroupBase(style);
+                layoutGroup = new HorizontalLayoutGroupBase(discardMarginAndPadding, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
-                layoutGroup.RegisterDebugData();
             }
             
             _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginHorizontalGroup() {
-            return BeginHorizontalGroup(ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+        public static bool BeginHorizontalGroup(bool discardMarginAndPadding = false) {
+            return BeginHorizontalGroup(discardMarginAndPadding, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
         }
 
         public static void EndHorizontalGroup() {

@@ -13,9 +13,6 @@ namespace SoftKata.ExtendedEditorGUI {
         private static LayoutGroupBase _topGroup;
 
         private static int _groupCount = 0;
-        
-        // TODO [remove]: this is only used for debug 
-        private static int _globalIndentLevel = 0;
 
         public struct LayoutDebugData {
             public string Data;
@@ -43,10 +40,15 @@ namespace SoftKata.ExtendedEditorGUI {
             return RequestLayoutRect(style.GetContentHeight());
         }
 
-        public static void RegisterElementsArray(float elementHeight, int count) {
-            RegisterElementsArray(elementHeight, EditorGUIUtility.currentViewWidth, count);
+        public static void RegisterElementsArray(int count, float elementHeight) {
+            if (_topGroup != null) {
+                _topGroup.RegisterRectArray(elementHeight, count);
+            }
+            else {
+                RequestRectRaw(elementHeight * count);
+            }
         }
-        public static void RegisterElementsArray(float elementHeight, float elementWidth, int count) {
+        public static void RegisterElementsArray(int count, float elementHeight, float elementWidth) {
             if (_topGroup != null) {
                 _topGroup.RegisterRectArray(elementHeight, elementWidth, count);
             }
@@ -57,7 +59,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
 
         public static void ScrapGroups(int count) {
-//            _groupCount -= count;
+            _groupCount -= count;
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }

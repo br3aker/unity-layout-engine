@@ -28,7 +28,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private bool _scrollbarPositionedAtBottom;
 
-            public HorizontalScrollGroup(float width, float scrollPos, GUIStyle style) : base(style) {
+            public HorizontalScrollGroup(bool discardMargin, float width, float scrollPos, GUIStyle style) : base(discardMargin, style) {
                 _containerWidth = width;
                 ScrollPos = scrollPos;
                 
@@ -53,7 +53,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!_scrollbarPositionedAtBottom) {
                     NextEntryY = _scrollBarContentOffset + _scrollBarFullHeight;
                 }
-                
+                ;
                 if (TotalContainerWidth > _containerWidth) {
                     _needsScroll = true;
                     NextEntryX = Mathf.Lerp(0f, _containerWidth - TotalContainerWidth, ScrollPos);
@@ -81,14 +81,14 @@ namespace SoftKata.ExtendedEditorGUI {
                     _scrollBarWidth,
                     _scrollBarFullHeight
                 );
-                    
+
                 var scrollbarBackgroundRect = new Rect(
                     0f,
                     scrollbarVerticalPosition,
                     FullRect.width,
                     _scrollBarFullHeight
                 );
-                
+
                 switch (currentEventType) {
                     case EventType.MouseDown:
                         if (GUIUtility.hotControl == 0) {
@@ -159,25 +159,24 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginHorizontalScrollGroup(float width, float scrollValue, GUIStyle style) {
+        public static bool BeginHorizontalScrollGroup(bool discardMarginAndPadding, float width, float scrollValue, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new HorizontalScrollGroup(width, scrollValue, style);
+                layoutGroup = new HorizontalScrollGroup(discardMarginAndPadding, width, scrollValue, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
-                layoutGroup.RegisterDebugData();
             }
             
             _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginHorizontalScrollGroup(float width, float scrollValue) {
-            return BeginHorizontalScrollGroup(width, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalScrollGroup);
+        public static bool BeginHorizontalScrollGroup(float width, float scrollValue, bool discardMarginAndPadding = false) {
+            return BeginHorizontalScrollGroup(discardMarginAndPadding, width, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalScrollGroup);
         }
 
         public static float EndHorizontalScrollGroup() {

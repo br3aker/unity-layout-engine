@@ -1525,10 +1525,10 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Margin:
-      m_Left: 16
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
     m_Padding:
       m_Left: 0
       m_Right: 0
@@ -1597,7 +1597,7 @@ MonoBehaviour:
       m_Bottom: 20
     m_Padding:
       m_Left: 0
-      m_Right: 0
+      m_Right: 12
       m_Top: 0
       m_Bottom: 0
     m_Overflow:
@@ -1613,7 +1613,7 @@ MonoBehaviour:
     m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 6, y: 4}
+    m_ContentOffset: {x: 0, y: 4}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0
@@ -1719,7 +1719,7 @@ MonoBehaviour:
       m_TextColor: {r: 0, g: 0, b: 0, a: 0}
     m_Border:
       m_Left: 1
-      m_Right: 4
+      m_Right: -4
       m_Top: 0
       m_Bottom: 0
     m_Margin:
@@ -1917,9 +1917,9 @@ MonoBehaviour:
       m_TextColor: {r: 0, g: 0, b: 0, a: 0}
     m_Border:
       m_Left: 0
-      m_Right: 0
+      m_Right: 20
       m_Top: 6
-      m_Bottom: 2
+      m_Bottom: 1
     m_Margin:
       m_Left: 20
       m_Right: 20
@@ -1928,7 +1928,7 @@ MonoBehaviour:
     m_Padding:
       m_Left: 0
       m_Right: 0
-      m_Top: 0
+      m_Top: 12
       m_Bottom: 0
     m_Overflow:
       m_Left: 0
@@ -1943,7 +1943,7 @@ MonoBehaviour:
     m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 4, y: 6}
+    m_ContentOffset: {x: 4, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0
@@ -2009,7 +2009,7 @@ MonoBehaviour:
     m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 4, y: 0}
+    m_ContentOffset: {x: 40, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0

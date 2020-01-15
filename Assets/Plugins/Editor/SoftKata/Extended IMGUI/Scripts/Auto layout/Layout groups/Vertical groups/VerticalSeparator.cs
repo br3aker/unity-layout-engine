@@ -11,11 +11,13 @@ namespace SoftKata.ExtendedEditorGUI {
             private Color _activeSeparatorColor;
             private Color _disabledSeparatorColor;
 
-            public VerticalSeparator(GUIStyle style) : base(style) {
+            public VerticalSeparator(GUIStyle style) : base(false, style) {
                 _separatorWidth = style.border.left;
                 
                 _activeSeparatorColor = style.onNormal.textColor;
                 _disabledSeparatorColor = style.normal.textColor;
+
+                DefaultEntryWidth -= _separatorWidth;
             }
             
             protected override void CalculateLayoutData() {
@@ -27,9 +29,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorRect = new Rect(0, 0, _separatorWidth, TotalContainerHeight);
-                
-                EditorGUI.DrawRect(separatorRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
+                var separatorLineRect = new Rect(0, 0, _separatorWidth, TotalContainerHeight);
+                EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
         }
         
@@ -43,7 +44,6 @@ namespace SoftKata.ExtendedEditorGUI {
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
-                layoutGroup.RegisterDebugData();
             }
             
             _topGroup = layoutGroup;
@@ -57,14 +57,5 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void EndVerticalSeparatorGroup() {
             EndLayoutGroup();
         }
-
-//        public static void DrawSeparatorForCurrentGroup(GUIStyle style) {
-//            if (Event.current.type != EventType.Repaint) return;
-//            
-//        }
-//
-//        public static void DrawSeparatorForCurrentGroup() {
-//            DrawSeparatorForCurrentGroup(ExtendedEditorGUI.Resources.LayoutGroup.VerticalSeparatorGroup);
-//        } 
     }
 }

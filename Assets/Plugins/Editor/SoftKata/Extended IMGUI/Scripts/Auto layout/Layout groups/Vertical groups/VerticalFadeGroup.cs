@@ -8,36 +8,33 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class VerticalFadeGroup : VerticalLayoutGroupBase {
             private float _faded;
 
-            public VerticalFadeGroup(float faded, GUIStyle style) : base(style) {
+            public VerticalFadeGroup(bool discardMargin, float faded, GUIStyle style) : base(discardMargin, style) {
                 _faded = faded;
             }
 
             protected override void CalculateLayoutData() {
                 TotalContainerHeight *= _faded;
             }
-            
-            
         }
         
-        public static bool BeginVerticalFadeGroup(float faded, GUIStyle style) {
+        public static bool BeginVerticalFadeGroup(bool discardMarginAndPadding, float faded, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalFadeGroup(faded, style);
+                layoutGroup = new VerticalFadeGroup(discardMarginAndPadding, faded, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
                 layoutGroup.RetrieveLayoutData(eventType);
-                layoutGroup.RegisterDebugData();
             }
             
             _topGroup = layoutGroup;
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginVerticalFadeGroup(float faded) {
-            return BeginVerticalFadeGroup(faded, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
+        public static bool BeginVerticalFadeGroup(float faded, bool discardMarginAndPadding = false) {
+            return BeginVerticalFadeGroup(discardMarginAndPadding, faded, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
         }
 
         public static void EndVerticalFadeGroup() {
