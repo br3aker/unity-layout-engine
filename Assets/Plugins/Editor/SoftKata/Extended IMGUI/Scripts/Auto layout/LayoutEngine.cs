@@ -56,7 +56,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 RequestRectRaw(elementHeight * count);
             }
         }
-        
 
         public static void ScrapGroups(int count) {
             _groupCount -= count;

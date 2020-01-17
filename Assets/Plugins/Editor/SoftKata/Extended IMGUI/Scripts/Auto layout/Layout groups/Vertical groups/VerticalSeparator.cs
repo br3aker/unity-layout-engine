@@ -17,19 +17,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 _activeSeparatorColor = style.onNormal.textColor;
                 _disabledSeparatorColor = style.normal.textColor;
 
-                DefaultEntryWidth -= _separatorWidth;
+                MaxAllowedWidth -= _separatorWidth;
             }
             
             protected override void CalculateLayoutData() {
-                TotalContainerWidth += _separatorWidth;
-                NextEntryX += _separatorWidth;
+                TotalRequestedWidth += _separatorWidth;
+                NextEntryPosition.x += _separatorWidth;
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorLineRect = new Rect(0, 0, _separatorWidth, TotalContainerHeight);
+                var separatorLineRect = new Rect(0, 0, _separatorWidth, TotalRequestedHeight);
                 EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
         }

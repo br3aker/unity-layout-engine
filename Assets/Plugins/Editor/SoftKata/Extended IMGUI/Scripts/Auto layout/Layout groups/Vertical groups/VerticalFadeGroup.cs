@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class VerticalFadeGroup : VerticalLayoutGroupBase {
+        internal class VerticalFadeGroup : VerticalClippingGroup {
             private float _faded;
 
             public VerticalFadeGroup(bool discardMargin, float faded, GUIStyle style) : base(discardMargin, style) {
@@ -13,7 +13,13 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                TotalContainerHeight *= _faded;
+                TotalRequestedHeight *= _faded;
+                if (Mathf.Approximately(_faded, 0f)) {
+                    IsGroupValid = false;
+                    if (Parent != null) {
+                        Parent.EntriesCount--;
+                    }
+                }
             }
         }
         

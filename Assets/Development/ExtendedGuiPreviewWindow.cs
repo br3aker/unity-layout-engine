@@ -3,6 +3,7 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
+using UnityEngine.Profiling;
 
 public class ExtendedGuiPreviewWindow : EditorWindow
 {
@@ -58,15 +59,17 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            HorizontalScrollGroupTest();
 //            HorizontalScrollGroupVerticalInternalsTest();
 //            ScrollGridTest();
-//            VerticalFadeGroupTest();
+            VerticalFadeGroupTest();
 //            VerticalFadeGroupHorizontalChildGroupTest();
 //            VerticalFadeGroupGridTest();
 //            VerticalFadeGroupScrollGridTest();
 //            NestedFadeGroupsTest();
 //            VerticalSeparatorGroupTest();
 //            VerticalHierarchyGroupTest();
+//            VerticalHierarchyWithSeparatorTest();
 //            FixedHorizontalGroupTest();
-            FixedHorizontalGroupComplexInternalsTest();
+//            FixedHorizontalGroupComplexInternalsTest();
+//            HybridScrollGroupTest();
         }
 
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
@@ -106,7 +109,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     private float _verticalScrollPosition = 0f;
     private float _horizontalScrollPosition = 0f;
-
 
     private void UnityImplementationScrollTest() {
         EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.Height(150));
@@ -154,11 +156,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         }
     }
     private void HorizontalGroupTest() {
-        if (LayoutEngine.BeginHorizontalGroup()) {
+        if (LayoutEngine.BeginHorizontalGroup(false)) {
             for (int i = 0; i < _horizontalElementsCount; i++) {
                 var rect = LayoutEngine.RequestLayoutRect(16, 150);
                 if (rect.IsValid()) {
-                    ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
+                    EditorGUI.TextField(rect, "");
                 }
             }
         }
@@ -383,6 +385,12 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
+    private void VerticalHierarchyWithSeparatorTest() {
+        if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            VerticalHierarchyGroupTest();
+        }
+        LayoutEngine.EndVerticalSeparatorGroup();
+    }
 
     private void FixedHorizontalGroupTest() {
         if (LayoutEngine.BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
@@ -399,22 +407,22 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void FixedHorizontalGroupComplexInternalsTest() {
         if (LayoutEngine.BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
             // Hierarchy
-//            if (LayoutEngine.BeginVerticalGroup(true)) {
-//                var nestedFoldoutRect = LayoutEngine.RequestLayoutRect(16);
-//                if (nestedFoldoutRect.IsValid()) {
-//                    _verticalFaded2.target = EditorGUI.Foldout(nestedFoldoutRect, _verticalFaded2.target, "Nested fade group", true);
-//                }
-//                if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded, true)) {
-//                    if (LayoutEngine.BeginVerticalHierarchyGroup()) {
-//                        for (int i = 0; i < _verticalElementsCount; i++) {
-//                            EditorGUI.TextField(LayoutEngine.RequestLayoutRect(16), "Nested label");
-//                        }
-//                    }
-//                    LayoutEngine.EndVerticalHierarchyGroup();
-//                }
-//                LayoutEngine.EndVerticalFadeGroup();
-//            }
-//            LayoutEngine.EndVerticalGroup();
+            if (LayoutEngine.BeginVerticalGroup(true)) {
+                var nestedFoldoutRect = LayoutEngine.RequestLayoutRect(16);
+                if (nestedFoldoutRect.IsValid()) {
+                    _verticalFaded2.target = EditorGUI.Foldout(nestedFoldoutRect, _verticalFaded2.target, "Nested fade group", true);
+                }
+                if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded, true)) {
+                    if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+                        for (int i = 0; i < _verticalElementsCount; i++) {
+                            EditorGUI.TextField(LayoutEngine.RequestLayoutRect(16), "Nested label");
+                        }
+                    }
+                    LayoutEngine.EndVerticalHierarchyGroup();
+                }
+                LayoutEngine.EndVerticalFadeGroup();
+            }
+            LayoutEngine.EndVerticalGroup();
             
             // Horizontal scroll
             if (LayoutEngine.BeginVerticalGroup(true)) {
@@ -446,5 +454,39 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             _verticalScrollPosition = LayoutEngine.EndVerticalScrollGroup();
         }
         LayoutEngine.EndRestrictedHorizontalGroup();
+    }
+
+    private Vector2 _hybridScrollPos;
+    
+    private void HybridScrollGroupTest() {
+        float horizontal = EditorGUILayout.Slider("Horizontal", _hybridScrollPos.x, 0f, 1f);
+        float vertical = EditorGUILayout.Slider("Vertical", _hybridScrollPos.y, 0f, 1f);
+
+        int counter = 0;
+        if (LayoutEngine.BeginHybridScrollGroup(400, 400, _hybridScrollPos)) {
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                if (LayoutEngine.BeginHorizontalGroup(true)) {
+                    for (int j = 0; j < _horizontalElementsCount; j++) {
+                        var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                        if (rect.IsValid()) {
+                            counter++;
+//                            EditorGUI.TextField(rect, "");
+                            EditorGUI.DrawRect(rect, Color.green);
+                        }
+                    }
+                }
+                LayoutEngine.EndHorizontalGroup();
+            }
+//            var rect = LayoutEngine.RequestLayoutRect(1000, 1000);
+//            EditorGUI.DrawRect(rect, Color.magenta);
+//            EditorGUI.LabelField(rect, rect.ToString());
+        }
+        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+        EditorGUILayout.LabelField($"Validated rects: {counter}");
+
+        if (Event.current.type != EventType.Layout) {
+            _hybridScrollPos.x = horizontal;
+            _hybridScrollPos.y = vertical;
+        }
     }
 }

@@ -5,17 +5,15 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class HorizontalLayoutGroupBase : LayoutGroupBase {
-            public HorizontalLayoutGroupBase(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
+        internal class HorizontalLayoutGroup : LayoutGroupBase {
+            public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-            internal override Rect GetRect(float height, float width) {
+            internal override Rect GetRectInternal(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
-                    TotalContainerWidth += width;
-                    TotalContainerHeight = Mathf.Max(TotalContainerHeight, height);
-                    
+                    TotalRequestedWidth += width;
+                    TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, height);
                     return InvalidRect;
-                    return LayoutDummyRect;
                 }
 
                 if (!IsGroupValid) {
@@ -23,26 +21,26 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 
                 if (width < 0f) {
-                    width = DefaultEntryWidth;
+                    width = MaxAllowedWidth;
                 }
 
                 var entryRect = GetActualRect(height, width);
-                NextEntryX += width + ContentOffset.x;
+                NextEntryPosition.x += width + ContentOffset.x;
                 return entryRect;
             }
             
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
                 EntriesCount += count;
-                TotalContainerHeight = Mathf.Max(TotalContainerHeight, elementHeight);
-                TotalContainerWidth += elementWidth * count;
+                TotalRequestedWidth += elementWidth * count;
+                TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
             }
 
             protected Rect GetActualRect(float height, float width) {
-                if (NextEntryX + width < 0 || NextEntryX > FullRect.width) {
+                if (NextEntryPosition.x + width < FullContainerRect.x || NextEntryPosition.x > FullContainerRect.xMax) {
                     return InvalidRect;
                 }
                 
-                return new Rect(NextEntryX, NextEntryY, width, height);
+                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
             }
         }
 
@@ -50,7 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new HorizontalLayoutGroupBase(discardMarginAndPadding, style);
+                layoutGroup = new HorizontalLayoutGroup(discardMarginAndPadding, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class FlexibleHorizontalLayoutGroup : HorizontalLayoutGroupBase {
+        internal class FlexibleHorizontalLayoutGroup : HorizontalLayoutGroup {
             private float _containerWidth;
             
             private int _fixedEntriesCount;
@@ -16,9 +16,9 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _horizontalContentOffset; 
             
             public FlexibleHorizontalLayoutGroup(bool discardMargin, float width, GUIStyle style) : base(discardMargin, style) {
-                TotalContainerWidth = Mathf.Min(width, DefaultEntryWidth);
-                _containerWidth = TotalContainerWidth;
-                DefaultEntryWidth = -1f;
+//                TotalContainerWidth = Mathf.Min(width, Max);
+                _containerWidth = TotalRequestedWidth;
+                MaxAllowedWidth = -1f;
 
                 
                 _horizontalContentOffset = ContentOffset.x;
@@ -34,17 +34,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 return GetRect(height, -1f);
             }
             
-            internal override Rect GetRect(float height, float width) {
+            internal override Rect GetRectInternal(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     if (width > 0f) {
                         _totalFixedEntriesWidth += width;
                         _fixedEntriesCount++;
                     }
                     EntriesCount++;
-                    TotalContainerHeight = Mathf.Max(TotalContainerHeight, height);
+                    TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, height);
 
                     return InvalidRect;
-                    return LayoutDummyRect;
                 }
 
                 if (!IsGroupValid) {
@@ -53,7 +52,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 var calculatedWidth = width > 0f ? width : _flexibleElementWidth;
                 var entryRect = GetActualRect(height, calculatedWidth);
-                NextEntryX += calculatedWidth + _horizontalContentOffset;
+                NextEntryPosition.x += calculatedWidth + _horizontalContentOffset;
                 return entryRect;
             }
 
@@ -63,7 +62,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     _totalFixedEntriesWidth += elementHeight * count;
                 }
                 EntriesCount += count;
-                TotalContainerHeight = Mathf.Max(TotalContainerHeight, elementHeight);
+                TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
             }
         }
 

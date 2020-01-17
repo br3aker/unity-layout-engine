@@ -18,27 +18,27 @@ namespace SoftKata.ExtendedEditorGUI {
             protected EventType CurrentEventType = EventType.Layout;
             
             // group layouting data
-            protected float TotalContainerHeight = 0f;
-            protected float TotalContainerWidth = 0f;
-            
-            protected int EntriesCount;
+            protected float TotalRequestedHeight = 0f;
+            protected float TotalRequestedWidth = 0f;
+
+            internal int EntriesCount;
             internal bool IsGroupValid = true;
 
-            protected float DefaultEntryWidth;
+            protected float MaxAllowedWidth;
 
             // total rect of the group
-            internal Rect FullRect;
+            internal Rect FullContainerRect;
             
             // entries layout data
-            protected float NextEntryX = 0f;
-            protected float NextEntryY = 0f;
+            protected Vector2 NextEntryPosition;
 
             // padding settings
             protected readonly RectOffset Margin;
+            protected readonly RectOffset Border;
             protected readonly RectOffset Padding;
 
             protected Vector2 ContentOffset;
-            
+
             // Debug data
             private int _debugIndentLevel;
             
@@ -56,11 +56,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 else {
                     Margin = style.margin;
                 }
+                Border = style.border;
                 Padding = style.padding;
 
                 ContentOffset = style.contentOffset;
 
-                DefaultEntryWidth = (Parent?.DefaultEntryWidth ?? EditorGUIUtility.currentViewWidth) - Margin.horizontal - Padding.horizontal;
+                MaxAllowedWidth = (Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth) - Margin.horizontal - Padding.horizontal;
 
                 // Debug data
                 _debugIndentLevel = (Parent?._debugIndentLevel ?? -1) + 1;
@@ -70,42 +71,40 @@ namespace SoftKata.ExtendedEditorGUI {
                 _childrenCount = SubscribedForLayout.Count - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
-                    TotalContainerHeight += 
+                    TotalRequestedHeight += 
                         Margin.vertical
                         + Padding.vertical
                         + ContentOffset.y * (EntriesCount - 1);
 
-                    TotalContainerWidth +=
+                    TotalRequestedWidth +=
                         Margin.horizontal
                         + Padding.horizontal
                         + ContentOffset.x * (EntriesCount - 1);
                     
                     CalculateLayoutData();
                     
-                    FullRect = Parent?.GetRect(TotalContainerHeight, TotalContainerWidth) ?? LayoutEngine.RequestRectRaw(TotalContainerHeight, TotalContainerWidth);
+                    FullContainerRect = Parent?.GetRect(TotalRequestedHeight, TotalRequestedWidth) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
                 }
             }
 
-            internal void RetrieveLayoutData(EventType currentEventType) {
+            internal virtual void RetrieveLayoutData(EventType currentEventType) {
                 //RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    FullRect = Parent?.GetRect(TotalContainerHeight, TotalContainerWidth) ?? LayoutEngine.RequestRectRaw(TotalContainerHeight, TotalContainerWidth);
-                    IsGroupValid = FullRect.IsValid();
-                    if (IsGroupValid) {
-//                        EditorGUI.DrawRect(FullRect, Color.red);
-                        
-                        FullRect = Margin.Remove(FullRect);
-                        GUI.BeginClip(FullRect);
-                        DefaultEntryWidth = FullRect.width - Padding.horizontal;
-                        NextEntryX += Padding.left;
-                        NextEntryY += Padding.top;
-                        
-                        FullRect.y = 0;
-                        FullRect.x = 0;
-//                        EditorGUI.DrawRect(FullRect, Color.cyan);
-//                        EditorGUI.LabelField(FullRect, $"{FullRect.ToString()} | {DefaultEntryWidth}");
+                    FullContainerRect = Parent?.GetRect(TotalRequestedHeight, Mathf.Min(TotalRequestedWidth, MaxAllowedWidth)) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                    IsGroupValid = FullContainerRect.IsValid();
 
+                    if (IsGroupValid) {
+//                        EditorGUI.DrawRect(FullContainerRect, Color.red);
+//                        EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
+                        FullContainerRect = Margin.Remove(FullContainerRect);
+//                        EditorGUI.DrawRect(FullContainerRect, Color.green);
+                        FullContainerRect = Padding.Remove(FullContainerRect);
+//                        EditorGUI.DrawRect(FullContainerRect, Color.cyan);
+                        NextEntryPosition = FullContainerRect.position;
+//                        Debug.Log(NextEntryPosition);
+//                        Debug.Log($"Requested: {TotalRequestedWidth} | Got: {FullContainerRect.width}");
+                        
                         return;
                     }
                 }
@@ -116,41 +115,34 @@ namespace SoftKata.ExtendedEditorGUI {
                 // This would ensure 2 things:
                 // 1. Entries > 0 because this is called after PushLayoutRequest() which checks that
                 // 2. Parent group returned Valid rect
+                if (Parent != null) {
+                    Parent.EntriesCount -= _childrenCount + 1;
+                }
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
 
             protected virtual void CalculateLayoutData() { }
 
             internal virtual Rect GetRect(float height) {
-                return GetRect(height, DefaultEntryWidth);
+                return GetRect(height, MaxAllowedWidth);
             }
-            internal abstract Rect GetRect(float height, float width);
+            internal Rect GetRect(float height, float width) {
+                return GetRectInternal(height, width);
+            }
+            internal abstract Rect GetRectInternal(float height, float width);
 
             internal void RegisterRectArray(float elementHeight, int count) {
-                RegisterRectArray(elementHeight, DefaultEntryWidth, count);
+                RegisterRectArray(elementHeight, MaxAllowedWidth, count);
             }
             internal abstract void RegisterRectArray(float elementHeight, float elementWidth, int count);
 
             
-            internal void EndGroup(EventType currentEventType) {
+            internal virtual void EndGroup(EventType currentEventType) {
                 if (IsGroupValid) {
                     EndGroupRoutine(currentEventType);
-                    GUI.EndClip();
                 }
             }
             protected virtual void EndGroupRoutine(EventType currentEventType) { }
-
-            internal void ResetGroup() {
-                CurrentEventType = EventType.Layout;
-
-                IsGroupValid = true;
-
-                TotalContainerHeight = 0;
-                TotalContainerWidth = 0;
-                
-                NextEntryX = 0;
-                NextEntryY = 0;
-            }
             
             internal void RegisterDebugData() {
                 string tabSpacing = new string('\t', _debugIndentLevel);

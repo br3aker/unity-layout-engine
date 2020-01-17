@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class HorizontalScrollGroup : HorizontalLayoutGroupBase {
+        internal class HorizontalScrollGroup : HorizontalLayoutGroup {
             private float _containerWidth;
             
             internal float ScrollPos;
@@ -48,22 +48,22 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                TotalContainerHeight += _scrollBarFullHeight + _scrollBarContentOffset;
+                TotalRequestedHeight += _scrollBarFullHeight + _scrollBarContentOffset;
 
                 if (!_scrollbarPositionedAtBottom) {
-                    NextEntryY = _scrollBarContentOffset + _scrollBarFullHeight;
+                    NextEntryPosition.y = _scrollBarContentOffset + _scrollBarFullHeight;
                 }
                 ;
-                if (TotalContainerWidth > _containerWidth) {
+                if (TotalRequestedWidth > _containerWidth) {
                     _needsScroll = true;
-                    NextEntryX = Mathf.Lerp(0f, _containerWidth - TotalContainerWidth, ScrollPos);
+                    NextEntryPosition.x = Mathf.Lerp(0f, _containerWidth - TotalRequestedWidth, ScrollPos);
                         
-                    float _containerToContentWidthRatio = _containerWidth / TotalContainerWidth;
+                    float _containerToContentWidthRatio = _containerWidth / TotalRequestedWidth;
                     _scrollBarWidth = Mathf.Max(_containerWidth * _containerToContentWidthRatio, _scrollBarMinimalWidth);
 
                     // this action is not very clear, TotalWidth is used at layout entries data registration
                     // probably needs to be renamed
-                    TotalContainerWidth = _containerWidth;
+                    TotalRequestedWidth = _containerWidth;
                 }
             }
 
@@ -72,11 +72,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 float scrollbarVerticalPosition = 
                     _scrollbarPositionedAtBottom 
-                    ? FullRect.height - _scrollBarFullHeight
+                    ? FullContainerRect.height - _scrollBarFullHeight
                     : 0f;
                 
                 var scrollbarRect = new Rect(
-                    (FullRect.width - _scrollBarWidth) * ScrollPos,
+                    (FullContainerRect.width - _scrollBarWidth) * ScrollPos,
                     scrollbarVerticalPosition,
                     _scrollBarWidth,
                     _scrollBarFullHeight
@@ -85,7 +85,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var scrollbarBackgroundRect = new Rect(
                     0f,
                     scrollbarVerticalPosition,
-                    FullRect.width,
+                    FullContainerRect.width,
                     _scrollBarFullHeight
                 );
 
@@ -102,7 +102,7 @@ namespace SoftKata.ExtendedEditorGUI {
                                 GUIUtility.hotControl = _groupId;
                                 GUIUtility.keyboardControl = 0;
                                 
-                                ScrollPos = Event.current.mousePosition.x / FullRect.width;
+                                ScrollPos = Event.current.mousePosition.x / FullContainerRect.width;
                                 
                                 Event.current.Use();
                             }
@@ -118,25 +118,25 @@ namespace SoftKata.ExtendedEditorGUI {
                         break;
                     case EventType.MouseDrag:
                         if (GUIUtility.hotControl == _groupId) {
-                            var currentX = Mathf.Clamp((scrollbarRect.x + Event.current.delta.x) - FullRect.x, 0f, FullRect.width - _scrollBarWidth);
+                            var currentX = Mathf.Clamp((scrollbarRect.x + Event.current.delta.x) - FullContainerRect.x, 0f, FullContainerRect.width - _scrollBarWidth);
 
-                            ScrollPos = currentX / (FullRect.width - _scrollBarWidth);
+                            ScrollPos = currentX / (FullContainerRect.width - _scrollBarWidth);
                             
                             Event.current.Use();
                         }
                         break;
                     case EventType.ScrollWheel:
-                        if (FullRect.Contains(Event.current.mousePosition)) {
+                        if (FullContainerRect.Contains(Event.current.mousePosition)) {
                             GUIUtility.keyboardControl = 0;
                             
-                            ScrollPos = Mathf.Clamp01(ScrollPos + Event.current.delta.y / FullRect.width);
+                            ScrollPos = Mathf.Clamp01(ScrollPos + Event.current.delta.y / FullContainerRect.width);
                             
                             Event.current.Use();
                         }
                         break;
                     case EventType.Repaint:
                         // Check if we should render full-sized scrollbar
-                        if (!FullRect.Contains(Event.current.mousePosition) && GUIUtility.hotControl != _groupId) {
+                        if (!FullContainerRect.Contains(Event.current.mousePosition) && GUIUtility.hotControl != _groupId) {
                             if (_scrollbarPositionedAtBottom) {
                                 scrollbarBackgroundRect.yMin += _scrollBarMinimizedHeightDelta;
                                 scrollbarRect.yMin += _scrollBarMinimizedHeightDelta;

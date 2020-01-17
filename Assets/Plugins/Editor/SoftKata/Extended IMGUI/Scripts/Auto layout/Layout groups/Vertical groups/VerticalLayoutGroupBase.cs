@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,16 +7,15 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class VerticalLayoutGroupBase : LayoutGroupBase {
             public VerticalLayoutGroupBase(bool discardMargin, GUIStyle style) : base(discardMargin, style) {
-                TotalContainerWidth = float.MinValue; // this setup is used auto-defined width layout calls
+                TotalRequestedWidth = float.MinValue; // this setup is used auto-defined width layout calls
             }
 
-            internal sealed override Rect GetRect(float height, float width) {
+            internal sealed override Rect GetRectInternal(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
-                    TotalContainerHeight += height;
-                    TotalContainerWidth = Mathf.Max(TotalContainerWidth, width);
+                    TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, width);
+                    TotalRequestedHeight += height;
                     return InvalidRect;
-                    return LayoutDummyRect;
                 }
 
                 if (!IsGroupValid) {
@@ -23,26 +23,26 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 if (width < 0f) {
-                    width = DefaultEntryWidth;
+                    width = MaxAllowedWidth;
                 }
 
                 var entryRect = GetActualRect(height, width);
-                NextEntryY += height + ContentOffset.y;
+                NextEntryPosition.y += height + ContentOffset.y;
                 return entryRect;
             }
 
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
                 EntriesCount += count;
-                TotalContainerHeight += elementHeight * count;
-                TotalContainerWidth = Mathf.Max(TotalContainerWidth, elementWidth);
+                TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, elementWidth);
+                TotalRequestedHeight += elementHeight * count;
             }
 
             protected virtual Rect GetActualRect(float height, float width) {
-                if (NextEntryY + height < 0 || NextEntryY > FullRect.height) {
+                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
                     return InvalidRect;
                 }
 
-                return new Rect(NextEntryX, NextEntryY, width, height);
+                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
             }
         }
 

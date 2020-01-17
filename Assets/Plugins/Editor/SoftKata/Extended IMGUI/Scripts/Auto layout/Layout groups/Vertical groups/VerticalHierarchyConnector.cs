@@ -8,43 +8,42 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         // Does not support nesting
         internal class VerticalHierarchyGroup : VerticalLayoutGroupBase {
-            private const float _connectorLineX = 0f;
-            private float _connectorLineY = 0;
+            private float _connectorLineY;
             
             private float _connectionLineWidth;
             private float _connectionLineLength;
-
+            
+            private Color _connectionLineColor;
+            
             private float _lastEntryHeight;
 
-            private Color _connectionLineColor;
-
             public VerticalHierarchyGroup(GUIStyle style) : base(false, style) {
-                _connectionLineWidth = style.border.left;
-                _connectionLineLength = Padding.left + style.border.right;
+                _connectionLineWidth = Border.left;
+                _connectionLineLength = Padding.left + Border.right;
 
                 _connectionLineColor = style.normal.textColor;
             }
             
             protected override void CalculateLayoutData() {
-                NextEntryX += _connectionLineWidth;
+                NextEntryPosition.x += _connectionLineWidth;
             }
 
             protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryY + height < 0 || NextEntryY > FullRect.height) {
+                if (NextEntryPosition.y + height < 0 || NextEntryPosition.y > FullContainerRect.height) {
                     return InvalidRect;
                 }
-                
+
                 _lastEntryHeight = height;
-                _connectorLineY = NextEntryY + height / 2;
+                _connectorLineY = NextEntryPosition.y + height / 2;
                 
                 var horizontalLine = new Rect(
-                    _connectorLineX, _connectorLineY,
+                    0f, _connectorLineY,
                     _connectionLineLength, _connectionLineWidth
                 );
 
                 EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
 
-                return new Rect(NextEntryX, NextEntryY, width, height);
+                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width - _connectionLineWidth, height);
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {
@@ -54,7 +53,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var verticalLineRect = new Rect(
                     0, 0,
                     _connectionLineWidth,
-                    NextEntryY - _lastEntryHeight / 2 - ContentOffset.y
+                    NextEntryPosition.y - _lastEntryHeight / 2 - ContentOffset.y
                 );
                 
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
