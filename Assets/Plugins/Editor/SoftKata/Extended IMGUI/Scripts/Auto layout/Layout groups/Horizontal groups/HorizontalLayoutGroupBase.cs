@@ -8,7 +8,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalLayoutGroup : LayoutGroupBase {
             public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-            internal override Rect GetRectInternal(float height, float width) {
+            internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
                     TotalRequestedWidth += width;

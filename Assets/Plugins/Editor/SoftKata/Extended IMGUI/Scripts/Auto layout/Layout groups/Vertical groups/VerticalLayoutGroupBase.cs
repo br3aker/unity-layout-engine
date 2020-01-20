@@ -10,7 +10,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedWidth = float.MinValue; // this setup is used auto-defined width layout calls
             }
 
-            internal sealed override Rect GetRectInternal(float height, float width) {
+            internal sealed override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
                     TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, width);
@@ -21,7 +21,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!IsGroupValid) {
                     return InvalidRect;
                 }
-
+                
                 if (width < 0f) {
                     width = MaxAllowedWidth;
                 }

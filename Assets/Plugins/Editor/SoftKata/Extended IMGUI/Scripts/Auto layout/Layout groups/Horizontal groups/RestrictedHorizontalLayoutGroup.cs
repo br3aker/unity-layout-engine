@@ -16,7 +16,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _horizontalContentOffset; 
             
             public FlexibleHorizontalLayoutGroup(bool discardMargin, float width, GUIStyle style) : base(discardMargin, style) {
-//                TotalContainerWidth = Mathf.Min(width, Max);
+                TotalRequestedWidth = width;
                 _containerWidth = TotalRequestedWidth;
                 MaxAllowedWidth = -1f;
 
@@ -26,7 +26,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void CalculateLayoutData() {
-                _containerWidth -= _horizontalContentOffset * (EntriesCount - 1);
+                _containerWidth -= _horizontalContentOffset * (EntriesCount - 1) + Padding.horizontal + Margin.horizontal;
                 _flexibleElementWidth = (_containerWidth - _totalFixedEntriesWidth) / (EntriesCount - _fixedEntriesCount);
             }
             
@@ -34,7 +34,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return GetRect(height, -1f);
             }
             
-            internal override Rect GetRectInternal(float height, float width) {
+            internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     if (width > 0f) {
                         _totalFixedEntriesWidth += width;

@@ -29,7 +29,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorLineRect = new Rect(0, 0, _separatorWidth, TotalRequestedHeight);
+                var separatorLineRect = new Rect(FullContainerRect.x - Padding.left, FullContainerRect.y - Padding.top, _separatorWidth, TotalRequestedHeight - Margin.vertical);
                 EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
         }

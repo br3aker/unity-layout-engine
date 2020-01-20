@@ -88,28 +88,21 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal virtual void RetrieveLayoutData(EventType currentEventType) {
-                //RegisterDebugData();
+                RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
                     FullContainerRect = Parent?.GetRect(TotalRequestedHeight, Mathf.Min(TotalRequestedWidth, MaxAllowedWidth)) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
-//                        EditorGUI.DrawRect(FullContainerRect, Color.red);
-//                        EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
                         FullContainerRect = Margin.Remove(FullContainerRect);
-//                        EditorGUI.DrawRect(FullContainerRect, Color.green);
                         FullContainerRect = Padding.Remove(FullContainerRect);
-//                        EditorGUI.DrawRect(FullContainerRect, Color.cyan);
                         NextEntryPosition = FullContainerRect.position;
-//                        Debug.Log(NextEntryPosition);
-//                        Debug.Log($"Requested: {TotalRequestedWidth} | Got: {FullContainerRect.width}");
-                        
+                        MaxAllowedWidth = FullContainerRect.width;
                         return;
                     }
                 }
-                
-                //UpdateDebugData();
+                UpdateDebugData();
 
                 // Nested groups should be banished exactly here at non-layout layout data pull
                 // This would ensure 2 things:
@@ -126,10 +119,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal virtual Rect GetRect(float height) {
                 return GetRect(height, MaxAllowedWidth);
             }
-            internal Rect GetRect(float height, float width) {
-                return GetRectInternal(height, width);
-            }
-            internal abstract Rect GetRectInternal(float height, float width);
+            internal abstract Rect GetRect(float height, float width);
 
             internal void RegisterRectArray(float elementHeight, int count) {
                 RegisterRectArray(elementHeight, MaxAllowedWidth, count);

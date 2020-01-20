@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        // TODO [optimization]: if faded equals to zero, this group behaves like a normal one
         internal class VerticalFadeGroup : VerticalClippingGroup {
             private float _faded;
 
@@ -14,12 +15,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected override void CalculateLayoutData() {
                 TotalRequestedHeight *= _faded;
-                if (Mathf.Approximately(_faded, 0f)) {
-                    IsGroupValid = false;
-                    if (Parent != null) {
-                        Parent.EntriesCount--;
-                    }
-                }
             }
         }
         

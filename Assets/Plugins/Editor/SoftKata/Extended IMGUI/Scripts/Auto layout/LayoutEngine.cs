@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        private static readonly Rect LayoutDummyRect = new Rect(0f, 0f, 1f, 1f);
-        private static readonly Rect InvalidRect = new Rect(0f, 0f, -1f, -1f);
+        private static readonly Rect InvalidRect = new Rect(0, 0, -1, -1);
+        private static readonly RectOffset zeroRectOffset = new RectOffset(0, 0, 0, 0);
 
         private static readonly Queue<LayoutGroupBase> SubscribedForLayout = new Queue<LayoutGroupBase>();
         private static readonly Stack<LayoutGroupBase> ActiveGroupStack = new Stack<LayoutGroupBase>();
         
         private static LayoutGroupBase _topGroup;
-
-        private static int _groupCount = 0;
 
         public struct LayoutDebugData {
             public string Data;
@@ -58,7 +56,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static void ScrapGroups(int count) {
-            _groupCount -= count;
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }

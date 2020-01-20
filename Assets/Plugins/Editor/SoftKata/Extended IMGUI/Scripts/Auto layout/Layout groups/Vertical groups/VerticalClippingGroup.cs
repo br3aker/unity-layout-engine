@@ -7,28 +7,31 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class VerticalClippingGroup : VerticalLayoutGroupBase {
+            private Vector2 _worldPosition;
+            
             public VerticalClippingGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
             internal override void RetrieveLayoutData(EventType currentEventType) {
-                //RegisterDebugData();
+                RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
                     FullContainerRect = Parent?.GetRect(TotalRequestedHeight, TotalRequestedWidth) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
-                        FullContainerRect = Padding.Remove(Margin.Remove(FullContainerRect));
-                        var color = Color.black;
-                        color.a = 0.5f;
-                        EditorGUI.DrawRect(FullContainerRect, color);
+                        FullContainerRect = Margin.Remove(FullContainerRect);
+                        _worldPosition = FullContainerRect.position;
+                        FullContainerRect = Padding.Remove(FullContainerRect);
+//                        EditorGUI.DrawRect(FullContainerRect, Color.magenta);
                         GUI.BeginClip(FullContainerRect);
                         FullContainerRect.position = Vector2.zero;
-                        
+                        MaxAllowedWidth = FullContainerRect.width;
+
                         return;
                     }
                 }
                 
-                //UpdateDebugData();
+                UpdateDebugData();
 
                 // Nested groups should be banished exactly here at non-layout layout data pull
                 // This would ensure 2 things:
@@ -44,6 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (IsGroupValid) {
                     GUI.EndClip();
                     FullContainerRect = Padding.Add(FullContainerRect);
+                    FullContainerRect.position = _worldPosition;
                     EndGroupRoutine(currentEventType);
                 }
             }

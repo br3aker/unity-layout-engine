@@ -29,7 +29,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryPosition.y + height < 0 || NextEntryPosition.y > FullContainerRect.height) {
+                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
                     return InvalidRect;
                 }
 
@@ -37,7 +37,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _connectorLineY = NextEntryPosition.y + height / 2;
                 
                 var horizontalLine = new Rect(
-                    0f, _connectorLineY,
+                    FullContainerRect.x - Padding.left, _connectorLineY,
                     _connectionLineLength, _connectionLineWidth
                 );
 
@@ -51,9 +51,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!IsGroupValid) return;
                 
                 var verticalLineRect = new Rect(
-                    0, 0,
+                    FullContainerRect.x - Padding.left, FullContainerRect.y - Padding.top,
                     _connectionLineWidth,
-                    NextEntryPosition.y - _lastEntryHeight / 2 - ContentOffset.y
+                    TotalRequestedHeight - _lastEntryHeight / 2
                 );
                 
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
