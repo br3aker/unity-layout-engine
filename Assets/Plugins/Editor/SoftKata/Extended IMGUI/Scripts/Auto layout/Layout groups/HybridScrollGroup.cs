@@ -20,7 +20,10 @@ namespace SoftKata.ExtendedEditorGUI {
             
             // Scrollbar settings
             private float _verticalScrollBarWidth;
+            private float _verticalScrollBarWidthDelta;
+            
             private float _horizontalScrollBarHeight;
+            private float _horizontalScrollBarHeightDelta;
             
             private float _verticalScrollLength;
             private float _horizontalScrollLength;
@@ -33,7 +36,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 ScrollPos = scrollPos;
                 
                 _verticalScrollBarWidth = Border.right;
+                _verticalScrollBarWidthDelta = Border.left - _verticalScrollBarWidth;
                 _horizontalScrollBarHeight = Border.bottom;
+                _horizontalScrollBarHeightDelta = Border.top - _horizontalScrollBarHeight;
 
                 // Colors
                 _backgroundColor = style.normal.textColor;
@@ -43,6 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 MaxAllowedWidth = _containerSize.x - Margin.horizontal - Padding.horizontal;
                 
                 _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
             protected override void CalculateLayoutData() {
@@ -74,6 +80,9 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void EndGroupRoutine(EventType currentEventType) {
                 if (!_needsVerticalScroll && !_needsHorizontalScroll) return;
 
+                currentEventType = Event.current.type;
+//                Debug.Log(currentEventType);
+                
                 // Vertical
                 float verticalScrollPos = FullContainerRect.xMax - _verticalScrollBarWidth;
                 var verticalScrollRect = new Rect(
@@ -118,15 +127,28 @@ namespace SoftKata.ExtendedEditorGUI {
                                 GUIUtility.hotControl = _verticalScrollId;
                                 GUIUtility.keyboardControl = 0;
                                 
-                                ScrollPos.y = Event.current.mousePosition.y / FullContainerRect.height; 
+                                ScrollPos.y = Event.current.mousePosition.y / FullContainerRect.yMax; 
+                                
+                                Event.current.Use();
+                            }
+                            else if (horizontalScrollRect.Contains(Event.current.mousePosition)) {
+                                GUIUtility.hotControl = _horizontalScrollId;
+                                GUIUtility.keyboardControl = 0;
+
+                                Event.current.Use();
+                            }
+                            else if (horizontalScrollbarBackgroundRect.Contains(Event.current.mousePosition)) {
+                                GUIUtility.hotControl = _horizontalScrollId;
+                                GUIUtility.keyboardControl = 0;
+                                
+                                ScrollPos.x = Event.current.mousePosition.x / FullContainerRect.width; 
                                 
                                 Event.current.Use();
                             }
                         }
-
                         break;
                     case EventType.MouseUp:
-                        if (GUIUtility.hotControl == _verticalScrollId) {
+                        if (GUIUtility.hotControl == _verticalScrollId || GUIUtility.hotControl == _horizontalScrollId) {
                             GUIUtility.hotControl = 0;
                             
                             Event.current.Use();
@@ -135,12 +157,20 @@ namespace SoftKata.ExtendedEditorGUI {
                     case EventType.MouseDrag:
                         if (GUIUtility.hotControl == _verticalScrollId) {
                             var delta = Event.current.delta.y;
-                            var currentY = Mathf.Clamp(verticalScrollRect.y + delta, 0f, FullContainerRect.height - _verticalScrollLength);
+                            var currentY = Mathf.Clamp(verticalScrollRect.y + delta, 0f, FullContainerRect.yMax - _verticalScrollLength);
 
-                            ScrollPos.y = currentY / (FullContainerRect.height - _verticalScrollLength);
+//                            ScrollPos.y = ;
                             
                             Event.current.Use();
                         }
+//                        else if (GUIUtility.hotControl == _horizontalScrollId) {
+//                            var delta = Event.current.delta.y;
+//                            var currentY = Mathf.Clamp(verticalScrollRect.y + delta, 0f, FullContainerRect.height - _verticalScrollLength);
+//
+//                            ScrollPos.y = currentY / (FullContainerRect.height - _verticalScrollLength);
+//                            
+//                            Event.current.Use();
+//                        }
                         break;
                     case EventType.ScrollWheel:
                         if (FullContainerRect.Contains(Event.current.mousePosition)) {
@@ -152,10 +182,13 @@ namespace SoftKata.ExtendedEditorGUI {
                         }
                         break;
                     case EventType.Repaint:
-//                        // Check if we should render full-sized scrollbar
-//                        if (!FullRect.Contains(Event.current.mousePosition) && GUIUtility.hotControl != _verticalScrollId) {
-//                            scrollbarBackgroundRect.xMin += _scrollBarMinimizedWidthDelta;
-//                            verticalScrollRect.xMin += _scrollBarMinimizedWidthDelta;
+                        // Check if we should render full-sized scrollbar
+//                        if (!FullContainerRect.Contains(Event.current.mousePosition) && GUIUtility.hotControl != _verticalScrollId) {
+//                            verticalScrollRect.xMin -= _verticalScrollBarWidthDelta;
+//                            verticalScrollbarBackgroundRect.xMin -= _verticalScrollBarWidthDelta;
+//
+//                            horizontalScrollRect.yMin -= _horizontalScrollBarHeightDelta;
+//                            horizontalScrollbarBackgroundRect.yMin -= _horizontalScrollBarHeightDelta;
 //                        }
 //                        
 //                        // Background
@@ -167,11 +200,11 @@ namespace SoftKata.ExtendedEditorGUI {
 //                        EditorGUI.DrawRect(verticalScrollRect, _scrollbarColor);
 //                        break;
 
-                        EditorGUI.DrawRect(verticalScrollbarBackgroundRect, Color.red);
-                        EditorGUI.DrawRect(verticalScrollRect, Color.cyan);
+                        EditorGUI.DrawRect(verticalScrollbarBackgroundRect, _backgroundColor);
+                        EditorGUI.DrawRect(verticalScrollRect, _scrollbarColor);
 
-                        EditorGUI.DrawRect(horizontalScrollbarBackgroundRect, Color.red);
-                        EditorGUI.DrawRect(horizontalScrollRect, Color.cyan);
+                        EditorGUI.DrawRect(horizontalScrollbarBackgroundRect, _backgroundColor);
+                        EditorGUI.DrawRect(horizontalScrollRect, _scrollbarColor);
                         break;
                 }
             }
@@ -181,7 +214,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new ScrollGroup(discardMarginAndPadding, width, height, scrollValue, style);
+                layoutGroup = new ScrollGroup(discardMarginAndPadding, height, width, scrollValue, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {

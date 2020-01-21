@@ -22,7 +22,6 @@ namespace SoftKata.ExtendedEditorGUI {
                         FullContainerRect = Margin.Remove(FullContainerRect);
                         _worldPosition = FullContainerRect.position;
                         FullContainerRect = Padding.Remove(FullContainerRect);
-//                        EditorGUI.DrawRect(FullContainerRect, Color.magenta);
                         GUI.BeginClip(FullContainerRect);
                         FullContainerRect.position = Vector2.zero;
                         MaxAllowedWidth = FullContainerRect.width;
@@ -41,6 +40,15 @@ namespace SoftKata.ExtendedEditorGUI {
                     Parent.EntriesCount -= _childrenCount + 1;
                 }
                 LayoutEngine.ScrapGroups(_childrenCount);
+            }
+            
+            protected override Rect GetActualRect(float height, float width) {
+                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
+                    return InvalidRect;
+                }
+
+//                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
+                return new Rect(NextEntryPosition.x, NextEntryPosition.y, Mathf.Min(width, FullContainerRect.width), Mathf.Min(height, FullContainerRect.height));
             }
 
             internal sealed override void EndGroup(EventType currentEventType) {

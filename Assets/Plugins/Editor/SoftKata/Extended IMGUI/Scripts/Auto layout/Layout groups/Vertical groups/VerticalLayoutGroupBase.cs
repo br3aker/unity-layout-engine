@@ -38,7 +38,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected virtual Rect GetActualRect(float height, float width) {
-                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
+                if (NextEntryPosition.y + height < FullContainerRect.y  || NextEntryPosition.y > FullContainerRect.yMax) {
                     return InvalidRect;
                 }
 

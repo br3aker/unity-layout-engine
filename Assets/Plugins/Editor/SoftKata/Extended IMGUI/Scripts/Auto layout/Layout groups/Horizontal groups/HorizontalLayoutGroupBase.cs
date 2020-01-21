@@ -8,6 +8,10 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalLayoutGroup : LayoutGroupBase {
             public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
+            protected override void CalculateLayoutData() {
+//                TotalRequestedWidth = MaxAllowedWidth;
+            }
+
             internal override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
@@ -35,7 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
             }
 
-            protected Rect GetActualRect(float height, float width) {
+            protected virtual Rect GetActualRect(float height, float width) {
                 if (NextEntryPosition.x + width < FullContainerRect.x || NextEntryPosition.x > FullContainerRect.xMax) {
                     return InvalidRect;
                 }

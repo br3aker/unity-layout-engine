@@ -24,13 +24,14 @@ namespace SoftKata.ExtendedEditorGUI {
             internal int EntriesCount;
             internal bool IsGroupValid = true;
 
-            protected float MaxAllowedWidth;
+            protected float MaxAllowedWidth = -1f;
 
             // total rect of the group
             internal Rect FullContainerRect;
             
             // entries layout data
             protected Vector2 NextEntryPosition;
+            protected Vector2 EntryRectBorders;
 
             // padding settings
             protected readonly RectOffset Margin;
@@ -64,7 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 MaxAllowedWidth = (Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth) - Margin.horizontal - Padding.horizontal;
 
                 // Debug data
-                _debugIndentLevel = (Parent?._debugIndentLevel ?? -1) + 1;
+                _debugIndentLevel = Parent?._debugIndentLevel + 1 ?? 0;
             }
 
             internal void RegisterLayoutRequest() {
@@ -87,18 +88,36 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
+//            protected abstract Vector2 GetContentBorderValues(bool isClippedByParentGroup);
+
             internal virtual void RetrieveLayoutData(EventType currentEventType) {
+//                MaxAllowedWidth = Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth - Margin.horizontal - Padding.horizontal;
+                
                 RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    FullContainerRect = Parent?.GetRect(TotalRequestedHeight, Mathf.Min(TotalRequestedWidth, MaxAllowedWidth)) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                    if (Parent != null) {
+                        FullContainerRect = Parent.GetRect(TotalRequestedHeight, TotalRequestedWidth);
+//                        EntryRectBorders = GetContentBorderValues(Parent.GetType().IsSubclassOf(typeof(VerticalClippingGroup)));
+                    }
+                    else {
+                        FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                    }
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
                         FullContainerRect = Margin.Remove(FullContainerRect);
-                        FullContainerRect = Padding.Remove(FullContainerRect);
-                        NextEntryPosition = FullContainerRect.position;
-                        MaxAllowedWidth = FullContainerRect.width;
+                        
+                        NextEntryPosition = FullContainerRect.position + new Vector2(Padding.left, Padding.top);
+                        MaxAllowedWidth = FullContainerRect.width;// - Padding.horizontal;
+
+
+
+//                        if (GetType() == typeof(VerticalLayoutGroupBase)) {
+//                            EditorGUI.DrawRect(FullContainerRect, Color.magenta);
+//                            EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
+//                        }
+
                         return;
                     }
                 }
