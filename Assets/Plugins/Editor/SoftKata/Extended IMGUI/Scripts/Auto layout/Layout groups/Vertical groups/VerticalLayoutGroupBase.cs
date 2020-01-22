@@ -10,10 +10,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedWidth = float.MinValue; // this setup is used auto-defined width layout calls
             }
 
-            protected override Vector2 GetContentBorderValues(bool isClippedByParentGroup) {
-                if (isClippedByParentGroup) {
-                    return new Vector2(0f, FullContainerRect.height);
-                }
+            protected override Vector2 GetContentBorderValues() {
                 return new Vector2(FullContainerRect.y, FullContainerRect.yMax);
             }
 

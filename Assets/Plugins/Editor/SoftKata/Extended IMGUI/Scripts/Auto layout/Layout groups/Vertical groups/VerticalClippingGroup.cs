@@ -15,14 +15,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    if (Parent != null) {
-                        FullContainerRect = Parent.GetRect(TotalRequestedHeight, TotalRequestedWidth);
-                        EntryRectBorders = GetContentBorderValues(Parent.GetType().IsSubclassOf(typeof(VerticalClippingGroup)));
-                    }
-                    else {
-                        FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
-                        EntryRectBorders = GetContentBorderValues(true);
-                    }
+                    FullContainerRect = Parent?.GetRect(TotalRequestedHeight, TotalRequestedWidth) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                    
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
@@ -32,6 +26,8 @@ namespace SoftKata.ExtendedEditorGUI {
                         GUI.BeginClip(FullContainerRect);
                         FullContainerRect.position = Vector2.zero;
                         MaxAllowedWidth = FullContainerRect.width;
+                        
+                        EntryRectBorders = GetContentBorderValues();
 
                         return;
                     }

@@ -377,6 +377,19 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 }
                 LayoutEngine.EndHorizontalGroup();
             }
+            
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                    for (int j = 0; j < _horizontalElementsCount; j++) {
+                        var rect = LayoutEngine.RequestLayoutRect(16, 500);
+                        if (rect.IsValid()) {
+                            counter++;
+                            EditorGUI.TextField(rect, "Text");
+                        }
+                    }
+                }
+                LayoutEngine.EndVerticalGroup();
+            }
         }
         _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
         EditorGUILayout.LabelField($"Validated rects: {counter}");

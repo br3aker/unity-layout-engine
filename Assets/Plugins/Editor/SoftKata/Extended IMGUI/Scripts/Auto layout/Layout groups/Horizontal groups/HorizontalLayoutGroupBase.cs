@@ -8,9 +8,9 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalLayoutGroup : LayoutGroupBase {
             public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-            protected override Vector2 GetContentBorderValues(bool isClippedByParentGroup) {
-                if (isClippedByParentGroup) {
-//                    Debug.Log($"Horizontal layout group is clipped by parent group: {new Vector2(0f, FullContainerRect.width)}");
+            protected override Vector2 GetContentBorderValues() {
+                bool isClippedByParent = Parent?.GetType().IsSubclassOf(typeof(VerticalClippingGroup)) ?? false;
+                if (isClippedByParent) {
                     return new Vector2(0f, FullContainerRect.width);
                 }
                 return new Vector2(FullContainerRect.x, FullContainerRect.xMax);
