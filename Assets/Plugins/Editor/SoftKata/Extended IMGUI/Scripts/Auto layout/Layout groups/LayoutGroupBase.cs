@@ -88,7 +88,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-//            protected abstract Vector2 GetContentBorderValues(bool isClippedByParentGroup);
+            protected abstract Vector2 GetContentBorderValues(bool isClippedByParentGroup);
 
             internal virtual void RetrieveLayoutData(EventType currentEventType) {
 //                MaxAllowedWidth = Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth - Margin.horizontal - Padding.horizontal;
@@ -98,10 +98,11 @@ namespace SoftKata.ExtendedEditorGUI {
                     CurrentEventType = currentEventType;
                     if (Parent != null) {
                         FullContainerRect = Parent.GetRect(TotalRequestedHeight, TotalRequestedWidth);
-//                        EntryRectBorders = GetContentBorderValues(Parent.GetType().IsSubclassOf(typeof(VerticalClippingGroup)));
+                        EntryRectBorders = GetContentBorderValues(Parent.GetType().IsSubclassOf(typeof(VerticalClippingGroup)));
                     }
                     else {
                         FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        EntryRectBorders = GetContentBorderValues(false);
                     }
                     IsGroupValid = FullContainerRect.IsValid();
 
@@ -113,10 +114,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
 
-//                        if (GetType() == typeof(VerticalLayoutGroupBase)) {
-//                            EditorGUI.DrawRect(FullContainerRect, Color.magenta);
-//                            EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
-//                        }
+                        if (GetType() == typeof(HorizontalLayoutGroup)) {
+                            EditorGUI.DrawRect(FullContainerRect, Color.magenta);
+                            EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
+                        }
 
                         return;
                     }

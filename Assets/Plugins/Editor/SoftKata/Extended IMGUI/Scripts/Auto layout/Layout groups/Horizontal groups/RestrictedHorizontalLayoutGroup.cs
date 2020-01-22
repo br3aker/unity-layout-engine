@@ -51,7 +51,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 var calculatedWidth = width > 0f ? width : _flexibleElementWidth;
-                var entryRect = GetActualRect(height, calculatedWidth);
+                var entryRect = GetActualRect(0, 0, height, calculatedWidth);
                 NextEntryPosition.x += calculatedWidth + _horizontalContentOffset;
                 return entryRect;
             }

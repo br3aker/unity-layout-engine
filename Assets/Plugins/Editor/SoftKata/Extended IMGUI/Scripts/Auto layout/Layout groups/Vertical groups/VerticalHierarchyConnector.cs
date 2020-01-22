@@ -28,13 +28,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryPosition.x += _connectionLineWidth;
             }
 
-            protected override Rect GetActualRect(float height, float width) {
+            protected override Rect GetActualRect(float x, float y, float height, float width) {
                 if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
                     return InvalidRect;
                 }
 
                 _lastEntryHeight = height;
-                _connectorLineY = NextEntryPosition.y + height / 2;
+                _connectorLineY = y + height / 2;
                 
                 var horizontalLine = new Rect(
                     FullContainerRect.x - Padding.left, _connectorLineY,
@@ -43,7 +43,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
 
-                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width - _connectionLineWidth, height);
+                return new Rect(x, y, width - _connectionLineWidth, height);
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {

@@ -15,7 +15,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
-                    FullContainerRect = Parent?.GetRect(TotalRequestedHeight, TotalRequestedWidth) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                    if (Parent != null) {
+                        FullContainerRect = Parent.GetRect(TotalRequestedHeight, TotalRequestedWidth);
+                        EntryRectBorders = GetContentBorderValues(Parent.GetType().IsSubclassOf(typeof(VerticalClippingGroup)));
+                    }
+                    else {
+                        FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        EntryRectBorders = GetContentBorderValues(true);
+                    }
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
@@ -42,13 +49,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
             
-            protected override Rect GetActualRect(float height, float width) {
-                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
-                    return InvalidRect;
-                }
+            protected override Rect GetActualRect(float x, float y, float height, float width) {
+//                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
+//                    return InvalidRect;
+//                }
 
 //                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
-                return new Rect(NextEntryPosition.x, NextEntryPosition.y, Mathf.Min(width, FullContainerRect.width), Mathf.Min(height, FullContainerRect.height));
+
+                return new Rect(x, y, Mathf.Min(width, FullContainerRect.width), Mathf.Min(height, FullContainerRect.height));
             }
 
             internal sealed override void EndGroup(EventType currentEventType) {

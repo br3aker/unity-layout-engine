@@ -10,6 +10,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedWidth = float.MinValue; // this setup is used auto-defined width layout calls
             }
 
+            protected override Vector2 GetContentBorderValues(bool isClippedByParentGroup) {
+                if (isClippedByParentGroup) {
+                    return new Vector2(0f, FullContainerRect.height);
+                }
+                return new Vector2(FullContainerRect.y, FullContainerRect.yMax);
+            }
+
             internal sealed override Rect GetRect(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
@@ -26,9 +33,14 @@ namespace SoftKata.ExtendedEditorGUI {
                     width = MaxAllowedWidth;
                 }
 
-                var entryRect = GetActualRect(height, width);
+                var currentEntryY = NextEntryPosition.y;
                 NextEntryPosition.y += height + ContentOffset.y;
-                return entryRect;
+
+                if (currentEntryY + height < EntryRectBorders.x || currentEntryY > EntryRectBorders.y) {
+                    return InvalidRect;
+                }
+                
+                return GetActualRect(NextEntryPosition.x, currentEntryY, height, width);
             }
 
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
@@ -37,12 +49,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight += elementHeight * count;
             }
 
-            protected virtual Rect GetActualRect(float height, float width) {
-                if (NextEntryPosition.y + height < FullContainerRect.y  || NextEntryPosition.y > FullContainerRect.yMax) {
-                    return InvalidRect;
-                }
+            protected virtual Rect GetActualRect(float x, float y, float height, float width) {
+//                if (NextEntryPosition.y + height < FullContainerRect.y  || NextEntryPosition.y > FullContainerRect.yMax) {
+//                    return InvalidRect;
+//                }
 
-                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
+                return new Rect(x, y, width, height);
             }
         }
 

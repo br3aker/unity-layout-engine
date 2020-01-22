@@ -45,7 +45,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
-            VerticalGroupTest();    // passed
+//            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
 //            VerticalUnityNativeTest();    // utility
@@ -61,7 +61,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
-//            HybridScrollGroupTest();    // passed
+            HybridScrollGroupTest();    // passed
         }
 
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
@@ -366,7 +366,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         int counter = 0;
         if (LayoutEngine.BeginHybridScrollGroup(400, 400, _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalClipSpaceGroup(true)) {
+                if (LayoutEngine.BeginHorizontalGroup(true)) {
                     for (int j = 0; j < _horizontalElementsCount; j++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, 150);
                         if (rect.IsValid()) {
@@ -375,7 +375,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                         }
                     }
                 }
-                LayoutEngine.EndHorizontalClipSpaceGroup();
+                LayoutEngine.EndHorizontalGroup();
             }
         }
         _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();

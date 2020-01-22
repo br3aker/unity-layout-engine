@@ -8,6 +8,14 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalLayoutGroup : LayoutGroupBase {
             public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
+            protected override Vector2 GetContentBorderValues(bool isClippedByParentGroup) {
+                if (isClippedByParentGroup) {
+//                    Debug.Log($"Horizontal layout group is clipped by parent group: {new Vector2(0f, FullContainerRect.width)}");
+                    return new Vector2(0f, FullContainerRect.width);
+                }
+                return new Vector2(FullContainerRect.x, FullContainerRect.xMax);
+            }
+            
             protected override void CalculateLayoutData() {
 //                TotalRequestedWidth = MaxAllowedWidth;
             }
@@ -28,9 +36,14 @@ namespace SoftKata.ExtendedEditorGUI {
                     width = MaxAllowedWidth;
                 }
 
-                var entryRect = GetActualRect(height, width);
+                var currentEntryX = NextEntryPosition.x;
                 NextEntryPosition.x += width + ContentOffset.x;
-                return entryRect;
+                
+                if (currentEntryX + width < EntryRectBorders.x || currentEntryX > EntryRectBorders.y) {
+                    return InvalidRect;
+                }
+                
+                return GetActualRect(currentEntryX, NextEntryPosition.y, height, width);
             }
             
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
@@ -39,12 +52,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
             }
 
-            protected virtual Rect GetActualRect(float height, float width) {
-                if (NextEntryPosition.x + width < FullContainerRect.x || NextEntryPosition.x > FullContainerRect.xMax) {
-                    return InvalidRect;
-                }
+            protected virtual Rect GetActualRect(float x, float y, float height, float width) {
+//                if (NextEntryPosition.x + width < FullContainerRect.x || NextEntryPosition.x > FullContainerRect.xMax) {
+//                    return InvalidRect;
+//                }
                 
-                return new Rect(NextEntryPosition.x, NextEntryPosition.y, width, height);
+                return new Rect(x, y, width, height);
             }
         }
 
