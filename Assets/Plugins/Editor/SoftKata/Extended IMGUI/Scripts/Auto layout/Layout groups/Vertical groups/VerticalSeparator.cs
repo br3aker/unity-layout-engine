@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
                 if (!IsGroupValid) return;
                 
-                var separatorLineRect = new Rect(FullContainerRect.x - Padding.left, FullContainerRect.y - Padding.top, _separatorWidth, TotalRequestedHeight - Margin.vertical);
+                var separatorLineRect = new Rect(GroupOrigin.x + Margin.left, GroupOrigin.y, _separatorWidth, TotalRequestedHeight - Margin.vertical);
                 EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
         }

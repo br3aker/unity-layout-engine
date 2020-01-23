@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +11,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedWidth = float.MinValue; // this setup is used auto-defined width layout calls
             }
 
-            protected override Vector2 GetContentBorderValues() {
-                return new Vector2(FullContainerRect.y, FullContainerRect.yMax);
+            internal override GroupRectData GetGroupRect(float height, float width) {
+                var currentEntryPosition = NextEntryPosition;
+                var rect = GetRect(height, width);
+                var groupRectData = new GroupRectData {
+                    Rect = rect,
+                    OffsetFromParentRect = currentEntryPosition
+                };
+                return groupRectData;
             }
 
             internal sealed override Rect GetRect(float height, float width) {
@@ -33,7 +40,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var currentEntryY = NextEntryPosition.y;
                 NextEntryPosition.y += height + ContentOffset.y;
 
-                if (currentEntryY + height < EntryRectBorders.x || currentEntryY > EntryRectBorders.y) {
+                if (currentEntryY + height < FullContainerRect.y || currentEntryY > FullContainerRect.yMax) {
                     return InvalidRect;
                 }
                 

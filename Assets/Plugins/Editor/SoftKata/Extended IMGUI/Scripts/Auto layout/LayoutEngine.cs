@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         private static readonly Rect InvalidRect = new Rect(0, 0, -1, -1);
-        private static readonly RectOffset zeroRectOffset = new RectOffset(0, 0, 0, 0);
+        private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
         private static readonly Queue<LayoutGroupBase> SubscribedForLayout = new Queue<LayoutGroupBase>();
         private static readonly Stack<LayoutGroupBase> ActiveGroupStack = new Stack<LayoutGroupBase>();
@@ -26,6 +26,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 rect.width = width;
             }
             return rect;
+        }
+
+        internal static GroupRectData RequestGroupRect(float height, float width = -1f) {
+            return new GroupRectData {Rect = RequestRectRaw(height, width), OffsetFromParentRect = Vector2.zero};
         }
         
         public static Rect RequestLayoutRect(int height) {

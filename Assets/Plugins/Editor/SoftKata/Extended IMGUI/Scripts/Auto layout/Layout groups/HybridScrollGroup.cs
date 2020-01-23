@@ -58,9 +58,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     
                     float containerToContentHeightRatio = _containerSize.y / TotalRequestedHeight;
                     _verticalScrollLength = Mathf.Max(_containerSize.y * containerToContentHeightRatio, _containerSize.y * MinimalScrollbarSizeMultiplier);
-
-                    // this action is not very clear, TotalHeight is used at layout entries data registration
-                    // probably needs to be renamed
+                    
                     TotalRequestedHeight = _containerSize.y;
                 }
                 
@@ -70,9 +68,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                     float containerToContentWidthRatio = _containerSize.x / TotalRequestedWidth;
                     _horizontalScrollLength = Mathf.Max(_containerSize.x * containerToContentWidthRatio, _containerSize.x * MinimalScrollbarSizeMultiplier);
-
-                    // this action is not very clear, TotalHeight is used at layout entries data registration
-                    // probably needs to be renamed
+                    
                     TotalRequestedWidth = _containerSize.x;
                 }
             }

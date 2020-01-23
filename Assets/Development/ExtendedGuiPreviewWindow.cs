@@ -198,15 +198,19 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private AnimBool _verticalFaded4;
 
     private void VerticalFadeGroupTest() {
-        _verticalFaded1.target = EditorGUILayout.Foldout(_verticalFaded1.target, "Vertical foldout example", true);
+        var foldoutHeaderRect = LayoutEngine.RequestLayoutRect(16, 150);
+        if (foldoutHeaderRect.IsValid()) {
+            _verticalFaded1.target = EditorGUI.Foldout(foldoutHeaderRect,_verticalFaded1.target, "Vertical foldout example", true);
+        }
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16);
+                var rect = LayoutEngine.RequestLayoutRect(16, 150);
                 if (rect.IsValid()) {
                     ExtendedEditorGUI.IntPostfixInputField(rect, i, "prefix", null);
                 }
             }
         }
+
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void VerticalFadeGroupHorizontalChildGroupTest() {
@@ -224,34 +228,45 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void NestedFadeGroupsTest() {
-        _verticalFaded1.target = EditorGUI.Foldout(LayoutEngine.RequestLayoutRect(16), _verticalFaded1.target, "Vertical foldout example", true);
-        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
+        var foldoutRect0 = LayoutEngine.RequestLayoutRect(16);
+        if (foldoutRect0.IsValid()) {
+            _verticalFaded4.target =
+                EditorGUI.Foldout(foldoutRect0, _verticalFaded4.target, "Nested foldout example", true);
+        }
+        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded4.faded)) {
             HorizontalGroupTest();
             var foldoutRect1 = LayoutEngine.RequestLayoutRect(16, 150);
             if (foldoutRect1.IsValid()) {
                 _verticalFaded2.target = EditorGUI.Foldout(foldoutRect1, _verticalFaded2.target, "Oh my", true);
             }
-            if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded)) {
+
+            if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded, true)) {
                 var foldoutRect2 = LayoutEngine.RequestLayoutRect(16, 150);
                 if (foldoutRect2.IsValid()) {
-                    _verticalFaded3.target = EditorGUI.Foldout(foldoutRect2, _verticalFaded3.target, "Vertical foldout example", true);
+                    _verticalFaded3.target = EditorGUI.Foldout(foldoutRect2, _verticalFaded3.target,
+                        "Vertical foldout example", true);
                 }
-                if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded3.faded)) {
+
+                if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded3.faded, true)) {
                     var foldoutRect3 = LayoutEngine.RequestLayoutRect(16, 150);
                     if (foldoutRect3.IsValid()) {
-                        _verticalFaded4.target = EditorGUI.Foldout(foldoutRect3, _verticalFaded4.target, "Oh my", true);
+                        _verticalFaded4.target =
+                            EditorGUI.Foldout(foldoutRect3, _verticalFaded4.target, "Oh my", true);
                     }
-                    if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded4.faded)) {
+                    if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded4.faded, true)) {
                         var contentRect = LayoutEngine.RequestLayoutRect(200);
                         if (contentRect.IsValid()) {
                             EditorGUI.DrawRect(contentRect, Color.magenta);
                             EditorGUI.LabelField(contentRect, contentRect.ToString());
                         }
                     }
+
                     LayoutEngine.EndVerticalFadeGroup();
                 }
+
                 LayoutEngine.EndVerticalFadeGroup();
             }
+
             LayoutEngine.EndVerticalFadeGroup();
         }
         LayoutEngine.EndVerticalFadeGroup();
@@ -378,18 +393,59 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 LayoutEngine.EndHorizontalGroup();
             }
             
-            for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginVerticalSeparatorGroup()) {
-                    for (int j = 0; j < _horizontalElementsCount; j++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, 500);
-                        if (rect.IsValid()) {
-                            counter++;
-                            EditorGUI.TextField(rect, "Text");
-                        }
+            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                for (int i = 0; i < 5; i++) {
+                    var rect = LayoutEngine.RequestLayoutRect(16);
+                    if (rect.IsValid()) {
+                        counter++;
+                        EditorGUI.TextField(rect, "");
                     }
                 }
-                LayoutEngine.EndVerticalGroup();
             }
+            LayoutEngine.EndVerticalSeparatorGroup();
+            
+            if (LayoutEngine.BeginHorizontalGroup(true)) {
+                for (int j = 0; j < _horizontalElementsCount; j++) {
+                    if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                        for (int i = 0; i < 5; i++) {
+                            var rect = LayoutEngine.RequestLayoutRect(16);
+                            if (rect.IsValid()) {
+                                counter++;
+                                EditorGUI.TextField(rect, "");
+                            }
+                        }
+                    }
+                    LayoutEngine.EndVerticalSeparatorGroup();
+                }
+            }
+            LayoutEngine.EndHorizontalGroup();
+            
+            if (LayoutEngine.BeginVerticalGroup()) {
+                NestedFadeGroupsTest();
+            }
+            LayoutEngine.EndVerticalGroup();
+
+            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                for (int i = 0; i < _verticalElementsCount; i++) {
+                    var rect = LayoutEngine.RequestLayoutRect(16);
+                    if (rect.IsValid()) {
+                        counter++;
+                        EditorGUI.TextField(rect, rect.ToString());
+                    }
+                }
+            }
+            LayoutEngine.EndVerticalSeparatorGroup();
+            
+            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                for (int i = 0; i < _verticalElementsCount; i++) {
+                    var rect = LayoutEngine.RequestLayoutRect(16);
+                    if (rect.IsValid()) {
+                        counter++;
+                        EditorGUI.TextField(rect, "");
+                    }
+                }
+            }
+            LayoutEngine.EndVerticalSeparatorGroup();
         }
         _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
         EditorGUILayout.LabelField($"Validated rects: {counter}");

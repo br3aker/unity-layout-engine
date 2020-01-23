@@ -8,6 +8,11 @@ using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        internal struct GroupRectData {
+            public Rect Rect;
+            public Vector2 OffsetFromParentRect;
+        }
+        
         internal abstract class LayoutGroupBase {
             protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroupBase).GetHashCode();
             
@@ -28,10 +33,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // total rect of the group
             internal Rect FullContainerRect;
-            
+
             // entries layout data
             protected Vector2 NextEntryPosition;
-            protected Vector2 EntryRectBorders;
+            protected Vector2 GroupOrigin;
 
             // padding settings
             protected readonly RectOffset Margin;
@@ -52,7 +57,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 // group layout settings
                 if (discardMargin) {
-                    Margin = new RectOffset(0, 0, 0, 0);
+                    Margin = ZeroRectOffset;
                 }
                 else {
                     Margin = style.margin;
@@ -88,40 +93,39 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-            protected abstract Vector2 GetContentBorderValues();
-
             internal virtual void RetrieveLayoutData(EventType currentEventType) {
 //                MaxAllowedWidth = Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth - Margin.horizontal - Padding.horizontal;
                 
-                RegisterDebugData();
+//                RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
                     if (Parent != null) {
-                        FullContainerRect = Parent.GetRect(TotalRequestedHeight, TotalRequestedWidth);
+                        var rectData = Parent.GetGroupRect(TotalRequestedHeight, TotalRequestedWidth);
+                        FullContainerRect = rectData.Rect;
+                        NextEntryPosition = rectData.OffsetFromParentRect;
                     }
                     else {
                         FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        NextEntryPosition = FullContainerRect.position;
                     }
                     IsGroupValid = FullContainerRect.IsValid();
 
                     if (IsGroupValid) {
                         FullContainerRect = Margin.Remove(FullContainerRect);
-                        
-                        NextEntryPosition = FullContainerRect.position + new Vector2(Padding.left, Padding.top);
-                        MaxAllowedWidth = FullContainerRect.width;// - Padding.horizontal;
-                        
-                        EntryRectBorders = GetContentBorderValues();
 
-
-//                        if (GetType() == typeof(HorizontalLayoutGroup)) {
-//                            EditorGUI.DrawRect(FullContainerRect, Color.magenta);
-//                            EditorGUI.LabelField(FullContainerRect, FullContainerRect.ToString());
+//                        if (GetType() == typeof(VerticalLayoutGroupBase)) {
+//                            EditorGUI.DrawRect(FullContainerRect, Color.green);
+//                            EditorGUI.LabelField(FullContainerRect, $"{NextEntryPosition} | {FullContainerRect}");
 //                        }
+                        
+                        GroupOrigin = NextEntryPosition;
+                        NextEntryPosition += new Vector2(Padding.left + Margin.left, Padding.top + Margin.top);
+                        MaxAllowedWidth = FullContainerRect.width;// - Padding.horizontal - Margin.horizontal;
 
                         return;
                     }
                 }
-                UpdateDebugData();
+//                UpdateDebugData();
 
                 // Nested groups should be banished exactly here at non-layout layout data pull
                 // This would ensure 2 things:
@@ -135,6 +139,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected virtual void CalculateLayoutData() { }
 
+            internal abstract GroupRectData GetGroupRect(float height, float width);
+            
             internal virtual Rect GetRect(float height) {
                 return GetRect(height, MaxAllowedWidth);
             }

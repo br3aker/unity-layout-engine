@@ -8,16 +8,18 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalLayoutGroup : LayoutGroupBase {
             public HorizontalLayoutGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-            protected override Vector2 GetContentBorderValues() {
-                bool isClippedByParent = Parent?.GetType().IsSubclassOf(typeof(VerticalClippingGroup)) ?? false;
-                if (isClippedByParent) {
-                    return new Vector2(0f, FullContainerRect.width);
-                }
-                return new Vector2(FullContainerRect.x, FullContainerRect.xMax);
-            }
-            
+
             protected override void CalculateLayoutData() {
 //                TotalRequestedWidth = MaxAllowedWidth;
+            }
+
+            internal override GroupRectData GetGroupRect(float height, float width) {
+                var currentEntryPosition = NextEntryPosition;
+                var groupRectData = new GroupRectData {
+                    Rect = GetRect(height, width),
+                    OffsetFromParentRect = new Vector2(currentEntryPosition.x, FullContainerRect.y)
+                };
+                return groupRectData;
             }
 
             internal override Rect GetRect(float height, float width) {
@@ -39,7 +41,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 var currentEntryX = NextEntryPosition.x;
                 NextEntryPosition.x += width + ContentOffset.x;
                 
-                if (currentEntryX + width < EntryRectBorders.x || currentEntryX > EntryRectBorders.y) {
+                if (currentEntryX + width < FullContainerRect.x || currentEntryX > FullContainerRect.xMax) {
+//                    Debug.Log($"{currentEntryX} | Borders: {FullContainerRect.x} - {FullContainerRect.xMax}");
                     return InvalidRect;
                 }
                 
