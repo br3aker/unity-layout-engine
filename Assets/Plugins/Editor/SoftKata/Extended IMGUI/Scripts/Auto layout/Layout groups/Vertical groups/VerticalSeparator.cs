@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class VerticalSeparator : VerticalLayoutGroupBase {
+        internal class VerticalSeparator : VerticalGroup {
             private float _separatorWidth;
 
             private Color _activeSeparatorColor;
@@ -27,10 +27,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {
-                // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
-                if (!IsGroupValid) return;
-                
-                var separatorLineRect = new Rect(GroupOrigin.x + Margin.left, GroupOrigin.y, _separatorWidth, TotalRequestedHeight - Margin.vertical);
+                var separatorLineRect = new Rect(ContentRect.x - Padding.left, ContentRect.y - Padding.top, _separatorWidth, TotalRequestedHeight - Margin.vertical);
                 EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _activeSeparatorColor : _disabledSeparatorColor);
             } 
         }
@@ -56,7 +53,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static void EndVerticalSeparatorGroup() {
-            EndLayoutGroup();
+            EndLayoutGroup<VerticalSeparator>();
         }
     }
 }

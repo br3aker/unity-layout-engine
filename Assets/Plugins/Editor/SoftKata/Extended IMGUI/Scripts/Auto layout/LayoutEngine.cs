@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,10 +29,6 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect;
         }
 
-        internal static GroupRectData RequestGroupRect(float height, float width = -1f) {
-            return new GroupRectData {Rect = RequestRectRaw(height, width), OffsetFromParentRect = Vector2.zero};
-        }
-        
         public static Rect RequestLayoutRect(int height) {
             return _topGroup?.GetRect(height) ?? RequestRectRaw(height);
         }

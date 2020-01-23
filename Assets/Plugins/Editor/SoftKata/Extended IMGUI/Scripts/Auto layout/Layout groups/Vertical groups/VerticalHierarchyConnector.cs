@@ -7,15 +7,14 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         // Does not support nesting
-        internal class VerticalHierarchyGroup : VerticalLayoutGroupBase {
-            private float _connectorLineY;
-            
+        internal class VerticalHierarchyGroup : VerticalGroup {
             private float _connectionLineWidth;
             private float _connectionLineLength;
             
             private Color _connectionLineColor;
             
             private float _lastEntryHeight;
+            private float _lastEntryY;
 
             public VerticalHierarchyGroup(GUIStyle style) : base(false, style) {
                 _connectionLineWidth = Border.left;
@@ -23,37 +22,25 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 _connectionLineColor = style.normal.textColor;
             }
-            
-            protected override void CalculateLayoutData() {
-                NextEntryPosition.x += _connectionLineWidth;
-            }
 
-            protected override Rect GetActualRect(float x, float y, float height, float width) {
-                if (NextEntryPosition.y + height < FullContainerRect.y || NextEntryPosition.y > FullContainerRect.yMax) {
-                    return InvalidRect;
-                }
-
+            protected override Rect GetRectInternal(float x, float y, float height, float width) {
                 _lastEntryHeight = height;
-                _connectorLineY = y + height / 2;
+                _lastEntryY = y;
                 
                 var horizontalLine = new Rect(
-                    FullContainerRect.x - Padding.left, _connectorLineY,
+                    ContentRect.x - Padding.left, y + height / 2,
                     _connectionLineLength, _connectionLineWidth
                 );
-
                 EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
-
-                return new Rect(x, y, width - _connectionLineWidth, height);
+                
+                return new Rect(x, y, width, height);
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {
-                // No need to check if current event is Repaint - EditorGUI.DrawRect checks it internally
-                if (!IsGroupValid) return;
-                
                 var verticalLineRect = new Rect(
-                    FullContainerRect.x - Padding.left, FullContainerRect.y - Padding.top,
+                    ContentRect.x - Padding.left, ContentRect.y - Padding.top,
                     _connectionLineWidth,
-                    TotalRequestedHeight - _lastEntryHeight / 2
+                    (_lastEntryY - ContentRect.y) + _lastEntryHeight
                 );
                 
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
@@ -81,7 +68,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static void EndVerticalHierarchyGroup() {
-            EndLayoutGroup();
+            EndLayoutGroup<VerticalHierarchyGroup>();
         }
     }
 }

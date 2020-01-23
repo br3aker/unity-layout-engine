@@ -3,62 +3,41 @@ using System.Collections.Specialized;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class VerticalClippingGroup : VerticalLayoutGroupBase {
-            private Vector2 _worldPosition;
-
-            private float _lastRectActualHeight;
-            private float _lastRectActualY;
-
+        internal class VerticalClippingGroup : VerticalGroup {
             public VerticalClippingGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-            internal override GroupRectData GetGroupRect(float height, float width) {
-                var currentEntryPosition = NextEntryPosition;
-                var rect = GetRect(height, width);
-                rect.x = 0f;
-                rect.y = _lastRectActualY;
-//                rect.height = _lastRectActualHeight;
-
-                var groupRectData = new GroupRectData {
-                    Rect = rect,
-                    OffsetFromParentRect = currentEntryPosition
-                };
-                return groupRectData;
-            }
-
             internal override void RetrieveLayoutData(EventType currentEventType) {
-//                RegisterDebugData();
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
                     
                     if (Parent != null) {
                         var rectData = Parent.GetGroupRect(TotalRequestedHeight, TotalRequestedWidth);
-                        FullContainerRect = rectData.Rect;
-                        NextEntryPosition = rectData.OffsetFromParentRect - FullContainerRect.position;
+                        VisibleAreaRect = rectData.ClippedRect;
+                        ContentRect = rectData.FullContentRect;
                     }
                     else {
-                        FullContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        VisibleAreaRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        ContentRect = VisibleAreaRect;
                     }
                     
-                    IsGroupValid = FullContainerRect.IsValid();
+                    IsGroupValid = VisibleAreaRect.IsValid();
 
                     if (IsGroupValid) {
-                        FullContainerRect = Margin.Remove(FullContainerRect);
-                        _worldPosition = FullContainerRect.position;
-                        FullContainerRect = Padding.Remove(FullContainerRect);
+                        ContentRect = Padding.Remove(Margin.Remove(ContentRect));
 
-                        GUI.BeginClip(FullContainerRect);
-                        FullContainerRect.position = Vector2.zero;
-                        MaxAllowedWidth = FullContainerRect.width;
+                        VisibleAreaRect = Utility.RectIntersection(ContentRect, VisibleAreaRect);
+                        NextEntryPosition += (ContentRect.position - VisibleAreaRect.position);
+                        GUI.BeginClip(VisibleAreaRect);
+                        VisibleAreaRect.position = Vector2.zero;
 
                         return;
                     }
                 }
-                
-//                UpdateDebugData();
 
                 // Nested groups should be banished exactly here at non-layout layout data pull
                 // This would ensure 2 things:
@@ -69,30 +48,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
-            
-            protected override Rect GetActualRect(float x, float y, float height, float width) {
-                _lastRectActualHeight = height;
-                _lastRectActualY = y;
-                
-                var entryBottom = y + height;
-                if (y < FullContainerRect.y) {
-                    var uselessTop = Mathf.Abs(FullContainerRect.y - y);
-                    _lastRectActualHeight -= uselessTop;
-                    _lastRectActualY += uselessTop;
-                }
-                else if (entryBottom > FullContainerRect.yMax) {
-                    var uselessBottom = Mathf.Abs(entryBottom - FullContainerRect.yMax);
-                    _lastRectActualHeight -= uselessBottom;
-                }
-
-                return new Rect(x, y, Mathf.Min(width, FullContainerRect.width), Mathf.Min(height, FullContainerRect.height));
-            }
 
             internal sealed override void EndGroup(EventType currentEventType) {
                 if (IsGroupValid) {
+
                     GUI.EndClip();
-                    FullContainerRect = Padding.Add(FullContainerRect);
-                    FullContainerRect.position = _worldPosition;
                     EndGroupRoutine(currentEventType);
                 }
             }

@@ -17,7 +17,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight *= _faded;
             }
         }
-        
+
         public static bool BeginVerticalFadeGroup(bool discardMarginAndPadding, float faded, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
@@ -39,8 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static void EndVerticalFadeGroup() {
-            var topGroup = EndLayoutGroup();
-            if(!(topGroup is VerticalFadeGroup)) throw new Exception($"Group type mismatch: Expected {nameof(VerticalFadeGroup)} | Got {topGroup.GetType().Name}");
+            EndLayoutGroup<VerticalFadeGroup>();
         }
     }
 }
