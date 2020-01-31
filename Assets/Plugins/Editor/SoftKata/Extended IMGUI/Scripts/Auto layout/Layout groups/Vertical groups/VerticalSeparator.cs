@@ -18,12 +18,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 _activeSeparatorColor = style.onNormal.textColor;
                 _disabledSeparatorColor = style.normal.textColor;
 
-                MaxAllowedWidth -= _separatorWidth;
+                AutomaticEntryWidth -= _separatorWidth;
             }
             
-            protected override void CalculateLayoutData() {
-                TotalRequestedWidth += _separatorWidth;
-                NextEntryPosition.x += _separatorWidth;
+            protected override void PreLayoutRequest() {
+//                ServiceWidth += _separatorWidth;
+//                NextEntryPosition.x += _separatorWidth;
             }
 
             protected override void EndGroupRoutine(EventType currentEventType) {

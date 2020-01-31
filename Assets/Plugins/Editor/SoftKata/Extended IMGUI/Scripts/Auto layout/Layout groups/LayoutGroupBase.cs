@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal struct GroupRectData {
-            public Rect ClippedRect;
+            public Rect VisibleRect;
             public Rect FullContentRect;
         }
         
@@ -26,10 +26,13 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float TotalRequestedHeight = 0f;
             protected float TotalRequestedWidth = 0f;
 
+            protected float ServiceHeight = 0f;
+            protected float ServiceWidth = 0f;
+
             internal int EntriesCount;
             internal bool IsGroupValid = true;
 
-            protected float MaxAllowedWidth = -1f;
+            protected float AutomaticEntryWidth = -1f;
 
             // total rect of the group
             protected Rect VisibleAreaRect;
@@ -63,26 +66,23 @@ namespace SoftKata.ExtendedEditorGUI {
                 Padding = style.padding;
 
                 ContentOffset = style.contentOffset;
-
-                MaxAllowedWidth = (Parent?.MaxAllowedWidth ?? EditorGUIUtility.currentViewWidth) - Margin.horizontal - Padding.horizontal;
             }
 
             internal void RegisterLayoutRequest() {
                 _childrenCount = SubscribedForLayout.Count - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
-                    TotalRequestedHeight += 
-                        Margin.vertical
-                        + Padding.vertical
-                        + ContentOffset.y * (EntriesCount - 1);
+                    ServiceHeight = Margin.vertical + Border.vertical + Padding.vertical + ContentOffset.y * (EntriesCount - 1);
+                    ServiceWidth = Margin.horizontal + Border.horizontal + Padding.horizontal + ContentOffset.x * (EntriesCount - 1);
 
-                    TotalRequestedWidth +=
-                        Margin.horizontal
-                        + Padding.horizontal
-                        + ContentOffset.x * (EntriesCount - 1);
                     
-                    CalculateLayoutData();
+                    TotalRequestedHeight += ServiceHeight;
+                    if (TotalRequestedWidth > 0f) {
+                        TotalRequestedWidth += ServiceWidth;
+                    }
                     
+                    PreLayoutRequest();
+
                     VisibleAreaRect = Parent?.GetRect(TotalRequestedHeight, TotalRequestedWidth) ?? LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
                 }
             }
@@ -91,8 +91,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (IsGroupValid) {
                     CurrentEventType = currentEventType;
                     if (Parent != null) {
-                        var rectData = Parent.GetGroupRect(TotalRequestedHeight, TotalRequestedWidth);
-                        VisibleAreaRect = rectData.ClippedRect;
+                        var rectData = Parent.GetGroupRectData(TotalRequestedHeight, TotalRequestedWidth);
+                        VisibleAreaRect = rectData.VisibleRect;
                         ContentRect = rectData.FullContentRect;
                     }
                     else {
@@ -102,10 +102,19 @@ namespace SoftKata.ExtendedEditorGUI {
                     IsGroupValid = VisibleAreaRect.IsValid();
 
                     if (IsGroupValid) {
-                        ContentRect = Padding.Remove(Margin.Remove(ContentRect));
+                        ContentRect = Padding.Remove(Border.Remove(Margin.Remove(ContentRect)));
                         NextEntryPosition = ContentRect.position;
-                        
-                        MaxAllowedWidth = VisibleAreaRect.width;
+
+//                        var testRect = ContentRect;
+//                        testRect.height += Margin.top;
+//                        EditorGUI.LabelField(testRect, ContentRect.ToString());
+//                        EditorGUI.DrawRect(Padding.Add(Border.Add(Margin.Add(testRect))), Color.white);
+//                        EditorGUI.DrawRect(Padding.Add(Border.Add(testRect)), Color.black);
+//                        EditorGUI.DrawRect(Padding.Add(testRect), Color.green);
+
+                        if (AutomaticEntryWidth < 0f) {
+                            AutomaticEntryWidth = ContentRect.width;
+                        }
 
                         return;
                     }
@@ -121,17 +130,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
 
-            protected virtual void CalculateLayoutData() { }
-
-            internal virtual Rect GetRect(float height) {
-                return GetRect(height, MaxAllowedWidth);
-            }
+            protected virtual void PreLayoutRequest() { }
 
             internal Rect GetRect(float height, float width) {
                 CurrentEntryPosition = NextEntryPosition;
+                
                 if (width < 0f) {
-                    width = MaxAllowedWidth;
+                    width = AutomaticEntryWidth;
                 }
+
                 if (RegisterNewEntry(height, width)) {
                     return GetRectInternal(CurrentEntryPosition.x, CurrentEntryPosition.y, height, width);
                 }
@@ -139,16 +146,20 @@ namespace SoftKata.ExtendedEditorGUI {
                 return InvalidRect;
             }
 
-            internal GroupRectData GetGroupRect(float height, float width) {
+            internal GroupRectData GetGroupRectData(float height, float width) {
                 CurrentEntryPosition = NextEntryPosition;
 
-                var groupRect = 
-                    RegisterNewEntry(height, width)
-                    ? GetGroupRectInternal(CurrentEntryPosition.x, CurrentEntryPosition.y, height, Mathf.Min(VisibleAreaRect.width, width))
-                    : InvalidRect;
+                if (width <= 0f) {
+                    width = AutomaticEntryWidth;
+                }
                 
+                Rect visibleRect = InvalidRect;
+                if (RegisterNewEntry(height, width)) {
+                    visibleRect = GetVisibleGroupRect(CurrentEntryPosition.x, CurrentEntryPosition.y, height, width);
+                }
+
                 return new GroupRectData {
-                    ClippedRect = groupRect,
+                    VisibleRect = visibleRect,
                     FullContentRect = new Rect(CurrentEntryPosition, new Vector2(width, height))
                 };
             }
@@ -159,41 +170,42 @@ namespace SoftKata.ExtendedEditorGUI {
                 return new Rect(x, y, width, height);
             }
 
-            private Rect GetGroupRectInternal(float x, float y, float height, float width) {
+            private Rect GetVisibleGroupRect(float x, float y, float height, float width) {
+                // X axis
+                var clippedWidth = width;
+                var modifiedX = x;
+                var entryRight = x + width;
+                
+                if (x < VisibleAreaRect.x) {
+                    var uselessLeft = Mathf.Abs(VisibleAreaRect.x - x);
+                    clippedWidth -= uselessLeft;
+                    modifiedX += uselessLeft;
+                }
+                if (entryRight > VisibleAreaRect.xMax) {
+                    var uselessRight = Mathf.Abs(entryRight - VisibleAreaRect.xMax);
+                    clippedWidth -= uselessRight;
+                }
+                
+                // Y axis
                 var clippedHeight = height;
                 var modifiedY = y;
-
-                float upClip = 0f;
-                float botClip = 0f;
-                
                 var entryBottom = y + height;
+                
                 if (y < VisibleAreaRect.y) {
                     var uselessTop = Mathf.Abs(VisibleAreaRect.y - y);
                     clippedHeight -= uselessTop;
                     modifiedY += uselessTop;
-
-                    upClip = uselessTop;
-
-//                    if (GetType() == typeof(ScrollGroup)) {
-//                        Debug.Log(uselessTop);
-//                    }
                 }
                 if (entryBottom > VisibleAreaRect.yMax) {
                     var uselessBottom = Mathf.Abs(entryBottom - VisibleAreaRect.yMax);
                     clippedHeight -= uselessBottom;
-
-                    botClip = uselessBottom;
                 }
-                
-//                if (GetType() == typeof(VerticalFadeGroup)) {
-//                    Debug.Log($"Clip Space: {VisibleAreaRect} | Requested height {height} - actual height: {clippedHeight} | Clipped top: {upClip} - Clipped bottom: {botClip}");
-//                }
-                
-                return new Rect(0f, modifiedY, width, clippedHeight);
+
+                return new Rect(modifiedX, modifiedY, clippedWidth, clippedHeight);
             }
 
             internal void RegisterRectArray(float elementHeight, int count) {
-                RegisterRectArray(elementHeight, MaxAllowedWidth, count);
+                RegisterRectArray(elementHeight, AutomaticEntryWidth, count);
             }
             internal abstract void RegisterRectArray(float elementHeight, float elementWidth, int count);
 

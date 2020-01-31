@@ -8,13 +8,12 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalGroup : LayoutGroupBase {
             public HorizontalGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
 
-
-            protected override void CalculateLayoutData() {}
-
-            protected sealed override bool RegisterNewEntry(float height, float width) {
+            protected override bool RegisterNewEntry(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
                     EntriesCount++;
-                    TotalRequestedWidth += width;
+                    if (width > 0f) {
+                        TotalRequestedWidth += width;
+                    }
                     TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, height);
                     return false;
                 }
@@ -22,14 +21,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!IsGroupValid) {
                     return false;
                 }
+
                 
                 NextEntryPosition.x += width + ContentOffset.x;
-                
+
                 // occlusion
                 if (CurrentEntryPosition.x + width < VisibleAreaRect.x || CurrentEntryPosition.x > VisibleAreaRect.xMax) {
                     return false;
                 }
-                
+
                 return true;
             }
 

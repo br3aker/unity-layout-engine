@@ -46,13 +46,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 _scrollbarColor = style.onNormal.textColor;
 
 
-                MaxAllowedWidth = _containerSize.x - Margin.horizontal - Padding.horizontal;
+                AutomaticEntryWidth = _containerSize.x - Margin.horizontal - Padding.horizontal;
                 
                 _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
-            protected override void CalculateLayoutData() {
+            protected override void PreLayoutRequest() {
                 if (TotalRequestedWidth > _containerSize.x) {
                     _needsHorizontalScroll = true;
                     _containerToActualSizeRatio.x = _containerSize.x / TotalRequestedWidth;

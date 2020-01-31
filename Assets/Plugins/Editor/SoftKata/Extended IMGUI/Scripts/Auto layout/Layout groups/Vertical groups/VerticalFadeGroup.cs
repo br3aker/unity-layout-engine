@@ -13,7 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _faded = faded;
             }
 
-            protected override void CalculateLayoutData() {
+            protected override void PreLayoutRequest() {
                 TotalRequestedHeight *= _faded;
             }
         }
