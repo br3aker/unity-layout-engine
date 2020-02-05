@@ -14,14 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         private static LayoutGroupBase _topGroup;
 
-        public struct LayoutDebugData {
-            public string Data;
-            public bool IsValid;
-        }
-        private static List<LayoutDebugData> _debugDataList = new List<LayoutDebugData>();
-        private static LayoutDebugData[] _debugDataOut;
 
-        
         internal static Rect RequestRectRaw(float height, float width = AutoWidthValue) {
             var rect = GUILayoutUtility.GetRect(width, height);
             if (width > 0f) {
@@ -55,15 +48,6 @@ namespace SoftKata.ExtendedEditorGUI {
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }
-        }
-
-        public static LayoutDebugData[] GetEngineGroupHierarchyData() {
-            if (Event.current.type == EventType.Layout) {
-                _debugDataOut = _debugDataList.ToArray();
-                _debugDataList.Clear();
-            }
-
-            return _debugDataOut;
         }
     }
 }
