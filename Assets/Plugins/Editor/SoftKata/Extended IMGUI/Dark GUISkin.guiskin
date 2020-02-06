@@ -1424,7 +1424,7 @@ MonoBehaviour:
     m_Normal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+      m_TextColor: {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -1440,7 +1440,7 @@ MonoBehaviour:
     m_OnNormal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+      m_TextColor: {r: 0.28235295, g: 0.76862746, b: 0.9137255, a: 1}
     m_OnHover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -1454,20 +1454,20 @@ MonoBehaviour:
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 0}
     m_Border:
-      m_Left: 0
+      m_Left: 2
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
     m_Margin:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
     m_Padding:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Left: 20
+      m_Right: 20
+      m_Top: 20
+      m_Bottom: 20
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -1729,7 +1729,7 @@ MonoBehaviour:
       m_Bottom: 20
     m_Padding:
       m_Left: 20
-      m_Right: 0
+      m_Right: 20
       m_Top: 20
       m_Bottom: 20
     m_Overflow:

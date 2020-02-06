@@ -42,7 +42,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
-            TestingMethod();
+//            TestingMethod();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -65,8 +65,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         }
 
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Hot control id: {EditorGUIUtility.hotControl}");
-        EditorGUILayout.LabelField($"Keyboard control id: {EditorGUIUtility.keyboardControl}");
+        EditorGUILayout.LabelField($"Hot control id: {GUIUtility.hotControl}");
+        EditorGUILayout.LabelField($"Keyboard control id: {GUIUtility.keyboardControl}");
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
@@ -83,10 +83,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private float _verticalScrollPosition = 0f;
     private float _horizontalScrollPosition = 0f;
 
-    private void TestingMethod() {
-        
-    }
-    
     private void UnityImplementationScrollTest() {
         EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.Height(150));
         for (int i = 0; i < _verticalElementsCount; i++) {
@@ -147,7 +143,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void HorizontalGroupNestedVerticalGroupsTest() {
         if (LayoutEngine.BeginHorizontalGroup()) {
             for (int j = 0; j < 10; j++) {
-                if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                     for (int i = 0; i < 3; i++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, 150);
                         if (rect.IsValid()) {
@@ -155,7 +151,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                         }
                     }
                 }
-                LayoutEngine.EndVerticalSeparatorGroup();
+                LayoutEngine.EndVerticalGroup();
             }
         }
         LayoutEngine.EndHorizontalGroup();
@@ -231,8 +227,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void VerticalSeparatorGroupTest() {
-        if (LayoutEngine.BeginVerticalSeparatorGroup()) {
-            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+        if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
                     var rect = LayoutEngine.RequestLayoutRect(16);
                     if (rect.IsValid()) {
@@ -240,9 +236,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     }
                 }
             }
-            LayoutEngine.EndVerticalSeparatorGroup();
+            LayoutEngine.EndVerticalGroup();
         }
-        LayoutEngine.EndVerticalSeparatorGroup();
+        LayoutEngine.EndVerticalGroup();
     }
     private void VerticalHierarchyGroupTest() {
         if (LayoutEngine.BeginVerticalHierarchyGroup()) {
@@ -258,7 +254,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         if (headerRect.IsValid()) {
             folded.target = EditorGUI.Foldout(headerRect,folded.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, true)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, GroupModifier.DiscardMargin)) {
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < 3; i++) {
                     var rect = LayoutEngine.RequestLayoutRect(16, 150);
@@ -276,7 +272,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         if (headerRect.IsValid()) {
             folded1.target = EditorGUI.Foldout(headerRect,folded1.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, true)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, GroupModifier.DiscardMargin)) {
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < 3; i++) {
                     var rect = LayoutEngine.RequestLayoutRect(16, 150);
@@ -299,7 +295,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         if (rootHeaderRect.IsValid()) {
             _verticalFaded1.target = EditorGUI.Foldout(rootHeaderRect,_verticalFaded1.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, true)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, GroupModifier.DiscardMargin)) {
             if(LayoutEngine.BeginVerticalHierarchyGroup()) {
                 var rect = LayoutEngine.RequestLayoutRect(16, 150);
                 if (rect.IsValid()) {
@@ -325,10 +321,10 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void VerticalHierarchyWithSeparatorTest() {
-        if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+        if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
             VerticalHierarchyGroupTest();
         }
-        LayoutEngine.EndVerticalSeparatorGroup();
+        LayoutEngine.EndVerticalGroup();
     }
 
     private void FixedHorizontalGroupTest() {
@@ -375,7 +371,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             LayoutEngine.EndVerticalHierarchyGroup();
              
             // Hierarchy
-            if (LayoutEngine.BeginVerticalGroup(false)) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 var nestedFoldoutRect = LayoutEngine.RequestLayoutRect(16, -1);
                 if (nestedFoldoutRect.IsValid()) {
                     _verticalFaded2.target = EditorGUI.Foldout(nestedFoldoutRect, _verticalFaded2.target, "Nested fade group", true);
@@ -402,7 +398,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             HorizontalGroupNestedVerticalGroupsTest();
             
             for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalGroup(true)) {
+                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
                         LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
                     }
@@ -418,7 +414,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 LayoutEngine.EndHorizontalGroup();
             }
 
-            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, -1);
@@ -429,10 +425,10 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 }
                 LayoutEngine.EndVerticalGroup();
             }
-            LayoutEngine.EndVerticalSeparatorGroup();
+            LayoutEngine.EndVerticalGroup();
 
             
-            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, 500);
@@ -443,13 +439,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 }
                 LayoutEngine.EndVerticalGroup();
             }
-            LayoutEngine.EndVerticalSeparatorGroup();
+            LayoutEngine.EndVerticalGroup();
 
 
             
-            if (LayoutEngine.BeginHorizontalGroup(true)) {
+            if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                 for (int j = 0; j < 8; j++) {
-                    if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+                    if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                         for (int i = 0; i < 3; i++) {
                             var rect = LayoutEngine.RequestLayoutRect(16, 150);
                             if (rect.IsValid()) {
@@ -457,7 +453,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                             }
                         }
                     }
-                    LayoutEngine.EndVerticalSeparatorGroup();
+                    LayoutEngine.EndVerticalGroup();
                 }
             }
             LayoutEngine.EndHorizontalGroup();
@@ -467,7 +463,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < 16; i++) {
                     var rect = LayoutEngine.RequestLayoutRect(16, 150);
                     if (rect.IsValid()) {
@@ -475,9 +471,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     }
                 }
             }
-            LayoutEngine.EndVerticalSeparatorGroup();
+            LayoutEngine.EndVerticalGroup();
             
-            if (LayoutEngine.BeginVerticalSeparatorGroup()) {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < 10; i++) {
                     var rect = LayoutEngine.RequestLayoutRect(16, 150);
                     if (rect.IsValid()) {
@@ -485,7 +481,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     }
                 }
             }
-            LayoutEngine.EndVerticalSeparatorGroup();
+            LayoutEngine.EndVerticalGroup();
             
             VerticalHierarchyGroupTreeTest();
         }

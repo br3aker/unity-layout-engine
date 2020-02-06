@@ -31,7 +31,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private Color _backgroundColor;
             private Color _scrollbarColor;
 
-            public ScrollGroup(bool discardMargin, float height, float width, Vector2 scrollPos, GUIStyle style) : base(discardMargin, style) {
+            public ScrollGroup(float height, float width, Vector2 scrollPos, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _containerSize = new Vector2(width, height);
                 ScrollPos = scrollPos;
                 
@@ -191,11 +191,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginHybridScrollGroup(bool discardMarginAndPadding, float width, float height, Vector2 scrollValue, GUIStyle style) {
+        public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new ScrollGroup(discardMarginAndPadding, height, width, scrollValue, style);
+                layoutGroup = new ScrollGroup(height, width, scrollValue, modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -207,8 +207,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, bool discardMarginAndPadding = false) {
-            return BeginHybridScrollGroup(discardMarginAndPadding, width, height, scrollValue, ExtendedEditorGUI.Resources.LayoutGroup.VerticalScrollGroup);
+        public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
+            return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalScrollGroup);
         }
 
         public static Vector2 EndHybridScrollGroup() {

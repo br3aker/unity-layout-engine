@@ -11,7 +11,7 @@ using UnityEngine.Assertions.Must;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class VerticalClippingGroup : VerticalGroup {
-            public VerticalClippingGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
+            public VerticalClippingGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
 
             internal override void RetrieveLayoutData(EventType currentEventType) {
                 if (IsGroupValid) {
@@ -75,8 +75,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             internal sealed override void EndGroup(EventType currentEventType) {
                 if (IsGroupValid) {
-
                     GUI.EndClip();
+                    EndGroupModifiersRoutine();
                     EndGroupRoutine(currentEventType);
                 }
             }

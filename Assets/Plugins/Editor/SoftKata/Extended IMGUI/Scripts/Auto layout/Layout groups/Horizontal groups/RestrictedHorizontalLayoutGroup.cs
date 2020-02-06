@@ -15,7 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _flexibleElementWidth = -1f;
 
             
-            public FlexibleHorizontalLayoutGroup(bool discardMargin, float width, GUIStyle style) : base(discardMargin, style) {
+            public FlexibleHorizontalLayoutGroup(float width, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _containerWidth = width;
             }
 
@@ -65,15 +65,15 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginRestrictedHorizontalGroup(bool discardMarginAndPadding = false) {
-            return BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth, discardMarginAndPadding);
+        public static bool BeginRestrictedHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
+            return BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth, modifier);
         }
         
-        public static bool BeginRestrictedHorizontalGroup(float width, bool discardMarginAndPadding, GUIStyle style) {
+        public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new FlexibleHorizontalLayoutGroup(discardMarginAndPadding, width, style);
+                layoutGroup = new FlexibleHorizontalLayoutGroup(width, modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -85,8 +85,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginRestrictedHorizontalGroup(float width, bool discardMarginAndPadding = false) {
-            return BeginRestrictedHorizontalGroup(width, discardMarginAndPadding, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalRestrictedGroup);
+        public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
+            return BeginRestrictedHorizontalGroup(width, modifier, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalRestrictedGroup);
         }
 
         public static void EndRestrictedHorizontalGroup() {

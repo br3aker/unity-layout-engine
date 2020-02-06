@@ -9,7 +9,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class VerticalFadeGroup : VerticalClippingGroup {
             private float _faded;
 
-            public VerticalFadeGroup(bool discardMargin, float faded, GUIStyle style) : base(discardMargin, style) {
+            public VerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _faded = faded;
             }
 
@@ -18,11 +18,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginVerticalFadeGroup(bool discardMarginAndPadding, float faded, GUIStyle style) {
+        public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalFadeGroup(discardMarginAndPadding, faded, style);
+                layoutGroup = new VerticalFadeGroup(faded, modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -34,8 +34,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginVerticalFadeGroup(float faded, bool discardMarginAndPadding = false) {
-            return BeginVerticalFadeGroup(discardMarginAndPadding, faded, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
+        public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
+            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
         }
 
         public static void EndVerticalFadeGroup() {

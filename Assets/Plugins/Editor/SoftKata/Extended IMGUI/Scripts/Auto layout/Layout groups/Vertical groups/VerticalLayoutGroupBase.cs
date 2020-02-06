@@ -7,7 +7,7 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class VerticalGroup : LayoutGroupBase {
-            public VerticalGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {
+            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 TotalRequestedWidth = float.MinValue;
             }
 
@@ -40,11 +40,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginVerticalGroup(bool discardMargins, GUIStyle style) {
+        public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalGroup(discardMargins, style);
+                layoutGroup = new VerticalGroup(modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -56,8 +56,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginVerticalGroup(bool discardMargins = false) {
-            return BeginVerticalGroup(discardMargins, ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
+        public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
+            return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalGroup);
         }
 
         public static void EndVerticalGroup() {

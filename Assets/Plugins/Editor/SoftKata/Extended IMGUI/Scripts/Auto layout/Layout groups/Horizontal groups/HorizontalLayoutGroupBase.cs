@@ -6,7 +6,7 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         internal class HorizontalGroup : LayoutGroupBase {
-            public HorizontalGroup(bool discardMargin, GUIStyle style) : base(discardMargin, style) {}
+            public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
 
             protected override bool RegisterNewEntry(float height, float width) {
                 if (CurrentEventType == EventType.Layout) {
@@ -40,11 +40,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginHorizontalGroup(bool discardMarginAndPadding, GUIStyle style) {
+        public static bool BeginHorizontalGroup(GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new HorizontalGroup(discardMarginAndPadding, style);
+                layoutGroup = new HorizontalGroup(modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -56,8 +56,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginHorizontalGroup(bool discardMarginAndPadding = false) {
-            return BeginHorizontalGroup(discardMarginAndPadding, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+        public static bool BeginHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
+            return BeginHorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
         }
 
         public static void EndHorizontalGroup() {

@@ -7,14 +7,25 @@ using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
+    [Flags]
+    public enum GroupModifier {
+        None = 1 << 1,
+        DiscardMargin = 1 << 2,
+        DiscardBorder = 1 << 3,
+        DiscardPadding = 1 << 4,
+        DrawLeftSeparator = 1 << 5
+    }
+    
     public static partial class LayoutEngine {
         internal struct GroupRectData {
             public Rect VisibleRect;
             public Rect FullContentRect;
         }
-        
+
         internal abstract class LayoutGroupBase {
             protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroupBase).GetHashCode();
+
+            private GroupModifier _modifier;
 
             internal LayoutGroupBase Parent { get; }
             private int _groupIndex;
@@ -42,28 +53,32 @@ namespace SoftKata.ExtendedEditorGUI {
             protected Vector2 NextEntryPosition;
             protected Vector2 CurrentEntryPosition;
 
-            // padding settings
+            // offset settings
             protected readonly RectOffset Margin;
             protected readonly RectOffset Border;
             protected readonly RectOffset Padding;
+            
+            // main color - used in modfiers
+            protected readonly Color ActiveColor;
+            protected readonly Color InactiveColor;
 
             protected Vector2 ContentOffset;
 
-            protected LayoutGroupBase(bool discardMargin, GUIStyle style) {
+            protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
                 Parent = _topGroup;
+
+                _modifier = modifier;
 
                 // Child groups indexing
                 _groupIndex = SubscribedForLayout.Count;
                 
                 // group layout settings
-                if (discardMargin) {
-                    Margin = ZeroRectOffset;
-                }
-                else {
-                    Margin = style.margin;
-                }
-                Border = style.border;
-                Padding = style.padding;
+                Margin = (modifier & GroupModifier.DiscardMargin) == GroupModifier.DiscardMargin ? ZeroRectOffset : style.margin;
+                Border = (modifier & GroupModifier.DiscardBorder) == GroupModifier.DiscardBorder ? ZeroRectOffset : style.border;
+                Padding = (modifier & GroupModifier.DiscardPadding) == GroupModifier.DiscardPadding ? ZeroRectOffset : style.padding;
+
+                ActiveColor = style.onNormal.textColor;
+                InactiveColor = style.normal.textColor;
 
                 ContentOffset = style.contentOffset;
             }
@@ -212,30 +227,23 @@ namespace SoftKata.ExtendedEditorGUI {
             
             internal virtual void EndGroup(EventType currentEventType) {
                 if (IsGroupValid) {
+                    EndGroupModifiersRoutine();
                     EndGroupRoutine(currentEventType);
                 }
             }
             protected virtual void EndGroupRoutine(EventType currentEventType) { }
+
+            protected void EndGroupModifiersRoutine() {
+                var paddedContentRect = Padding.Add(ContentRect);
+                
+                // Left separator line
+                if ((_modifier & GroupModifier.DrawLeftSeparator) == GroupModifier.DrawLeftSeparator) {
+                    var separatorLineRect = new Rect(paddedContentRect.x - Border.left, paddedContentRect.y, Border.left, paddedContentRect.height);
+                    EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? ActiveColor : InactiveColor);
+                }
+            }
         }
 
-        
-        internal static bool BeginGroupBase<T>(bool discardMargins, GUIStyle style, Func<bool, GUIStyle, T> creator) where T : LayoutGroupBase {
-            var eventType = Event.current.type;
-            LayoutGroupBase layoutGroup;
-            if (eventType == EventType.Layout) {
-                layoutGroup = creator(discardMargins, style);
-                SubscribedForLayout.Enqueue(layoutGroup);
-            }
-            else {
-                layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData(eventType);
-            }
-            
-            _topGroup = layoutGroup;
-
-            return layoutGroup.IsGroupValid;
-        }
-        
         internal static T EndLayoutGroup<T>() where T : LayoutGroupBase {
             var eventType = Event.current.type;
 

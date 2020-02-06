@@ -16,7 +16,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _lastEntryHeight;
             private float _lastEntryY;
 
-            public VerticalHierarchyGroup(GUIStyle style) : base(false, style) {
+            public VerticalHierarchyGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _connectionLineWidth = Border.left;
                 _connectionLineLength = Padding.left + Border.right;
 
@@ -47,11 +47,11 @@ namespace SoftKata.ExtendedEditorGUI {
             } 
         }
         
-        public static bool BeginVerticalHierarchyGroup(GUIStyle style) {
+        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier, GUIStyle style) {
             var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
             if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalHierarchyGroup(style);
+                layoutGroup = new VerticalHierarchyGroup(modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
@@ -63,8 +63,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginVerticalHierarchyGroup() {
-            return BeginVerticalHierarchyGroup(ExtendedEditorGUI.Resources.LayoutGroup.VerticalHierarchyGroup);
+        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier = GroupModifier.None) {
+            return BeginVerticalHierarchyGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalHierarchyGroup);
         }
 
         public static void EndVerticalHierarchyGroup() {
