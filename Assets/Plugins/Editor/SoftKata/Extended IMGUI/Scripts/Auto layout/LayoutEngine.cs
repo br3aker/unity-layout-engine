@@ -26,16 +26,8 @@ namespace SoftKata.ExtendedEditorGUI {
         public static Rect RequestLayoutRect(float height, float width = AutoWidthValue) {
             return _topGroup?.GetRect(height, width) ?? RequestRectRaw(height, width);
         }
-
-        public static void RegisterElementsArray(int count, float elementHeight) {
-            if (_topGroup != null) {
-                _topGroup.RegisterRectArray(elementHeight, count);
-            }
-            else {
-                RequestRectRaw(elementHeight * count);
-            }
-        }
-        public static void RegisterElementsArray(int count, float elementHeight, float elementWidth) {
+        
+        public static void RegisterElementsArray(int count, float elementHeight, float elementWidth = AutoWidthValue) {
             if (_topGroup != null) {
                 _topGroup.RegisterRectArray(elementHeight, elementWidth, count);
             }
