@@ -42,7 +42,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
-//            TestingMethod();
+            TestingMethod();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -77,6 +77,10 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         }
     }
 
+    private void TestingMethod() {
+        ExtendedEditorGUI.FloatPostfixInputField(LayoutEngine.RequestLayoutRect(16), 10f, "postfix", null);
+    }
+    
     private int _verticalElementsCount = 16;
     private int _horizontalElementsCount = 16;
 

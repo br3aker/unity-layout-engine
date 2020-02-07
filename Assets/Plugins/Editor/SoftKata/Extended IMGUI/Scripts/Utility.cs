@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -47,6 +50,15 @@ namespace SoftKata.ExtendedEditorGUI {
             for (int i = startIndex; i <= endIndex; i++) {
                 list[i] = value;
             }
+        }
+        
+        public static Func<T> CreateStaticGetter<T>(FieldInfo field) {
+            var methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
+            var setterMethod = new DynamicMethod(methodName, typeof(T), null, true);
+            var gen = setterMethod.GetILGenerator();
+            gen.Emit(OpCodes.Ldsfld, field);
+            gen.Emit(OpCodes.Ret);
+            return (Func<T>)setterMethod.CreateDelegate(typeof(Func<T>));
         }
     }
 }
