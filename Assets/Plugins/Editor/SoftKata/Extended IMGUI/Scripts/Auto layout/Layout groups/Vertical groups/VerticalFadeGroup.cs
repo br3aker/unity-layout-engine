@@ -35,7 +35,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return layoutGroup.IsGroupValid;
         }
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
-            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalFadeGroup);
+            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalFadeGroup);
         }
 
         public static void EndVerticalFadeGroup() {

@@ -34,7 +34,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     
     private void Update() {
-//        Repaint();
+        Repaint();
     }
 
     private void OnGUI() {
@@ -43,6 +43,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
             TestingMethod();
+//            PerformanceTestingScrollGroup();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -77,8 +78,24 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         }
     }
 
+    private bool _guiDisabled = false;
+
+    private int _testInteger = 10;
+    private float _testFloat = 3.14f;
+    private string _testError = "Must be > 0";
+
     private void TestingMethod() {
-        ExtendedEditorGUI.FloatPostfixInputField(LayoutEngine.RequestLayoutRect(16), 10f, "postfix", null);
+        _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
+        EditorGUI.BeginDisabledGroup(_guiDisabled);
+        if (LayoutEngine.BeginVerticalGroup()) {
+            var rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
+            _testInteger = ExtendedEditorGUI.IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
+            
+            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
+            _testFloat = ExtendedEditorGUI.FloatDelayedField(rect, _testFloat, "postfix", _testFloat > 0 ? null : _testError);
+        }
+        LayoutEngine.EndVerticalGroup();
+        EditorGUI.EndDisabledGroup();
     }
     
     private int _verticalElementsCount = 16;
@@ -88,9 +105,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private float _horizontalScrollPosition = 0f;
 
     private void UnityImplementationScrollTest() {
-        EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.Height(150));
+        EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.Height(640), GUILayout.Width(640));
         for (int i = 0; i < _verticalElementsCount; i++) {
-            EditorGUILayout.TextField("");
+            EditorGUILayout.BeginHorizontal();
+            for (int j = 0; j < _horizontalElementsCount; j++) {
+                EditorGUILayout.TextField("Text");                    
+            }
+            EditorGUILayout.EndHorizontal();
         }
         EditorGUILayout.EndScrollView();
     }
@@ -488,6 +509,29 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             LayoutEngine.EndVerticalGroup();
             
             VerticalHierarchyGroupTreeTest();
+        }
+        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+    }
+
+    private void PerformanceTestingScrollGroup() {
+        if (LayoutEngine.BeginHybridScrollGroup(640, 640, _hybridScrollPos)) {
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                    if (Event.current.type == EventType.Layout) {
+                        LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
+                    }
+                    else {
+                        for (int j = 0; j < _horizontalElementsCount; j++) {
+                            var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                            if (rect.IsValid()) {
+//                                EditorGUI.DelayedIntField(rect, 123);
+                                ExtendedEditorGUI.IntDelayedField(rect, 123, null, null);
+                            }
+                        }
+                    }
+                }
+                LayoutEngine.EndHorizontalGroup();
+            }
         }
         _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
     }

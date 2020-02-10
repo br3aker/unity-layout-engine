@@ -57,7 +57,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return layoutGroup.IsGroupValid;
         }
         public static bool BeginHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
-            return BeginHorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroup.HorizontalGroup);
+            return BeginHorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalGroup);
         }
 
         public static void EndHorizontalGroup() {

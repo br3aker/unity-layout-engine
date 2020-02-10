@@ -208,7 +208,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return layoutGroup.IsGroupValid;
         }
         public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
-            return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroup.VerticalScrollGroup);
+            return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalScrollGroup);
         }
 
         public static Vector2 EndHybridScrollGroup() {

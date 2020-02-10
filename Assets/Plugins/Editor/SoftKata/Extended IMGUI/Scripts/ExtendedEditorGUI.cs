@@ -21,20 +21,14 @@ namespace SoftKata.ExtendedEditorGUI {
     }
     
     internal class ResourcesHolder {
-        private const string LightSkinSubPath = "/Light GUISkin.guiskin";
-        private const string DarkSkinSubPath = "/Dark GUISkin.guiskin";
-        
-        private const string ResourcesEditorLightVersion = "/Resources/Light/";
-        private const string ResourcesEditorDarkVersion = "/Resources/Dark/";
+        private const string LayoutEngineLightSkinSubPath = "/Light Layout Engine skin.guiskin";
+        private const string LayoutEngineDarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
 
-        internal struct CommonMargins {
-            public GUIStyle DefaultMargins;
+        private const string ControlsLightSkinSubPath = "/Light Controls skin.guiskin";
+        private const string ControlsDarkSkinSubPath = "/Dark Controls skin.guiskin";
 
-            public CommonMargins(GUISkin skin) {
-                DefaultMargins = skin.GetStyle("Layout/Default margins");
-            }
-        }
-        internal struct LayoutGroupData {
+        // Layout Engine
+        internal struct LayoutGroupsStyles {
             public GUIStyle VerticalGroup;
             public GUIStyle VerticalFadeGroup;
             public GUIStyle VerticalScrollGroup;
@@ -44,7 +38,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle HorizontalScrollGroup;
             public GUIStyle HorizontalRestrictedGroup;
 
-            public LayoutGroupData(GUISkin skin) {
+            public LayoutGroupsStyles(GUISkin skin) {
                 VerticalGroup = skin.GetStyle("Layout group/Vertical group");
                 VerticalFadeGroup = skin.GetStyle("Layout group/Vertical fade group");
                 VerticalScrollGroup = skin.GetStyle("Layout group/Vertical scroll group");
@@ -55,6 +49,27 @@ namespace SoftKata.ExtendedEditorGUI {
                 HorizontalRestrictedGroup = skin.GetStyle("Layout group/Horizontal restricted group");
             }
         }
+        
+        // Controls
+        internal struct InputFieldStyles {
+            public GUIStyle Normal;
+            public GUIStyle Error;
+
+            public GUIStyle ErrorMessage;
+
+            public GUIStyle Postfix;
+            
+
+            public InputFieldStyles(GUISkin skin) {
+                Normal = skin.GetStyle("Input field");
+                Error = skin.GetStyle("Input field error");
+                
+                Postfix = skin.GetStyle("Input field/Postfix");
+                
+                ErrorMessage = skin.GetStyle("Input field/Error message");
+            }
+        }
+        
         internal struct ToggleData {
             public GUIStyle Style;
             public Texture DisabledIcon;
@@ -62,22 +77,6 @@ namespace SoftKata.ExtendedEditorGUI {
             public ToggleData(GUISkin skin, string path) {
                 Style = skin.GetStyle("Controls/Toggle");
                 DisabledIcon = Utility.LoadAssetAtPathAndAssert<Texture>(path + "toggle_on_disabled.png");
-            }
-        }
-        internal struct InputFieldData {
-            public GUIStyle UnderlineMainNormal;
-            public GUIStyle UnderlineMainError;
-            public GUIStyle UnderlineErrorMessage;
-
-            public GUIStyle Postfix;
-            
-
-            public InputFieldData(GUISkin skin) {
-                UnderlineMainNormal = skin.GetStyle("Controls/Input field/Underline/Main");
-                UnderlineMainError = skin.GetStyle("Controls/Input field/Underline/Main error");
-                UnderlineErrorMessage = skin.GetStyle("Controls/Input field/Underline/Error message");
-
-                Postfix = skin.GetStyle("Controls/Input field/Postfix");
             }
         }
         internal struct FoldoutData {
@@ -115,35 +114,34 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        internal CommonMargins Margins;
-        internal LayoutGroupData LayoutGroup;
-        internal ToggleData Toggle;
-        internal InputFieldData InputField;
-        internal FoldoutData Foldout;
-        internal KeyboardListenerData KeyboardListener;
-        internal ColorFieldData ColorField;
-        internal ObjectFieldData ObjectField;
+        // Layout engine
+        internal LayoutGroupsStyles LayoutGroups;
+        
+        // Controls
+        internal InputFieldStyles InputField;
+
+//        internal ToggleData Toggle;
+//        internal FoldoutData Foldout;
+//        internal KeyboardListenerData KeyboardListener;
+//        internal ColorFieldData ColorField;
+//        internal ObjectFieldData ObjectField;
 
         internal ResourcesHolder() {
             // Paths resolution
             var isProSkin = EditorGUIUtility.isProSkin;
             
             var skinPath = 
-                ExtendedEditorGUI.PluginPath + (isProSkin ? DarkSkinSubPath : LightSkinSubPath);
-            var resourcesPath = 
-                ExtendedEditorGUI.PluginPath + (isProSkin ? ResourcesEditorDarkVersion : ResourcesEditorLightVersion);
+                ExtendedEditorGUI.PluginPath + (isProSkin ? LayoutEngineDarkSkinSubPath : LayoutEngineLightSkinSubPath);
+            var controlsSkinPath = 
+                ExtendedEditorGUI.PluginPath + (isProSkin ? ControlsDarkSkinSubPath : ControlsLightSkinSubPath);
             
-            // Resources loading
-            var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
-
-            Margins = new CommonMargins(skin);
-            LayoutGroup = new LayoutGroupData(skin);
-            Toggle = new ToggleData(skin, resourcesPath + "Toggle/");
-            InputField = new InputFieldData(skin);
-            Foldout = new FoldoutData(skin);
-            KeyboardListener = new KeyboardListenerData(skin);
-            ColorField = new ColorFieldData(skin);
-            ObjectField = new ObjectFieldData(skin, resourcesPath + "Object field/");
+            // Layout engine
+            LayoutGroups = new LayoutGroupsStyles(Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath));
+            
+            // Controls
+            var controlSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
+            
+            InputField = new InputFieldStyles(controlSkin);
         }
     }
 }
