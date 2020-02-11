@@ -90,6 +90,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     private void TestingMethod() {
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
+        
         EditorGUI.BeginDisabledGroup(_guiDisabled);
         if (LayoutEngine.BeginVerticalGroup()) {
             var rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
@@ -97,6 +98,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             
             rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
             _testBool = ExtendedEditorGUI.PrefixToggle(rect, _testBool, "prefix toggle");
+
+            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
+            _testBool = ExtendedEditorGUI.Foldout(rect, _testBool, "Foldout");
         }
         LayoutEngine.EndVerticalGroup();
         EditorGUI.EndDisabledGroup();

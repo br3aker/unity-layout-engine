@@ -70,7 +70,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 ErrorMessage = skin.GetStyle("Input field/Error message");
             }
         }
-        
         internal struct ToggleStyle {
             public GUIStyle Style;
 
@@ -78,16 +77,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 Style = skin.GetStyle("Toggle");
             }
         }
-        
-        internal struct FoldoutData {
-            public GUIStyle UnderlineLabelStyle;
-            public GUIStyle ArrowIconStyle;
+        internal struct FoldoutStyle {
+            public GUIStyle Underline;
             
-            public FoldoutData(GUISkin skin) {
-                UnderlineLabelStyle = skin.GetStyle("Controls/Foldout/Foldout underline/Label");
-                ArrowIconStyle = skin.GetStyle("Controls/Foldout/Foldout underline/Arrow icon");
+            public FoldoutStyle(GUISkin skin) {
+                Underline = skin.GetStyle("Foldout");
             }
         }
+        
         internal struct KeyboardListenerData {
             public GUIStyle MainLabel;
             public GUIStyle SubLabel;
@@ -122,9 +119,8 @@ namespace SoftKata.ExtendedEditorGUI {
         
         internal InputFieldStyle InputField;
         internal ToggleStyle Toggle;
+        internal FoldoutStyle Foldout;
 
-//        internal ToggleData Toggle;
-//        internal FoldoutData Foldout;
 //        internal KeyboardListenerData KeyboardListener;
 //        internal ColorFieldData ColorField;
 //        internal ObjectFieldData ObjectField;
@@ -142,12 +138,13 @@ namespace SoftKata.ExtendedEditorGUI {
             LayoutGroups = new LayoutGroupsStyles(Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath));
             
             // Controls
-            var controlSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
+            var controlsSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
 
-            Label = controlSkin.FindStyle("Label");
+            Label = controlsSkin.FindStyle("Label");
             
-            InputField = new InputFieldStyle(controlSkin);
-            Toggle = new ToggleStyle(controlSkin);
+            InputField = new InputFieldStyle(controlsSkin);
+            Toggle = new ToggleStyle(controlsSkin);
+            Foldout = new FoldoutStyle(controlsSkin);
         }
     }
 }

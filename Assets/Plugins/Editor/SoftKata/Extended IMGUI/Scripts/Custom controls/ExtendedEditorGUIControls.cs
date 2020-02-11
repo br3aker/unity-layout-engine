@@ -153,49 +153,11 @@ namespace SoftKata.ExtendedEditorGUI {
             value.floatValue = GenericAssertedField(rect, value.floatValue, postfix, errorMessage);
         }
 
-
-//        // TODO [assertion]: add check for input style for border >= 1
-//        public static bool FoldoutUnderline(Rect rect, bool expanded, GUIContent label) {
-//            var styles = Resources.Foldout;
-//            var labelStyle = styles.UnderlineLabelStyle;
-//            var arrowStyle = styles.ArrowIconStyle;
-//            
-//            var margin = labelStyle.margin;
-//            
-//            rect.x += margin.left;
-//            rect.width -= margin.right + margin.left;
-//
-//            // Underline
-//            float lineHeight = labelStyle.border.bottom;
-//            var underlineRect = new Rect(rect.x, rect.yMax - lineHeight, rect.width, lineHeight);
-//            EditorGUI.DrawRect(underlineRect, labelStyle.onNormal.textColor);
-//
-//            // Arrow
-//            if (Event.current.type == EventType.Repaint) {
-//                var arrowRect = new Rect(
-//                    rect.x,
-//                    rect.y + (rect.height - labelStyle.padding.vertical) / 2 + labelStyle.padding.top -
-//                    arrowStyle.fixedHeight / 2,
-//                    rect.height,
-//                    rect.width
-//                );
-//                arrowStyle.Draw(arrowRect, false, false, expanded, false);
-//            }
-//            
-//            // Foldout
-//            rect.xMin += DefaultFoldoutMargin + arrowStyle.fixedWidth + arrowStyle.padding.right;
-//            return EditorGUI.Foldout(rect, expanded, label, true, labelStyle);
-//        }
-//        public static bool FoldoutUnderline(Rect rect, SerializedProperty expanded, GUIContent label) {
-//            return expanded.boolValue = FoldoutUnderline(rect, expanded.boolValue, label);
-//        }
-//        public static bool FoldoutUnderline(bool expanded, GUIContent label) {
-//            var autoRect = LayoutEngine.RequestLayoutRect(Resources.Foldout.UnderlineLabelStyle.GetContentHeight());
-//            return FoldoutUnderline(autoRect, expanded, label);
-//        }
-//        public static bool FoldoutUnderline(SerializedProperty expanded, GUIContent label) {
-//            return expanded.boolValue = FoldoutUnderline(expanded.boolValue, label);
-//        }
+        public static bool Foldout(Rect rect, bool expanded, string label) {
+            var style = Resources.Foldout.Underline;
+            style.fixedWidth = rect.width;
+            return EditorGUI.Foldout(rect, expanded, label, style);
+        }
 
         public static Color ColorField(Rect rect, Color color) {
             rect.width = ColorFieldFixedWidth;
