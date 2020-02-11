@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
@@ -30,11 +31,15 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void OnDestroy() {
         ExtendedEditorGUI.UnregisterUsage();
     }
+    private void OnLostFocus() {
+        LayoutEngine.ResetEngine();
+    }
+
     #endregion
 
     
     private void Update() {
-        Repaint();
+//        Repaint();
     }
 
     private void OnGUI() {
@@ -71,6 +76,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"Leaked groups count: {LayoutEngine.GroupCount()}");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
 
         if (Event.current.type != EventType.Layout) {
             _verticalElementsCount = verticalCount;
@@ -92,7 +99,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
         
         EditorGUI.BeginDisabledGroup(_guiDisabled);
-        if (LayoutEngine.BeginVerticalGroup()) {
+        LayoutEngine.BeginVerticalGroup(); {
             var rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
             _testInteger = ExtendedEditorGUI.IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
             
@@ -101,6 +108,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
             rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
             _testBool = ExtendedEditorGUI.Foldout(rect, _testBool, "Foldout");
+            
+            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
+            _testColor = EditorGUI.ColorField(rect, _testColor);
         }
         LayoutEngine.EndVerticalGroup();
         EditorGUI.EndDisabledGroup();

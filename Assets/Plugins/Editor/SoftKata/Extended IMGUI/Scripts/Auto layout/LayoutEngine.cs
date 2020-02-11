@@ -36,10 +36,18 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static void ScrapGroups(int count) {
+        private static void ScrapGroups(int count) {
             for (; count > 0; count--) {
                 SubscribedForLayout.Dequeue();
             }
         }
+
+        public static void ResetEngine() {
+            _topGroup = null;
+        }
+
+        public static int GroupCount() => SubscribedForLayout.Count;
+
+        public static string GetCurrentGroupContentRect() => _topGroup.GetDebugData();
     }
 }

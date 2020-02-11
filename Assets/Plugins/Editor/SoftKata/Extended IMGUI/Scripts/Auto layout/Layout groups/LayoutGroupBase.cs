@@ -64,6 +64,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             protected Vector2 ContentOffset;
 
+            public string GetDebugData() => $"{ContentRect} | {IsGroupValid}";
+            
             protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
                 Parent = _topGroup;
 
@@ -109,14 +111,18 @@ namespace SoftKata.ExtendedEditorGUI {
                         var rectData = Parent.GetGroupRectData(TotalRequestedHeight, TotalRequestedWidth);
                         VisibleAreaRect = rectData.VisibleRect;
                         ContentRect = rectData.FullContentRect;
+                        Debug.Log($"Parent layout request call, group count: {LayoutEngine.GroupCount()}");
                     }
                     else {
                         VisibleAreaRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
                         ContentRect = VisibleAreaRect;
                     }
+//                    Debug.Log($"Non-layout validation: {VisibleAreaRect}");
                     IsGroupValid = VisibleAreaRect.IsValid();
 
                     if (IsGroupValid) {
+//                        Debug.Log("Non-layout VALID");
+                        
                         ContentRect = Padding.Remove(Border.Remove(Margin.Remove(ContentRect)));
                         NextEntryPosition = ContentRect.position;
 
