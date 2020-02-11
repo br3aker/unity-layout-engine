@@ -85,6 +85,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private string _testError = "Must be > 0";
 
     private bool _testBool = false;
+    
+    private Color _testColor = Color.black;
 
     private void TestingMethod() {
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
@@ -102,9 +104,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     
     private int _verticalElementsCount = 16;
     private int _horizontalElementsCount = 16;
-
-    private float _verticalScrollPosition = 0f;
-    private float _horizontalScrollPosition = 0f;
 
     private void UnityImplementationScrollTest() {
         EditorGUILayout.BeginScrollView(Vector2.zero, GUILayout.Height(640), GUILayout.Width(640));

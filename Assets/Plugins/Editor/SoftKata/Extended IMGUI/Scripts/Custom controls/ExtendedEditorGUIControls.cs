@@ -13,6 +13,8 @@ namespace SoftKata.ExtendedEditorGUI {
         public const int ErrorSubLabelHeight = 10;
         public const int LabelWithErrorHeight = LabelHeight + ErrorSubLabelHeight;
 
+        private const float ColorFieldFixedWidth = 25; 
+        
         private const int DefaultFoldoutMargin = 12;
         
         private static GUIContent _tempContent = new GUIContent();
@@ -194,14 +196,17 @@ namespace SoftKata.ExtendedEditorGUI {
 //        public static bool FoldoutUnderline(SerializedProperty expanded, GUIContent label) {
 //            return expanded.boolValue = FoldoutUnderline(expanded.boolValue, label);
 //        }
-//        
-//        
-//        public static void ColorField(Rect rect, SerializedProperty color) {
-//            rect.width = Resources.ColorField.Style.fixedWidth;
-//            color.colorValue = EditorGUI.ColorField(
-//                rect, GUIContent.none, color.colorValue, 
-//                false, true, false
-//            );
-//        }
+
+        public static Color ColorField(Rect rect, Color color) {
+            rect.width = ColorFieldFixedWidth;
+
+            return EditorGUI.ColorField(
+                rect, GUIContent.none, color, 
+                false, true, false
+            );
+        }
+        public static void ColorField(Rect rect, SerializedProperty color) {
+            color.colorValue = ColorField(rect, color.colorValue);
+        }
     }
 }
