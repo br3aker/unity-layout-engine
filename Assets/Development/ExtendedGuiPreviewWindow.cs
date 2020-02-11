@@ -84,6 +84,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private float _testFloat = 3.14f;
     private string _testError = "Must be > 0";
 
+    private bool _testBool = false;
+
     private void TestingMethod() {
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
         EditorGUI.BeginDisabledGroup(_guiDisabled);
@@ -92,7 +94,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             _testInteger = ExtendedEditorGUI.IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
             
             rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
-            _testFloat = ExtendedEditorGUI.FloatDelayedField(rect, _testFloat, "postfix", _testFloat > 0 ? null : _testError);
+            _testBool = ExtendedEditorGUI.PrefixToggle(rect, _testBool, "prefix toggle");
         }
         LayoutEngine.EndVerticalGroup();
         EditorGUI.EndDisabledGroup();

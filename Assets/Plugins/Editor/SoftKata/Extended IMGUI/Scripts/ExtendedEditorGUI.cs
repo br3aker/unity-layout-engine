@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
@@ -51,7 +52,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         
         // Controls
-        internal struct InputFieldStyles {
+        internal struct InputFieldStyle {
             public GUIStyle Normal;
             public GUIStyle Error;
 
@@ -60,7 +61,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle Postfix;
             
 
-            public InputFieldStyles(GUISkin skin) {
+            public InputFieldStyle(GUISkin skin) {
                 Normal = skin.GetStyle("Input field");
                 Error = skin.GetStyle("Input field error");
                 
@@ -70,15 +71,14 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
         
-        internal struct ToggleData {
+        internal struct ToggleStyle {
             public GUIStyle Style;
-            public Texture DisabledIcon;
 
-            public ToggleData(GUISkin skin, string path) {
-                Style = skin.GetStyle("Controls/Toggle");
-                DisabledIcon = Utility.LoadAssetAtPathAndAssert<Texture>(path + "toggle_on_disabled.png");
+            public ToggleStyle(GUISkin skin) {
+                Style = skin.GetStyle("Toggle");
             }
         }
+        
         internal struct FoldoutData {
             public GUIStyle UnderlineLabelStyle;
             public GUIStyle ArrowIconStyle;
@@ -118,7 +118,10 @@ namespace SoftKata.ExtendedEditorGUI {
         internal LayoutGroupsStyles LayoutGroups;
         
         // Controls
-        internal InputFieldStyles InputField;
+        internal GUIStyle Label;
+        
+        internal InputFieldStyle InputField;
+        internal ToggleStyle Toggle;
 
 //        internal ToggleData Toggle;
 //        internal FoldoutData Foldout;
@@ -140,8 +143,11 @@ namespace SoftKata.ExtendedEditorGUI {
             
             // Controls
             var controlSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
+
+            Label = controlSkin.FindStyle("Label");
             
-            InputField = new InputFieldStyles(controlSkin);
+            InputField = new InputFieldStyle(controlSkin);
+            Toggle = new ToggleStyle(controlSkin);
         }
     }
 }

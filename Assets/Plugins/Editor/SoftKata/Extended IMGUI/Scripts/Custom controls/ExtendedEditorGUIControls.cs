@@ -38,36 +38,22 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
 
-//        public static bool PrefixToggle(Rect rect, bool value, GUIContent content, GUIStyle style) {
-//            var toggleGuiData = Resources.Toggle;
-//            
-//            var toggleStyle = toggleGuiData.Style;
-//            
-//            float height = style.GetContentHeight();
-//            float toggleOffset = (height - toggleStyle.fixedHeight) / 2;
-//
-//            var toggleRect = new Rect(
-//                rect.x, rect.y + toggleOffset,
-//                toggleStyle.fixedWidth, toggleStyle.fixedHeight
-//            );
-//            
-//            rect.x += height + toggleStyle.margin.right;
-//
-//            if (!GUI.enabled && value) {
-//                GUI.DrawTexture(toggleRect, toggleGuiData.DisabledIcon);
-//            }
-//            else {
-//                value = EditorGUI.Toggle(toggleRect, GUIContent.none, value, toggleStyle);
-//            }
-//            EditorGUI.LabelField(rect, content, style);
-//
-//            return value;
-//        }
-//        public static bool PrefixToggle(Rect rect, SerializedProperty value, GUIContent content, GUIStyle style) {
-//            return value.boolValue = PrefixToggle(rect, value.boolValue, content, style);
-//        }
-//
-//        
+        public static bool PrefixToggle(Rect rect, bool value, string label) {
+            var toggleGuiData = Resources.Toggle;
+            
+            var toggleStyle = toggleGuiData.Style;
+
+            value = EditorGUI.Toggle(rect, GUIContent.none, value, toggleStyle);
+
+            rect.x += toggleStyle.margin.right;
+            EditorGUI.LabelField(rect, label, Resources.Label);
+
+            return value;
+        }
+        public static bool PrefixToggle(Rect rect, SerializedProperty value, string label) {
+            return value.boolValue = PrefixToggle(rect, value.boolValue, label);
+        }
+        
 //        // RULE #1
 //        // background color -> normal/on normal
 //        // icon color -> active/on active
