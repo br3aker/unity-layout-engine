@@ -53,7 +53,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         // Controls
         internal struct InputFieldStyle {
-            public GUIStyle Normal;
+            public GUIStyle Main;
             public GUIStyle Error;
 
             public GUIStyle ErrorMessage;
@@ -62,19 +62,12 @@ namespace SoftKata.ExtendedEditorGUI {
             
 
             public InputFieldStyle(GUISkin skin) {
-                Normal = skin.GetStyle("Input field");
+                Main = skin.GetStyle("Input field");
                 Error = skin.GetStyle("Input field error");
                 
                 Postfix = skin.GetStyle("Input field/Postfix");
                 
                 ErrorMessage = skin.GetStyle("Input field/Error message");
-            }
-        }
-        internal struct ToggleStyle {
-            public GUIStyle Style;
-
-            public ToggleStyle(GUISkin skin) {
-                Style = skin.GetStyle("Toggle");
             }
         }
         internal struct FoldoutStyle {
@@ -84,30 +77,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 Underline = skin.GetStyle("Foldout");
             }
         }
-        
-        internal struct KeyboardListenerData {
-            public GUIStyle MainLabel;
-            public GUIStyle SubLabel;
+        internal struct ShortcutRecorderStyle {
+            public GUIStyle Main;
+            public Texture RecordingIcon;
 
-            public KeyboardListenerData(GUISkin skin) {
-                MainLabel = skin.GetStyle("Controls/Keyboard shortcut listener/Main label");
-                SubLabel = skin.GetStyle("Controls/Keyboard shortcut listener/Sub label");
-            }
-        }
-        internal struct ColorFieldData {
-            public GUIStyle Style;
-
-            public ColorFieldData(GUISkin skin) {
-                Style = skin.GetStyle("Controls/Color field/Main");
-            }
-        }
-        internal struct ObjectFieldData {
-            public GUIStyle Style;
-            public Texture OpenObjectPickerIcon;
-
-            public ObjectFieldData(GUISkin skin, string path) {
-                Style = skin.GetStyle("Controls/Object field/Main");
-                OpenObjectPickerIcon = Utility.LoadAssetAtPathAndAssert<Texture>(path + "open_object_picker.png");
+            public ShortcutRecorderStyle(GUISkin skin) {
+                Main = skin.GetStyle("Keyboard shortcut main");
+                RecordingIcon = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
             }
         }
 
@@ -115,15 +91,11 @@ namespace SoftKata.ExtendedEditorGUI {
         internal LayoutGroupsStyles LayoutGroups;
         
         // Controls
-        internal GUIStyle Label;
+        public GUIStyle Label;
         
-        internal InputFieldStyle InputField;
-        internal ToggleStyle Toggle;
-        internal FoldoutStyle Foldout;
-
-//        internal KeyboardListenerData KeyboardListener;
-//        internal ColorFieldData ColorField;
-//        internal ObjectFieldData ObjectField;
+        public InputFieldStyle InputField;
+        public FoldoutStyle Foldout;
+        public ShortcutRecorderStyle ShortcutRecorder;
 
         internal ResourcesHolder() {
             // Paths resolution
@@ -143,8 +115,8 @@ namespace SoftKata.ExtendedEditorGUI {
             Label = controlsSkin.FindStyle("Label");
             
             InputField = new InputFieldStyle(controlsSkin);
-            Toggle = new ToggleStyle(controlsSkin);
             Foldout = new FoldoutStyle(controlsSkin);
+            ShortcutRecorder = new ShortcutRecorderStyle(controlsSkin);
         }
     }
 }

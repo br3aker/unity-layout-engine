@@ -44,6 +44,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public static void ResetEngine() {
             _topGroup = null;
+            SubscribedForLayout.Clear();
         }
 
         public static int GroupCount() => SubscribedForLayout.Count;

@@ -4,6 +4,8 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
+using UnityEditor.Experimental.TerrainAPI;
+using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 public class ExtendedGuiPreviewWindow : EditorWindow
 {
@@ -17,7 +19,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
     
     private void OnEnable() {
-        ExtendedEditorGUI.RegisterUsage();
+        RegisterUsage();
         
         _verticalFaded1 = new AnimBool(false);
         _verticalFaded1.valueChanged.AddListener(Repaint);
@@ -27,9 +29,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         _verticalFaded3.valueChanged.AddListener(Repaint);
         _verticalFaded4 = new AnimBool(false);
         _verticalFaded4.valueChanged.AddListener(Repaint);
+        
+        _testAnimBool = new AnimBool(false, Repaint);
     }
     private void OnDestroy() {
-        ExtendedEditorGUI.UnregisterUsage();
+        UnregisterUsage();
     }
     private void OnLostFocus() {
         LayoutEngine.ResetEngine();
@@ -43,6 +47,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void OnGUI() {
+        if (Event.current.type == EventType.Used) return;
+        
         var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
@@ -88,34 +94,43 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private bool _guiDisabled = false;
 
     private int _testInteger = 10;
-    private float _testFloat = 3.14f;
     private string _testError = "Must be > 0";
 
     private bool _testBool = false;
     
     private Color _testColor = Color.black;
+    
+    private AnimBool _testAnimBool;
+
+    private string _testText1;
+    private string _testText2;
+
+    private KeyboardShortcut _testShortcut1;
 
     private void TestingMethod() {
+        Rect rect;
+        
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
         
         EditorGUI.BeginDisabledGroup(_guiDisabled);
         LayoutEngine.BeginVerticalGroup(); {
-            var rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
-            _testInteger = ExtendedEditorGUI.IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
-            
-            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
-            _testBool = ExtendedEditorGUI.PrefixToggle(rect, _testBool, "prefix toggle");
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
+            _testInteger = IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
 
-            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
-            _testBool = ExtendedEditorGUI.Foldout(rect, _testBool, "Foldout");
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
+            _testBool = UnderlineFoldout(rect, _testBool, "Foldout");
             
-            rect = LayoutEngine.RequestLayoutRect(ExtendedEditorGUI.LabelHeight);
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             _testColor = EditorGUI.ColorField(rect, _testColor);
+
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight, ShortcutRecorderWidth);
+            _testShortcut1 = KeyboardShortcutField(rect, _testShortcut1);
         }
         LayoutEngine.EndVerticalGroup();
+
         EditorGUI.EndDisabledGroup();
     }
-    
+
     private int _verticalElementsCount = 16;
     private int _horizontalElementsCount = 16;
 
@@ -540,7 +555,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                             var rect = LayoutEngine.RequestLayoutRect(16, 150);
                             if (rect.IsValid()) {
 //                                EditorGUI.DelayedIntField(rect, 123);
-                                ExtendedEditorGUI.IntDelayedField(rect, 123, null, null);
+                                IntDelayedField(rect, 123, null, null);
                             }
                         }
                     }

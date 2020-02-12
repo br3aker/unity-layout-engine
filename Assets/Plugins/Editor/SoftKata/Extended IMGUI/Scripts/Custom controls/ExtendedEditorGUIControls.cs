@@ -9,10 +9,24 @@ using UnityEngine;
 // TODO [implement/control]: add underlined text control and use it in underlined foldout
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
-        public const int LabelHeight = 18;
-        public const int ErrorSubLabelHeight = 10;
-        public const int LabelWithErrorHeight = LabelHeight + ErrorSubLabelHeight;
+        private const int NoActiveControlId = int.MinValue;
 
+        public const float LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
+        public const float ErrorSubLabelHeight = 10;
+        public const float LabelWithErrorHeight = LabelHeight + ErrorSubLabelHeight;
+        
+        private const float AbsoluteBorderOffset = 3;
+        
+        // Postfix text
+        private const float PostfixTextAreaWidth = 50;
+
+        // Postfix icon
+        private const float PostfixIconSize = 16;
+        private const float PostfixIconAreaWidth = PostfixIconSize + AbsoluteBorderOffset;
+
+
+        public const int ShortcutRecorderWidth = 200; 
+        
         private const float ColorFieldFixedWidth = 25;
 
         private static GUIContent _tempContent = new GUIContent();
@@ -37,23 +51,6 @@ namespace SoftKata.ExtendedEditorGUI {
             return _tempContent;
         }
 
-
-        public static bool PrefixToggle(Rect rect, bool value, string label) {
-            var toggleGuiData = Resources.Toggle;
-            
-            var toggleStyle = toggleGuiData.Style;
-
-            value = EditorGUI.Toggle(rect, GUIContent.none, value, toggleStyle);
-
-            rect.x += toggleStyle.margin.right;
-            EditorGUI.LabelField(rect, label, Resources.Label);
-
-            return value;
-        }
-        public static bool PrefixToggle(Rect rect, SerializedProperty value, string label) {
-            return value.boolValue = PrefixToggle(rect, value.boolValue, label);
-        }
-        
 //        // RULE #1
 //        // background color -> normal/on normal
 //        // icon color -> active/on active
@@ -105,10 +102,12 @@ namespace SoftKata.ExtendedEditorGUI {
         private static string GetTextInput(Rect rect, string value, string postfix, GUIStyle style, GUIStyle postfixStyle) {
             // Main
             var expression = EditorGUI.DelayedTextField(rect, value, style);
-
+            
             // Postfix
+            var postfixRect = new Rect(rect.xMax - PostfixTextAreaWidth, rect.y, PostfixTextAreaWidth, rect.height);
+
             if (Event.current.type == EventType.Repaint) {
-                postfixStyle.Draw(rect, postfix, false, false,false,false);
+                postfixStyle.Draw(postfixRect, TempContent(postfix), false, false, false, false);
             }
             
             return expression;
@@ -118,14 +117,14 @@ namespace SoftKata.ExtendedEditorGUI {
             
             // Styles
             var styles = Resources.InputField;
-            var valueStyle = isError ? styles.Error : styles.Normal;
+            var valueStyle = isError ? styles.Error : styles.Main;
             var postfixStyle = styles.Postfix;
-            
+
             EditorGUI.BeginChangeCheck();
             var expression = GetTextInput(rect, value.ToString(), postfix, valueStyle, postfixStyle);
             if (isError) {
-                var errorRect = LayoutEngine.RequestLayoutRect(ErrorSubLabelHeight, rect.width);
-                errorRect.x = rect.x;
+                var errorStyle = styles.ErrorMessage;
+                var errorRect = new Rect(rect.x, rect.yMax + errorStyle.margin.top, rect.width, ErrorSubLabelHeight);
 
                 EditorGUI.LabelField(errorRect, errorMessage, styles.ErrorMessage);
             }
@@ -151,14 +150,18 @@ namespace SoftKata.ExtendedEditorGUI {
             value.floatValue = GenericAssertedField(rect, value.floatValue, postfix, errorMessage);
         }
 
-        public static bool Foldout(Rect rect, bool expanded, string label) {
+        public static bool UnderlineFoldout(Rect rect, bool expanded, string label) {
             var style = Resources.Foldout.Underline;
-            style.fixedWidth = rect.width;
-            return EditorGUI.Foldout(rect, expanded, label, style);
+            if (EditorGUI.Foldout(rect, expanded, label, style)) {
+                var underlineRect = new Rect(rect.x, rect.yMax - 1, rect.width, 1);
+                EditorGUI.DrawRect(underlineRect, style.active.textColor);
+                return true;
+            }
+            return false;
         }
 
-        public static void Foldout(Rect rect, SerializedProperty expanded, string label) {
-            expanded.isExpanded = Foldout(rect, expanded.isExpanded, label);
+        public static void UnderlineFoldout(Rect rect, SerializedProperty expanded, string label) {
+            expanded.isExpanded = UnderlineFoldout(rect, expanded.isExpanded, label);
         }
 
         public static Color ColorField(Rect rect, Color color) {
