@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Experimental.TerrainAPI;
@@ -12,17 +13,20 @@ namespace SoftKata.ExtendedEditorGUI {
         private const int NoActiveControlId = int.MinValue;
 
         public const float LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
+
         public const float ErrorSubLabelHeight = 10;
         public const float LabelWithErrorHeight = LabelHeight + ErrorSubLabelHeight;
-        
-        private const float AbsoluteBorderOffset = 3;
-        
+
         // Postfix text
         private const float PostfixTextAreaWidth = 50;
 
         // Postfix icon
         private const float PostfixIconSize = 16;
-        private const float PostfixIconAreaWidth = PostfixIconSize + AbsoluteBorderOffset;
+        private const float PostfixIconAreaWidth = PostfixIconSize + 3;
+
+        // Toggle array
+        public const float ToggleArrayHeight = 20;
+        private const float ToggleArrayIconOffset = 4;
 
 
         public const int ShortcutRecorderWidth = 200; 
@@ -50,53 +54,132 @@ namespace SoftKata.ExtendedEditorGUI {
             _tempContent.text = text;
             return _tempContent;
         }
+        
+        // background color -> normal/on normal
+        // icon color -> active/on active
 
-//        // RULE #1
-//        // background color -> normal/on normal
-//        // icon color -> active/on active
-//        
-//        // RULE #2
-//        // push textures in this way: all off - all on
-        public static int EnumToggles(Rect rect, int value, Texture[] icons, GUIStyle style) {
-            float backgroundHorizontalOffset = style.fixedWidth + style.margin.right;
-            float iconHorizontalOffset = backgroundHorizontalOffset;
-            int togglesCount = icons.Length / 2;
+        public struct ToggleArrayData {
+            internal Texture IconSet;
+            internal int Count;
 
-            rect.xMax = rect.x + style.fixedWidth;
+            public GUIContent[] Contents;
+
+            public ToggleArrayData(int count, GUIContent[] contents, Texture iconSet) {
+                Count = count;
+                Contents = contents;
+                IconSet = iconSet;
+            }
+        }
+
+        public struct ToggleArrayGUIContent {
+            public GUIContent[] guiContent;
+            public Texture IconSet;
+
+            internal float[] ElementsStartOffset;
             
-            var padding = style.padding;
-            var iconRect = new Rect(
-                new Vector2(rect.x + padding.left, rect.y + padding.top),
-                new Vector2(rect.width - padding.horizontal, rect.height - padding.vertical)
-            );
+            public float MaxTabWidth;
+            internal float IconSize;
             
-            for (int i = 0; i < icons.Length / 2; i++) {
+            public ToggleArrayGUIContent(GUIContent[] content, Texture iconSet) {
+                guiContent = content;
+                IconSet = iconSet;
+                
+                // Icon size
+                var style = Resources.Buttons.Mid;
+                IconSize = style.GetContentHeight() - style.padding.vertical;
+                
+                // Width for all elements
+                var elementsWidth = guiContent.Select(q => style.CalcSize(q).x).ToArray();
+                
+                // Actual width for all toggles
+                MaxTabWidth = elementsWidth.Max() + IconSize + ToggleArrayIconOffset;
+
+                // Calculating offsets
+                ElementsStartOffset = new float[guiContent.Length];
+                var extraOffset = MaxTabWidth - IconSize + style.padding.horizontal - ToggleArrayIconOffset;
+                for (int i = 0; i < guiContent.Length; i++) {
+                    ElementsStartOffset[i] = (MaxTabWidth + 1) * i + (extraOffset - elementsWidth[i]) / 2;
+                }
+            }
+        }
+
+        public static int ToggleArray(Rect rect, int value, GUIContent[] contents, float width) {
+            var buttonsStyles = Resources.Buttons;
+            var leftStyle = buttonsStyles.Left;
+            var midStyle = buttonsStyles.Mid;
+            var rightStyle = buttonsStyles.Right;
+
+            float iconHorizontalOffset = width + 1;
+
+            var toggleRect = new Rect(rect.x, rect.y, width, ToggleArrayHeight);
+
+            for (int i = 0; i < contents.Length; i++) {
                 int checker = 1 << i;
                 bool on = (value & checker) == checker;
                 
-                Color colorBackup = GUI.color;
-                {
-                    GUI.color = on ? style.onNormal.textColor : style.normal.textColor;
-                    if (EditorGUI.Toggle(rect, GUIContent.none, on, style)) {
-                        value |= checker;
-                    }
-                    else {
-                        value &= ~checker;
-                    }
-
-                    GUI.color = on ? style.onActive.textColor : style.active.textColor;
-                    GUI.DrawTexture(iconRect, icons[on ? i + togglesCount : i]);
+                if (GUI.Toggle(toggleRect, on, contents[i], i == 0 ? leftStyle : i == contents.Length - 1 ? rightStyle : midStyle)) {
+                    value |= checker;
                 }
-                GUI.color = colorBackup;
+                else {
+                    value &= ~checker;
+                }
 
-                rect.x += backgroundHorizontalOffset;
-                iconRect.x += iconHorizontalOffset;
+                toggleRect.x += iconHorizontalOffset;
             }
 
             return value;
         }
-        public static void EnumToggles(Rect rect, SerializedProperty value, Texture[] icons, GUIStyle style) {
-            value.intValue = EnumToggles(rect, value.intValue, icons, style);
+        public static int ToggleArray(Rect rect, int value, ToggleArrayGUIContent content) {
+            var buttonsStyles = Resources.Buttons;
+            var leftStyle = buttonsStyles.Left;
+            var midStyle = buttonsStyles.Mid;
+            var rightStyle = buttonsStyles.Right;
+            
+            var iconSize = content.IconSize;
+            
+            float iconTextureCoordsSize = 1f / content.guiContent.Length;
+
+            var oldPadding = leftStyle.padding.left;
+            var newPadding = (int) (content.IconSize + ToggleArrayIconOffset / 2);
+            leftStyle.padding.left += newPadding;
+            midStyle.padding.left += newPadding;
+            rightStyle.padding.left += newPadding;
+            
+            value = ToggleArray(rect, value, content.guiContent, content.MaxTabWidth);
+
+            var iconY = rect.y + leftStyle.padding.top;
+            if (Event.current.type == EventType.Repaint) {
+                for (int i = 0; i < content.guiContent.Length; i++) {
+                    int checker = 1 << i;
+                    bool on = (value & checker) == checker;
+                    
+                    var textureCoords = new Rect(
+                        iconTextureCoordsSize * i, on ? 0 : 0.5f,
+                        iconTextureCoordsSize, 0.5f
+                    );
+                    
+                    var iconRect = new Rect(
+                        rect.x + content.ElementsStartOffset[i], 
+                        iconY,
+                        iconSize,
+                        iconSize
+                    );
+                    
+                    GUI.DrawTextureWithTexCoords(iconRect, content.IconSet, textureCoords);
+                }
+            }
+            
+            leftStyle.padding.left = oldPadding;
+            midStyle.padding.left = oldPadding;
+            rightStyle.padding.left = oldPadding;
+
+            return value;
+        }
+        public static void ToggleArray(Rect rect, SerializedProperty value, GUIContent[] contents, float width) {
+            value.intValue = ToggleArray(rect, value.intValue, contents, width);
+        }
+        public static void ToggleArray(Rect rect, SerializedProperty value, ToggleArrayGUIContent content) {
+            value.intValue = ToggleArray(rect, value.intValue, content);
         }
 
         private static string GetTextInput(Rect rect, string value, string postfix, GUIStyle style, GUIStyle postfixStyle) {

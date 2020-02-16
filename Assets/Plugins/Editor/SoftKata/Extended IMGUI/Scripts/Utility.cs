@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEditor;
@@ -12,6 +14,17 @@ namespace SoftKata.ExtendedEditorGUI {
             var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
             Assert.IsNotNull(asset, $"Couldn't load asset [{typeof(T).Name}] at path \"{assetPath}\"");
             return asset;
+        }
+
+        public static T[] LoadAllAssetsFromFolderAndAssert<T>(string folderPath) where T : UnityEngine.Object {
+            var paths = Directory.GetFiles(folderPath, "*.png");
+            Debug.Log(paths.Length);
+            var assets = new T[paths.Length];
+            for (int i = 0; i < paths.Length; i++) {
+                assets[i] = LoadAssetAtPathAndAssert<T>(paths[i]);
+            }
+
+            return assets;
         }
 
         public static int GetContentHeight(this GUIStyle style) {

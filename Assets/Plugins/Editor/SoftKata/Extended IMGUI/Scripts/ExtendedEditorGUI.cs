@@ -79,11 +79,22 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         internal struct ShortcutRecorderStyle {
             public GUIStyle Main;
-            public Texture RecordingIcon;
+            public Texture RecordingIcons;
 
             public ShortcutRecorderStyle(GUISkin skin) {
                 Main = skin.GetStyle("Keyboard shortcut main");
-                RecordingIcon = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
+                RecordingIcons = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
+            }
+        }
+        internal struct ButtonStyle {
+            public GUIStyle Left;
+            public GUIStyle Mid;
+            public GUIStyle Right;
+
+            public ButtonStyle(GUISkin skin) {
+                Left = skin.GetStyle("button left");
+                Mid = skin.GetStyle("button mid");
+                Right = skin.GetStyle("button right");
             }
         }
 
@@ -96,6 +107,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public InputFieldStyle InputField;
         public FoldoutStyle Foldout;
         public ShortcutRecorderStyle ShortcutRecorder;
+        public ButtonStyle Buttons;
 
         internal ResourcesHolder() {
             // Paths resolution
@@ -117,6 +129,7 @@ namespace SoftKata.ExtendedEditorGUI {
             InputField = new InputFieldStyle(controlsSkin);
             Foldout = new FoldoutStyle(controlsSkin);
             ShortcutRecorder = new ShortcutRecorderStyle(controlsSkin);
+            Buttons = new ButtonStyle(controlsSkin);
         }
     }
 }

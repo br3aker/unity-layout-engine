@@ -138,7 +138,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         PostfixIconSize
                     );
                     
-                    GUI.DrawTextureWithTexCoords(postfixIconRect, Resources.ShortcutRecorder.RecordingIcon, coordsRect);
+                    GUI.DrawTextureWithTexCoords(postfixIconRect, Resources.ShortcutRecorder.RecordingIcons, coordsRect);
                     
                     break;
             }

@@ -11,11 +11,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 {
     #region Window initialization & lifetime management
     [MenuItem("Window/Extended GUI preview")]
-    static void Init()
-    {
-        ExtendedGuiPreviewWindow window = GetWindow<ExtendedGuiPreviewWindow>();
-        window.titleContent = new GUIContent("GUI preview");
-        window.Show();
+    static void Init() {
+        GetWindow<ExtendedGuiPreviewWindow>(false, "GUI Preview").Show();
     }
     
     private void OnEnable() {
@@ -29,8 +26,18 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         _verticalFaded3.valueChanged.AddListener(Repaint);
         _verticalFaded4 = new AnimBool(false);
         _verticalFaded4.valueChanged.AddListener(Repaint);
+
+        _testIconSet = Utility.LoadAssetAtPathAndAssert<Texture>("Assets/Development/Textures/icon_set.png");
+
+        var monitor_string = "Monitor";
+        var text_string = "Text";
+        var graph_string = "Graph";
         
-        _testAnimBool = new AnimBool(false, Repaint);
+        var monitor = new GUIContent(monitor_string, monitor_string);
+        var text = new GUIContent(text_string, text_string);
+        var graph = new GUIContent(graph_string, graph_string);
+
+        _testToggleArrayContent = new ToggleArrayGUIContent(new []{monitor, text, graph}, _testIconSet);
     }
     private void OnDestroy() {
         UnregisterUsage();
@@ -43,7 +50,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     
     private void Update() {
-//        Repaint();
+        Repaint();
     }
 
     private void OnGUI() {
@@ -99,13 +106,15 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private bool _testBool = false;
     
     private Color _testColor = Color.black;
-    
-    private AnimBool _testAnimBool;
 
     private string _testText1;
     private string _testText2;
 
     private KeyboardShortcut _testShortcut1;
+
+    private Texture _testIconSet;
+    private int _testToggleArray = 0;
+    private ToggleArrayGUIContent _testToggleArrayContent;
 
     private void TestingMethod() {
         Rect rect;
@@ -125,10 +134,25 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
             rect = LayoutEngine.RequestLayoutRect(LabelHeight, ShortcutRecorderWidth);
             _testShortcut1 = KeyboardShortcutField(rect, _testShortcut1);
+
+            rect = LayoutEngine.RequestLayoutRect(ToggleArrayHeight);
+            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayContent);
+            
+            rect = LayoutEngine.RequestLayoutRect(ToggleArrayHeight);
+            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayContent.guiContent, _testToggleArrayContent.MaxTabWidth);
+
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
+            GUI.Toolbar(rect, 0, new[] {"First", "Second"});
         }
         LayoutEngine.EndVerticalGroup();
 
         EditorGUI.EndDisabledGroup();
+
+//        rect = LayoutEngine.RequestLayoutRect(ToggleArrayIconHeight);
+//        for (int i = 0; i < _verticalElementsCount; i++) {
+////            _testToggleArray = ToggleArraySingleLoop(rect, _testToggleArray, _testIconSet, 3);
+//            _testToggleArray = ToggleArraySeparateLoops(rect, _testToggleArray, _testToggleArrayData);
+//        }
     }
 
     private int _verticalElementsCount = 16;
