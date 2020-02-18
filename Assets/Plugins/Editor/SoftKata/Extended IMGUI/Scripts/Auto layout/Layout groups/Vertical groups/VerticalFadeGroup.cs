@@ -19,15 +19,14 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) {
-            var eventType = Event.current.type;
             LayoutGroupBase layoutGroup;
-            if (eventType == EventType.Layout) {
+            if (Event.current.type == EventType.Layout) {
                 layoutGroup = new VerticalFadeGroup(faded, modifier, style);
                 SubscribedForLayout.Enqueue(layoutGroup);
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RetrieveLayoutData();
             }
             
             _topGroup = layoutGroup;

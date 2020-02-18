@@ -28,7 +28,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _lastEntryY = y;
                 
                 var horizontalLine = new Rect(
-                    ContentRect.x - Padding.left, y + height / 2,
+                    ContainerRect.x - Padding.left, y + height / 2,
                     _connectionLineLength, _connectionLineWidth
                 );
                 EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
@@ -36,11 +36,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 return new Rect(x, y, width, height);
             }
 
-            protected override void EndGroupRoutine(EventType currentEventType) {
+            internal void DrawMajorConnectionType() {
                 var verticalLineRect = new Rect(
-                    ContentRect.x - Padding.left, ContentRect.y - Padding.top,
+                    ContainerRect.x - Padding.left, ContainerRect.y - Padding.top,
                     _connectionLineWidth,
-                    (_lastEntryY - ContentRect.y) + _lastEntryHeight
+                    (_lastEntryY - ContainerRect.y) + _lastEntryHeight
                 );
                 
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
@@ -56,7 +56,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RetrieveLayoutData();
             }
             
             _topGroup = layoutGroup;
@@ -68,7 +68,8 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static void EndVerticalHierarchyGroup() {
-            EndLayoutGroup<VerticalHierarchyGroup>();
+            var group = EndLayoutGroup<VerticalHierarchyGroup>();
+            group.DrawMajorConnectionType();
         }
     }
 }

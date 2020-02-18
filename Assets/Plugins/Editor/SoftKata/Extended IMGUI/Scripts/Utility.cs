@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -72,6 +73,11 @@ namespace SoftKata.ExtendedEditorGUI {
             gen.Emit(OpCodes.Ldsfld, field);
             gen.Emit(OpCodes.Ret);
             return (Func<T>)setterMethod.CreateDelegate(typeof(Func<T>));
+        }
+
+        [MenuItem( "Utility/Recompile scripts")] 
+        public static void RequestRecompilation() {
+            CompilationPipeline.RequestScriptCompilation();
         }
     }
 }

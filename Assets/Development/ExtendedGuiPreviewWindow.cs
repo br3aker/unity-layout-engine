@@ -4,7 +4,6 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
-using UnityEditor.Experimental.TerrainAPI;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 public class ExtendedGuiPreviewWindow : EditorWindow
@@ -16,8 +15,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
     
     private void OnEnable() {
-        RegisterUsage();
-        
         _verticalFaded1 = new AnimBool(false);
         _verticalFaded1.valueChanged.AddListener(Repaint);
         _verticalFaded2 = new AnimBool(false);
@@ -27,41 +24,47 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         _verticalFaded4 = new AnimBool(false);
         _verticalFaded4.valueChanged.AddListener(Repaint);
 
-        _testIconSet = Utility.LoadAssetAtPathAndAssert<Texture>("Assets/Development/Textures/icon_set.png");
+        var icon_off = Utility.LoadAssetAtPathAndAssert<Texture>("Assets/Development/Textures/monitor_off.png");
+        var icon_on = Utility.LoadAssetAtPathAndAssert<Texture>("Assets/Development/Textures/monitor_on.png");
 
         var monitor_string = "Monitor";
         var text_string = "Text";
         var graph_string = "Graph";
         
-        var monitor = new GUIContent(monitor_string, monitor_string);
-        var text = new GUIContent(text_string, text_string);
-        var graph = new GUIContent(graph_string, graph_string);
-
-        _testToggleArrayContent = new ToggleArrayGUIContent(new []{monitor, text, graph}, _testIconSet);
-    }
-    private void OnDestroy() {
-        UnregisterUsage();
+        var monitor = new GUIContent(monitor_string, icon_off, monitor_string);
+        var text = new GUIContent(text_string, icon_off, text_string);
+        var graph = new GUIContent(graph_string, icon_off, graph_string);
+        var monitor_off = new GUIContent(monitor_string, icon_on, monitor_string);
+        var text_off = new GUIContent(text_string, icon_on, text_string);
+        var graph_off = new GUIContent(graph_string, icon_on, graph_string);
+        _testToggleArrayGUIContent = new[] {monitor_off, text_off, graph_off, monitor, text, graph};
     }
     private void OnLostFocus() {
         LayoutEngine.ResetEngine();
     }
 
-    #endregion
-
-    
-    private void Update() {
+    private void OnFocus() {
         Repaint();
     }
 
+    #endregion
+
+    private void Update() {
+//        Repaint();
+    }
+
+    private int id = 0;
+    
     private void OnGUI() {
         if (Event.current.type == EventType.Used) return;
-        
+        if(Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
+
         var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
-            TestingMethod();
-//            PerformanceTestingScrollGroup();
+//            TestingMethod();
+            PerformanceTestingScrollGroup();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -89,7 +92,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Leaked groups count: {LayoutEngine.GroupCount()}");
+        EditorGUILayout.LabelField($"Scroll position: ({_hybridScrollPos.x}, {_hybridScrollPos.y})");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"Group count: {LayoutEngine.GetGroupQueueSize()}");
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
 
         if (Event.current.type != EventType.Layout) {
@@ -114,7 +119,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     private Texture _testIconSet;
     private int _testToggleArray = 0;
-    private ToggleArrayGUIContent _testToggleArrayContent;
+
+    private GUIContent[] _testToggleArrayGUIContent;
 
     private void TestingMethod() {
         Rect rect;
@@ -122,7 +128,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
         
         EditorGUI.BeginDisabledGroup(_guiDisabled);
+
         LayoutEngine.BeginVerticalGroup(); {
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
+            _testInteger = EditorGUI.IntField(rect, _testInteger);
+
             rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             _testInteger = IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
 
@@ -132,30 +142,24 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             _testColor = EditorGUI.ColorField(rect, _testColor);
 
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight, ShortcutRecorderWidth);
+            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             _testShortcut1 = KeyboardShortcutField(rect, _testShortcut1);
 
             rect = LayoutEngine.RequestLayoutRect(ToggleArrayHeight);
-            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayContent);
-            
-            rect = LayoutEngine.RequestLayoutRect(ToggleArrayHeight);
-            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayContent.guiContent, _testToggleArrayContent.MaxTabWidth);
+            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayGUIContent);
 
             rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             GUI.Toolbar(rect, 0, new[] {"First", "Second"});
+            
+            rect = LayoutEngine.RequestLayoutRect(ElementListHeight);
+            ListElement(rect, new GUIContent("Main label"), new GUIContent("Sub label/description"));
         }
         LayoutEngine.EndVerticalGroup();
 
         EditorGUI.EndDisabledGroup();
-
-//        rect = LayoutEngine.RequestLayoutRect(ToggleArrayIconHeight);
-//        for (int i = 0; i < _verticalElementsCount; i++) {
-////            _testToggleArray = ToggleArraySingleLoop(rect, _testToggleArray, _testIconSet, 3);
-//            _testToggleArray = ToggleArraySeparateLoops(rect, _testToggleArray, _testToggleArrayData);
-//        }
     }
 
-    private int _verticalElementsCount = 16;
+    private int _verticalElementsCount = 64;
     private int _horizontalElementsCount = 16;
 
     private void UnityImplementationScrollTest() {
@@ -226,7 +230,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     for (int i = 0; i < 3; i++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, 150);
                         if (rect.IsValid()) {
-                            EditorGUI.TextField(rect, "");
+                            EditorGUI.TextField(rect, "Horizontal/Vertical");
                         }
                     }
                 }
@@ -473,7 +477,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private Vector2 _hybridScrollPos;
     
     private void ScrollGroupTest() {
-        if (LayoutEngine.BeginHybridScrollGroup(640, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
             HorizontalGroupNestedVerticalGroupsTest();
             
             for (int i = 0; i < _verticalElementsCount; i++) {
@@ -506,7 +510,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-            
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
@@ -520,8 +523,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-
-            
             if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                 for (int j = 0; j < 8; j++) {
                     if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
@@ -568,7 +569,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void PerformanceTestingScrollGroup() {
-        if (LayoutEngine.BeginHybridScrollGroup(640, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
@@ -578,8 +579,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                         for (int j = 0; j < _horizontalElementsCount; j++) {
                             var rect = LayoutEngine.RequestLayoutRect(16, 150);
                             if (rect.IsValid()) {
-//                                EditorGUI.DelayedIntField(rect, 123);
-                                IntDelayedField(rect, 123, null, null);
+                                IntDelayedField(rect, 123, "postfix", null);
                             }
                         }
                     }

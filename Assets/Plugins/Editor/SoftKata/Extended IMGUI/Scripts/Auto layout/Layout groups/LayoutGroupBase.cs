@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Configuration;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -31,7 +33,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _groupIndex;
             internal int _childrenCount;
 
-            protected EventType CurrentEventType = EventType.Layout;
+            protected bool IsLayout = true;
             
             // group layouting data
             protected float TotalRequestedHeight = 0f;
@@ -43,11 +45,11 @@ namespace SoftKata.ExtendedEditorGUI {
             internal int EntriesCount;
             internal bool IsGroupValid = true;
 
-            protected float AutomaticEntryWidth = -1f;
+            internal float AutomaticEntryWidth = -1f;
 
             // total rect of the group
             protected Rect VisibleAreaRect;
-            protected Rect ContentRect;
+            protected Rect ContainerRect;
 
             // entries layout data
             protected Vector2 NextEntryPosition;
@@ -58,13 +60,11 @@ namespace SoftKata.ExtendedEditorGUI {
             protected readonly RectOffset Border;
             protected readonly RectOffset Padding;
             
-            // main color - used in modfiers
+            // main color - used in modifiers
             protected readonly Color ActiveColor;
             protected readonly Color InactiveColor;
 
             protected Vector2 ContentOffset;
-
-            public string GetDebugData() => $"{ContentRect} | {IsGroupValid}";
             
             protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
                 Parent = _topGroup;
@@ -104,33 +104,27 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-            internal virtual void RetrieveLayoutData(EventType currentEventType) {
+            internal virtual void RetrieveLayoutData() {
                 if (IsGroupValid) {
-                    CurrentEventType = currentEventType;
                     if (Parent != null) {
                         var rectData = Parent.GetGroupRectData(TotalRequestedHeight, TotalRequestedWidth);
                         VisibleAreaRect = rectData.VisibleRect;
-                        ContentRect = rectData.FullContentRect;
+                        ContainerRect = rectData.FullContentRect;
                     }
                     else {
                         VisibleAreaRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
-                        ContentRect = VisibleAreaRect;
+                        ContainerRect = VisibleAreaRect;
                     }
                     
                     IsGroupValid = VisibleAreaRect.IsValid();
                     if (IsGroupValid) {
-                        ContentRect = Padding.Remove(Border.Remove(Margin.Remove(ContentRect)));
-                        NextEntryPosition = ContentRect.position;
-
-//                        var testRect = ContentRect;
-//                        testRect.height += Margin.top;
-//                        EditorGUI.LabelField(testRect, ContentRect.ToString());
-//                        EditorGUI.DrawRect(Padding.Add(Border.Add(Margin.Add(testRect))), Color.white);
-//                        EditorGUI.DrawRect(Padding.Add(Border.Add(testRect)), Color.black);
-//                        EditorGUI.DrawRect(Padding.Add(testRect), Color.green);
+                        IsLayout = false;
+                        
+                        ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
+                        NextEntryPosition = ContainerRect.position;
 
                         if (AutomaticEntryWidth < 0f) {
-                            AutomaticEntryWidth = ContentRect.width;
+                            AutomaticEntryWidth = ContainerRect.width;
                         }
 
                         return;
@@ -159,7 +153,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (RegisterNewEntry(height, width)) {
                     return GetRectInternal(CurrentEntryPosition.x, CurrentEntryPosition.y, height, width);
                 }
-
                 return InvalidRect;
             }
 
@@ -227,26 +220,49 @@ namespace SoftKata.ExtendedEditorGUI {
             internal abstract void RegisterRectArray(float elementHeight, float elementWidth, int count);
 
             
-            internal virtual void EndGroup(EventType currentEventType) {
-                if (IsGroupValid) {
-                    EndGroupModifiersRoutine();
-                    EndGroupRoutine(currentEventType);
-                }
+            internal virtual void EndGroup(EventType eventType) {
+                if (!IsGroupValid) return;
+                EndGroupModifiersRoutine(eventType);
             }
-            protected virtual void EndGroupRoutine(EventType currentEventType) { }
 
-            protected void EndGroupModifiersRoutine() {
-                var paddedContentRect = Padding.Add(ContentRect);
+            protected void EndGroupModifiersRoutine(EventType eventType) {
+                var paddedContentRect = Padding.Add(ContainerRect);
                 
                 // Left separator line
-                if ((_modifier & GroupModifier.DrawLeftSeparator) == GroupModifier.DrawLeftSeparator) {
+                if ((_modifier & GroupModifier.DrawLeftSeparator) == GroupModifier.DrawLeftSeparator && eventType == EventType.Repaint) {
                     var separatorLineRect = new Rect(paddedContentRect.x - Border.left, paddedContentRect.y, Border.left, paddedContentRect.height);
                     EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? ActiveColor : InactiveColor);
                 }
             }
         }
 
-        internal static T EndLayoutGroup<T>() where T : LayoutGroupBase {
+        private static bool RegisterGroup(LayoutGroupBase layoutGroup) {
+            SubscribedForLayout.Enqueue(layoutGroup);
+            _topGroup = layoutGroup;
+
+            return true;
+        }
+
+        private static bool GatherGroup() {
+            var layoutGroup = SubscribedForLayout.Dequeue();
+            layoutGroup.RetrieveLayoutData();
+            _topGroup = layoutGroup;
+            
+            return layoutGroup.IsGroupValid;
+        }
+
+        public static bool BeginGroup(GroupModifier modifier) {
+            if (Event.current.type == EventType.Layout) {
+                return RegisterGroup(new HorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalGroup));
+            }
+
+            return GatherGroup();
+        }
+        
+        
+        // Casting is not always needed, some execution time can be saved here,
+        // but type check & exception is more important right now
+        private static T EndLayoutGroup<T>() where T : LayoutGroupBase {
             var eventType = Event.current.type;
 
             var currentGroup = _topGroup;
@@ -258,11 +274,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             _topGroup = currentGroup.Parent;
 
-            if (!(currentGroup is T)) {
-                throw new Exception($"Group type mismatch: Expected {typeof(T).Name} | Got {currentGroup.GetType().Name}");
-            }
-
-            return (T) currentGroup;
+            if (currentGroup is T castedGroup) return castedGroup;
+            throw new Exception($"Group type mismatch: Expected {typeof(T).Name} | Got {currentGroup.GetType().Name}");
         }
     }
 }

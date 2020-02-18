@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,9 +10,10 @@ namespace SoftKata.ExtendedEditorGUI {
         private const float AutoWidthValue = -1f;
 
         private static readonly Queue<LayoutGroupBase> SubscribedForLayout = new Queue<LayoutGroupBase>();
+
+        public static int GetGroupQueueSize() => SubscribedForLayout.Count;
         
         private static LayoutGroupBase _topGroup;
-
 
         internal static Rect RequestRectRaw(float height, float width = AutoWidthValue) {
             var rect = GUILayoutUtility.GetRect(width, height);
@@ -46,9 +46,5 @@ namespace SoftKata.ExtendedEditorGUI {
             _topGroup = null;
             SubscribedForLayout.Clear();
         }
-
-        public static int GroupCount() => SubscribedForLayout.Count;
-
-        public static string GetCurrentGroupContentRect() => _topGroup.GetDebugData();
     }
 }

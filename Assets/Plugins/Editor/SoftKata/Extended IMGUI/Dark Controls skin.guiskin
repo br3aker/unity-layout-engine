@@ -1420,72 +1420,6 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: Input field
-    m_Normal:
-      m_Background: {fileID: 2800000, guid: 4d3b63ac809e7ac4abc2222585e89f8c, type: 3}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
-    m_Hover:
-      m_Background: {fileID: 2800000, guid: 93eab9698d8ebf9429828ff2fe6fc83d, type: 3}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
-    m_Active:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Focused:
-      m_Background: {fileID: 2800000, guid: 481f1b0b0101f164e9d76b10fccda36d, type: 3}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
-    m_OnNormal:
-      m_Background: {fileID: 2800000, guid: 481f1b0b0101f164e9d76b10fccda36d, type: 3}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnHover:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnActive:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnFocused:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Border:
-      m_Left: 3
-      m_Right: 3
-      m_Top: 3
-      m_Bottom: 2
-    m_Margin:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Padding:
-      m_Left: 3
-      m_Right: 3
-      m_Top: 3
-      m_Bottom: 3
-    m_Overflow:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Font: {fileID: 12800000, guid: 333e065b2dab01f41a64377da4d3af19, type: 3}
-    m_FontSize: 12
-    m_FontStyle: 0
-    m_Alignment: 3
-    m_WordWrap: 0
-    m_RichText: 0
-    m_TextClipping: 1
-    m_ImagePosition: 3
-    m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 0
-    m_FixedHeight: 18
-    m_StretchWidth: 0
-    m_StretchHeight: 0
   - m_Name: Input field error
     m_Normal:
       m_Background: {fileID: 2800000, guid: b0cb33c4d42022b4da061ff24ccf5a8a, type: 3}
@@ -1552,7 +1486,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: Input field/Postfix
+  - m_Name: Generic postfix
     m_Normal:
       m_Background: {fileID: 2800000, guid: 526b8177ddb9cd246a47cdaca7013ac3, type: 3}
       m_ScaledBackgrounds: []
@@ -1605,8 +1539,8 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 12800000, guid: 333e065b2dab01f41a64377da4d3af19, type: 3}
-    m_FontSize: 12
+    m_Font: {fileID: 12800000, guid: 2602b1ae7770006459977700f0d65d24, type: 3}
+    m_FontSize: 11
     m_FontStyle: 2
     m_Alignment: 4
     m_WordWrap: 0
@@ -1816,7 +1750,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: button left
+  - m_Name: Button left
     m_Normal:
       m_Background: {fileID: 2800000, guid: 523cf4ed4f4ce0b469795a44d541e9c7, type: 3}
       m_ScaledBackgrounds: []
@@ -1875,14 +1809,14 @@ MonoBehaviour:
     m_Alignment: 4
     m_WordWrap: 0
     m_RichText: 0
-    m_TextClipping: 0
+    m_TextClipping: 1
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: button mid
+  - m_Name: Button mid
     m_Normal:
       m_Background: {fileID: 2800000, guid: cfcac6ad74404604d8b95a51e1da96a8, type: 3}
       m_ScaledBackgrounds: []
@@ -1941,14 +1875,14 @@ MonoBehaviour:
     m_Alignment: 4
     m_WordWrap: 0
     m_RichText: 0
-    m_TextClipping: 0
-    m_ImagePosition: 3
-    m_ContentOffset: {x: 1, y: 0}
+    m_TextClipping: 1
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: button right
+  - m_Name: Button right
     m_Normal:
       m_Background: {fileID: 2800000, guid: 9f694b49bffd955478b9d8ebeca46cb0, type: 3}
       m_ScaledBackgrounds: []
@@ -2007,9 +1941,141 @@ MonoBehaviour:
     m_Alignment: 4
     m_WordWrap: 0
     m_RichText: 0
+    m_TextClipping: 1
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 0
+    m_StretchHeight: 0
+  - m_Name: List element main
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.80392164, g: 0.80392164, b: 0.80392164, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.96862745, g: 0.96862745, b: 0.96862745, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 2
+      m_Right: 2
+      m_Top: 2
+      m_Bottom: 2
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 3
+      m_Right: 3
+      m_Top: 2
+      m_Bottom: 2
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: 2602b1ae7770006459977700f0d65d24, type: 3}
+    m_FontSize: 13
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 3
-    m_ContentOffset: {x: 1, y: 0}
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 0
+    m_StretchHeight: 0
+  - m_Name: List element sub
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.45882356, g: 0.45882356, b: 0.45882356, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.96862745, g: 0.96862745, b: 0.96862745, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 2
+      m_Right: 2
+      m_Top: 2
+      m_Bottom: 2
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 3
+      m_Right: 3
+      m_Top: 2
+      m_Bottom: 2
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 11
+    m_FontStyle: 0
+    m_Alignment: 3
+    m_WordWrap: 0
+    m_RichText: 0
+    m_TextClipping: 0
+    m_ImagePosition: 3
+    m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0

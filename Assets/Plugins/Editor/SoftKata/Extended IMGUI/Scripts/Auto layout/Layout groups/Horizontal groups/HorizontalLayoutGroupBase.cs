@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -9,7 +10,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
 
             protected override bool RegisterNewEntry(float height, float width) {
-                if (CurrentEventType == EventType.Layout) {
+                if (IsLayout) {
                     EntriesCount++;
                     if (width > 0f) {
                         TotalRequestedWidth += width;
@@ -26,11 +27,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryPosition.x += width + ContentOffset.x;
 
                 // occlusion
-                if (CurrentEntryPosition.x + width < VisibleAreaRect.x || CurrentEntryPosition.x > VisibleAreaRect.xMax) {
-                    return false;
-                }
-
-                return true;
+                return CurrentEntryPosition.x + width >= VisibleAreaRect.x 
+                       && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
             }
 
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
@@ -49,7 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RetrieveLayoutData();
             }
             
             _topGroup = layoutGroup;

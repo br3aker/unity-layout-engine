@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.Experimental.UIElements.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
+using UnityEngine.Profiling;
 
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -13,50 +14,34 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class VerticalClippingGroup : VerticalGroup {
             public VerticalClippingGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
 
-            internal override void RetrieveLayoutData(EventType currentEventType) {
+            internal override void RetrieveLayoutData() {
                 if (IsGroupValid) {
-                    CurrentEventType = currentEventType;
-                    
                     if (Parent != null) {
                         var rectData = Parent.GetGroupRectData(TotalRequestedHeight, TotalRequestedWidth);
                         VisibleAreaRect = rectData.VisibleRect;
-                        ContentRect = rectData.FullContentRect;
+                        ContainerRect = rectData.FullContentRect;
                     }
                     else {
-                        ContentRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
-                        VisibleAreaRect = ContentRect;
+                        ContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
+                        VisibleAreaRect = ContainerRect;
                     }
                     
                     IsGroupValid = VisibleAreaRect.IsValid();
 
                     if (IsGroupValid) {
-                        ContentRect = Padding.Remove(Border.Remove(Margin.Remove(ContentRect)));
-                        VisibleAreaRect = Utility.RectIntersection(VisibleAreaRect, ContentRect);
+                        IsLayout = false;
                         
-                        NextEntryPosition += ContentRect.position - VisibleAreaRect.position;
-
-
-//                        if (GetType() == typeof(ScrollGroup)) {
-//                            EditorGUI.DrawRect(Padding.Add(Border.Add(Margin.Add(ContentRect))), Color.black);
-//                            EditorGUI.LabelField(Padding.Add(Border.Add(Margin.Add(ContentRect))), Padding.Add(Border.Add(Margin.Add(ContentRect))).ToString());
-//                            EditorGUI.DrawRect(Padding.Add(Border.Add(ContentRect)), Color.white);
-//                            EditorGUI.DrawRect(Padding.Add(ContentRect), Color.grey);
-//
-////                            var rect = Padding.Add(ContentRect);
-////                            EditorGUI.DrawRect(rect, Color.black);
-////                            EditorGUI.LabelField(rect, NextEntryPosition.ToString());
-//
-//
-////                            EditorGUI.DrawRect(VisibleAreaRect, Color.magenta);
-////                            EditorGUI.LabelField(VisibleAreaRect, VisibleAreaRect.ToString());
-//                        }
+                        ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
+                        VisibleAreaRect = Utility.RectIntersection(VisibleAreaRect, ContainerRect);
+                        
+                        NextEntryPosition += ContainerRect.position - VisibleAreaRect.position;
 
                         GUI.BeginClip(VisibleAreaRect);
                         VisibleAreaRect.position = Vector2.zero;
 
 
                         if (AutomaticEntryWidth < 0f) {
-                            AutomaticEntryWidth = ContentRect.width;
+                            AutomaticEntryWidth = ContainerRect.width;
                         }
 
                         return;
@@ -73,12 +58,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
 
-            internal sealed override void EndGroup(EventType currentEventType) {
-                if (IsGroupValid) {
-                    GUI.EndClip();
-                    EndGroupModifiersRoutine();
-                    EndGroupRoutine(currentEventType);
-                }
+            internal sealed override void EndGroup(EventType eventType) {
+                if (!IsGroupValid) return;
+                GUI.EndClip();
+                EndGroupModifiersRoutine(eventType);
             }
         }
     }

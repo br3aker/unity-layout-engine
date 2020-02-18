@@ -123,12 +123,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
                     break;
                 case EventType.Repaint:
+                    var resources = Resources.ShortcutRecorder;
+                    
                     // Label
                     var label = (isRecording ? _shortcutFieldStateObject.LastRecordingControlValue : value).ToString();
-                    Resources.ShortcutRecorder.Main.Draw(rect, TempContent(label), controlId, isRecording);
+                    resources.Main.Draw(rect, TempContent(label),controlId, isRecording);
 
                     // Postfix
-                    Resources.InputField.Postfix.Draw(postfixRect, TempContent(null), false, false, false, false);
+                    Resources.GenericPostfix.Draw(postfixRect, TempContent(null), postfixRect.Contains(current.mousePosition), false, false, false);
                     
                     var coordsRect = new Rect(isRecording ? 0.5f : 0f, 0f, 0.5f, 1);
                     var postfixIconRect = new Rect(
@@ -138,7 +140,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         PostfixIconSize
                     );
                     
-                    GUI.DrawTextureWithTexCoords(postfixIconRect, Resources.ShortcutRecorder.RecordingIcons, coordsRect);
+                    GUI.DrawTextureWithTexCoords(postfixIconRect, resources.RecordStateIconSet, coordsRect);
                     
                     break;
             }

@@ -1,27 +1,18 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         internal const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
-        internal static ResourcesHolder Resources;
-        
-        private static int _userCount;
-        
-        public static void RegisterUsage() {
-            if (0 == _userCount++) {
-                Resources = new ResourcesHolder();
-            }
-        }
-        public static void UnregisterUsage() {
-            if (0 == --_userCount) {
-                Resources = null;
-            }
-        }
+
+        private static ResourcesHolder _resources;
+
+        public static ResourcesHolder Resources => _resources ?? (_resources = new ResourcesHolder());
     }
     
-    internal class ResourcesHolder {
+    public class ResourcesHolder {
         private const string LayoutEngineLightSkinSubPath = "/Light Layout Engine skin.guiskin";
         private const string LayoutEngineDarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
 
@@ -32,69 +23,69 @@ namespace SoftKata.ExtendedEditorGUI {
         internal struct LayoutGroupsStyles {
             public GUIStyle VerticalGroup;
             public GUIStyle VerticalFadeGroup;
-            public GUIStyle VerticalScrollGroup;
             public GUIStyle VerticalHierarchyGroup;
+            
             public GUIStyle HorizontalGroup;
-            public GUIStyle HorizontalFadeGroup;
-            public GUIStyle HorizontalScrollGroup;
             public GUIStyle HorizontalRestrictedGroup;
+            
+            public GUIStyle ScrollGroup;
 
             public LayoutGroupsStyles(GUISkin skin) {
-                VerticalGroup = skin.GetStyle("Layout group/Vertical group");
-                VerticalFadeGroup = skin.GetStyle("Layout group/Vertical fade group");
-                VerticalScrollGroup = skin.GetStyle("Layout group/Vertical scroll group");
-                VerticalHierarchyGroup = skin.GetStyle("Layout group/Vertical hierarchy group");
-                HorizontalGroup = skin.GetStyle("Layout group/Horizontal group");
-                HorizontalFadeGroup = skin.GetStyle("Layout group/Horizontal fade group");
-                HorizontalScrollGroup = skin.GetStyle("Layout group/Horizontal scroll group");
-                HorizontalRestrictedGroup = skin.GetStyle("Layout group/Horizontal restricted group");
+                VerticalGroup = skin.GetStyle("Vertical group");
+                VerticalFadeGroup = skin.GetStyle("Vertical fade group");
+                ScrollGroup = skin.GetStyle("Scroll group");
+                VerticalHierarchyGroup = skin.GetStyle("Vertical hierarchy group");
+                HorizontalGroup = skin.GetStyle("Horizontal group");
+                HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
             }
         }
         
         // Controls
-        internal struct InputFieldStyle {
-            public GUIStyle Main;
+        public struct PostfixInputFieldStyle {
             public GUIStyle Error;
-
             public GUIStyle ErrorMessage;
-
-            public GUIStyle Postfix;
             
-
-            public InputFieldStyle(GUISkin skin) {
-                Main = skin.GetStyle("Input field");
+            public PostfixInputFieldStyle(GUISkin skin) {
                 Error = skin.GetStyle("Input field error");
-                
-                Postfix = skin.GetStyle("Input field/Postfix");
-                
                 ErrorMessage = skin.GetStyle("Input field/Error message");
             }
         }
-        internal struct FoldoutStyle {
+        public struct FoldoutStyle {
             public GUIStyle Underline;
             
             public FoldoutStyle(GUISkin skin) {
                 Underline = skin.GetStyle("Foldout");
             }
         }
-        internal struct ShortcutRecorderStyle {
+        public struct KeyboardShortcutRecorder {
             public GUIStyle Main;
-            public Texture RecordingIcons;
+            public Texture RecordStateIconSet;
 
-            public ShortcutRecorderStyle(GUISkin skin) {
+            public KeyboardShortcutRecorder(GUISkin skin) {
                 Main = skin.GetStyle("Keyboard shortcut main");
-                RecordingIcons = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
+                RecordStateIconSet = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
             }
         }
-        internal struct ButtonStyle {
+        public struct ButtonStyle {
             public GUIStyle Left;
             public GUIStyle Mid;
             public GUIStyle Right;
 
             public ButtonStyle(GUISkin skin) {
-                Left = skin.GetStyle("button left");
-                Mid = skin.GetStyle("button mid");
-                Right = skin.GetStyle("button right");
+                var prefix = "Button ";
+                Left = skin.GetStyle(prefix + "left");
+                Mid = skin.GetStyle(prefix + "mid");
+                Right = skin.GetStyle(prefix + "right");
+            }
+        }
+        public struct ListElementStyle {
+            public GUIStyle MainLabel;
+            public GUIStyle SubLabel;
+
+            public ListElementStyle(GUISkin skin) {
+                var prefix = "List element ";
+                MainLabel = skin.GetStyle(prefix + "main");
+                SubLabel = skin.GetStyle(prefix + "sub");
             }
         }
 
@@ -103,33 +94,39 @@ namespace SoftKata.ExtendedEditorGUI {
         
         // Controls
         public GUIStyle Label;
+        public GUIStyle GenericInputField;
+        public GUIStyle GenericPostfix;
         
-        public InputFieldStyle InputField;
+        public PostfixInputFieldStyle PostfixInputField;
         public FoldoutStyle Foldout;
-        public ShortcutRecorderStyle ShortcutRecorder;
+        public KeyboardShortcutRecorder ShortcutRecorder;
         public ButtonStyle Buttons;
+        public ListElementStyle ListElement;
 
         internal ResourcesHolder() {
             // Paths resolution
             var isProSkin = EditorGUIUtility.isProSkin;
             
-            var skinPath = 
+            var layoutEngineSkinPath = 
                 ExtendedEditorGUI.PluginPath + (isProSkin ? LayoutEngineDarkSkinSubPath : LayoutEngineLightSkinSubPath);
             var controlsSkinPath = 
                 ExtendedEditorGUI.PluginPath + (isProSkin ? ControlsDarkSkinSubPath : ControlsLightSkinSubPath);
             
             // Layout engine
-            LayoutGroups = new LayoutGroupsStyles(Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath));
+            LayoutGroups = new LayoutGroupsStyles(Utility.LoadAssetAtPathAndAssert<GUISkin>(layoutEngineSkinPath));
             
             // Controls
             var controlsSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
 
             Label = controlsSkin.FindStyle("Label");
+            GenericInputField = EditorStyles.numberField;
+            GenericPostfix = controlsSkin.GetStyle("Generic Postfix");
             
-            InputField = new InputFieldStyle(controlsSkin);
+            PostfixInputField = new PostfixInputFieldStyle(controlsSkin);
             Foldout = new FoldoutStyle(controlsSkin);
-            ShortcutRecorder = new ShortcutRecorderStyle(controlsSkin);
+            ShortcutRecorder = new KeyboardShortcutRecorder(controlsSkin);
             Buttons = new ButtonStyle(controlsSkin);
+            ListElement = new ListElementStyle(controlsSkin);
         }
     }
 }

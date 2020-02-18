@@ -13,7 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             protected sealed override bool RegisterNewEntry(float height, float width) {
-                if (CurrentEventType == EventType.Layout) {
+                if (IsLayout) {
                     EntriesCount++;
                     TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, width);
                     TotalRequestedHeight += height;
@@ -27,11 +27,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryPosition.y += height + ContentOffset.y;
 
                 // occlusion
-                if (CurrentEntryPosition.y + height < VisibleAreaRect.y || CurrentEntryPosition.y > VisibleAreaRect.yMax) {
-                    return false;
-                }
-                
-                return true;
+                return CurrentEntryPosition.y + height >= VisibleAreaRect.y 
+                       && CurrentEntryPosition.y <= VisibleAreaRect.yMax;
             }
 
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
@@ -50,7 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData(eventType);
+                layoutGroup.RetrieveLayoutData();
             }
             
             _topGroup = layoutGroup;
