@@ -116,8 +116,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         ContainerRect = VisibleAreaRect;
                     }
                     
-                    IsGroupValid = VisibleAreaRect.IsValid();
-                    if (IsGroupValid) {
+                    if (VisibleAreaRect.IsValid() && Event.current.type != EventType.Used) {
                         IsLayout = false;
                         
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
@@ -130,14 +129,8 @@ namespace SoftKata.ExtendedEditorGUI {
                         return;
                     }
                 }
-
-                // Nested groups should be banished exactly here at non-layout layout data pull
-                // This would ensure 2 things:
-                // 1. Entries > 0 because this is called after PushLayoutRequest() which checks that condition
-                // 2. Parent group returned Valid rect
-                if (Parent != null) {
-                    Parent.EntriesCount -= _childrenCount + 1;
-                }
+                
+                IsGroupValid = false;
                 LayoutEngine.ScrapGroups(_childrenCount);
             }
 
@@ -221,7 +214,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             
             internal virtual void EndGroup(EventType eventType) {
-                if (!IsGroupValid) return;
                 EndGroupModifiersRoutine(eventType);
             }
 
@@ -243,12 +235,10 @@ namespace SoftKata.ExtendedEditorGUI {
             return true;
         }
 
-        private static bool GatherGroup() {
-            var layoutGroup = SubscribedForLayout.Dequeue();
-            layoutGroup.RetrieveLayoutData();
-            _topGroup = layoutGroup;
-            
-            return layoutGroup.IsGroupValid;
+        private static LayoutGroupBase GatherGroup() {
+            _topGroup = SubscribedForLayout.Dequeue();
+            _topGroup.RetrieveLayoutData();
+            return _topGroup;
         }
         
         
@@ -261,12 +251,12 @@ namespace SoftKata.ExtendedEditorGUI {
             if (eventType == EventType.Layout) {
                 currentGroup.RegisterLayoutRequest();
             }
-            else {
+            else if(currentGroup.IsGroupValid) {
                 currentGroup.EndGroup(eventType);
             }
             _topGroup = currentGroup.Parent;
 
-            if (currentGroup is T castedGroup) return castedGroup;
+            if (currentGroup is T castedTypeGroup) return castedTypeGroup;
             throw new Exception($"Group type mismatch: Expected {typeof(T).Name} | Got {currentGroup.GetType().Name}");
         }
     }

@@ -71,7 +71,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new FlexibleHorizontalLayoutGroup(width, modifier, style));
             }
 
-            return GatherGroup();
+            return GatherGroup().IsGroupValid;
         }
         public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
             return BeginRestrictedHorizontalGroup(width, modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalRestrictedGroup);

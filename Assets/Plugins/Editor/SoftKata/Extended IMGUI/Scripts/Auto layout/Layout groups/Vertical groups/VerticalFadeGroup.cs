@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new VerticalFadeGroup(faded, modifier, style));
             }
 
-            return GatherGroup();
+            return GatherGroup().IsGroupValid;
         }
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalFadeGroup);

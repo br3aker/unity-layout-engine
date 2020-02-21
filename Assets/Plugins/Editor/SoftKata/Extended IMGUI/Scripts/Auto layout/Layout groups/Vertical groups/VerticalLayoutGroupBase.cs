@@ -43,7 +43,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new VerticalGroup(modifier, style));
             }
 
-            return GatherGroup();
+            return GatherGroup().IsGroupValid;
         }
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalGroup);

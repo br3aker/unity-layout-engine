@@ -4,6 +4,7 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
+using UnityEngine.Profiling;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 public class ExtendedGuiPreviewWindow : EditorWindow
@@ -39,30 +40,35 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         var graph_off = new GUIContent(graph_string, icon_on, graph_string);
         _testToggleArrayGUIContent = new[] {monitor_off, text_off, graph_off, monitor, text, graph};
     }
-    private void OnLostFocus() {
-        LayoutEngine.ResetEngine();
-    }
-
-    private void OnFocus() {
-        Repaint();
-    }
+//    private void OnLostFocus() {
+//        LayoutEngine.ResetEngine();
+//    }
+//
+//    private void OnFocus() {
+//        Repaint();
+//    }
 
     #endregion
 
     private void Update() {
-//        Repaint();
+        Repaint();
     }
-
+    
     private void OnGUI() {
-        if (Event.current.type == EventType.Used) return;
+        if(Event.current.type == EventType.Used) return;
         if(Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
+
+        
+        EditorGUILayout.LabelField($"Sin: {Mathf.Sin((float)EditorApplication.timeSinceStartup)}");
 
         var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
+
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
 //            TestingMethod();
 //            PerformanceTestingScrollGroup();
+            PerformanceTestingScrollGroupNew();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -80,7 +86,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
-            ScrollGroupTest();    // passed
+//            ScrollGroupTest();    // passed
 //            HorizontalGroupNestedScroll();
         }
 
@@ -127,7 +133,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         
         EditorGUI.BeginDisabledGroup(_guiDisabled);
 
-        LayoutEngine.BeginVerticalGroup(); {
+        if (LayoutEngine.BeginVerticalGroup()) {
             rect = LayoutEngine.RequestLayoutRect(LabelHeight);
             _testInteger = EditorGUI.IntField(rect, _testInteger);
 
@@ -151,13 +157,14 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             
             rect = LayoutEngine.RequestLayoutRect(ElementListHeight);
             ListElement(rect, new GUIContent("Main label"), new GUIContent("Sub label/description"));
+            
+            LayoutEngine.EndVerticalGroup();
         }
-        LayoutEngine.EndVerticalGroup();
 
         EditorGUI.EndDisabledGroup();
     }
 
-    private int _verticalElementsCount = 64;
+    private int _verticalElementsCount = 16;
     private int _horizontalElementsCount = 16;
 
     private void UnityImplementationScrollTest() {
@@ -179,8 +186,8 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     EditorGUI.TextField(rect, "Text");
                 }
             }
+            LayoutEngine.EndVerticalGroup();
         }
-        LayoutEngine.EndVerticalGroup();
     }
     private void VerticalGroupsPlainTest() {
         for (int i = 0; i < _verticalElementsCount; i++) {
@@ -223,9 +230,9 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     private void HorizontalGroupNestedVerticalGroupsTest() {
         if (LayoutEngine.BeginHorizontalGroup()) {
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < _horizontalElementsCount; j++) {
                 if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.RequestLayoutRect(16, 150);
                         if (rect.IsValid()) {
                             EditorGUI.TextField(rect, "Horizontal/Vertical");
@@ -577,6 +584,27 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                         for (int j = 0; j < _horizontalElementsCount; j++) {
                             var rect = LayoutEngine.RequestLayoutRect(16, 150);
                             if (rect.IsValid()) {
+                                IntDelayedField(rect, 123, "postfix", null);
+                            }
+                        }
+                    }
+                }
+                LayoutEngine.EndHorizontalGroup();
+            }
+        }
+        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+    }
+    
+    private void PerformanceTestingScrollGroupNew() {
+        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
+            for (int i = 0; i < _verticalElementsCount; i++) {
+                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                    if (Event.current.type == EventType.Layout) {
+                        LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
+                    }
+                    else {
+                        for (int j = 0; j < _horizontalElementsCount; j++) {
+                            if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
                                 IntDelayedField(rect, 123, "postfix", null);
                             }
                         }

@@ -8,7 +8,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class ScrollGroup : VerticalClippingGroup {
             private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
-            private float _actualContainerWidth;
+//            private float _actualContainerWidth;
             private Vector2 _containerSize;
             
             internal Vector2 ScrollPos;
@@ -33,7 +33,6 @@ namespace SoftKata.ExtendedEditorGUI {
             private Color _scrollbarColor;
             
             public ScrollGroup(float height, float width, Vector2 scrollPos, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                // Container size
                 _containerSize = new Vector2(width, height);
                 
                 // Scroll settings
@@ -54,15 +53,20 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
             
+            // TODO: redo this method 
+            // Actually we only need to assign fixed Width and Height to this
+            // Actual content position can be calculated in CalculateScrollContainerSize() method
             protected override void PreLayoutRequest() {
-                if (TotalRequestedWidth > _containerSize.x) {
+                if (_containerSize.x > 0f && TotalRequestedWidth > _containerSize.x) {
                     _needsHorizontalScroll = true;
-
-                    _actualContainerWidth = TotalRequestedWidth;
+                    
+                    _containerToActualSizeRatio.x = _containerSize.x / TotalRequestedWidth;
+                    NextEntryPosition.x = Mathf.Lerp(0f, _containerSize.x - TotalRequestedWidth, ScrollPos.x);
+                    
                     TotalRequestedWidth = _containerSize.x;
                 }
                 
-                if (TotalRequestedHeight > _containerSize.y) {
+                if (_containerSize.y > 0f && TotalRequestedHeight > _containerSize.y) {
                     _needsVerticalScroll = true;
                     
                     _containerToActualSizeRatio.y = _containerSize.y / TotalRequestedHeight;
@@ -71,62 +75,23 @@ namespace SoftKata.ExtendedEditorGUI {
                     TotalRequestedHeight = _containerSize.y;
                 }
             }
-            
-            internal override void RetrieveLayoutData() {
-                _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+
+            internal void CalculateScrollContainerSize() {
+				_verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-                if (IsGroupValid) {
-                    if (Parent != null) {
-                        var rectData = Parent.GetGroupRectData(TotalRequestedHeight, TotalRequestedWidth);
-                        VisibleAreaRect = rectData.VisibleRect;
-                        ContainerRect = rectData.FullContentRect;
-                    }
-                    else {
-                        ContainerRect = LayoutEngine.RequestRectRaw(TotalRequestedHeight, TotalRequestedWidth);
-                        VisibleAreaRect = ContainerRect;
-                    }
-                    
-                    IsGroupValid = VisibleAreaRect.IsValid();
-
-                    if (IsGroupValid) {
-                        IsLayout = false;
-                        
-                        // Scroll bar calculations
-                        var allowedWidth = ContainerRect.width;
-                        if (_actualContainerWidth > allowedWidth) {
-                            NextEntryPosition.x = Mathf.Lerp(0f, allowedWidth - _actualContainerWidth, ScrollPos.x);
-                            _containerToActualSizeRatio.x = allowedWidth / _actualContainerWidth;
-                        }
-                        else {
-                            _needsHorizontalScroll = false;
-                            ContainerRect.width = _actualContainerWidth;
-                        }
-                        ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
-
-                        VisibleAreaRect = Utility.RectIntersection(VisibleAreaRect, ContainerRect);
-
-                        NextEntryPosition += ContainerRect.position - VisibleAreaRect.position;
-
-                        GUI.BeginClip(VisibleAreaRect);
-                        VisibleAreaRect.position = Vector2.zero;
-
-
-                        if (AutomaticEntryWidth < 0f) {
-                            AutomaticEntryWidth = ContainerRect.width;
-                        }
-
-                        return;
-                    }
+			
+                var allowedWidth = ContainerRect.width;
+                var actualWidth = TotalRequestedWidth - ServiceWidth;
+                
+                if (actualWidth > allowedWidth) {
+                    _needsHorizontalScroll = true;
+                    NextEntryPosition.x = Mathf.Lerp(0f, allowedWidth - actualWidth, ScrollPos.x);
+                    _containerToActualSizeRatio.x = allowedWidth / actualWidth;
                 }
-
-                // Nested groups should be banished exactly here at non-layout layout data pull
-                // This would ensure 2 things:
-                // 1. Entries > 0 because this is called after PushLayoutRequest() which checks that
-                // 2. Parent group returned Valid rect
-                if (Parent != null) {
-                    Parent.EntriesCount -= _childrenCount + 1;
+                else {
+                    _needsHorizontalScroll = false;
+                    ContainerRect.width = actualWidth;
                 }
-                LayoutEngine.ScrapGroups(_childrenCount);
             }
 
             internal void DoScrollGroupEndRoutine() {
@@ -268,7 +233,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new ScrollGroup(height, width, scrollValue, modifier, style));
             }
 
-            return GatherGroup();
+            var currentGroup = GatherGroup() as ScrollGroup;
+            currentGroup.CalculateScrollContainerSize();
+            return currentGroup.IsGroupValid;
         }
         public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
             return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);

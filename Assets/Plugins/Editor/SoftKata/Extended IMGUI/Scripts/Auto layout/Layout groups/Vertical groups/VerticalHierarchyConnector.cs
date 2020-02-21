@@ -52,7 +52,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new VerticalHierarchyGroup(modifier, style));
             }
 
-            return GatherGroup();
+            return GatherGroup().IsGroupValid;
         }
         public static bool BeginVerticalHierarchyGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalHierarchyGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalHierarchyGroup);
