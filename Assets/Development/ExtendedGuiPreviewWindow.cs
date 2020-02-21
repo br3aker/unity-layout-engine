@@ -53,8 +53,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //        Repaint();
     }
 
-    private int id = 0;
-    
     private void OnGUI() {
         if (Event.current.type == EventType.Used) return;
         if(Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
@@ -64,7 +62,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
         {
 //            TestingMethod();
-            PerformanceTestingScrollGroup();
+//            PerformanceTestingScrollGroup();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -82,7 +80,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
-//            ScrollGroupTest();    // passed
+            ScrollGroupTest();    // passed
 //            HorizontalGroupNestedScroll();
         }
 

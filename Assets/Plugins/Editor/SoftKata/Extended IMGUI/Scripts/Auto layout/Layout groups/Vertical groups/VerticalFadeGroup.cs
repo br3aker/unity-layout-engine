@@ -19,19 +19,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) {
-            LayoutGroupBase layoutGroup;
             if (Event.current.type == EventType.Layout) {
-                layoutGroup = new VerticalFadeGroup(faded, modifier, style);
-                SubscribedForLayout.Enqueue(layoutGroup);
+                return RegisterGroup(new VerticalFadeGroup(faded, modifier, style));
             }
-            else {
-                layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData();
-            }
-            
-            _topGroup = layoutGroup;
 
-            return layoutGroup.IsGroupValid;
+            return GatherGroup();
         }
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalFadeGroup);

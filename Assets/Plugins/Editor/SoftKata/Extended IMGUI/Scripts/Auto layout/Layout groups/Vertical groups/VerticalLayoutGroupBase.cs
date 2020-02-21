@@ -39,20 +39,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
-            var eventType = Event.current.type;
-            LayoutGroupBase layoutGroup;
-            if (eventType == EventType.Layout) {
-                layoutGroup = new VerticalGroup(modifier, style);
-                SubscribedForLayout.Enqueue(layoutGroup);
+            if (Event.current.type == EventType.Layout) {
+                return RegisterGroup(new VerticalGroup(modifier, style));
             }
-            else {
-                layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData();
-            }
-            
-            _topGroup = layoutGroup;
 
-            return layoutGroup.IsGroupValid;
+            return GatherGroup();
         }
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalGroup);

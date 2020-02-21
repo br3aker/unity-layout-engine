@@ -264,20 +264,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
-            var eventType = Event.current.type;
-            LayoutGroupBase layoutGroup;
-            if (eventType == EventType.Layout) {
-                layoutGroup = new ScrollGroup(height, width, scrollValue, modifier, style);
-                SubscribedForLayout.Enqueue(layoutGroup);
+            if (Event.current.type == EventType.Layout) {
+                return RegisterGroup(new ScrollGroup(height, width, scrollValue, modifier, style));
             }
-            else {
-                layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData();
-            }
-            
-            _topGroup = layoutGroup;
 
-            return layoutGroup.IsGroupValid;
+            return GatherGroup();
         }
         public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
             return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);

@@ -67,20 +67,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         
         public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
-            var eventType = Event.current.type;
-            LayoutGroupBase layoutGroup;
-            if (eventType == EventType.Layout) {
-                layoutGroup = new FlexibleHorizontalLayoutGroup(width, modifier, style);
-                SubscribedForLayout.Enqueue(layoutGroup);
+            if (Event.current.type == EventType.Layout) {
+                return RegisterGroup(new FlexibleHorizontalLayoutGroup(width, modifier, style));
             }
-            else {
-                layoutGroup = SubscribedForLayout.Dequeue();
-                layoutGroup.RetrieveLayoutData();
-            }
-            
-            _topGroup = layoutGroup;
 
-            return layoutGroup.IsGroupValid;
+            return GatherGroup();
         }
         public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
             return BeginRestrictedHorizontalGroup(width, modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalRestrictedGroup);

@@ -250,14 +250,6 @@ namespace SoftKata.ExtendedEditorGUI {
             
             return layoutGroup.IsGroupValid;
         }
-
-        public static bool BeginGroup(GroupModifier modifier) {
-            if (Event.current.type == EventType.Layout) {
-                return RegisterGroup(new HorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalGroup));
-            }
-
-            return GatherGroup();
-        }
         
         
         // Casting is not always needed, some execution time can be saved here,
