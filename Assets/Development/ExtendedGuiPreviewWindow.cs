@@ -4,6 +4,7 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
+using UnityEditor.Experimental.TerrainAPI;
 using UnityEngine.Profiling;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
@@ -50,25 +51,43 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
     #endregion
 
-    private void Update() {
-        Repaint();
-    }
+    private bool _alwaysRepaint;
     
     private void OnGUI() {
         if(Event.current.type == EventType.Used) return;
         if(Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
 
+        EditorGUILayout.LabelField($"Always repaint: {_alwaysRepaint}");
+        if (GUILayout.Button(_alwaysRepaint ? "Always update" : "Update on action")) {
+            _alwaysRepaint = !_alwaysRepaint;
+            if (_alwaysRepaint) {
+                EditorApplication.update += Repaint;
+            }
+            else {
+                EditorApplication.update -= Repaint;
+            }
+        }
         
         EditorGUILayout.LabelField($"Sin: {Mathf.Sin((float)EditorApplication.timeSinceStartup)}");
 
         var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
         var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
-
+        
         EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"Hot control id: {GUIUtility.hotControl}");
+        EditorGUILayout.LabelField($"Keyboard control id: {GUIUtility.keyboardControl}");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"Scroll position: ({_hybridScrollPos.x}, {_hybridScrollPos.y})");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUILayout.LabelField($"Group count: {LayoutEngine.GetGroupQueueSize()}");
+        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        
         {
 //            TestingMethod();
 //            PerformanceTestingScrollGroup();
-            PerformanceTestingScrollGroupNew();
+//            PerformanceTestingScrollGroupNew();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -89,17 +108,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            ScrollGroupTest();    // passed
 //            HorizontalGroupNestedScroll();
         }
-
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Hot control id: {GUIUtility.hotControl}");
-        EditorGUILayout.LabelField($"Keyboard control id: {GUIUtility.keyboardControl}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Scroll position: ({_hybridScrollPos.x}, {_hybridScrollPos.y})");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Group count: {LayoutEngine.GetGroupQueueSize()}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
 
         if (Event.current.type != EventType.Layout) {
             _verticalElementsCount = verticalCount;
@@ -164,7 +172,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUI.EndDisabledGroup();
     }
 
-    private int _verticalElementsCount = 16;
+    private int _verticalElementsCount = 14;
     private int _horizontalElementsCount = 16;
 
     private void UnityImplementationScrollTest() {
@@ -179,14 +187,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         EditorGUILayout.EndScrollView();
     }
     private void VerticalGroupTest() {
-        if (LayoutEngine.BeginVerticalGroup()) {
+        using (var scope = new LayoutEngine.VerticalGroupScope()) {
+            if (!scope.Valid) return;
             for (int i = 0; i < _verticalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16);
-                if (rect.IsValid()) {
+                if (LayoutEngine.GetRect(16, LayoutEngine.AutoWidth, out Rect rect)) {
                     EditorGUI.TextField(rect, "Text");
                 }
             }
-            LayoutEngine.EndVerticalGroup();
         }
     }
     private void VerticalGroupsPlainTest() {
@@ -482,7 +489,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private Vector2 _hybridScrollPos;
     
     private void ScrollGroupTest() {
-        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
             HorizontalGroupNestedVerticalGroupsTest();
             
             for (int i = 0; i < _verticalElementsCount; i++) {
@@ -570,11 +577,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             
             VerticalHierarchyGroupTreeTest();
         }
-        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+        _hybridScrollPos = LayoutEngine.EndScrollGroup();
     }
 
     private void PerformanceTestingScrollGroup() {
-        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
@@ -592,28 +599,32 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 LayoutEngine.EndHorizontalGroup();
             }
         }
-        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+        _hybridScrollPos = LayoutEngine.EndScrollGroup();
     }
     
     private void PerformanceTestingScrollGroupNew() {
-        if (LayoutEngine.BeginHybridScrollGroup(-1, 640, _hybridScrollPos)) {
-            for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
-                    if (Event.current.type == EventType.Layout) {
-                        LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
-                    }
-                    else {
-                        for (int j = 0; j < _horizontalElementsCount; j++) {
-                            if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
-                                IntDelayedField(rect, 123, "postfix", null);
+        Profiler.BeginSample("PerformanceTestingScrollGroup");
+        {
+            if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
+                for (int i = 0; i < _verticalElementsCount; i++) {
+                    if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                        if (Event.current.type == EventType.Layout) {
+                            LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
+                        }
+                        else {
+                            for (int j = 0; j < _horizontalElementsCount; j++) {
+                                if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
+                                    IntDelayedField(rect, 123, "postfix", null);
+                                }
                             }
                         }
                     }
+                    LayoutEngine.EndHorizontalGroup();
                 }
-                LayoutEngine.EndHorizontalGroup();
             }
+            _hybridScrollPos = LayoutEngine.EndScrollGroup();
         }
-        _hybridScrollPos = LayoutEngine.EndHybridScrollGroup();
+        Profiler.EndSample();
     }
 
     private void HorizontalGroupNestedScroll() {

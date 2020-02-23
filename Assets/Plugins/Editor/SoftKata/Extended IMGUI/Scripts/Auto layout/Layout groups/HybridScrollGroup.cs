@@ -8,7 +8,6 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class ScrollGroup : VerticalClippingGroup {
             private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
-//            private float _actualContainerWidth;
             private Vector2 _containerSize;
             
             internal Vector2 ScrollPos;
@@ -228,7 +227,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
+        public static bool BeginScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
                 return RegisterGroup(new ScrollGroup(height, width, scrollValue, modifier, style));
             }
@@ -237,11 +236,11 @@ namespace SoftKata.ExtendedEditorGUI {
             currentGroup.CalculateScrollContainerSize();
             return currentGroup.IsGroupValid;
         }
-        public static bool BeginHybridScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
-            return BeginHybridScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);
+        public static bool BeginScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
+            return BeginScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);
         }
 
-        public static Vector2 EndHybridScrollGroup() {
+        public static Vector2 EndScrollGroup() {
             var group = EndLayoutGroup<ScrollGroup>();
             group.DoScrollGroupEndRoutine();
             return group.ScrollPos;

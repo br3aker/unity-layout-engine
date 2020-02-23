@@ -38,6 +38,21 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
+        public class HorizontalGroupScope : IDisposable {
+            public readonly bool Valid;
+            
+            public HorizontalGroupScope(GroupModifier modifier, GUIStyle style) {
+                Valid = BeginHorizontalGroup(modifier, style);
+            }
+            public HorizontalGroupScope(GroupModifier modifier = GroupModifier.None) {
+                Valid = BeginHorizontalGroup(modifier);
+            }
+            
+            public void Dispose() {
+                EndLayoutGroup<HorizontalGroup>();
+            }
+        }
+        
         public static bool BeginHorizontalGroup(GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
                 return RegisterGroup(new HorizontalGroup(modifier, style));

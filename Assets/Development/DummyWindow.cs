@@ -19,7 +19,7 @@ namespace Development {
         private void OnGUI() {
             EditorGUILayout.LabelField($"Sin: {Mathf.Sin((float)EditorApplication.timeSinceStartup)}");
             
-            if (LayoutEngine.BeginHybridScrollGroup(-1, this.position.height - 18, _scrollPos)) {
+            if (LayoutEngine.BeginScrollGroup(-1, this.position.height - 18, _scrollPos)) {
                 for (int i = 0; i < 16; i++) {
                     if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                         if (Event.current.type == EventType.Layout) {
@@ -36,7 +36,7 @@ namespace Development {
                     LayoutEngine.EndHorizontalGroup();
                 }
             }
-            _scrollPos = LayoutEngine.EndHybridScrollGroup();
+            _scrollPos = LayoutEngine.EndScrollGroup();
         }
     }
 }

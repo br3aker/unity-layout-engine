@@ -37,6 +37,21 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight += elementHeight * count;
             }
         }
+        
+        public class VerticalGroupScope : IDisposable {
+            public readonly bool Valid;
+            
+            public VerticalGroupScope(GroupModifier modifier, GUIStyle style) {
+                Valid = BeginVerticalGroup(modifier, style);
+            }
+            public VerticalGroupScope(GroupModifier modifier = GroupModifier.None) {
+                Valid = BeginVerticalGroup(modifier);
+            }
+            
+            public void Dispose() {
+                EndVerticalGroup();
+            }
+        }
 
         public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
@@ -48,7 +63,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalGroup);
         }
-
+        
         public static void EndVerticalGroup() {
             EndLayoutGroup<VerticalGroup>();
         }

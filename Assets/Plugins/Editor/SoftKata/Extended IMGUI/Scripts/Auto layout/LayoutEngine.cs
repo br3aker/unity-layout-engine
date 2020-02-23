@@ -7,7 +7,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private static readonly Rect InvalidRect = new Rect(0, 0, -1, -1);
         private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
-        private const float AutoWidthValue = -1f;
+        public const float AutoWidth = -1f;
 
         private static readonly Queue<LayoutGroupBase> SubscribedForLayout = new Queue<LayoutGroupBase>();
 
@@ -15,7 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         private static LayoutGroupBase _topGroup;
 
-        internal static Rect RequestRectRaw(float height, float width = AutoWidthValue) {
+        internal static Rect RequestRectRaw(float height, float width = AutoWidth) {
             var rect = GUILayoutUtility.GetRect(width, height);
             if (width > 0f) {
                 rect.width = Mathf.Min(width, EditorGUIUtility.currentViewWidth);
@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect;
         }
 
-        public static Rect RequestLayoutRect(float height, float width = AutoWidthValue) {
+        public static Rect RequestLayoutRect(float height, float width = AutoWidth) {
             return _topGroup?.GetRect(height, width) ?? RequestRectRaw(height, width);
         }
 
@@ -32,7 +32,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect.IsValid();
         }
         
-        public static void RegisterElementsArray(int count, float elementHeight, float elementWidth = AutoWidthValue) {
+        public static void RegisterElementsArray(int count, float elementHeight, float elementWidth = AutoWidth) {
             if (_topGroup != null) {
                 _topGroup.RegisterRectArray(elementHeight, elementWidth, count);
             }

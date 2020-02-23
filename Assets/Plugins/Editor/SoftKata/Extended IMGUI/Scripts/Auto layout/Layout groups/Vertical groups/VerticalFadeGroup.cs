@@ -17,6 +17,21 @@ namespace SoftKata.ExtendedEditorGUI {
                 TotalRequestedHeight *= _faded;
             }
         }
+        
+        public class VerticalFadeGroupScope : IDisposable {
+            public readonly bool Valid;
+            
+            public VerticalFadeGroupScope(float faded, GroupModifier modifier, GUIStyle style) {
+                Valid = BeginVerticalFadeGroup(faded, modifier, style);
+            }
+            public VerticalFadeGroupScope(float faded, GroupModifier modifier = GroupModifier.None) {
+                Valid = BeginVerticalFadeGroup(faded, modifier);
+            }
+            
+            public void Dispose() {
+                EndVerticalFadeGroup();
+            }
+        }
 
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
