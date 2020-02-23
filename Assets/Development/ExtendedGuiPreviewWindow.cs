@@ -102,7 +102,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalHierarchyGroupTest();    // passed
 //            VerticalHierarchyGroupTreeTest();
 //            VerticalHierarchyWithSeparatorTest();    // passed
-//            FixedHorizontalGroupTest();    // passed
+            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
 //            ScrollGroupTest();    // passed
@@ -423,23 +423,20 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void FixedHorizontalGroupTest() {
-        if (LayoutEngine.BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
-            var rect1 = LayoutEngine.RequestLayoutRect(16, 100);
-            if (rect1.IsValid()) {
-                EditorGUI.DrawRect(rect1, Color.black);
-                EditorGUI.LabelField(rect1, rect1.width.ToString());
+        if (LayoutEngine.BeginRestrictedHorizontalGroup(LayoutEngine.AutoWidth)) {
+            if (LayoutEngine.GetRect(16, 100, out var fixedRect)) {
+                EditorGUI.DrawRect(fixedRect, Color.black);
+                EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
             }
-            for (int i = 0; i < _horizontalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16, -1);
-                if (rect.IsValid()) {
-                    EditorGUI.DrawRect(rect, Color.black);
-                    EditorGUI.LabelField(rect, rect.width.ToString());
-                }
+
+            if (LayoutEngine.GetRect(32, LayoutEngine.AutoWidth, out var flexibleRect)) {
+                EditorGUI.DrawRect(flexibleRect, Color.black);
+                EditorGUI.LabelField(flexibleRect, flexibleRect.width.ToString());
             }
-            var rect2 = LayoutEngine.RequestLayoutRect(16, 100);
-            if (rect2.IsValid()) {
-                EditorGUI.DrawRect(rect2, Color.black);
-                EditorGUI.LabelField(rect2, rect2.width.ToString());
+
+            if (LayoutEngine.GetRect(32, LayoutEngine.AutoWidth, out var fractionRect)) {
+                EditorGUI.DrawRect(fractionRect, Color.black);
+                EditorGUI.LabelField(fractionRect, fractionRect.width.ToString());
             }
         }
         LayoutEngine.EndRestrictedHorizontalGroup();

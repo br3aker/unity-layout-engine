@@ -5,36 +5,27 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class FlexibleHorizontalLayoutGroup : HorizontalGroup {
-            private float _containerWidth;
-            
+        private class FlexibleHorizontalLayoutGroup : HorizontalGroup {
             private int _fixedEntriesCount;
-            
-            private float _totalFixedEntriesWidth;
-            
-            private float _flexibleElementWidth = -1f;
-
+            private float _fixedEntriesWidth;
             
             public FlexibleHorizontalLayoutGroup(float width, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                _containerWidth = width;
+                TotalRequestedWidth = width;
             }
 
-            protected override void PreLayoutRequest() {
-                // Calculation flexible elements width
-                float totalFlexibleElementsWidth = _containerWidth - TotalRequestedWidth;
-
-                TotalRequestedWidth += totalFlexibleElementsWidth;
+            internal void CalculateLayout() {
+                float totalFlexibleWidth = ContainerRect.width - _fixedEntriesWidth - ContentOffset.x * (EntriesCount - 1);
                 
-                _flexibleElementWidth = Mathf.Max(totalFlexibleElementsWidth / (EntriesCount - _fixedEntriesCount), 0f);
+                AutomaticEntryWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
                 
-                AutomaticEntryWidth = _flexibleElementWidth;
+                EditorGUI.DrawRect(ContainerRect, Color.blue);
             }
 
             protected override bool RegisterNewEntry(float height, float width) {
                 if (IsLayout) {
                     if (width > 0) {
                         _fixedEntriesCount++;
-                        TotalRequestedWidth += width;
+                        _fixedEntriesWidth += width;
                     }
 
                     EntriesCount++;
@@ -55,7 +46,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
                 if (elementWidth > 0f) {
                     _fixedEntriesCount += count;
-                    _totalFixedEntriesWidth += elementHeight * count;
+                    _fixedEntriesWidth += elementHeight * count;
                 }
                 EntriesCount += count;
                 TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
@@ -82,7 +73,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 return RegisterGroup(new FlexibleHorizontalLayoutGroup(width, modifier, style));
             }
 
-            return GatherGroup().IsGroupValid;
+            var layoutGroup = GatherGroup() as FlexibleHorizontalLayoutGroup;
+            layoutGroup.CalculateLayout();
+            return layoutGroup.IsGroupValid;
         }
         public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
             return BeginRestrictedHorizontalGroup(width, modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalRestrictedGroup);
