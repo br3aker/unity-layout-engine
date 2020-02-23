@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Configuration;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
-using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace SoftKata.ExtendedEditorGUI {
     [Flags]

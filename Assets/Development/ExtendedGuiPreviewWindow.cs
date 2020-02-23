@@ -2,13 +2,12 @@
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 using SoftKata.ExtendedEditorGUI;
-using UnityEditor.Experimental.TerrainAPI;
-using UnityEngine.Profiling;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
-public class ExtendedGuiPreviewWindow : EditorWindow
+public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
 {
     #region Window initialization & lifetime management
     [MenuItem("Window/Extended GUI preview")]
@@ -52,42 +51,41 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     #endregion
 
     private bool _alwaysRepaint;
-    
-    private void OnGUI() {
-        if(Event.current.type == EventType.Used) return;
-        if(Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
 
-        EditorGUILayout.LabelField($"Always repaint: {_alwaysRepaint}");
-        if (GUILayout.Button(_alwaysRepaint ? "Always update" : "Update on action")) {
-            _alwaysRepaint = !_alwaysRepaint;
-            if (_alwaysRepaint) {
-                EditorApplication.update += Repaint;
-            }
-            else {
-                EditorApplication.update -= Repaint;
+    protected override void IMGUI() {
+        if (LayoutEngine.GetRect(ExtendedEditorGUI.LabelHeight, -1, out var labelRect)) {
+            EditorGUI.LabelField(labelRect,$"Always repaint: [{_alwaysRepaint}] | [{Mathf.Sin((float)EditorApplication.timeSinceStartup)}]");
+        }
+        if (LayoutEngine.GetRect(ExtendedEditorGUI.LabelHeight, -1, out var buttonRect)) {
+            if (GUI.Button(buttonRect, _alwaysRepaint ? "Always update" : "Update on action")) {
+                _alwaysRepaint = !_alwaysRepaint;
+                if (_alwaysRepaint) {
+                    EditorApplication.update += Repaint;
+                }
+                else {
+                    EditorApplication.update -= Repaint;
+                }
             }
         }
-        
-        EditorGUILayout.LabelField($"Sin: {Mathf.Sin((float)EditorApplication.timeSinceStartup)}");
 
-        var verticalCount = EditorGUILayout.IntField("Vertical count: ", _verticalElementsCount);
-        var horizontalCount = EditorGUILayout.IntField("Horizontal count: ", _horizontalElementsCount);
+        var verticalCount = EditorGUI.IntField(LayoutEngine.GetRect(18), "Vertical count: ", _verticalElementsCount);
+        var horizontalCount = EditorGUI.IntField(LayoutEngine.GetRect(18), "Horizontal count: ", _horizontalElementsCount);
         
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Hot control id: {GUIUtility.hotControl}");
-        EditorGUILayout.LabelField($"Keyboard control id: {GUIUtility.keyboardControl}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"View width: {EditorGUIUtility.currentViewWidth}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Scroll position: ({_hybridScrollPos.x}, {_hybridScrollPos.y})");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
-        EditorGUILayout.LabelField($"Group count: {LayoutEngine.GetGroupQueueSize()}");
-        EditorGUI.DrawRect(GUILayoutUtility.GetRect(0f, 1f), Color.gray);
+        EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
+        EditorGUI.LabelField(LayoutEngine.GetRect(18), $"Hot control id: {GUIUtility.hotControl}");
+        EditorGUI.LabelField(LayoutEngine.GetRect(18), $"Keyboard control id: {GUIUtility.keyboardControl}");
+        EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
+        EditorGUI.LabelField(LayoutEngine.GetRect(18), $"View width: {EditorGUIUtility.currentViewWidth}");
+        EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
+        EditorGUI.LabelField(LayoutEngine.GetRect(18), $"Scroll position: ({_hybridScrollPos.x}, {_hybridScrollPos.y})");
+        EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
+        EditorGUI.LabelField(LayoutEngine.GetRect(18), $"Group count: {LayoutEngine.GetGroupQueueSize()}");
+        EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
         
         {
-//            TestingMethod();
+            TestingMethod();
 //            PerformanceTestingScrollGroup();
-//            PerformanceTestingScrollGroupNew();
+            PerformanceTestingScrollGroup();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -102,7 +100,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 //            VerticalHierarchyGroupTest();    // passed
 //            VerticalHierarchyGroupTreeTest();
 //            VerticalHierarchyWithSeparatorTest();    // passed
-            FixedHorizontalGroupTest();    // passed
+//            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
 //            ScrollGroupTest();    // passed
@@ -135,39 +133,28 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private GUIContent[] _testToggleArrayGUIContent;
 
     private void TestingMethod() {
-        Rect rect;
-        
-        _guiDisabled = EditorGUILayout.Toggle("GUI.enabled", _guiDisabled);
+        _guiDisabled = EditorGUI.Toggle(LayoutEngine.GetRect(18), "GUI.enabled", _guiDisabled);
         
         EditorGUI.BeginDisabledGroup(_guiDisabled);
 
         if (LayoutEngine.BeginVerticalGroup()) {
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            _testInteger = EditorGUI.IntField(rect, _testInteger);
+            _testInteger = EditorGUI.IntField(LayoutEngine.GetRect(LabelHeight), _testInteger);
 
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            _testInteger = IntDelayedField(rect, _testInteger, "postfix", _testInteger > 0 ? null : _testError);
+            _testInteger = IntDelayedField(LayoutEngine.GetRect(LabelHeight), _testInteger, "postfix", _testInteger > 0 ? null : _testError);
 
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            _testBool = UnderlineFoldout(rect, _testBool, "Foldout");
+            _testBool = UnderlineFoldout(LayoutEngine.GetRect(LabelHeight), _testBool, "Foldout");
             
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            _testColor = EditorGUI.ColorField(rect, _testColor);
+            _testColor = EditorGUI.ColorField(LayoutEngine.GetRect(LabelHeight), _testColor);
 
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            _testShortcut1 = KeyboardShortcutField(rect, _testShortcut1);
+            _testShortcut1 = KeyboardShortcutField(LayoutEngine.GetRect(LabelHeight), _testShortcut1);
 
-            rect = LayoutEngine.RequestLayoutRect(ToggleArrayHeight);
-            _testToggleArray = ToggleArray(rect, _testToggleArray, _testToggleArrayGUIContent);
+            _testToggleArray = ToggleArray(LayoutEngine.GetRect(LabelHeight), _testToggleArray, _testToggleArrayGUIContent);
 
-            rect = LayoutEngine.RequestLayoutRect(LabelHeight);
-            GUI.Toolbar(rect, 0, new[] {"First", "Second"});
+            GUI.Toolbar(LayoutEngine.GetRect(LabelHeight), 0, new[] {"First", "Second"});
             
-            rect = LayoutEngine.RequestLayoutRect(ElementListHeight);
-            ListElement(rect, new GUIContent("Main label"), new GUIContent("Sub label/description"));
-            
-            LayoutEngine.EndVerticalGroup();
+            ListElement(LayoutEngine.GetRect(LabelHeight), new GUIContent("Main label"), new GUIContent("Sub label/description"));
         }
+        LayoutEngine.EndVerticalGroup();
 
         EditorGUI.EndDisabledGroup();
     }
@@ -199,7 +186,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void VerticalGroupsPlainTest() {
         for (int i = 0; i < _verticalElementsCount; i++) {
             if (LayoutEngine.BeginVerticalGroup()) {
-                var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                var rect = LayoutEngine.GetRect(16, 150);
                 EditorGUI.TextField(rect, "");
             }
             LayoutEngine.EndVerticalGroup();
@@ -208,7 +195,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void VerticalGroupsIfCheckTest() {
         for (int i = 0; i < _verticalElementsCount; i++) {
             if (LayoutEngine.BeginVerticalGroup()) {
-                var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                var rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.TextField(rect, "");
                 }
@@ -226,7 +213,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void HorizontalGroupTest() {
         if (LayoutEngine.BeginHorizontalGroup()) {
             for (int i = 0; i < _horizontalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16, -1);
+                var rect = LayoutEngine.GetRect(16, -1);
                 if (rect.IsValid()) {
                     EditorGUI.TextField(rect, "");
                 }
@@ -240,7 +227,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             for (int j = 0; j < _horizontalElementsCount; j++) {
                 if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                        var rect = LayoutEngine.GetRect(16, 150);
                         if (rect.IsValid()) {
                             EditorGUI.TextField(rect, "Horizontal/Vertical");
                         }
@@ -258,13 +245,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private AnimBool _verticalFaded4;
 
     private void VerticalFadeGroupTest() {
-        var foldoutHeaderRect = LayoutEngine.RequestLayoutRect(16, 250);
+        var foldoutHeaderRect = LayoutEngine.GetRect(16, 250);
         if (foldoutHeaderRect.IsValid()) {
             _verticalFaded1.target = EditorGUI.Foldout(foldoutHeaderRect,_verticalFaded1.target, foldoutHeaderRect.ToString(), true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                var rect = LayoutEngine.RequestLayoutRect(16, 300);
+                var rect = LayoutEngine.GetRect(16, 300);
                 if (rect.IsValid()) {
                     EditorGUI.TextField(rect, rect.ToString());
                 }
@@ -274,11 +261,11 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
     
     private void VerticalFadeGroupHorizontalChildGroupTest() {
-        _verticalFaded1.target = EditorGUILayout.Foldout(_verticalFaded1.target, "Vertical foldout example", true);
+        _verticalFaded1.target = EditorGUI.Foldout(LayoutEngine.GetRect(18), _verticalFaded1.target, "Vertical foldout example", true);
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
             if (LayoutEngine.BeginHorizontalGroup()) {
                 for (int i = 0; i < _horizontalElementsCount; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, -1);
+                    var rect = LayoutEngine.GetRect(16, -1);
                     if (rect.IsValid()) {
                         EditorGUI.TextField(rect, "");
                     }
@@ -289,26 +276,26 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void NestedFadeGroupsTest() {
-        var foldoutRect0 = LayoutEngine.RequestLayoutRect(16, -1);
+        var foldoutRect0 = LayoutEngine.GetRect(16, -1);
         if (foldoutRect0.IsValid()) {
             _verticalFaded1.target =
                 EditorGUI.Foldout(foldoutRect0, _verticalFaded1.target, "Nested foldout example", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded)) {
             HorizontalGroupTest();
-            var foldoutRect1 = LayoutEngine.RequestLayoutRect(16, -1);
+            var foldoutRect1 = LayoutEngine.GetRect(16, -1);
             if (foldoutRect1.IsValid()) {
                 _verticalFaded2.target = EditorGUI.Foldout(foldoutRect1, _verticalFaded2.target, "Oh my", true);
             }
             if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded)) {
-                var foldoutRect2 = LayoutEngine.RequestLayoutRect(16, -1);
+                var foldoutRect2 = LayoutEngine.GetRect(16, -1);
                 if (foldoutRect2.IsValid()) {
                     _verticalFaded3.target = EditorGUI.Foldout(foldoutRect2, _verticalFaded3.target,
                         "Vertical foldout example", true);
                 }
 
                 if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded3.faded)) {
-                    var contentRect = LayoutEngine.RequestLayoutRect(200, -1);
+                    var contentRect = LayoutEngine.GetRect(200, -1);
                     if (contentRect.IsValid()) {
                         EditorGUI.DrawRect(contentRect, Color.magenta);
                         EditorGUI.LabelField(contentRect, contentRect.ToString());
@@ -325,7 +312,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16);
+                    var rect = LayoutEngine.GetRect(16);
                     if (rect.IsValid()) {
                         EditorGUI.TextField(rect, "");
                     }
@@ -338,21 +325,21 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     private void VerticalHierarchyGroupTest() {
         if (LayoutEngine.BeginVerticalHierarchyGroup()) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                EditorGUI.TextField(LayoutEngine.RequestLayoutRect(16, -1), "Nested label");
+                EditorGUI.TextField(LayoutEngine.GetRect(16, -1), "Nested label");
             }
         }
         LayoutEngine.EndVerticalHierarchyGroup();
     }
 
     private void _HierarchyTestHelperLevel1(AnimBool folded) {
-        var headerRect = LayoutEngine.RequestLayoutRect(16, 150);
+        var headerRect = LayoutEngine.GetRect(16, 150);
         if (headerRect.IsValid()) {
             folded.target = EditorGUI.Foldout(headerRect,folded.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, GroupModifier.DiscardMargin)) {
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < 3; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                    var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
                         EditorGUI.LabelField(rect, "Label");
                     }
@@ -363,20 +350,20 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void _HierarchyTestHelperLevel2(AnimBool folded1, AnimBool folded2) {
-        var headerRect = LayoutEngine.RequestLayoutRect(16, 150);
+        var headerRect = LayoutEngine.GetRect(16, 150);
         if (headerRect.IsValid()) {
             folded1.target = EditorGUI.Foldout(headerRect,folded1.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, GroupModifier.DiscardMargin)) {
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < 3; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                    var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
                         EditorGUI.LabelField(rect, "Label");
                     }
                 }
                 _HierarchyTestHelperLevel1(folded2);
-                var rect1 = LayoutEngine.RequestLayoutRect(16, 150);
+                var rect1 = LayoutEngine.GetRect(16, 150);
                 if (rect1.IsValid()) {
                     EditorGUI.LabelField(rect1, "Label");
                 }
@@ -386,26 +373,26 @@ public class ExtendedGuiPreviewWindow : EditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void VerticalHierarchyGroupTreeTest() {
-        var rootHeaderRect = LayoutEngine.RequestLayoutRect(16, 150);
+        var rootHeaderRect = LayoutEngine.GetRect(16, 150);
         if (rootHeaderRect.IsValid()) {
             _verticalFaded1.target = EditorGUI.Foldout(rootHeaderRect,_verticalFaded1.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, GroupModifier.DiscardMargin)) {
             if(LayoutEngine.BeginVerticalHierarchyGroup()) {
-                var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                var rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.LabelField(rect, "Label");
                 }
-                rect = LayoutEngine.RequestLayoutRect(16, 150);
+                rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.LabelField(rect, "Label");
                 }
                 _HierarchyTestHelperLevel2(_verticalFaded3, _verticalFaded4);
-                rect = LayoutEngine.RequestLayoutRect(16, 150);
+                rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.LabelField(rect, "Label");
                 }
-                rect = LayoutEngine.RequestLayoutRect(16, 150);
+                rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.LabelField(rect, "Label");
                 }
@@ -454,7 +441,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             // Vertical group
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, -1);
+                    var rect = LayoutEngine.GetRect(16, -1);
                     if (rect.IsValid()) {
                         EditorGUI.IntField(rect, i);
                     }
@@ -464,13 +451,13 @@ public class ExtendedGuiPreviewWindow : EditorWindow
              
             // Hierarchy
             if (LayoutEngine.BeginVerticalGroup()) {
-                var nestedFoldoutRect = LayoutEngine.RequestLayoutRect(16, -1);
+                var nestedFoldoutRect = LayoutEngine.GetRect(16, -1);
                 if (nestedFoldoutRect.IsValid()) {
                     _verticalFaded2.target = EditorGUI.Foldout(nestedFoldoutRect, _verticalFaded2.target, "Nested fade group", true);
                 }
                 if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded2.faded)) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, -1);
+                        var rect = LayoutEngine.GetRect(16, -1);
                         if (rect.IsValid()) {
                             EditorGUI.IntField(rect, i);
                         }
@@ -496,7 +483,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     }
                     else {
                         for (int j = 0; j < _horizontalElementsCount; j++) {
-                            var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                            var rect = LayoutEngine.GetRect(16, 150);
                             if (rect.IsValid()) {
                                 EditorGUI.TextField(rect, "Text");
                             }
@@ -509,7 +496,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, -1);
+                        var rect = LayoutEngine.GetRect(16, -1);
                         if (rect.IsValid()) {
                             EditorGUI.TextField(rect, "");
                         }
@@ -522,7 +509,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
-                        var rect = LayoutEngine.RequestLayoutRect(16, 500);
+                        var rect = LayoutEngine.GetRect(16, 500);
                         if (rect.IsValid()) {
                             EditorGUI.TextField(rect, "");
                         }
@@ -536,7 +523,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                 for (int j = 0; j < 8; j++) {
                     if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                         for (int i = 0; i < 3; i++) {
-                            var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                            var rect = LayoutEngine.GetRect(16, 150);
                             if (rect.IsValid()) {
                                 EditorGUI.TextField(rect, "");
                             }
@@ -554,7 +541,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
 
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < 16; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                    var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
                         EditorGUI.TextField(rect, "Text");
                     }
@@ -564,7 +551,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
                 for (int i = 0; i < 10; i++) {
-                    var rect = LayoutEngine.RequestLayoutRect(16, 150);
+                    var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
                         EditorGUI.TextField(rect, "");
                     }
@@ -578,7 +565,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
     }
 
     private void PerformanceTestingScrollGroup() {
-        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(position.width, position.height, _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
@@ -586,8 +573,7 @@ public class ExtendedGuiPreviewWindow : EditorWindow
                     }
                     else {
                         for (int j = 0; j < _horizontalElementsCount; j++) {
-                            var rect = LayoutEngine.RequestLayoutRect(16, 150);
-                            if (rect.IsValid()) {
+                            if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
                                 IntDelayedField(rect, 123, "postfix", null);
                             }
                         }
@@ -597,31 +583,6 @@ public class ExtendedGuiPreviewWindow : EditorWindow
             }
         }
         _hybridScrollPos = LayoutEngine.EndScrollGroup();
-    }
-    
-    private void PerformanceTestingScrollGroupNew() {
-        Profiler.BeginSample("PerformanceTestingScrollGroup");
-        {
-            if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
-                for (int i = 0; i < _verticalElementsCount; i++) {
-                    if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
-                        if (Event.current.type == EventType.Layout) {
-                            LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
-                        }
-                        else {
-                            for (int j = 0; j < _horizontalElementsCount; j++) {
-                                if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
-                                    IntDelayedField(rect, 123, "postfix", null);
-                                }
-                            }
-                        }
-                    }
-                    LayoutEngine.EndHorizontalGroup();
-                }
-            }
-            _hybridScrollPos = LayoutEngine.EndScrollGroup();
-        }
-        Profiler.EndSample();
     }
 
     private void HorizontalGroupNestedScroll() {

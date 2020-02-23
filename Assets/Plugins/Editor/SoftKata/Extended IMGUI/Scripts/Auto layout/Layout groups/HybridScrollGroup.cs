@@ -51,19 +51,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
+
+            private float _actualContentWidth;
             
             // TODO: redo this method 
             // Actually we only need to assign fixed Width and Height to this
             // Actual content position can be calculated in CalculateScrollContainerSize() method
             protected override void PreLayoutRequest() {
-                if (_containerSize.x > 0f && TotalRequestedWidth > _containerSize.x) {
-                    _needsHorizontalScroll = true;
-                    
-                    _containerToActualSizeRatio.x = _containerSize.x / TotalRequestedWidth;
-                    NextEntryPosition.x = Mathf.Lerp(0f, _containerSize.x - TotalRequestedWidth, ScrollPos.x);
-                    
-                    TotalRequestedWidth = _containerSize.x;
-                }
+                // Same can be done with content height
+                _actualContentWidth = TotalRequestedWidth;
+                TotalRequestedWidth = _containerSize.x;
                 
                 if (_containerSize.y > 0f && TotalRequestedHeight > _containerSize.y) {
                     _needsVerticalScroll = true;
@@ -80,7 +77,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 			
                 var allowedWidth = ContainerRect.width;
-                var actualWidth = TotalRequestedWidth - ServiceWidth;
+                var actualWidth = _actualContentWidth > 0 ? _actualContentWidth - ServiceWidth : AutomaticEntryWidth;
                 
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
@@ -96,13 +93,14 @@ namespace SoftKata.ExtendedEditorGUI {
             internal void DoScrollGroupEndRoutine() {
                 var current = Event.current;
                 var eventType = current.type;
-                if (eventType == EventType.Layout || !IsGroupValid) return;
+                if (!IsGroupValid) return;
 
                 var actualContentRect = ContainerRect;
                 ContainerRect = Margin.Add(Border.Add(Padding.Add(ContainerRect)));
                 
 
                 if (_needsVerticalScroll) {
+//                    Debug.Log("Vertical scroll code");
                     float scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y, actualContentRect.height * MinimalScrollbarSizeMultiplier);
                     float scrollMovementLength = actualContentRect.height - scrollbarHeight;
                     

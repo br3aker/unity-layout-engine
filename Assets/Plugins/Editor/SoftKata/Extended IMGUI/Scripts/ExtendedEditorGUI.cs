@@ -1,7 +1,5 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.UI;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {

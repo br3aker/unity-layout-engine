@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect;
         }
 
-        public static Rect RequestLayoutRect(float height, float width = AutoWidth) {
+        public static Rect GetRect(float height, float width = AutoWidth) {
             return _topGroup?.GetRect(height, width) ?? RequestRectRaw(height, width);
         }
 
