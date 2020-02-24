@@ -19,11 +19,11 @@ namespace Development {
         private void OnGUI() {
             EditorGUILayout.LabelField($"Sin: {Mathf.Sin((float)EditorApplication.timeSinceStartup)}");
             
-            if (LayoutEngine.BeginScrollGroup(-1, this.position.height - 18, _scrollPos)) {
+            if (LayoutEngine.BeginScrollGroup(new Vector2(-1, position.height - 18), _scrollPos)) {
                 for (int i = 0; i < 16; i++) {
                     if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                         if (Event.current.type == EventType.Layout) {
-                            LayoutEngine.RegisterElementsArray(16, 16, 150);
+                            LayoutEngine.RegisterArray(16, 16, 150);
                         }
                         else {
                             for (int j = 0; j < 16; j++) {

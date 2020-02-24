@@ -1,59 +1,20 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public partial class ExtendedEditorGUI {
-        private static readonly int s_KeyboardShortcutListenerHint = nameof(s_KeyboardShortcutListenerHint).GetHashCode();
+        private static readonly int s_KeyboardShortcutListenerHint =
+            nameof(s_KeyboardShortcutListenerHint).GetHashCode();
 
-        private static ShortcutFieldState _shortcutFieldStateObject = new ShortcutFieldState();
+        private static readonly ShortcutFieldState _shortcutFieldStateObject = new ShortcutFieldState();
 
-        public struct KeyboardShortcut {
-            private const string DefaultShortcutRecorderLabel = "No shortcut";
-            
-            public KeyCode Key;
-            public EventModifiers Modifiers;
-
-            private string _stringRepresentation;
-
-            public void Set(KeyCode key, EventModifiers modifiers) {
-                Key = key;
-                Modifiers = modifiers;
-
-                if (key != KeyCode.None) {
-                    _stringRepresentation = key.ToString();
-                    if (modifiers != EventModifiers.None) {
-                        _stringRepresentation += " + " + modifiers;
-                    }
-                }
-                else {
-                    Reset();
-                }
-            }
-
-            public void Reset() {
-                Key = KeyCode.None;
-                Modifiers = EventModifiers.None;
-
-                _stringRepresentation = null;
-            }
-
-            public override string ToString() {
-                return _stringRepresentation ?? DefaultShortcutRecorderLabel;
-            }
-        }
-        private class ShortcutFieldState {
-            public int LastRecordingControlId = -1;
-            public KeyboardShortcut LastRecordingControlValue;
-        }
         public static KeyboardShortcut KeyboardShortcutField(Rect rect, KeyboardShortcut value) {
-            int controlId = GUIUtility.GetControlID(s_KeyboardShortcutListenerHint, FocusType.Keyboard, rect);
+            var controlId = GUIUtility.GetControlID(s_KeyboardShortcutListenerHint, FocusType.Keyboard, rect);
 
             var current = Event.current;
             var eventType = current.GetTypeForControl(controlId);
 
             var lastRecordingControlId = _shortcutFieldStateObject.LastRecordingControlId;
-            
+
             var isRecording = controlId == GUIUtility.keyboardControl &&
                               controlId == lastRecordingControlId;
 
@@ -66,7 +27,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     if (rect.Contains(current.mousePosition)) {
                         GUIUtility.hotControl = controlId;
                         GUIUtility.keyboardControl = controlId;
-                        
+
                         // Postfix rect click
                         // Used for immediate record start
                         if (postfixRect.Contains(current.mousePosition)) {
@@ -87,7 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 case EventType.KeyDown:
                     if (GUIUtility.keyboardControl == controlId) {
                         var keyCode = current.keyCode;
-                        
+
                         if (keyCode == KeyCode.None) break;
 
                         if (isRecording) {
@@ -104,6 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
                                     _shortcutFieldStateObject.LastRecordingControlValue.Set(keyCode, current.modifiers);
                                     break;
                             }
+
                             current.Use();
                         }
                         else {
@@ -124,28 +86,67 @@ namespace SoftKata.ExtendedEditorGUI {
                     break;
                 case EventType.Repaint:
                     var resources = Resources.ShortcutRecorder;
-                    
+
                     // Label
                     var label = (isRecording ? _shortcutFieldStateObject.LastRecordingControlValue : value).ToString();
-                    resources.Main.Draw(rect, TempContent(label),controlId, isRecording);
+                    resources.Main.Draw(rect, TempContent(label), controlId, isRecording);
 
                     // Postfix
-                    Resources.GenericPostfix.Draw(postfixRect, TempContent(null), postfixRect.Contains(current.mousePosition), false, false, false);
-                    
+                    Resources.GenericPostfix.Draw(postfixRect, TempContent(null),
+                        postfixRect.Contains(current.mousePosition), false, false, false);
+
                     var coordsRect = new Rect(isRecording ? 0.5f : 0f, 0f, 0.5f, 1);
                     var postfixIconRect = new Rect(
                         postfixRect.x + 1,
-                        postfixRect.y + LabelHeight / 2 - PostfixIconSize / 2, 
-                        PostfixIconSize, 
+                        postfixRect.y + LabelHeight / 2 - PostfixIconSize / 2,
+                        PostfixIconSize,
                         PostfixIconSize
                     );
-                    
+
                     GUI.DrawTextureWithTexCoords(postfixIconRect, resources.RecordStateIconSet, coordsRect);
-                    
+
                     break;
             }
 
             return value;
+        }
+
+        public struct KeyboardShortcut {
+            private const string DefaultShortcutRecorderLabel = "No shortcut";
+
+            public KeyCode Key;
+            public EventModifiers Modifiers;
+
+            private string _stringRepresentation;
+
+            public void Set(KeyCode key, EventModifiers modifiers) {
+                Key = key;
+                Modifiers = modifiers;
+
+                if (key != KeyCode.None) {
+                    _stringRepresentation = key.ToString();
+                    if (modifiers != EventModifiers.None) _stringRepresentation += " + " + modifiers;
+                }
+                else {
+                    Reset();
+                }
+            }
+
+            public void Reset() {
+                Key = KeyCode.None;
+                Modifiers = EventModifiers.None;
+
+                _stringRepresentation = null;
+            }
+
+            public override string ToString() {
+                return _stringRepresentation ?? DefaultShortcutRecorderLabel;
+            }
+        }
+
+        private class ShortcutFieldState {
+            public int LastRecordingControlId = -1;
+            public KeyboardShortcut LastRecordingControlValue;
         }
     }
 }

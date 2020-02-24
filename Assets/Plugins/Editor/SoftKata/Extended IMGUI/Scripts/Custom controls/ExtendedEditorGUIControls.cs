@@ -9,7 +9,9 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         private const int NoActiveControlId = int.MinValue;
 
-        public const float LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
+        public const float
+            LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
+
         public const float ErrorSubLabelHeight = 10;
         public const float LabelWithErrorHeight = LabelHeight + ErrorSubLabelHeight;
 
@@ -30,21 +32,23 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public const int ShortcutRecorderWidth = 200;
 
-        public static readonly Func<int> GetLastControlId = 
+        public static readonly Func<int> GetLastControlId =
             Utility.CreateStaticGetter<int>(
                 typeof(EditorGUIUtility).GetField(
-                    "s_LastControlID", 
+                    "s_LastControlID",
                     BindingFlags.Static | BindingFlags.NonPublic
                 )
             );
 
 
-        private static GUIContent _tempContent = new GUIContent();
+        private static readonly GUIContent _tempContent = new GUIContent();
+
         private static void ClearTempContent() {
             _tempContent.text = null;
             _tempContent.image = null;
             _tempContent.tooltip = null;
         }
+
         private static GUIContent TempContent(string text) {
             ClearTempContent();
             _tempContent.text = text;
@@ -57,44 +61,43 @@ namespace SoftKata.ExtendedEditorGUI {
             var leftStyle = buttonsStyles.Left;
             var midStyle = buttonsStyles.Mid;
             var rightStyle = buttonsStyles.Right;
-            
+
             var actualContentLength = contents.Length / 2;
 
             var fixedWidthFromStyle = midStyle.fixedWidth;
-            var cellWidth = fixedWidthFromStyle > 0 
+            var cellWidth = fixedWidthFromStyle > 0
                 ? fixedWidthFromStyle
                 : (rect.width - 1 * actualContentLength) / actualContentLength;
 
             var iconHorizontalOffset = cellWidth + 1;
 
             var toggleRect = new Rect(rect.x, rect.y, cellWidth, ToggleArrayHeight);
-            
-            for (int i = 0; i < actualContentLength; i++) {
-                int checker = 1 << i;
-                bool on = (value & checker) == checker;
+
+            for (var i = 0; i < actualContentLength; i++) {
+                var checker = 1 << i;
+                var on = (value & checker) == checker;
 
                 var content = contents[on ? i : i + actualContentLength];
 
                 var style = i == 0 ? leftStyle : i == actualContentLength - 1 ? rightStyle : midStyle;
-                if (GUI.Toggle(toggleRect, on, content, style)) {
+                if (GUI.Toggle(toggleRect, on, content, style))
                     value |= checker;
-                }
-                else {
+                else
                     value &= ~checker;
-                }
 
                 toggleRect.x += iconHorizontalOffset;
             }
 
             return value;
         }
+
         public static void ToggleArray(Rect rect, SerializedProperty value, GUIContent[] contents) {
             value.intValue = ToggleArray(rect, value.intValue, contents);
         }
-        
+
         private static T GenericAssertedField<T>(Rect rect, T value, string postfix, string errorMessage) {
-            bool isError = errorMessage != null && GUI.enabled;
-            
+            var isError = errorMessage != null && GUI.enabled;
+
             // Styles
             var styles = Resources.PostfixInputField;
             var valueStyle = isError ? styles.Error : Resources.GenericInputField;
@@ -107,11 +110,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 EditorGUI.LabelField(errorRect, errorMessage, styles.ErrorMessage);
             }
-            if (EditorGUI.EndChangeCheck()) {
+
+            if (EditorGUI.EndChangeCheck())
                 if (ExpressionEvaluator.Evaluate(expression, out T newVal))
                     return newVal;
-            }
-            
+
             // Postfix
             if (Event.current.type == EventType.Repaint) {
                 var postfixRect = new Rect(rect.xMax - PostfixTextAreaWidth, rect.y, PostfixTextAreaWidth, rect.height);
@@ -124,13 +127,15 @@ namespace SoftKata.ExtendedEditorGUI {
         public static int IntDelayedField(Rect rect, int value, string postfix, string errorMessage) {
             return GenericAssertedField(rect, value, postfix, errorMessage);
         }
+
         public static void IntDelayedField(Rect rect, SerializedProperty value, string postfix, string errorMessage) {
             value.intValue = GenericAssertedField(rect, value.intValue, postfix, errorMessage);
         }
-        
+
         public static float FloatDelayedField(Rect rect, float value, string postfix, string errorMessage) {
             return GenericAssertedField(rect, value, postfix, errorMessage);
         }
+
         public static void FloatDelayedField(Rect rect, SerializedProperty value, string postfix, string errorMessage) {
             value.floatValue = GenericAssertedField(rect, value.floatValue, postfix, errorMessage);
         }
@@ -142,18 +147,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 EditorGUI.DrawRect(underlineRect, style.active.textColor);
                 return true;
             }
+
             return false;
         }
 
         public static void UnderlineFoldout(Rect rect, SerializedProperty expanded, string label) {
             expanded.isExpanded = UnderlineFoldout(rect, expanded.isExpanded, label);
         }
-        
+
         public static void ListElement(Rect rect, GUIContent mainLabel, GUIContent subLabel) {
             if (Event.current.type != EventType.Repaint) return;
-            
+
             var styles = Resources.ListElement;
-            
+
             // Main label
             styles.MainLabel.Draw(rect, mainLabel, rect.Contains(Event.current.mousePosition), false, false, false);
 

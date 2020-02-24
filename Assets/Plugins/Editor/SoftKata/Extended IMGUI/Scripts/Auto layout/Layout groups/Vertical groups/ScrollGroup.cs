@@ -1,47 +1,66 @@
-using System;
 using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
+            if (Event.current.type == EventType.Layout)
+                return RegisterForLayout(new ScrollGroup(containerSize, scrollValue, modifier, style));
+
+            var currentGroup = RetrieveNextGroup() as ScrollGroup;
+            currentGroup.CalculateScrollContainerSize();
+            return currentGroup.IsGroupValid;
+        }
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
+            return BeginScrollGroup(containerSize, scrollValue, modifier,
+                ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);
+        }
+        public static Vector2 EndScrollGroup() {
+            var group = EndLayoutGroup<ScrollGroup>();
+            group.DoScrollGroupEndRoutine();
+            return group.ScrollPos;
+        }
+
         internal class ScrollGroup : VerticalClippingGroup {
             private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
-            private Vector2 _containerSize;
-            
-            internal Vector2 ScrollPos;
+            private float _actualContentWidth;
+    
 
-            private bool _needsVerticalScroll;
-            private bool _needsHorizontalScroll;
+            private readonly Color _backgroundColor;
 
-            private int _verticalScrollId;
-            private int _horizontalScrollId;
+            private readonly Vector2 _containerSize;
+
+            private Vector2 _containerToActualSizeRatio;
+            private readonly Vector2 _horizontalScrollbarDelta;
 
             // Scrollbar settings
-            private float _verticalScrollBarWidth;
-            private Vector2 _verticalScrollbarDelta;
-            
-            private float _horizontalScrollBarHeight;
-            private Vector2 _horizontalScrollbarDelta;
-            
-            private Vector2 _containerToActualSizeRatio;
+            // horizontal
+            private readonly float _horizontalScrollBarHeight;
+            private bool _needsHorizontalScroll;
+            private int _horizontalScrollId;
 
+            // vertical
+            private readonly float _verticalScrollBarWidth;
+            private bool _needsVerticalScroll;
+            private int _verticalScrollId;
             
-            private Color _backgroundColor;
-            private Color _scrollbarColor;
-            
-            public ScrollGroup(float height, float width, Vector2 scrollPos, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                _containerSize = new Vector2(width, height);
-                
+            private readonly Color _scrollbarColor;
+            private readonly Vector2 _verticalScrollbarDelta;
+
+
+            internal Vector2 ScrollPos;
+
+            public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+                _containerSize = containerSize;
+
                 // Scroll settings
                 ScrollPos = scrollPos;
-                
+
                 var overflow = style.overflow;
                 _verticalScrollBarWidth = overflow.right;
                 _verticalScrollbarDelta = new Vector2(_verticalScrollBarWidth - overflow.left, 0f);
-                
+
                 _horizontalScrollBarHeight = overflow.bottom;
                 _horizontalScrollbarDelta = new Vector2(0f, _horizontalScrollBarHeight - overflow.top);
 
@@ -53,37 +72,35 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
-            private float _actualContentWidth;
-            
             // TODO: redo this method 
             // Actually we only need to assign fixed Width and Height to this
             // Actual content position can be calculated in CalculateScrollContainerSize() method
             protected override void PreLayoutRequest() {
                 // Same can be done with content height
-                _actualContentWidth = TotalRequestedWidth;
-                TotalRequestedWidth = _containerSize.x;
-                
-                if (_containerSize.y > 0f && TotalRequestedHeight > _containerSize.y) {
+                _actualContentWidth = RequestedWidth;
+                RequestedWidth = _containerSize.x;
+
+                if (_containerSize.y > 0f && RequestedHeight > _containerSize.y) {
                     _needsVerticalScroll = true;
-                    
-                    _containerToActualSizeRatio.y = _containerSize.y / TotalRequestedHeight;
-                    NextEntryPosition.y = Mathf.Lerp(0f, _containerSize.y - TotalRequestedHeight, ScrollPos.y);
-                    
-                    TotalRequestedHeight = _containerSize.y;
+
+                    _containerToActualSizeRatio.y = _containerSize.y / RequestedHeight;
+                    NextEntryPosition.y = Mathf.Lerp(0f, _containerSize.y - RequestedHeight, ScrollPos.y);
+
+                    RequestedHeight = _containerSize.y;
                 }
             }
 
             internal void CalculateScrollContainerSize() {
-				_verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-			
+
                 var allowedWidth = ContainerRect.width;
                 var actualWidth = _actualContentWidth > 0 ? _actualContentWidth - ServiceWidth : AutomaticEntryWidth;
-                
+
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
-                    
-                    NextEntryPosition.x = Mathf.Lerp( NextEntryPosition.x,  NextEntryPosition.x + allowedWidth - actualWidth, ScrollPos.x);
+
+                    NextEntryPosition.x += Mathf.Lerp(0, allowedWidth - actualWidth, ScrollPos.x);
                     _containerToActualSizeRatio.x = allowedWidth / actualWidth;
                 }
                 else {
@@ -99,30 +116,30 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 var actualContentRect = ContainerRect;
                 ContainerRect = Margin.Add(Border.Add(Padding.Add(ContainerRect)));
-                
+
 
                 if (_needsVerticalScroll) {
-//                    Debug.Log("Vertical scroll code");
-                    float scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y, actualContentRect.height * MinimalScrollbarSizeMultiplier);
-                    float scrollMovementLength = actualContentRect.height - scrollbarHeight;
-                    
+                    var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
+                        actualContentRect.height * MinimalScrollbarSizeMultiplier);
+                    var scrollMovementLength = actualContentRect.height - scrollbarHeight;
+
                     if (eventType == EventType.ScrollWheel && ContainerRect.Contains(current.mousePosition)) {
                         current.Use();
                         GUIUtility.keyboardControl = 0;
-                        
+
                         ScrollPos.y = Mathf.Clamp01(ScrollPos.y + current.delta.y / scrollMovementLength);
                         return;
                     }
 
-                    float verticalScrollPos = actualContentRect.xMax - _verticalScrollBarWidth + Padding.right;
-                    
+                    var verticalScrollPos = actualContentRect.xMax + Padding.right - _verticalScrollBarWidth;
+
                     var verticalScrollbarRect = new Rect(
                         verticalScrollPos,
                         actualContentRect.y + scrollMovementLength * ScrollPos.y,
                         _verticalScrollBarWidth,
                         scrollbarHeight
                     );
-                    
+
                     var verticalScrollbarBackgroundRect = new Rect(
                         verticalScrollPos,
                         actualContentRect.y,
@@ -130,24 +147,24 @@ namespace SoftKata.ExtendedEditorGUI {
                         actualContentRect.height
                     );
 
-                    ScrollPos.y = 
+                    ScrollPos.y =
                         DoGenericScrollbar(
                             current,
                             ScrollPos.y,
-                            verticalScrollbarRect, verticalScrollbarBackgroundRect, 
-                            _verticalScrollId, 
-                            true, 
+                            verticalScrollbarRect, verticalScrollbarBackgroundRect,
+                            _verticalScrollId,
+                            true,
                             scrollMovementLength,
                             _verticalScrollbarDelta
                         );
                 }
 
                 if (_needsHorizontalScroll) {
-                    float scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
+                    var scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
                         actualContentRect.width * MinimalScrollbarSizeMultiplier);
-                    float scrollMovementLength = actualContentRect.width - scrollBarWidth;
+                    var scrollMovementLength = actualContentRect.width - scrollBarWidth;
 
-                    float horizontalScrollPos = actualContentRect.yMax - _horizontalScrollBarHeight + Padding.bottom;
+                    var horizontalScrollPos = actualContentRect.yMax - _horizontalScrollBarHeight + Padding.bottom;
 
                     var horizontalScrollbarRect = new Rect(
                         actualContentRect.x + scrollMovementLength * ScrollPos.x,
@@ -175,7 +192,10 @@ namespace SoftKata.ExtendedEditorGUI {
                         );
                 }
             }
-            private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect, Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength, Vector2 renderingDelta) {
+
+            private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
+                Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength,
+                Vector2 renderingDelta) {
                 switch (currentEvent.type) {
                     case EventType.MouseDown:
                         var mousePos = currentEvent.mousePosition;
@@ -184,26 +204,28 @@ namespace SoftKata.ExtendedEditorGUI {
                             GUIUtility.keyboardControl = 0;
                             GUIUtility.hotControl = controlId;
 
-                            if (!scrollbarRect.Contains(mousePos)) {
-                                scrollPos = verticalBar 
-                                    ? mousePos.y / ContainerRect.yMax 
+                            if (!scrollbarRect.Contains(mousePos))
+                                scrollPos = verticalBar
+                                    ? mousePos.y / ContainerRect.yMax
                                     : mousePos.x / ContainerRect.xMax;
-                            }
                         }
+
                         break;
                     case EventType.MouseUp:
                         if (GUIUtility.hotControl == controlId) {
                             currentEvent.Use();
                             GUIUtility.hotControl = 0;
                         }
+
                         break;
                     case EventType.MouseDrag:
                         if (GUIUtility.hotControl == controlId) {
                             currentEvent.Use();
                             var dragDelta = currentEvent.delta;
-                            var movementDelta = verticalBar ? dragDelta.y : dragDelta.x; 
+                            var movementDelta = verticalBar ? dragDelta.y : dragDelta.x;
                             scrollPos = Mathf.Clamp01(scrollPos + movementDelta / totalMovementLength);
                         }
+
                         break;
                     case EventType.Repaint:
                         // Check if we should render full-sized scrollbar
@@ -211,39 +233,18 @@ namespace SoftKata.ExtendedEditorGUI {
                             scrollbarRect.min += renderingDelta;
                             backgroundRect.min += renderingDelta;
                         }
-                        
+
                         // Background
-                        if (_backgroundColor.a > 0f) {
-                            EditorGUI.DrawRect(backgroundRect, _backgroundColor);
-                        }
-                        
+                        if (_backgroundColor.a > 0f) EditorGUI.DrawRect(backgroundRect, _backgroundColor);
+
                         // Actual scrollbar
                         EditorGUI.DrawRect(scrollbarRect, _scrollbarColor);
-                        
+
                         break;
                 }
 
                 return scrollPos;
             }
-        }
-
-        public static bool BeginScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout) {
-                return RegisterGroup(new ScrollGroup(height, width, scrollValue, modifier, style));
-            }
-
-            var currentGroup = GatherGroup() as ScrollGroup;
-            currentGroup.CalculateScrollContainerSize();
-            return currentGroup.IsGroupValid;
-        }
-        public static bool BeginScrollGroup(float width, float height, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
-            return BeginScrollGroup(width, height, scrollValue, modifier, ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);
-        }
-
-        public static Vector2 EndScrollGroup() {
-            var group = EndLayoutGroup<ScrollGroup>();
-            group.DoScrollGroupEndRoutine();
-            return group.ScrollPos;
         }
     }
 }

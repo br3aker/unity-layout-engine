@@ -1,17 +1,29 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier, GUIStyle style) {
+            if (Event.current.type == EventType.Layout)
+                return RegisterForLayout(new VerticalHierarchyGroup(modifier, style));
+
+            return RetrieveNextGroup().IsGroupValid;
+        }
+        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier = GroupModifier.None) {
+            return BeginVerticalHierarchyGroup(modifier,
+                ExtendedEditorGUI.Resources.LayoutGroups.VerticalHierarchyGroup);
+        }
+        public static void EndVerticalHierarchyGroup() {
+            EndLayoutGroup<VerticalHierarchyGroup>()
+                .DrawMajorConnectionType();
+        }
+
         private class VerticalHierarchyGroup : VerticalGroup {
-            private float _connectionLineWidth;
-            private float _connectionLineLength;
-            
-            private Color _connectionLineColor;
-            
+            private readonly Color _connectionLineColor;
+            private readonly float _connectionLineLength;
+            private readonly float _connectionLineWidth;
+
             private float _lastEntryHeight;
             private float _lastEntryY;
 
@@ -22,16 +34,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 _connectionLineColor = style.normal.textColor;
             }
 
-            protected override Rect GetRectInternal(float x, float y, float height, float width) {
+            protected override Rect GetEntryRect(float x, float y, float width, float height) {
                 _lastEntryHeight = height;
                 _lastEntryY = y;
-                
+
                 var horizontalLine = new Rect(
                     ContainerRect.x - Padding.left, y + height / 2,
                     _connectionLineLength, _connectionLineWidth
                 );
                 EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
-                
+
                 return new Rect(x, y, width, height);
             }
 
@@ -39,41 +51,27 @@ namespace SoftKata.ExtendedEditorGUI {
                 var verticalLineRect = new Rect(
                     ContainerRect.x - Padding.left, ContainerRect.y - Padding.top,
                     _connectionLineWidth,
-                    (_lastEntryY - ContainerRect.y) + _lastEntryHeight
+                    _lastEntryY - ContainerRect.y + _lastEntryHeight
                 );
-                
+
                 EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
-            } 
+            }
         }
-        
-        public class VerticalHierarchyGroupScope : IDisposable {
+
+        public class VerticalHierarchyScope : IDisposable {
             public readonly bool Valid;
-            
-            public VerticalHierarchyGroupScope(GroupModifier modifier, GUIStyle style) {
+
+            public VerticalHierarchyScope(GroupModifier modifier, GUIStyle style) {
                 Valid = BeginVerticalHierarchyGroup(modifier, style);
             }
-            public VerticalHierarchyGroupScope(GroupModifier modifier = GroupModifier.None) {
+
+            public VerticalHierarchyScope(GroupModifier modifier = GroupModifier.None) {
                 Valid = BeginVerticalHierarchyGroup(modifier);
             }
-            
+
             public void Dispose() {
                 EndVerticalHierarchyGroup();
             }
-        }
-        
-        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout) {
-                return RegisterGroup(new VerticalHierarchyGroup(modifier, style));
-            }
-
-            return GatherGroup().IsGroupValid;
-        }
-        public static bool BeginVerticalHierarchyGroup(GroupModifier modifier = GroupModifier.None) {
-            return BeginVerticalHierarchyGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalHierarchyGroup);
-        }
-        public static void EndVerticalHierarchyGroup() {
-            EndLayoutGroup<VerticalHierarchyGroup>()
-                .DrawMajorConnectionType();
         }
     }
 }

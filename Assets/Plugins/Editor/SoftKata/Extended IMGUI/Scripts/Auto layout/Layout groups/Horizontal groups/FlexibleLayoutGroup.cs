@@ -2,26 +2,43 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        private class FlexibleHorizontalLayoutGroup : HorizontalGroup {
+        public static bool BeginFlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
+            if (Event.current.type == EventType.Layout)
+                return RegisterForLayout(new FlexibleHorizontalGroup(width, modifier, style));
+
+            var layoutGroup = RetrieveNextGroup<FlexibleHorizontalGroup>();
+            layoutGroup.CalculateLayout();
+            return layoutGroup.IsGroupValid;
+        }
+        public static bool BeginFlexibleHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
+            return BeginFlexibleHorizontalGroup(width, modifier,
+                ExtendedEditorGUI.Resources.LayoutGroups.HorizontalRestrictedGroup);
+        }
+        public static void EndFlexibleHorizontalGroup() {
+            EndLayoutGroup<FlexibleHorizontalGroup>();
+        }
+
+        private class FlexibleHorizontalGroup : HorizontalGroup {
             private int _fixedEntriesCount;
             private float _fixedEntriesWidth;
-            
-            public FlexibleHorizontalLayoutGroup(float width, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                TotalRequestedWidth = width;
+
+            public FlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) :
+                base(modifier, style) {
+                RequestedWidth = width;
             }
 
             internal void CalculateLayout() {
-                float totalFlexibleWidth = ContainerRect.width - _fixedEntriesWidth - ContentOffset.x * (EntriesCount - 1);
-                
+                var totalFlexibleWidth =
+                    ContainerRect.width - _fixedEntriesWidth - ContentOffset.x * (EntriesCount - 1);
+
                 AutomaticEntryWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-                
+
                 EditorGUI.DrawRect(ContainerRect, Color.blue);
             }
 
-            protected override bool RegisterNewEntry(float height, float width) {
+            protected override bool PrepareNextRect(float width, float height) {
                 if (IsLayout) {
                     if (width > 0) {
                         _fixedEntriesCount++;
@@ -29,60 +46,44 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
 
                     EntriesCount++;
-                    TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, height);
+                    RequestedHeight = Mathf.Max(RequestedHeight, height);
                     return false;
                 }
 
-                if (!IsGroupValid) {
-                    return false;
-                }
-                
+                if (!IsGroupValid) return false;
+
                 NextEntryPosition.x += width + ContentOffset.x;
-                
+
                 // occlusion
-                return CurrentEntryPosition.x + width >= VisibleAreaRect.x 
+                return CurrentEntryPosition.x + width >= VisibleAreaRect.x
                        && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
             }
-            internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
-                if (elementWidth > 0f) {
+
+            internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
+                if (elemWidth > 0f) {
                     _fixedEntriesCount += count;
-                    _fixedEntriesWidth += elementHeight * count;
+                    _fixedEntriesWidth += elemHeight * count;
                 }
+
                 EntriesCount += count;
-                TotalRequestedHeight = Mathf.Max(TotalRequestedHeight, elementHeight);
+                RequestedHeight = Mathf.Max(RequestedHeight, elemHeight);
             }
         }
-        
-        public class FlexibleHorizontalLayoutGroupScope : IDisposable {
+
+        public class FlexibleHorizontalScope : IDisposable {
             public readonly bool Valid;
-            
-            public FlexibleHorizontalLayoutGroupScope(float width, GroupModifier modifier, GUIStyle style) {
-                Valid = BeginRestrictedHorizontalGroup(width, modifier, style);
+
+            public FlexibleHorizontalScope(float width, GroupModifier modifier, GUIStyle style) {
+                Valid = BeginFlexibleHorizontalGroup(width, modifier, style);
             }
-            public FlexibleHorizontalLayoutGroupScope(float width, GroupModifier modifier = GroupModifier.None) {
-                Valid = BeginRestrictedHorizontalGroup(width, modifier);
+
+            public FlexibleHorizontalScope(float width, GroupModifier modifier = GroupModifier.None) {
+                Valid = BeginFlexibleHorizontalGroup(width, modifier);
             }
-            
+
             public void Dispose() {
-                EndLayoutGroup<FlexibleHorizontalLayoutGroup>();
+                EndLayoutGroup<FlexibleHorizontalGroup>();
             }
-        }
-
-        public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout) {
-                return RegisterGroup(new FlexibleHorizontalLayoutGroup(width, modifier, style));
-            }
-
-            var layoutGroup = GatherGroup() as FlexibleHorizontalLayoutGroup;
-            layoutGroup.CalculateLayout();
-            return layoutGroup.IsGroupValid;
-        }
-        public static bool BeginRestrictedHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
-            return BeginRestrictedHorizontalGroup(width, modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalRestrictedGroup);
-        }
-
-        public static void EndRestrictedHorizontalGroup() {
-            EndLayoutGroup<FlexibleHorizontalLayoutGroup>();
         }
     }
 }

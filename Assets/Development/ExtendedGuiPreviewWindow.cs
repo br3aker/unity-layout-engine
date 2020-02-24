@@ -82,8 +82,8 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         
         {
 //            TestingMethod();
-            PerformanceTestingScrollGroup();
-//            VerticalGroupTest();    // passed
+//            PerformanceTestingScrollGroup();
+            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
 //            VerticalUnityNativeTest();    // utility
@@ -171,7 +171,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         EditorGUILayout.EndScrollView();
     }
     private void VerticalGroupTest() {
-        using (var scope = new LayoutEngine.VerticalGroupScope()) {
+        using (var scope = new LayoutEngine.VerticalScope()) {
             if (!scope.Valid) return;
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.GetRect(16, LayoutEngine.AutoWidth, out Rect rect)) {
@@ -407,7 +407,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void FixedHorizontalGroupTest() {
-        if (LayoutEngine.BeginRestrictedHorizontalGroup(LayoutEngine.AutoWidth)) {
+        if (LayoutEngine.BeginFlexibleHorizontalGroup(LayoutEngine.AutoWidth)) {
             if (LayoutEngine.GetRect(16, 100, out var fixedRect)) {
                 EditorGUI.DrawRect(fixedRect, Color.black);
                 EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
@@ -423,18 +423,18 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                 EditorGUI.LabelField(fractionRect, fractionRect.width.ToString());
             }
         }
-        LayoutEngine.EndRestrictedHorizontalGroup();
+        LayoutEngine.EndFlexibleHorizontalGroup();
     }
     private void FixedHorizontalGroupVerticalChildrenTest() {
-        if (LayoutEngine.BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
+        if (LayoutEngine.BeginFlexibleHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
             for (int i = 0; i < _horizontalElementsCount; i++) {
                 VerticalHierarchyWithSeparatorTest();
             }
         }
-        LayoutEngine.EndRestrictedHorizontalGroup();
+        LayoutEngine.EndFlexibleHorizontalGroup();
     }
     private void FixedHorizontalGroupComplexInternalsTest() {
-        if (LayoutEngine.BeginRestrictedHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
+        if (LayoutEngine.BeginFlexibleHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
             // Vertical group
             if (LayoutEngine.BeginVerticalHierarchyGroup()) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
@@ -464,19 +464,19 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             }
             LayoutEngine.EndVerticalGroup();
         }
-        LayoutEngine.EndRestrictedHorizontalGroup();
+        LayoutEngine.EndFlexibleHorizontalGroup();
     }
 
     private Vector2 _hybridScrollPos;
     
     private void ScrollGroupTest() {
-        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(new Vector2(-1, 640), _hybridScrollPos)) {
             HorizontalGroupNestedVerticalGroupsTest();
             
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
-                        LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
+                        LayoutEngine.RegisterArray(_horizontalElementsCount, 16, 150);
                     }
                     else {
                         for (int j = 0; j < _horizontalElementsCount; j++) {
@@ -562,11 +562,11 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void PerformanceTestingScrollGroup() {
-        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(new Vector2(-1, 640), _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
-                        LayoutEngine.RegisterElementsArray(_horizontalElementsCount, 16, 150);
+                        LayoutEngine.RegisterArray(_horizontalElementsCount, 16, 150);
                     }
                     else {
                         for (int j = 0; j < _horizontalElementsCount; j++) {

@@ -1,71 +1,63 @@
 using System;
-using System.Collections.Specialized;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor;
 using UnityEngine;
-
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class VerticalGroup : LayoutGroupBase {
-            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                TotalRequestedWidth = float.MinValue;
-            }
-
-            protected sealed override bool RegisterNewEntry(float height, float width) {
-                if (IsLayout) {
-                    EntriesCount++;
-                    TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, width);
-                    TotalRequestedHeight += height;
-                    return false;
-                }
-
-                if (!IsGroupValid) {
-                    return false;
-                }
-
-                NextEntryPosition.y += height + ContentOffset.y;
-
-                // occlusion
-                return CurrentEntryPosition.y + height >= VisibleAreaRect.y 
-                       && CurrentEntryPosition.y <= VisibleAreaRect.yMax;
-            }
-
-            internal override void RegisterRectArray(float elementHeight, float elementWidth, int count) {
-                EntriesCount += count;
-                TotalRequestedWidth = Mathf.Max(TotalRequestedWidth, elementWidth);
-                TotalRequestedHeight += elementHeight * count;
-            }
-        }
-        
-        public class VerticalGroupScope : IDisposable {
-            public readonly bool Valid;
-            
-            public VerticalGroupScope(GroupModifier modifier, GUIStyle style) {
-                Valid = BeginVerticalGroup(modifier, style);
-            }
-            public VerticalGroupScope(GroupModifier modifier = GroupModifier.None) {
-                Valid = BeginVerticalGroup(modifier);
-            }
-            
-            public void Dispose() {
-                EndVerticalGroup();
-            }
-        }
-
         public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout) {
-                return RegisterGroup(new VerticalGroup(modifier, style));
-            }
+            if (Event.current.type == EventType.Layout) return RegisterForLayout(new VerticalGroup(modifier, style));
 
-            return GatherGroup().IsGroupValid;
+            return RetrieveNextGroup().IsGroupValid;
         }
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalGroup);
         }
-        
         public static void EndVerticalGroup() {
             EndLayoutGroup<VerticalGroup>();
+        }
+
+        internal class VerticalGroup : LayoutGroupBase {
+            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+                RequestedWidth = float.MinValue;
+            }
+
+            protected sealed override bool PrepareNextRect(float width, float height) {
+                if (IsLayout) {
+                    EntriesCount++;
+                    RequestedWidth = Mathf.Max(RequestedWidth, width);
+                    RequestedHeight += height;
+                    return false;
+                }
+
+                if (!IsGroupValid) return false;
+
+                NextEntryPosition.y += height + ContentOffset.y;
+
+                // occlusion
+                return CurrentEntryPosition.y + height >= VisibleAreaRect.y
+                       && CurrentEntryPosition.y <= VisibleAreaRect.yMax;
+            }
+
+            internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
+                EntriesCount += count;
+                RequestedWidth = Mathf.Max(RequestedWidth, elemWidth);
+                RequestedHeight += elemHeight * count;
+            }
+        }
+
+        public class VerticalScope : IDisposable {
+            public readonly bool Valid;
+
+            public VerticalScope(GroupModifier modifier, GUIStyle style) {
+                Valid = BeginVerticalGroup(modifier, style);
+            }
+
+            public VerticalScope(GroupModifier modifier = GroupModifier.None) {
+                Valid = BeginVerticalGroup(modifier);
+            }
+
+            public void Dispose() {
+                EndVerticalGroup();
+            }
         }
     }
 }
