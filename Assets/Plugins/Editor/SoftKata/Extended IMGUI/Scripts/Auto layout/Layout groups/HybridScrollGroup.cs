@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -81,7 +82,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
-                    NextEntryPosition.x = Mathf.Lerp(0f, allowedWidth - actualWidth, ScrollPos.x);
+                    
+                    NextEntryPosition.x = Mathf.Lerp( NextEntryPosition.x,  NextEntryPosition.x + allowedWidth - actualWidth, ScrollPos.x);
                     _containerToActualSizeRatio.x = allowedWidth / actualWidth;
                 }
                 else {

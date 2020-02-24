@@ -1,8 +1,6 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 using SoftKata.ExtendedEditorGUI;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
@@ -83,8 +81,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
         
         {
-            TestingMethod();
-//            PerformanceTestingScrollGroup();
+//            TestingMethod();
             PerformanceTestingScrollGroup();
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
@@ -565,7 +562,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void PerformanceTestingScrollGroup() {
-        if (LayoutEngine.BeginScrollGroup(position.width, position.height, _hybridScrollPos)) {
+        if (LayoutEngine.BeginScrollGroup(-1, 640, _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
