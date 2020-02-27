@@ -9,7 +9,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return RetrieveNextGroup().IsGroupValid;
         }
         public static bool BeginHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
-            return BeginHorizontalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.HorizontalGroup);
+            return BeginHorizontalGroup(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup);
         }
         public static void EndHorizontalGroup() {
             EndLayoutGroup<HorizontalGroup>();

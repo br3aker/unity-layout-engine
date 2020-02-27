@@ -5,12 +5,15 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         public const float AutoWidth = -1f;
-        private static readonly Rect InvalidRect = new Rect(0, 0, -1, -1);
+        private static readonly Rect InvalidRect = new Rect(float.MaxValue, float.MaxValue, -1, -1);
         private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
         private static readonly Queue<LayoutGroupBase> LayoutGroupQueue = new Queue<LayoutGroupBase>();
 
         private static LayoutGroupBase _topGroup;
+        public static LayoutGroupBase CurrentGroup => _topGroup;
+
+        public static Editor _editor;
 
         public static int GetGroupQueueSize() {
             return LayoutGroupQueue.Count;

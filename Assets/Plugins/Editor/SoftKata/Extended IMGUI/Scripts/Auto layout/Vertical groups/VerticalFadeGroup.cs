@@ -10,14 +10,18 @@ namespace SoftKata.ExtendedEditorGUI {
             return RetrieveNextGroup().IsGroupValid;
         }
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
-            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalFadeGroup);
+            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup);
         }
         public static void EndVerticalFadeGroup() {
             EndLayoutGroup<VerticalFadeGroup>();
         }
 
-        internal class VerticalFadeGroup : VerticalClippingGroup {
-            private readonly float _faded;
+        public class VerticalFadeGroup : VerticalClippingGroup {
+            private float _faded;
+
+            public float Faded {
+                set => _faded = value;
+            }
 
             public VerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _faded = faded;

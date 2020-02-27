@@ -28,7 +28,7 @@ namespace Development {
                         else {
                             for (int j = 0; j < 16; j++) {
                                 if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
-                                    ExtendedEditorGUI.IntDelayedField(rect, 123, "postfix", null);
+                                    ExtendedEditorGUI.IntDelayedField(rect, 123, "postfix");
                                 }
                             }
                         }

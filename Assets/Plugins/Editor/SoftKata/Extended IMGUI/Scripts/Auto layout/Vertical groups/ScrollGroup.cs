@@ -12,8 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return currentGroup.IsGroupValid;
         }
         public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
-            return BeginScrollGroup(containerSize, scrollValue, modifier,
-                ExtendedEditorGUI.Resources.LayoutGroups.ScrollGroup);
+            return BeginScrollGroup(containerSize, scrollValue, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup);
         }
         public static Vector2 EndScrollGroup() {
             var group = EndLayoutGroup<ScrollGroup>();
@@ -84,7 +83,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     _needsVerticalScroll = true;
 
                     _containerToActualSizeRatio.y = _containerSize.y / RequestedHeight;
-                    NextEntryPosition.y = Mathf.Lerp(0f, _containerSize.y - RequestedHeight, ScrollPos.y);
+                    NextEntryPosition.y += Mathf.Lerp(0f, _containerSize.y - RequestedHeight, ScrollPos.y);
 
                     RequestedHeight = _containerSize.y;
                 }
@@ -110,9 +109,9 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal void DoScrollGroupEndRoutine() {
+                if (!IsGroupValid) return;
                 var current = Event.current;
                 var eventType = current.type;
-                if (!IsGroupValid) return;
 
                 var actualContentRect = ContainerRect;
                 ContainerRect = Margin.Add(Border.Add(Padding.Add(ContainerRect)));

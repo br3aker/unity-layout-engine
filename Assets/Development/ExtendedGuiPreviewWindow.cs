@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
@@ -38,14 +39,6 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         var graph_off = new GUIContent(graph_string, icon_on, graph_string);
         _testToggleArrayGUIContent = new[] {monitor_off, text_off, graph_off, monitor, text, graph};
     }
-//    private void OnLostFocus() {
-//        LayoutEngine.ResetEngine();
-//    }
-//
-//    private void OnFocus() {
-//        Repaint();
-//    }
-
     #endregion
 
     private bool _alwaysRepaint;
@@ -82,8 +75,9 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         
         {
 //            TestingMethod();
+
 //            PerformanceTestingScrollGroup();
-            VerticalGroupTest();    // passed
+//            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
 //            VerticalUnityNativeTest();    // utility
@@ -95,7 +89,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
 //            NestedFadeGroupsTest();    // passed
 //            VerticalSeparatorGroupTest();    // passed
 //            VerticalHierarchyGroupTest();    // passed
-//            VerticalHierarchyGroupTreeTest();
+            VerticalHierarchyGroupTreeTest();
 //            VerticalHierarchyWithSeparatorTest();    // passed
 //            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
@@ -113,9 +107,6 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     private bool _guiDisabled = false;
 
     private int _testInteger = 10;
-    private string _testError = "Must be > 0";
-
-    private bool _testBool = false;
     
     private Color _testColor = Color.black;
 
@@ -137,10 +128,8 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         if (LayoutEngine.BeginVerticalGroup()) {
             _testInteger = EditorGUI.IntField(LayoutEngine.GetRect(LabelHeight), _testInteger);
 
-            _testInteger = IntDelayedField(LayoutEngine.GetRect(LabelHeight), _testInteger, "postfix", _testInteger > 0 ? null : _testError);
+            _testInteger = IntDelayedField(LayoutEngine.GetRect(LabelHeight), _testInteger, "postfix");
 
-            _testBool = UnderlineFoldout(LayoutEngine.GetRect(LabelHeight), _testBool, "Foldout");
-            
             _testColor = EditorGUI.ColorField(LayoutEngine.GetRect(LabelHeight), _testColor);
 
             _testShortcut1 = KeyboardShortcutField(LayoutEngine.GetRect(LabelHeight), _testShortcut1);
@@ -148,8 +137,6 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             _testToggleArray = ToggleArray(LayoutEngine.GetRect(LabelHeight), _testToggleArray, _testToggleArrayGUIContent);
 
             GUI.Toolbar(LayoutEngine.GetRect(LabelHeight), 0, new[] {"First", "Second"});
-            
-            ListElement(LayoutEngine.GetRect(LabelHeight), new GUIContent("Main label"), new GUIContent("Sub label/description"));
         }
         LayoutEngine.EndVerticalGroup();
 
@@ -320,29 +307,27 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         LayoutEngine.EndVerticalGroup();
     }
     private void VerticalHierarchyGroupTest() {
-        if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+        if (LayoutEngine.BeginTreeViewGroup()) {
             for (int i = 0; i < _verticalElementsCount; i++) {
                 EditorGUI.TextField(LayoutEngine.GetRect(16, -1), "Nested label");
             }
         }
-        LayoutEngine.EndVerticalHierarchyGroup();
+        LayoutEngine.EndBeginTreeView();
     }
 
     private void _HierarchyTestHelperLevel1(AnimBool folded) {
-        var headerRect = LayoutEngine.GetRect(16, 150);
-        if (headerRect.IsValid()) {
+        if (LayoutEngine.GetRect(16, 150, out var headerRect)) {
             folded.target = EditorGUI.Foldout(headerRect,folded.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, GroupModifier.DiscardMargin)) {
-            if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+            if (LayoutEngine.BeginTreeViewGroup()) {
                 for (int i = 0; i < 3; i++) {
-                    var rect = LayoutEngine.GetRect(16, 150);
-                    if (rect.IsValid()) {
+                    if (LayoutEngine.GetRect(16, 150, out var rect)) {
                         EditorGUI.LabelField(rect, "Label");
                     }
                 }
             }
-            LayoutEngine.EndVerticalHierarchyGroup();
+            LayoutEngine.EndBeginTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -352,7 +337,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             folded1.target = EditorGUI.Foldout(headerRect,folded1.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, GroupModifier.DiscardMargin)) {
-            if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+            if (LayoutEngine.BeginTreeViewGroup()) {
                 for (int i = 0; i < 3; i++) {
                     var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
@@ -365,7 +350,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     EditorGUI.LabelField(rect1, "Label");
                 }
             }
-            LayoutEngine.EndVerticalHierarchyGroup();
+            LayoutEngine.EndBeginTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -375,7 +360,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             _verticalFaded1.target = EditorGUI.Foldout(rootHeaderRect,_verticalFaded1.target, "Root", true);
         }
         if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, GroupModifier.DiscardMargin)) {
-            if(LayoutEngine.BeginVerticalHierarchyGroup()) {
+            if(LayoutEngine.BeginTreeViewGroup()) {
                 var rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
                     EditorGUI.LabelField(rect, "Label");
@@ -395,7 +380,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                 }
                 _HierarchyTestHelperLevel1(_verticalFaded2);
             }
-            LayoutEngine.EndVerticalHierarchyGroup();
+            LayoutEngine.EndBeginTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -436,7 +421,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     private void FixedHorizontalGroupComplexInternalsTest() {
         if (LayoutEngine.BeginFlexibleHorizontalGroup(EditorGUIUtility.currentViewWidth)) {
             // Vertical group
-            if (LayoutEngine.BeginVerticalHierarchyGroup()) {
+            if (LayoutEngine.BeginTreeViewGroup()) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
                     var rect = LayoutEngine.GetRect(16, -1);
                     if (rect.IsValid()) {
@@ -444,7 +429,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     }
                 }
             }
-            LayoutEngine.EndVerticalHierarchyGroup();
+            LayoutEngine.EndBeginTreeView();
              
             // Hierarchy
             if (LayoutEngine.BeginVerticalGroup()) {
@@ -571,7 +556,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     else {
                         for (int j = 0; j < _horizontalElementsCount; j++) {
                             if (LayoutEngine.GetRect(16, 150, out Rect rect)) {
-                                IntDelayedField(rect, 123, "postfix", null);
+                                IntDelayedField(rect, 123, "postfix");
                             }
                         }
                     }

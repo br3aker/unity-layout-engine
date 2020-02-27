@@ -4,18 +4,21 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout) return RegisterForLayout(new VerticalGroup(modifier, style));
+            if (Event.current.type == EventType.Layout) {
+                return RegisterForLayout(new VerticalGroup(modifier, style));
+            }
 
             return RetrieveNextGroup().IsGroupValid;
         }
+        
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
-            return BeginVerticalGroup(modifier, ExtendedEditorGUI.Resources.LayoutGroups.VerticalGroup);
+            return BeginVerticalGroup(modifier, ExtendedEditorGUI.LayoutResources.VerticalGroup);
         }
         public static void EndVerticalGroup() {
             EndLayoutGroup<VerticalGroup>();
         }
 
-        internal class VerticalGroup : LayoutGroupBase {
+        public class VerticalGroup : LayoutGroupBase {
             public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 RequestedWidth = float.MinValue;
             }

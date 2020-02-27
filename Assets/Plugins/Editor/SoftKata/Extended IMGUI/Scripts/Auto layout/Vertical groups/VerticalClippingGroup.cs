@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        internal class VerticalClippingGroup : VerticalGroup {
+        public class VerticalClippingGroup : VerticalGroup {
             public VerticalClippingGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) { }
 
             internal override void RetrieveLayoutData() {
                 if (IsGroupValid) {
-                    if (Parent != null) {
-                        var rectData = Parent.GetGroupRectData(RequestedWidth, RequestedHeight);
+                    if (_parent != null) {
+                        var rectData = _parent.GetGroupRectData(RequestedWidth, RequestedHeight);
                         VisibleAreaRect = rectData.VisibleRect;
                         ContainerRect = rectData.FullContentRect;
                     }
@@ -17,8 +17,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         VisibleAreaRect = ContainerRect;
                     }
 
-                    IsGroupValid = VisibleAreaRect.IsValid();
-
+                    IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                     if (IsGroupValid) {
                         IsLayout = false;
 
@@ -30,14 +29,14 @@ namespace SoftKata.ExtendedEditorGUI {
                         GUI.BeginClip(VisibleAreaRect);
                         VisibleAreaRect.position = Vector2.zero;
 
-
                         if (AutomaticEntryWidth < 0f) AutomaticEntryWidth = ContainerRect.width;
+                        
+                        ContainerRect = Padding.Add(ContainerRect);
 
                         return;
                     }
                 }
 
-                IsGroupValid = false;
                 ScrapGroups(ChildrenCount);
             }
 
