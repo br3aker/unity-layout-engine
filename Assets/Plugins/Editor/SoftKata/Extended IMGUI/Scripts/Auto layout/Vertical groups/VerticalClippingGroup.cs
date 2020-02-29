@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -29,8 +30,6 @@ namespace SoftKata.ExtendedEditorGUI {
                         GUI.BeginClip(VisibleAreaRect);
                         VisibleAreaRect.position = Vector2.zero;
 
-                        if (AutomaticEntryWidth < 0f) AutomaticEntryWidth = ContainerRect.width;
-                        
                         ContainerRect = Padding.Add(ContainerRect);
 
                         return;

@@ -12,6 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private static LayoutGroupBase _topGroup;
         public static LayoutGroupBase CurrentGroup => _topGroup;
+        public static float CurrentContentWidth => _topGroup.AutomaticContentWidth;
 
         public static Editor _editor;
 

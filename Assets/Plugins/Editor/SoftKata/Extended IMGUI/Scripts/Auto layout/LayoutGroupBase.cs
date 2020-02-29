@@ -51,6 +51,8 @@ namespace SoftKata.ExtendedEditorGUI {
         public abstract class LayoutGroupBase {
             protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroupBase).GetHashCode();
 
+            internal LayoutGroupBase _parent;
+            
             // registered style
             protected readonly GUIStyle _style;
 
@@ -63,7 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private readonly GroupModifier _modifier;
 
-            protected float AutomaticEntryWidth = -1f;
+//            protected float AutomaticEntryWidth = -1f;
             
             protected Rect ContainerRect;
             protected Rect VisibleAreaRect;
@@ -79,12 +81,15 @@ namespace SoftKata.ExtendedEditorGUI {
             protected Vector2 CurrentEntryPosition;
             protected Vector2 NextEntryPosition;
 
-            protected float ServiceHeight;
-            protected float ServiceWidth;
+            protected float ConstraintsHeight;
+            protected float ConstraintsWidth;
 
             // group layouting data
             protected float RequestedHeight;
             protected float RequestedWidth;
+
+            protected float _pureContentWidth = -1f;
+            public float AutomaticContentWidth => _pureContentWidth;
 
             protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
                 _parent = _topGroup;
@@ -108,23 +113,21 @@ namespace SoftKata.ExtendedEditorGUI {
                     : style.padding;
 
                 ContentOffset = style.contentOffset;
+                
+                ConstraintsHeight = Margin.vertical + Border.vertical + Padding.vertical;
+                ConstraintsWidth = Margin.horizontal + Border.horizontal + Padding.horizontal;
+                
+                _pureContentWidth =
+                    (_parent?.AutomaticContentWidth ?? EditorGUIUtility.currentViewWidth) - ConstraintsWidth;
             }
-
-            internal LayoutGroupBase _parent;
 
             internal void RegisterLayoutRequest() {
                 ChildrenCount = LayoutGroupQueue.Count - _groupIndex - 1;
                 IsGroupValid = EntriesCount > 0;
                 
                 if (IsGroupValid) {
-                    ServiceHeight = Margin.vertical + Border.vertical + Padding.vertical +
-                                    ContentOffset.y * (EntriesCount - 1);
-                    ServiceWidth = Margin.horizontal + Border.horizontal + Padding.horizontal +
-                                   ContentOffset.x * (EntriesCount - 1);
-
-
-                    RequestedHeight += ServiceHeight;
-                    if (RequestedWidth > 0f) RequestedWidth += ServiceWidth;
+                    RequestedHeight += ConstraintsHeight + ContentOffset.y * (EntriesCount - 1);
+                    if (RequestedWidth > 0f) RequestedWidth += ConstraintsWidth + ContentOffset.x * (EntriesCount - 1);
 
                     PreLayoutRequest();
 
@@ -151,9 +154,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
                         NextEntryPosition = ContainerRect.position;
-
-                        if (AutomaticEntryWidth < 0f) AutomaticEntryWidth = ContainerRect.width;
-
                         return;
                     }
                 }
@@ -166,7 +166,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal Rect GetNextEntryRect(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
 
-                if (width < 0f) width = AutomaticEntryWidth;
+                if (width < 0f) width = _pureContentWidth;
 
                 if (PrepareNextRect(width, height))
                     return GetEntryRect(CurrentEntryPosition.x, CurrentEntryPosition.y, width, height);
@@ -176,7 +176,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal GroupRenderingData GetGroupRectData(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
 
-                if (width <= 0f) width = AutomaticEntryWidth;
+                if (width <= 0f) width = _pureContentWidth;
 
                 var visibleRect = InvalidRect;
                 if (PrepareNextRect(width, height))
@@ -231,7 +231,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal void RegisterArray(float elementHeight, int count) {
-                RegisterArray(AutomaticEntryWidth, elementHeight, count);
+                RegisterArray(_pureContentWidth, elementHeight, count);
             }
 
             internal abstract void RegisterArray(float elemWidth, float elemHeight, int count);
@@ -254,7 +254,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public Rect GetContentRect() {
-                return Margin.Add(ContainerRect);
+                return Border.Add(Padding.Add(ContainerRect));
             }
         }
     }

@@ -15,12 +15,29 @@ namespace Development {
 
         private bool _alwaysRepaint;
 
+        private int _selectedTab;
+        private GUIContent[] _tabHeaders;
+        private Action[] _tabContentDrawers;
+        private ExtendedEditorGUI.ScrollableTabsHolder tabsDrawer;
+
         private void OnEnable() {
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
             }
+
+            _tabHeaders = new[] {
+                new GUIContent("Tab 1"),
+                new GUIContent("Tab 2"),
+                new GUIContent("Tab 3")
+            };
+
+            _tabContentDrawers =  new Action[] {
+                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 1"), DrawTab),
+                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 2"), DrawTab),
+                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 3"), DrawTab)
+            };
             
-            _cardExpandedAnim = new AnimBool(false, Repaint);
+            tabsDrawer = new ExtendedEditorGUI.ScrollableTabsHolder(_selectedTab, _tabHeaders, _tabContentDrawers, new AnimFloat(_selectedTab, Repaint), new Color(0.06f, 0.51f, 0.75f));
         }
 
         protected override void IMGUI() {
@@ -40,31 +57,28 @@ namespace Development {
                 }
             }
 
-            ExtendedEditorGUI.StaticCard(new GUIContent("Static card"), CardContentDrawer);
-            
-            ExtendedEditorGUI.ExpandableCard(new GUIContent("Expandable card"), CardContentDrawer, _cardExpandedAnim);
+
+            _selectedTab = tabsDrawer.DoScrollableTabs();
         }
         
         private AnimBool _cardExpandedAnim;
 
-        private static void CardContentDrawer() {
-            if (LayoutEngine.GetRect(18f, -1, out var contentRect1)) {
-                EditorGUI.LabelField(contentRect1, "Label with some text");
-            }
+        private static void DrawTab() {
+            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DiscardBorder | GroupModifier.DiscardMargin | GroupModifier.DiscardPadding)) {
+                if (LayoutEngine.GetRect(18f, -1, out var contentRect2)) {
+                    EditorGUI.ToggleLeft(contentRect2, "Sub-header", true);
+                }
 
-            if (LayoutEngine.GetRect(18f, -1, out var contentRect2)) {
-                EditorGUI.ToggleLeft(contentRect2, "Sub-header", true);
-            }
-
-            if (LayoutEngine.BeginTreeViewGroup()) {
-                for (int i = 0; i < 3; i++) {
-                    if (LayoutEngine.GetRect(18f, -1, out var hierarchyRect)) {
-                        EditorGUI.LabelField(hierarchyRect, $"Very long label with info #{i}");
+                if (LayoutEngine.BeginTreeViewGroup()) {
+                    for (int i = 0; i < 3; i++) {
+                        if (LayoutEngine.GetRect(18f, -1, out var hierarchyRect)) {
+                            EditorGUI.LabelField(hierarchyRect, $"Very long label with info #{i}");
+                        }
                     }
                 }
+                LayoutEngine.EndTreeView();
             }
-
-            LayoutEngine.EndBeginTreeView();
+            LayoutEngine.EndVerticalGroup();
         }
     }
 }

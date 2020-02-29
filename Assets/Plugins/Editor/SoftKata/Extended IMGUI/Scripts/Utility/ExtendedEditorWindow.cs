@@ -9,8 +9,9 @@ namespace SoftKata.ExtendedEditorGUI {
             if (Event.current.type == EventType.Used) return;
             if (Event.current.type == EventType.Layout) LayoutEngine.ResetEngine();
 
-            LayoutEngine.BeginScrollGroup(position.size, _windowScroll);
-            IMGUI();
+            if (LayoutEngine.BeginScrollGroup(position.size, _windowScroll)) {
+                IMGUI();
+            }
             _windowScroll = LayoutEngine.EndScrollGroup();
         }
 

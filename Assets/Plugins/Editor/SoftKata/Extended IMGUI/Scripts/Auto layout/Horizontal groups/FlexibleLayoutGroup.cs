@@ -33,9 +33,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var totalFlexibleWidth =
                     ContainerRect.width - _fixedEntriesWidth - ContentOffset.x * (EntriesCount - 1);
 
-                AutomaticEntryWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-
-                EditorGUI.DrawRect(ContainerRect, Color.blue);
+                _pureContentWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
             }
 
             protected override bool PrepareNextRect(float width, float height) {

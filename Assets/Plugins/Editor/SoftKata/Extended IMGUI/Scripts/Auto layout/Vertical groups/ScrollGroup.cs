@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollValue, GroupModifier modifier, GUIStyle style) {
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
-                return RegisterForLayout(new ScrollGroup(containerSize, scrollValue, modifier, style));
+                return RegisterForLayout(new ScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, style));
 
             var currentGroup = RetrieveNextGroup() as ScrollGroup;
             currentGroup.CalculateScrollContainerSize();
             return currentGroup.IsGroupValid;
         }
-        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollValue, GroupModifier modifier = GroupModifier.None) {
-            return BeginScrollGroup(containerSize, scrollValue, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup);
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, GroupModifier modifier = GroupModifier.None) {
+            return BeginScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup);
         }
         public static Vector2 EndScrollGroup() {
             var group = EndLayoutGroup<ScrollGroup>();
@@ -49,12 +49,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             internal Vector2 ScrollPos;
+            private bool _disableScrollbars;
 
-            public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+            public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
                 _containerSize = containerSize;
 
                 // Scroll settings
                 ScrollPos = scrollPos;
+
+                _disableScrollbars = disableScrollbars;
 
                 var overflow = style.overflow;
                 _verticalScrollBarWidth = overflow.right;
@@ -71,9 +74,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
-            // TODO: redo this method 
-            // Actually we only need to assign fixed Width and Height to this
-            // Actual content position can be calculated in CalculateScrollContainerSize() method
             protected override void PreLayoutRequest() {
                 // Same can be done with content height
                 _actualContentWidth = RequestedWidth;
@@ -94,7 +94,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 
                 var allowedWidth = ContainerRect.width;
-                var actualWidth = _actualContentWidth > 0 ? _actualContentWidth - ServiceWidth : AutomaticEntryWidth;
+                var actualWidth = _actualContentWidth > 0 ? _actualContentWidth - ConstraintsWidth - ContentOffset.x * (EntriesCount - 1) : _pureContentWidth;
 
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
@@ -109,7 +109,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal void DoScrollGroupEndRoutine() {
-                if (!IsGroupValid) return;
+                if (!IsGroupValid || _disableScrollbars) return;
                 var current = Event.current;
                 var eventType = current.type;
 

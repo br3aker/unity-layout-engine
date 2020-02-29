@@ -13,7 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginTreeViewGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginTreeViewGroup(modifier, ExtendedEditorGUI.LayoutResources.Treeview);
         }
-        public static void EndBeginTreeView() {
+        public static void EndTreeView() {
             var group = EndLayoutGroup<TreeViewGroup>();
             group.DrawMajorConnectionType();
         }
@@ -76,7 +76,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void Dispose() {
-                EndBeginTreeView();
+                EndTreeView();
             }
         }
     }

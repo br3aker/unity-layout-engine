@@ -16,12 +16,25 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         internal class HorizontalGroup : LayoutGroupBase {
+            private int _determinedWidthEntriesCount;
+            
             public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) { }
+
+            protected override void PreLayoutRequest() {
+//                Debug.Log($"Pre {RequestedWidth}");
+//                RequestedWidth += (EntriesCount - _determinedWidthEntriesCount) * AutomaticContentWidth;
+                if (EntriesCount - _determinedWidthEntriesCount > 0) {
+                    Debug.Log($"Auto nested entries: {EntriesCount - _determinedWidthEntriesCount}");
+                }
+            }
 
             protected override bool PrepareNextRect(float width, float height) {
                 if (IsLayout) {
+                    if (width > 0f) {
+                        RequestedWidth += width;
+                        _determinedWidthEntriesCount++;
+                    }
                     EntriesCount++;
-                    if (width > 0f) RequestedWidth += width;
                     RequestedHeight = Mathf.Max(RequestedHeight, height);
                     return false;
                 }
@@ -35,10 +48,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 return CurrentEntryPosition.x + width >= VisibleAreaRect.x
                        && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
             }
-
+            
             internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
-                EntriesCount += count;
-                RequestedWidth += elemWidth * count;
+                if (elemWidth > 0f) {
+                    RequestedWidth += elemWidth * count;
+                    _determinedWidthEntriesCount += count;
+                }
+                EntriesCount += count; ;
                 RequestedHeight = Mathf.Max(RequestedHeight, elemHeight);
             }
         }

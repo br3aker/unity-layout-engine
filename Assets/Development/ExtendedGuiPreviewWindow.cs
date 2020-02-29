@@ -4,6 +4,7 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 using SoftKata.ExtendedEditorGUI;
+using UnityEngine.Profiling;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
@@ -76,7 +77,10 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         {
 //            TestingMethod();
 
-//            PerformanceTestingScrollGroup();
+            Profiler.BeginSample("Performance testing group");
+            PerformanceTestingScrollGroup();
+            Profiler.EndSample();
+            
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
 //            VerticalGroupsIfCheckTest();    // passed
@@ -89,7 +93,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
 //            NestedFadeGroupsTest();    // passed
 //            VerticalSeparatorGroupTest();    // passed
 //            VerticalHierarchyGroupTest();    // passed
-            VerticalHierarchyGroupTreeTest();
+//            VerticalHierarchyGroupTreeTest();
 //            VerticalHierarchyWithSeparatorTest();    // passed
 //            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
@@ -312,7 +316,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                 EditorGUI.TextField(LayoutEngine.GetRect(16, -1), "Nested label");
             }
         }
-        LayoutEngine.EndBeginTreeView();
+        LayoutEngine.EndTreeView();
     }
 
     private void _HierarchyTestHelperLevel1(AnimBool folded) {
@@ -327,7 +331,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     }
                 }
             }
-            LayoutEngine.EndBeginTreeView();
+            LayoutEngine.EndTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -350,7 +354,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     EditorGUI.LabelField(rect1, "Label");
                 }
             }
-            LayoutEngine.EndBeginTreeView();
+            LayoutEngine.EndTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -380,7 +384,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                 }
                 _HierarchyTestHelperLevel1(_verticalFaded2);
             }
-            LayoutEngine.EndBeginTreeView();
+            LayoutEngine.EndTreeView();
         }
         LayoutEngine.EndVerticalFadeGroup();
     }
@@ -429,7 +433,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                     }
                 }
             }
-            LayoutEngine.EndBeginTreeView();
+            LayoutEngine.EndTreeView();
              
             // Hierarchy
             if (LayoutEngine.BeginVerticalGroup()) {

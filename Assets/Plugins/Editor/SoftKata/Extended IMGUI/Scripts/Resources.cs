@@ -26,6 +26,8 @@ namespace SoftKata.ExtendedEditorGUI {
         public GUIStyle HorizontalRestrictedGroup;
 
         public GUIStyle ScrollGroup;
+
+        public GUIStyle PureScrollGroup;
         
         internal LayoutResources() {
             var skinPath =
@@ -38,6 +40,8 @@ namespace SoftKata.ExtendedEditorGUI {
             Treeview = skin.GetStyle("Treeview");
             HorizontalGroup = skin.GetStyle("Horizontal group");
             HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
+
+            PureScrollGroup = skin.GetStyle("Pure scroll group");
         }
     }
 
@@ -46,16 +50,13 @@ namespace SoftKata.ExtendedEditorGUI {
         private const string ControlsDarkSkinSubPath = "/Dark Controls skin.guiskin";
         
         // GUIStyles
-        public GUIStyle InputField;
         public GUIStyle InputFieldPostfix;
-
         public GUIStyle ButtonLeft;
         public GUIStyle ButtonMid;
         public GUIStyle ButtonRight;
-
-        // Controls
         public GUIStyle Label;
         public GUIStyle Foldout;
+        public GUIStyle TabHeader;
 
         // Textures
         public Texture GreenGradient;
@@ -71,11 +72,11 @@ namespace SoftKata.ExtendedEditorGUI {
             // Classic styles
             Label = skin.FindStyle("Label");
             Foldout = skin.FindStyle("Foldout");
-            InputField = EditorStyles.numberField;
-            InputFieldPostfix = skin.GetStyle("Generic Postfix");
+            InputFieldPostfix = skin.GetStyle("Postfix");
             ButtonLeft = skin.GetStyle("Button left");
             ButtonMid = skin.GetStyle("Button mid");
             ButtonRight = skin.GetStyle("Button right");
+            TabHeader = skin.GetStyle("Tab header");
 
             // Textures
             GreenGradient = Utility.LoadAssetAtPathAndAssert<Texture>(
@@ -101,7 +102,6 @@ namespace SoftKata.ExtendedEditorGUI {
     public class ComplexControlsResources {
         public CardElementData StaticCard;
         public CardElementData ExpandableCard;
-
         public ComplexControlsResources() {
             var layoutResources = ExtendedEditorGUI.LayoutResources;
             var controlsResources= ExtendedEditorGUI.ControlsResources;
