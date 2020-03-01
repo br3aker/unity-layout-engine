@@ -24,47 +24,21 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _fixedEntriesCount;
             private float _fixedEntriesWidth;
 
-            public FlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) :
-                base(modifier, style) {
-                RequestedWidth = width;
+            private float _containerWidth;
+            private float _fixedWidth;
+
+            public FlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+                _containerWidth = width;
             }
 
+            protected override void PreLayoutRequest() {
+                _fixedWidth = RequestedWidth;
+                RequestedWidth = _containerWidth;
+            }
+            
             internal void CalculateLayout() {
-                var totalFlexibleWidth =
-                    ContainerRect.width - _fixedEntriesWidth - ContentOffset.x * (EntriesCount - 1);
-
-                _pureContentWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-            }
-
-            protected override bool PrepareNextRect(float width, float height) {
-                if (IsLayout) {
-                    if (width > 0) {
-                        _fixedEntriesCount++;
-                        _fixedEntriesWidth += width;
-                    }
-
-                    EntriesCount++;
-                    RequestedHeight = Mathf.Max(RequestedHeight, height);
-                    return false;
-                }
-
-                if (!IsGroupValid) return false;
-
-                NextEntryPosition.x += width + ContentOffset.x;
-
-                // occlusion
-                return CurrentEntryPosition.x + width >= VisibleAreaRect.x
-                       && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
-            }
-
-            internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
-                if (elemWidth > 0f) {
-                    _fixedEntriesCount += count;
-                    _fixedEntriesWidth += elemHeight * count;
-                }
-
-                EntriesCount += count;
-                RequestedHeight = Mathf.Max(RequestedHeight, elemHeight);
+                var totalFlexibleWidth = ContainerRect.width - _fixedWidth;
+                _automaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - FixedWidthEntriesCount), 0f);
             }
         }
 

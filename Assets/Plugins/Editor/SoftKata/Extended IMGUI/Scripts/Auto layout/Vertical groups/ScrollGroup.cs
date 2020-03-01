@@ -33,13 +33,12 @@ namespace SoftKata.ExtendedEditorGUI {
             private Vector2 _containerToActualSizeRatio;
             private readonly Vector2 _horizontalScrollbarDelta;
 
-            // Scrollbar settings
-            // horizontal
+            // horizontal scrollbar settings
             private readonly float _horizontalScrollBarHeight;
             private bool _needsHorizontalScroll;
             private int _horizontalScrollId;
 
-            // vertical
+            // vertical scrollbar settings
             private readonly float _verticalScrollBarWidth;
             private bool _needsVerticalScroll;
             private int _verticalScrollId;
@@ -78,7 +77,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Same can be done with content height
                 _actualContentWidth = RequestedWidth;
                 RequestedWidth = _containerSize.x;
-
+                
                 if (_containerSize.y > 0f && RequestedHeight > _containerSize.y) {
                     _needsVerticalScroll = true;
 
@@ -94,7 +93,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 
                 var allowedWidth = ContainerRect.width;
-                var actualWidth = _actualContentWidth > 0 ? _actualContentWidth - ConstraintsWidth - ContentOffset.x * (EntriesCount - 1) : _pureContentWidth;
+                var actualWidth = _actualContentWidth > 0 ? _actualContentWidth : _visibleContentWidth;
 
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;

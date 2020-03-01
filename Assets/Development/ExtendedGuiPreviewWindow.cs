@@ -15,7 +15,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         GetWindow<ExtendedGuiPreviewWindow>(false, "GUI Preview").Show();
     }
     
-    private void OnEnable() {
+    protected override void Initialize() {
         _verticalFaded1 = new AnimBool(false);
         _verticalFaded1.valueChanged.AddListener(Repaint);
         _verticalFaded2 = new AnimBool(false);
@@ -77,9 +77,9 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         {
 //            TestingMethod();
 
-            Profiler.BeginSample("Performance testing group");
-            PerformanceTestingScrollGroup();
-            Profiler.EndSample();
+//            Profiler.BeginSample("Performance testing group");
+//            PerformanceTestingScrollGroup();
+//            Profiler.EndSample();
             
 //            VerticalGroupTest();    // passed
 //            VerticalGroupsPlainTest();    // passed
@@ -95,7 +95,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
 //            VerticalHierarchyGroupTest();    // passed
 //            VerticalHierarchyGroupTreeTest();
 //            VerticalHierarchyWithSeparatorTest();    // passed
-//            FixedHorizontalGroupTest();    // passed
+            FixedHorizontalGroupTest();    // passed
 //            FixedHorizontalGroupVerticalChildrenTest();    // passed
 //            FixedHorizontalGroupComplexInternalsTest();    // passed
 //            ScrollGroupTest();    // passed
@@ -396,7 +396,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void FixedHorizontalGroupTest() {
-        if (LayoutEngine.BeginFlexibleHorizontalGroup(LayoutEngine.AutoWidth)) {
+        if (LayoutEngine.BeginFlexibleHorizontalGroup(LayoutEngine.CurrentContentWidth)) {
             if (LayoutEngine.GetRect(16, 100, out var fixedRect)) {
                 EditorGUI.DrawRect(fixedRect, Color.black);
                 EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());

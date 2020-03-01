@@ -7,9 +7,9 @@ using UnityEngine;
 namespace Development {
     public class ReorderableListDevelopmentWindow : ExtendedEditorWindow {
         #region Window initialization & lifetime management
-        [MenuItem("Window/Reorderable list")]
+        [MenuItem("Window/Complex elements")]
         static void Init() {
-            GetWindow<ReorderableListDevelopmentWindow>(false, "Reorderable list").Show();
+            GetWindow<ReorderableListDevelopmentWindow>(false, "Complex elements");
         }
         #endregion
 
@@ -18,9 +18,12 @@ namespace Development {
         private int _selectedTab;
         private GUIContent[] _tabHeaders;
         private Action[] _tabContentDrawers;
-        private ExtendedEditorGUI.ScrollableTabsHolder tabsDrawer;
 
-        private void OnEnable() {
+        private ExtendedEditorGUI.ScrollableTabsHolder _tabsDrawer;
+
+        private ExtendedEditorGUI.CardElement[] _cards;
+
+        protected override void Initialize() {
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
             }
@@ -31,13 +34,19 @@ namespace Development {
                 new GUIContent("Tab 3")
             };
 
+            _cards = new[] {
+                new ExtendedEditorGUI.CardElement(_tabHeaders[0], DrawTab),
+                new ExtendedEditorGUI.CardElement(_tabHeaders[1], DrawTab),
+                new ExtendedEditorGUI.CardElement(_tabHeaders[2], DrawTab)
+            };
+
             _tabContentDrawers =  new Action[] {
-                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 1"), DrawTab),
-                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 2"), DrawTab),
-                () => ExtendedEditorGUI.StaticCard(new GUIContent("Tab 3"), DrawTab)
+                _cards[0].OnGUI,
+                _cards[1].OnGUI,
+                _cards[2].OnGUI
             };
             
-            tabsDrawer = new ExtendedEditorGUI.ScrollableTabsHolder(_selectedTab, _tabHeaders, _tabContentDrawers, new AnimFloat(_selectedTab, Repaint), new Color(0.06f, 0.51f, 0.75f));
+            _tabsDrawer = new ExtendedEditorGUI.ScrollableTabsHolder(_selectedTab, _tabHeaders, _tabContentDrawers, _selectedTab, new Color(0.06f, 0.51f, 0.75f));
         }
 
         protected override void IMGUI() {
@@ -57,11 +66,8 @@ namespace Development {
                 }
             }
 
-
-            _selectedTab = tabsDrawer.DoScrollableTabs();
+            _selectedTab = _tabsDrawer.OnGUI();
         }
-        
-        private AnimBool _cardExpandedAnim;
 
         private static void DrawTab() {
             if (LayoutEngine.BeginVerticalGroup(GroupModifier.DiscardBorder | GroupModifier.DiscardMargin | GroupModifier.DiscardPadding)) {

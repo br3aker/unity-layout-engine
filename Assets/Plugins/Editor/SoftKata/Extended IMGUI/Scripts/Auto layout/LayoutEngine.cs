@@ -12,9 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private static LayoutGroupBase _topGroup;
         public static LayoutGroupBase CurrentGroup => _topGroup;
-        public static float CurrentContentWidth => _topGroup.AutomaticContentWidth;
-
-        public static Editor _editor;
+        public static float CurrentContentWidth => _topGroup?.VisibleContentWidth ?? EditorGUIUtility.currentViewWidth;
 
         public static int GetGroupQueueSize() {
             return LayoutGroupQueue.Count;
@@ -22,7 +20,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private static Rect GetRectFromRoot(float height, float width = AutoWidth) {
             var rect = GUILayoutUtility.GetRect(width, height);
-            if (width > 0f) rect.width = Mathf.Min(width, EditorGUIUtility.currentViewWidth);
+            rect.width = width > 0f ? width : EditorGUIUtility.currentViewWidth;
             return rect;
         }
 

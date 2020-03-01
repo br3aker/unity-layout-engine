@@ -21,7 +21,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                     if (IsGroupValid) {
                         IsLayout = false;
-
+                        
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
                         VisibleAreaRect = Utility.RectIntersection(VisibleAreaRect, ContainerRect);
 
@@ -29,8 +29,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                         GUI.BeginClip(VisibleAreaRect);
                         VisibleAreaRect.position = Vector2.zero;
-
-                        ContainerRect = Padding.Add(ContainerRect);
 
                         return;
                     }

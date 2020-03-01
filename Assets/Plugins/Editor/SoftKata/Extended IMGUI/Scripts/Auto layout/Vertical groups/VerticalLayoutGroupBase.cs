@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -19,15 +20,19 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public class VerticalGroup : LayoutGroupBase {
-            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                RequestedWidth = float.MinValue;
-            }
+            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
 
+            protected override void CalculateFinalContentSize() {
+                // vertical "service" height addition: margin/border/padding + space between entries
+                RequestedHeight += ConstraintsHeight + ContentOffset.y * (EntriesCount - 1);
+            }
+            
             protected sealed override bool PrepareNextRect(float width, float height) {
                 if (IsLayout) {
                     EntriesCount++;
                     RequestedWidth = Mathf.Max(RequestedWidth, width);
                     RequestedHeight += height;
+
                     return false;
                 }
 

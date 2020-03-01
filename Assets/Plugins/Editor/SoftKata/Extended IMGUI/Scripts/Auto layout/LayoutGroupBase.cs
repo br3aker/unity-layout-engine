@@ -14,9 +14,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
     public static partial class LayoutEngine {
         private static bool RegisterForLayout(LayoutGroupBase layoutGroup) {
+            layoutGroup.InitializeForLayout();
             LayoutGroupQueue.Enqueue(layoutGroup);
-            _topGroup = layoutGroup;
-
             return true;
         }
         private static LayoutGroupBase RetrieveNextGroup() {
@@ -29,12 +28,20 @@ namespace SoftKata.ExtendedEditorGUI {
             throw new Exception(
                 $"Group type mismatch at [{nameof(RetrieveNextGroup)}<{typeof(T)}>]: Expected {typeof(T).Name} | Got {_topGroup.GetType().Name}");
         }
-        private static T EndLayoutGroup<T>() where T : LayoutGroupBase {
+        
+        // public static bool BeginLayoutGroup(LayoutGroupBase group){
+        //     if(Event.current.type == EventType.Layout){
+        //         group.ResetLayout();
+        //         return RegisterForLayout(group);
+        //     }
+        //     return RetrieveNextGroup().IsGroupValid;
+        // }
+        public static T EndLayoutGroup<T>() where T : LayoutGroupBase {
             var eventType = Event.current.type;
 
             var currentGroup = _topGroup;
             if (eventType == EventType.Layout)
-                currentGroup.RegisterLayoutRequest();
+                currentGroup.RequestLayout();
             else if (currentGroup.IsGroupValid) currentGroup.EndGroup(eventType);
             _topGroup = currentGroup._parent;
 
@@ -61,12 +68,10 @@ namespace SoftKata.ExtendedEditorGUI {
             protected readonly RectOffset Border;
             protected readonly RectOffset Padding;
             protected int ChildrenCount;
-            private int _groupIndex;
+            public int _groupIndex;
 
             private readonly GroupModifier _modifier;
 
-//            protected float AutomaticEntryWidth = -1f;
-            
             protected Rect ContainerRect;
             protected Rect VisibleAreaRect;
 
@@ -86,20 +91,19 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // group layouting data
             protected float RequestedHeight;
-            protected float RequestedWidth;
+            protected float RequestedWidth = -1;
 
-            protected float _pureContentWidth = -1f;
-            public float AutomaticContentWidth => _pureContentWidth;
+            protected float _automaticWidth;
+            protected float _visibleContentWidth;
+            public float VisibleContentWidth => _visibleContentWidth;
+
+            private bool _drawBackground;
+            private bool _drawTexture;
 
             protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
-                _parent = _topGroup;
-
                 _style = style;
                 
                 _modifier = modifier;
-
-                // Child groups indexing
-                _groupIndex = LayoutGroupQueue.Count;
 
                 // group layout settings
                 Margin = (modifier & GroupModifier.DiscardMargin) == GroupModifier.DiscardMargin
@@ -116,19 +120,18 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 ConstraintsHeight = Margin.vertical + Border.vertical + Padding.vertical;
                 ConstraintsWidth = Margin.horizontal + Border.horizontal + Padding.horizontal;
-                
-                _pureContentWidth =
-                    (_parent?.AutomaticContentWidth ?? EditorGUIUtility.currentViewWidth) - ConstraintsWidth;
             }
 
-            internal void RegisterLayoutRequest() {
+            protected abstract void CalculateFinalContentSize();
+            
+            internal void RequestLayout() {
                 ChildrenCount = LayoutGroupQueue.Count - _groupIndex - 1;
-                IsGroupValid = EntriesCount > 0;
                 
+                IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
-                    RequestedHeight += ConstraintsHeight + ContentOffset.y * (EntriesCount - 1);
-                    if (RequestedWidth > 0f) RequestedWidth += ConstraintsWidth + ContentOffset.x * (EntriesCount - 1);
+                    _automaticWidth = _visibleContentWidth;
 
+                    CalculateFinalContentSize();
                     PreLayoutRequest();
 
                     VisibleAreaRect = _parent?.GetNextEntryRect(RequestedWidth, RequestedHeight) ??
@@ -149,11 +152,13 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
                     
                     IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
-                    if (VisibleAreaRect.IsValid() && Event.current.type != EventType.Used) {
+                    if (IsGroupValid) {
                         IsLayout = false;
 
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
+
                         NextEntryPosition = ContainerRect.position;
+                        
                         return;
                     }
                 }
@@ -166,17 +171,18 @@ namespace SoftKata.ExtendedEditorGUI {
             internal Rect GetNextEntryRect(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
 
-                if (width < 0f) width = _pureContentWidth;
-
-                if (PrepareNextRect(width, height))
+                if (width < 0f) width = _automaticWidth;
+                
+                if (PrepareNextRect(width, height)) {
                     return GetEntryRect(CurrentEntryPosition.x, CurrentEntryPosition.y, width, height);
+                }
                 return InvalidRect;
             }
 
             internal GroupRenderingData GetGroupRectData(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
 
-                if (width <= 0f) width = _pureContentWidth;
+                if (width <= 0f) width = _visibleContentWidth;
 
                 var visibleRect = InvalidRect;
                 if (PrepareNextRect(width, height))
@@ -231,7 +237,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             internal void RegisterArray(float elementHeight, int count) {
-                RegisterArray(_pureContentWidth, elementHeight, count);
+                RegisterArray(_visibleContentWidth, elementHeight, count);
             }
 
             internal abstract void RegisterArray(float elemWidth, float elemHeight, int count);
@@ -256,6 +262,26 @@ namespace SoftKata.ExtendedEditorGUI {
             public Rect GetContentRect() {
                 return Border.Add(Padding.Add(ContainerRect));
             }
+
+            public void InitializeForLayout(){
+                _groupIndex = LayoutGroupQueue.Count;
+                _parent = _topGroup;
+                _topGroup = this;
+
+                _visibleContentWidth =
+                    (_parent?.VisibleContentWidth ?? EditorGUIUtility.currentViewWidth) - ConstraintsWidth;
+            }
+
+            // public void ResetLayout() {
+            //     IsLayout = true;
+
+            //     RequestedWidth = -1f;
+            //     RequestedHeight = 0f;
+
+            //     NextEntryPosition = Vector2.zero;
+
+            //     EntriesCount = 0;
+            // }
         }
     }
 }

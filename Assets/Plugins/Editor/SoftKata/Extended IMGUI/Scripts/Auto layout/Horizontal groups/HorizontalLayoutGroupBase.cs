@@ -16,23 +16,23 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         internal class HorizontalGroup : LayoutGroupBase {
-            private int _determinedWidthEntriesCount;
+            protected int FixedWidthEntriesCount;
             
             public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) { }
 
-            protected override void PreLayoutRequest() {
-//                Debug.Log($"Pre {RequestedWidth}");
-//                RequestedWidth += (EntriesCount - _determinedWidthEntriesCount) * AutomaticContentWidth;
-                if (EntriesCount - _determinedWidthEntriesCount > 0) {
-                    Debug.Log($"Auto nested entries: {EntriesCount - _determinedWidthEntriesCount}");
-                }
+            protected override void CalculateFinalContentSize() {
+                // vertical "service" height addition: margin/border/padding + space between entries
+                RequestedHeight += ConstraintsHeight;
+                
+                // fixed width is already calculated, adding automatic-width entries width sum
+                RequestedWidth += (EntriesCount - FixedWidthEntriesCount) * _visibleContentWidth + ContentOffset.x * (EntriesCount - 1) + ConstraintsWidth;
             }
 
             protected override bool PrepareNextRect(float width, float height) {
                 if (IsLayout) {
                     if (width > 0f) {
                         RequestedWidth += width;
-                        _determinedWidthEntriesCount++;
+                        FixedWidthEntriesCount++;
                     }
                     EntriesCount++;
                     RequestedHeight = Mathf.Max(RequestedHeight, height);
@@ -52,7 +52,7 @@ namespace SoftKata.ExtendedEditorGUI {
             internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
                 if (elemWidth > 0f) {
                     RequestedWidth += elemWidth * count;
-                    _determinedWidthEntriesCount += count;
+                    FixedWidthEntriesCount += count;
                 }
                 EntriesCount += count; ;
                 RequestedHeight = Mathf.Max(RequestedHeight, elemHeight);

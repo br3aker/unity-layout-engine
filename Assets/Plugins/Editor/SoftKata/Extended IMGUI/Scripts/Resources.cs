@@ -7,16 +7,16 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private static LayoutResources _layoutResources;
         private static ControlsResources _controlsResources;
-        private static ComplexControlsResources _complexControlsResources;
+        private static GUIElementsResources _guiElementsResources;
 
         public static LayoutResources LayoutResources => _layoutResources ?? (_layoutResources = new LayoutResources());
         public static ControlsResources ControlsResources => _controlsResources ?? (_controlsResources = new ControlsResources());
-        public static ComplexControlsResources ComplexControlsResources => _complexControlsResources ?? (_complexControlsResources = new ComplexControlsResources());
+        public static GUIElementsResources GUIElementsResources => _guiElementsResources ?? (_guiElementsResources = new GUIElementsResources());
     }
 
     public class LayoutResources {
-        private const string LayoutEngineLightSkinSubPath = "/Light Layout Engine skin.guiskin";
-        private const string LayoutEngineDarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
+        private const string LightSkinSubPath = "/Light Layout Engine skin.guiskin";
+        private const string DarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
 
         public GUIStyle VerticalGroup;
         public GUIStyle VerticalFadeGroup;
@@ -31,7 +31,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         internal LayoutResources() {
             var skinPath =
-                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? LayoutEngineDarkSkinSubPath : LayoutEngineLightSkinSubPath);
+                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             VerticalGroup = skin.GetStyle("Vertical group");
@@ -46,8 +46,8 @@ namespace SoftKata.ExtendedEditorGUI {
     }
 
     public class ControlsResources {
-        private const string ControlsLightSkinSubPath = "/Light Controls skin.guiskin";
-        private const string ControlsDarkSkinSubPath = "/Dark Controls skin.guiskin";
+        private const string LightSkinSubPath = "/Light Controls skin.guiskin";
+        private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
         
         // GUIStyles
         public GUIStyle InputFieldPostfix;
@@ -66,7 +66,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         internal ControlsResources() {
             var skinPath =
-                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? ControlsDarkSkinSubPath : ControlsLightSkinSubPath);
+                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             // Classic styles
@@ -99,34 +99,22 @@ namespace SoftKata.ExtendedEditorGUI {
         }
     }
 
-    public class ComplexControlsResources {
-        public CardElementData StaticCard;
-        public CardElementData ExpandableCard;
-        public ComplexControlsResources() {
-            var layoutResources = ExtendedEditorGUI.LayoutResources;
+    public class GUIElementsResources {
+        private const string LightSkinSubPath = "/Light Elements skin.guiskin";
+        private const string DarkSkinSubPath = "/Dark Elements skin.guiskin";
+
+        public GUIStyle CardRoot;
+        public GUIStyle CardContent;
+
+        public GUIElementsResources() {
+            var skinPath =
+                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
+            var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
+
             var controlsResources= ExtendedEditorGUI.ControlsResources;
 
-            StaticCard = new CardElementData {
-                BackgroundColor = new Color(0.20f, 0.20f, 0.20f),
-                HeaderStyle = controlsResources.Label,
-                ContentStyle = layoutResources.VerticalGroup,
-                RootStyle = layoutResources.VerticalGroup
-            };
-            
-            ExpandableCard = new CardElementData {
-                BackgroundColor = new Color(0.20f, 0.20f, 0.20f),
-                HeaderStyle = controlsResources.Foldout,
-                ContentStyle = layoutResources.VerticalGroup,
-                RootStyle = layoutResources.VerticalGroup
-            };
-        }
-        
-        public struct CardElementData {
-            public GUIStyle HeaderStyle;
-            public GUIStyle RootStyle;
-            public GUIStyle ContentStyle;
-
-            public Color BackgroundColor;
+            CardRoot = skin.GetStyle("Card root");
+            CardContent = skin.GetStyle("Card content");
         }
     }
 }
