@@ -4,6 +4,14 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginFlexibleHorizontalGroup(LayoutGroupBase group){
+            if (Event.current.type == EventType.Layout)
+                return RegisterForLayout(group);
+
+            var layoutGroup = RetrieveNextGroup<FlexibleHorizontalGroup>();
+            layoutGroup.CalculateLayout();
+            return layoutGroup.IsGroupValid;
+        }
         public static bool BeginFlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new FlexibleHorizontalGroup(width, modifier, style));
@@ -16,6 +24,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return BeginFlexibleHorizontalGroup(width, modifier,
                 ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup);
         }
+        
         public static void EndFlexibleHorizontalGroup() {
             EndLayoutGroup<FlexibleHorizontalGroup>();
         }
@@ -31,13 +40,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 _containerWidth = width;
             }
 
-            protected override void PreLayoutRequest() {
+            protected override void ModifyContainerSize() {
+                // vertical "service" height addition: margin/border/padding
+                RequestedHeight += ConstraintsHeight;
+
                 _fixedWidth = RequestedWidth;
                 RequestedWidth = _containerWidth;
             }
             
             internal void CalculateLayout() {
-                var totalFlexibleWidth = ContainerRect.width - _fixedWidth;
+                var totalFlexibleWidth = ContainerRect.width - _fixedWidth - DistanceBetweenEntries * (EntriesCount - 1);
                 _automaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - FixedWidthEntriesCount), 0f);
             }
         }

@@ -3,6 +3,16 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginScrollGroup(LayoutGroupBase group){
+            if (Event.current.type == EventType.Layout){
+                group.ResetLayout();
+                return RegisterForLayout(group);
+            }
+
+            var currentGroup = RetrieveNextGroup() as ScrollGroup;
+            currentGroup.CalculateScrollContainerSize();
+            return currentGroup.IsGroupValid;
+        }
         public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new ScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, style));
@@ -14,6 +24,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, GroupModifier modifier = GroupModifier.None) {
             return BeginScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup);
         }
+        
         public static Vector2 EndScrollGroup() {
             var group = EndLayoutGroup<ScrollGroup>();
             group.DoScrollGroupEndRoutine();
@@ -68,12 +79,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Colors
                 _backgroundColor = style.normal.textColor;
                 _scrollbarColor = style.onNormal.textColor;
-
-                GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-                GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             }
 
-            protected override void PreLayoutRequest() {
+            protected override void ModifyContainerSize() {
+                base.ModifyContainerSize();
+                // GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                // GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+
                 // Same can be done with content height
                 _actualContentWidth = RequestedWidth;
                 RequestedWidth = _containerSize.x;

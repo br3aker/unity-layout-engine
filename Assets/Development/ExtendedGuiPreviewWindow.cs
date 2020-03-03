@@ -75,31 +75,31 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         EditorGUI.DrawRect(LayoutEngine.GetRect(1), Color.gray);
         
         {
-//            TestingMethod();
+            // TestingMethod();
 
-//            Profiler.BeginSample("Performance testing group");
-//            PerformanceTestingScrollGroup();
-//            Profiler.EndSample();
-            
-//            VerticalGroupTest();    // passed
-//            VerticalGroupsPlainTest();    // passed
-//            VerticalGroupsIfCheckTest();    // passed
-//            VerticalUnityNativeTest();    // utility
-//            HorizontalGroupTest();    // passed
-//            HorizontalGroupNestedVerticalGroupsTest();
-//            UnityImplementationScrollTest();    // utility
-//            VerticalFadeGroupTest();    // passed
-//            VerticalFadeGroupHorizontalChildGroupTest();    // passed
-//            NestedFadeGroupsTest();    // passed
-//            VerticalSeparatorGroupTest();    // passed
-//            VerticalHierarchyGroupTest();    // passed
-//            VerticalHierarchyGroupTreeTest();
-//            VerticalHierarchyWithSeparatorTest();    // passed
+            // Profiler.BeginSample("Performance testing group");
+            // PerformanceTestingScrollGroup();
+            // Profiler.EndSample();
+
+            // VerticalGroupTest();    // passed
+            // VerticalGroupsPlainTest();    // passed
+            // VerticalGroupsIfCheckTest();    // passed
+            // VerticalUnityNativeTest();    // utility
+            // HorizontalGroupTest();    // passed
+            // HorizontalGroupNestedVerticalGroupsTest();
+            // UnityImplementationScrollTest();    // utility
+            // VerticalFadeGroupTest();    // passed
+            // VerticalFadeGroupHorizontalChildGroupTest();    // passed
+            // NestedFadeGroupsTest();    // passed
+            // VerticalSeparatorGroupTest();    // passed
+            // VerticalHierarchyGroupTest();    // passed
+            // VerticalHierarchyGroupTreeTest();
+            // VerticalHierarchyWithSeparatorTest();    // passed
             FixedHorizontalGroupTest();    // passed
-//            FixedHorizontalGroupVerticalChildrenTest();    // passed
-//            FixedHorizontalGroupComplexInternalsTest();    // passed
-//            ScrollGroupTest();    // passed
-//            HorizontalGroupNestedScroll();
+            // FixedHorizontalGroupVerticalChildrenTest();    // passed
+            // FixedHorizontalGroupComplexInternalsTest();    // passed
+            // ScrollGroupTest();    // passed
+            // HorizontalGroupNestedScroll();
         }
 
         if (Event.current.type != EventType.Layout) {
@@ -396,7 +396,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void FixedHorizontalGroupTest() {
-        if (LayoutEngine.BeginFlexibleHorizontalGroup(LayoutEngine.CurrentContentWidth)) {
+        if (LayoutEngine.BeginFlexibleHorizontalGroup(LayoutEngine.AutoWidth)) {
             if (LayoutEngine.GetRect(16, 100, out var fixedRect)) {
                 EditorGUI.DrawRect(fixedRect, Color.black);
                 EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());

@@ -12,6 +12,8 @@ namespace SoftKata.ExtendedEditorGUI {
         public static LayoutResources LayoutResources => _layoutResources ?? (_layoutResources = new LayoutResources());
         public static ControlsResources ControlsResources => _controlsResources ?? (_controlsResources = new ControlsResources());
         public static GUIElementsResources GUIElementsResources => _guiElementsResources ?? (_guiElementsResources = new GUIElementsResources());
+
+        private static GUIStyle EmptyStyle = new GUIStyle();
     }
 
     public class LayoutResources {
@@ -26,8 +28,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public GUIStyle HorizontalRestrictedGroup;
 
         public GUIStyle ScrollGroup;
-
-        public GUIStyle PureScrollGroup;
         
         internal LayoutResources() {
             var skinPath =
@@ -40,8 +40,6 @@ namespace SoftKata.ExtendedEditorGUI {
             Treeview = skin.GetStyle("Treeview");
             HorizontalGroup = skin.GetStyle("Horizontal group");
             HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
-
-            PureScrollGroup = skin.GetStyle("Pure scroll group");
         }
     }
 

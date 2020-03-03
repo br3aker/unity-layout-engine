@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginVerticalFadeGroup(LayoutGroupBase group){
+            return BeginLayoutGroup(group);
+        }
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new VerticalFadeGroup(faded, modifier, style));
@@ -12,6 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginVerticalFadeGroup(float faded, GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup);
         }
+        
         public static void EndVerticalFadeGroup() {
             EndLayoutGroup<VerticalFadeGroup>();
         }
@@ -27,7 +31,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 _faded = faded;
             }
 
-            protected override void PreLayoutRequest() {
+            protected override void ModifyContainerSize() {
+                base.ModifyContainerSize();
+
                 RequestedHeight *= _faded;
             }
         }

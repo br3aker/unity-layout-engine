@@ -29,13 +29,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 $"Group type mismatch at [{nameof(RetrieveNextGroup)}<{typeof(T)}>]: Expected {typeof(T).Name} | Got {_topGroup.GetType().Name}");
         }
         
-        // public static bool BeginLayoutGroup(LayoutGroupBase group){
-        //     if(Event.current.type == EventType.Layout){
-        //         group.ResetLayout();
-        //         return RegisterForLayout(group);
-        //     }
-        //     return RetrieveNextGroup().IsGroupValid;
-        // }
+        public static bool BeginLayoutGroup(LayoutGroupBase group){
+            if(Event.current.type == EventType.Layout){
+                group.ResetLayout();
+                return RegisterForLayout(group);
+            }
+            return RetrieveNextGroup().IsGroupValid;
+        }
         public static T EndLayoutGroup<T>() where T : LayoutGroupBase {
             var eventType = Event.current.type;
 
@@ -75,7 +75,7 @@ namespace SoftKata.ExtendedEditorGUI {
             protected Rect ContainerRect;
             protected Rect VisibleAreaRect;
 
-            protected Vector2 ContentOffset;
+            protected float DistanceBetweenEntries;
 
             internal int EntriesCount;
             internal bool IsGroupValid;
@@ -93,12 +93,9 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float RequestedHeight;
             protected float RequestedWidth = -1;
 
-            protected float _automaticWidth;
+            protected float _automaticWidth = -1;
             protected float _visibleContentWidth;
             public float VisibleContentWidth => _visibleContentWidth;
-
-            private bool _drawBackground;
-            private bool _drawTexture;
 
             protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
                 _style = style;
@@ -115,14 +112,12 @@ namespace SoftKata.ExtendedEditorGUI {
                 Padding = (modifier & GroupModifier.DiscardPadding) == GroupModifier.DiscardPadding
                     ? ZeroRectOffset
                     : style.padding;
-
-                ContentOffset = style.contentOffset;
                 
                 ConstraintsHeight = Margin.vertical + Border.vertical + Padding.vertical;
                 ConstraintsWidth = Margin.horizontal + Border.horizontal + Padding.horizontal;
             }
 
-            protected abstract void CalculateFinalContentSize();
+            protected abstract void ModifyContainerSize();
             
             internal void RequestLayout() {
                 ChildrenCount = LayoutGroupQueue.Count - _groupIndex - 1;
@@ -131,8 +126,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (IsGroupValid) {
                     _automaticWidth = _visibleContentWidth;
 
-                    CalculateFinalContentSize();
-                    PreLayoutRequest();
+                    ModifyContainerSize();
 
                     VisibleAreaRect = _parent?.GetNextEntryRect(RequestedWidth, RequestedHeight) ??
                                       GetRectFromRoot(RequestedHeight, RequestedWidth);
@@ -165,8 +159,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 ScrapGroups(ChildrenCount);
             }
-
-            protected virtual void PreLayoutRequest() { }
 
             internal Rect GetNextEntryRect(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
@@ -242,7 +234,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             internal abstract void RegisterArray(float elemWidth, float elemHeight, int count);
 
-
             internal virtual void EndGroup(EventType eventType) {
                 EndGroupModifiersRoutine(eventType);
             }
@@ -272,16 +263,17 @@ namespace SoftKata.ExtendedEditorGUI {
                     (_parent?.VisibleContentWidth ?? EditorGUIUtility.currentViewWidth) - ConstraintsWidth;
             }
 
-            // public void ResetLayout() {
-            //     IsLayout = true;
+            public void ResetLayout() {
+                IsLayout = true;
 
-            //     RequestedWidth = -1f;
-            //     RequestedHeight = 0f;
+                 _automaticWidth = -1;
+                RequestedWidth = -1;
+                RequestedHeight = 0;
 
-            //     NextEntryPosition = Vector2.zero;
+                NextEntryPosition = Vector2.zero;
 
-            //     EntriesCount = 0;
-            // }
+                EntriesCount = 0;
+            }
         }
     }
 }

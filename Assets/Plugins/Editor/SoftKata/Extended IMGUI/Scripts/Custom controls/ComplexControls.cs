@@ -2,9 +2,28 @@ using System;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
+        public interface IDrawableElement {
+            void OnGUI();
+        }
+
+        public class DelegateElemenet : IDrawableElement {
+            public delegate void Drawer();
+
+            private Drawer _drawer;
+
+            public DelegateElemenet(Drawer drawer) {
+                _drawer = drawer;
+            }
+
+            public void OnGUI(){
+                _drawer();
+            }
+        }
+
         public class CardElement {
             private GUIContent _header;
             private Action _contentDrawer;
@@ -16,6 +35,9 @@ namespace SoftKata.ExtendedEditorGUI {
             private bool _drawRootBackground;
             private Color _rootBackgroundColor;
 
+            private readonly LayoutEngine.LayoutGroupBase _rootGroup;
+            private readonly LayoutEngine.LayoutGroupBase _contentGroup;
+
             public CardElement(GUIContent header, Action contentDrawer, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
                 _header = header;
                 _contentDrawer = contentDrawer;
@@ -26,6 +48,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 _rootBackgroundColor = rootStyle.normal.textColor;
                 _drawRootBackground = _rootBackgroundColor.a > 0f;
+
+                _rootGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, _rootContainerStyle);
+                _contentGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, EmptyStyle);
             }
             public CardElement(GUIContent header, Action contentDrawer)
                 : this(
@@ -37,7 +62,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 ) {}
 
             public void OnGUI(){
-                if (LayoutEngine.BeginVerticalGroup(GroupModifier.None, _rootContainerStyle)) {
+                // if (LayoutEngine.BeginVerticalGroup(GroupModifier.None, _rootContainerStyle)) {
+                if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
                     // Background
                     if(_drawRootBackground && Event.current.type == EventType.Repaint){
                         EditorGUI.DrawRect(LayoutEngine.CurrentGroup.GetContentRect(), _rootBackgroundColor);
@@ -52,9 +78,9 @@ namespace SoftKata.ExtendedEditorGUI {
                     if (LayoutEngine.GetRect(1f, LayoutEngine.AutoWidth, out var separatorRect)) {
                         DrawSeparator(separatorRect);
                     }
-                
+
                     // Content
-                    if (LayoutEngine.BeginVerticalGroup(GroupModifier.DiscardMargin, _contentContainerStyle)) {
+                    if (LayoutEngine.BeginVerticalGroup(_contentGroup)) {
                         _contentDrawer?.Invoke();
                     }
                     LayoutEngine.EndVerticalGroup();
@@ -87,7 +113,9 @@ namespace SoftKata.ExtendedEditorGUI {
             public void OnGUI(){
                 if (LayoutEngine.BeginVerticalGroup(GroupModifier.None, _rootContainerStyle)) {
                     // Background
-                    EditorGUI.DrawRect(LayoutEngine.CurrentGroup.GetContentRect(), Color.black);
+                    // if(_drawRootBackground && Event.current.type == EventType.Repaint){
+                    //     EditorGUI.DrawRect(LayoutEngine.CurrentGroup.GetContentRect(), _rootBackgroundColor);
+                    // }
                     
                     // Header
                     if (LayoutEngine.GetRect(LabelHeight, LayoutEngine.AutoWidth, out var headerRect)) {
@@ -109,7 +137,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public class ScrollableTabsHolder {
+        public class TabsElement {
             private readonly GUIContent[] _tabHeaders;
             private readonly Action[] _contentDrawers;
             
@@ -117,14 +145,17 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private int _currentTab;
             private int _previousTab;
-            private Vector2 _scrollValue;
 
             private readonly Color _underlineColor;
             private readonly float _underlineHeight;
 
             private readonly GUIStyle _tabStyle;
 
-            public ScrollableTabsHolder(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, int initialeTab, Color underlineColor, GUIStyle tabStyle) {
+            private readonly LayoutEngine.ScrollGroup _scrollGroup;
+            private readonly LayoutEngine.LayoutGroupBase _horizontalGroup;
+            
+
+            public TabsElement(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, Color underlineColor, GUIStyle tabStyle) {
                 _currentTab = currentTab;
                 _tabHeaders = tabHeaders;
                 _contentDrawers = contentDrawers;
@@ -133,11 +164,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabStyle.padding.bottom;
                 _tabStyle = tabStyle;
                 
-                _animator = new AnimFloat(initialeTab, ExtendedEditorGUI.CurrentViewRepaint);
-            }
+                _animator = new AnimFloat(currentTab, ExtendedEditorGUI.CurrentViewRepaint);
 
-            public ScrollableTabsHolder(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, int initialTab, Color underlineColor) 
-                : this(currentTab, tabHeaders, contentDrawers, initialTab, underlineColor, ControlsResources.TabHeader) { }
+                _scrollGroup = new LayoutEngine.ScrollGroup(new Vector2(-1, -1), new Vector2(currentTab / (_tabHeaders.Length - 1), 0f), true, GroupModifier.None, ExtendedEditorGUI.EmptyStyle);
+                _horizontalGroup = new LayoutEngine.HorizontalGroup(GroupModifier.None, ExtendedEditorGUI.EmptyStyle);
+            }
+            public TabsElement(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, Color underlineColor) 
+                : this(currentTab, tabHeaders, contentDrawers, underlineColor, ControlsResources.TabHeader) { }
 
             public int OnGUI() {
                 if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var selectedTabRect)) {
@@ -150,7 +183,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     EditorGUI.LabelField(animValueRect, $"Animation value: {_animator.value}");
                 }
                 if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var scrollValueRect)) {
-                    EditorGUI.LabelField(scrollValueRect, $"Scroll pos: {_scrollValue}");
+                    EditorGUI.LabelField(scrollValueRect, $"Scroll pos: {_scrollGroup.ScrollPos}");
                 }
                 
                 int currentSelection = _currentTab;
@@ -158,7 +191,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Tabs
                 if (LayoutEngine.GetRect(22f, LayoutEngine.AutoWidth, out var toolbarRect)) {
-                    // Logic
+                    // Tab control
                     currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabStyle);
 
                     // Underline
@@ -171,9 +204,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Content
                 if (_animator.isAnimating) {
-                    _scrollValue = new Vector2(currentAnimationPosition, 0f);
-                    if (LayoutEngine.BeginScrollGroup(new Vector2(-1, -1), _scrollValue, false, GroupModifier.None, LayoutResources.PureScrollGroup)) {
-                        if (LayoutEngine.BeginHorizontalGroup()) {
+                    _scrollGroup.ScrollPos = new Vector2(currentAnimationPosition, 0f);
+                    if(LayoutEngine.BeginScrollGroup(_scrollGroup)) {
+                        if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].Invoke();
                             }

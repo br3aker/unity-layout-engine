@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginTreeViewGroup(LayoutGroupBase group) {
+            return BeginLayoutGroup(group);
+        }
         public static bool BeginTreeViewGroup(GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new TreeViewGroup(modifier, style));
@@ -13,8 +16,10 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginTreeViewGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginTreeViewGroup(modifier, ExtendedEditorGUI.LayoutResources.Treeview);
         }
+        
         public static void EndTreeView() {
             var group = EndLayoutGroup<TreeViewGroup>();
+            // TODO: move this to BeginTreeViewGroup(...) for consistency
             group.DrawMajorConnectionType();
         }
 

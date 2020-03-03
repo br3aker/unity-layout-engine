@@ -4,27 +4,32 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginVerticalGroup(LayoutGroupBase group) {
+            return BeginLayoutGroup(group);
+        }
         public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
                 return RegisterForLayout(new VerticalGroup(modifier, style));
             }
 
             return RetrieveNextGroup().IsGroupValid;
-        }
-        
+        }        
         public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.LayoutResources.VerticalGroup);
         }
+        
         public static void EndVerticalGroup() {
             EndLayoutGroup<VerticalGroup>();
         }
 
         public class VerticalGroup : LayoutGroupBase {
-            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {}
+            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+                DistanceBetweenEntries = style.contentOffset.y;
+            }
 
-            protected override void CalculateFinalContentSize() {
+            protected override void ModifyContainerSize() {
                 // vertical "service" height addition: margin/border/padding + space between entries
-                RequestedHeight += ConstraintsHeight + ContentOffset.y * (EntriesCount - 1);
+                RequestedHeight += ConstraintsHeight + DistanceBetweenEntries * (EntriesCount - 1);
             }
             
             protected sealed override bool PrepareNextRect(float width, float height) {
@@ -38,7 +43,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if (!IsGroupValid) return false;
 
-                NextEntryPosition.y += height + ContentOffset.y;
+                NextEntryPosition.y += height + DistanceBetweenEntries;
 
                 // occlusion
                 return CurrentEntryPosition.y + height >= VisibleAreaRect.y

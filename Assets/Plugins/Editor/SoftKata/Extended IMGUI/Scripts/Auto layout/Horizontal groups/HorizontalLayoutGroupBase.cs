@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        public static bool BeginHorizontalGroup(LayoutGroupBase group){
+            return BeginLayoutGroup(group);
+        }
         public static bool BeginHorizontalGroup(GroupModifier modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) return RegisterForLayout(new HorizontalGroup(modifier, style));
 
@@ -11,6 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
             return BeginHorizontalGroup(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup);
         }
+       
         public static void EndHorizontalGroup() {
             EndLayoutGroup<HorizontalGroup>();
         }
@@ -18,14 +22,16 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalGroup : LayoutGroupBase {
             protected int FixedWidthEntriesCount;
             
-            public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) { }
+            public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+                DistanceBetweenEntries = style.contentOffset.x;
+            }
 
-            protected override void CalculateFinalContentSize() {
+            protected override void ModifyContainerSize() {
                 // vertical "service" height addition: margin/border/padding + space between entries
                 RequestedHeight += ConstraintsHeight;
-                
+
                 // fixed width is already calculated, adding automatic-width entries width sum
-                RequestedWidth += (EntriesCount - FixedWidthEntriesCount) * _visibleContentWidth + ContentOffset.x * (EntriesCount - 1) + ConstraintsWidth;
+                RequestedWidth += (EntriesCount - FixedWidthEntriesCount) * _visibleContentWidth + DistanceBetweenEntries * (EntriesCount - 1) + ConstraintsWidth;
             }
 
             protected override bool PrepareNextRect(float width, float height) {
@@ -42,7 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!IsGroupValid) return false;
 
 
-                NextEntryPosition.x += width + ContentOffset.x;
+                NextEntryPosition.x += width + DistanceBetweenEntries;
 
                 // occlusion
                 return CurrentEntryPosition.x + width >= VisibleAreaRect.x
