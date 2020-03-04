@@ -6,18 +6,21 @@ using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Assertions;
-using Object = UnityEngine.Object;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static class Utility {
-        public static T LoadAssetAtPathAndAssert<T>(string assetPath) where T : Object {
+        public static T LoadAssetAtPathAndAssert<T>(string assetPath) where T : UnityEngine.Object {
             var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
             Assert.IsNotNull(asset, $"Couldn't load asset [{typeof(T).Name}] at path \"{assetPath}\"");
             return asset;
         }
 
+        [Obsolete("Use GetContentHeight(this GUIStyle style, GUIContent content) instead")]
         public static int GetContentHeight(this GUIStyle style) {
             return (int) Mathf.Ceil(style.CalcSize(GUIContent.none).y);
+        }
+        public static int GetContentHeight(this GUIStyle style, GUIContent content) {
+            return (int)Mathf.Ceil(style.CalcSize(content).y);
         }
 
         public static bool IsValid(this Rect rect) {

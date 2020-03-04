@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
+        //  TODO: move to ExtendedEditorGUI class?
         public const float AutoWidth = -1f;
+
         private static readonly Rect InvalidRect = new Rect(float.MaxValue, float.MaxValue, -1, -1);
+
+        // TODO: do we really need this constant for margin/border/padding?
         private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
+        // TODO: use list?
         private static readonly Queue<LayoutGroupBase> LayoutGroupQueue = new Queue<LayoutGroupBase>();
 
         private static LayoutGroupBase _topGroup;
@@ -27,6 +32,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static Rect GetRect(float height, float width = AutoWidth) {
             return _topGroup?.GetNextEntryRect(width, height) ?? GetRectFromRoot(height, width);
         }
+
         public static bool GetRect(float height, float width, out Rect rect) {
             rect = _topGroup?.GetNextEntryRect(width, height) ?? GetRectFromRoot(height, width);
             return rect.IsValid();

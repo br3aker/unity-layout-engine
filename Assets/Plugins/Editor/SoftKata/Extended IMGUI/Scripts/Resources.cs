@@ -6,11 +6,12 @@ namespace SoftKata.ExtendedEditorGUI {
         internal const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
 
         private static LayoutResources _layoutResources;
-        private static ControlsResources _controlsResources;
-        private static GUIElementsResources _guiElementsResources;
-
         public static LayoutResources LayoutResources => _layoutResources ?? (_layoutResources = new LayoutResources());
+
+        private static ControlsResources _controlsResources;
         public static ControlsResources ControlsResources => _controlsResources ?? (_controlsResources = new ControlsResources());
+
+        private static GUIElementsResources _guiElementsResources;
         public static GUIElementsResources GUIElementsResources => _guiElementsResources ?? (_guiElementsResources = new GUIElementsResources());
 
         private static GUIStyle EmptyStyle = new GUIStyle();
@@ -54,7 +55,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public GUIStyle ButtonRight;
         public GUIStyle Label;
         public GUIStyle Foldout;
-        public GUIStyle TabHeader;
 
         // Textures
         public Texture GreenGradient;
@@ -74,7 +74,6 @@ namespace SoftKata.ExtendedEditorGUI {
             ButtonLeft = skin.GetStyle("Button left");
             ButtonMid = skin.GetStyle("Button mid");
             ButtonRight = skin.GetStyle("Button right");
-            TabHeader = skin.GetStyle("Tab header");
 
             // Textures
             GreenGradient = Utility.LoadAssetAtPathAndAssert<Texture>(
@@ -103,6 +102,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public GUIStyle CardRoot;
         public GUIStyle CardContent;
+        public GUIStyle CardHeader;
+        public GUIStyle CardFoldoutHeader;
+
+        public GUIStyle TabHeader;
 
         public GUIElementsResources() {
             var skinPath =
@@ -111,8 +114,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
             var controlsResources= ExtendedEditorGUI.ControlsResources;
 
+            // Card element
             CardRoot = skin.GetStyle("Card root");
             CardContent = skin.GetStyle("Card content");
+            CardHeader = skin.GetStyle("Card header");
+            CardFoldoutHeader = skin.GetStyle("Card foldout header");
+
+            // Tab element
+            TabHeader = skin.GetStyle("Tab header");
         }
     }
 }

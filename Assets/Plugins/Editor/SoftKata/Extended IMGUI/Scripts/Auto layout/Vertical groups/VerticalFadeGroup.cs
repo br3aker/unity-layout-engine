@@ -21,20 +21,16 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public class VerticalFadeGroup : VerticalClippingGroup {
-            private float _faded;
-
-            public float Faded {
-                set => _faded = value;
-            }
+            public float Faded {get; set;}
 
             public VerticalFadeGroup(float faded, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                _faded = faded;
+                Faded = faded;
             }
 
             protected override void ModifyContainerSize() {
                 base.ModifyContainerSize();
 
-                RequestedHeight *= _faded;
+                RequestedHeight *= Faded;
             }
         }
 

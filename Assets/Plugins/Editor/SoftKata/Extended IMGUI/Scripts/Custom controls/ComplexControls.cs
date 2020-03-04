@@ -1,8 +1,10 @@
+#define DYNAMIC_STYLING
+
 using System;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
@@ -10,67 +12,71 @@ namespace SoftKata.ExtendedEditorGUI {
             void OnGUI();
         }
 
-        public class DelegateElemenet : IDrawableElement {
-            public delegate void Drawer();
+        public class DelegateElement : IDrawableElement {
+            private Action _drawer;
 
-            private Drawer _drawer;
-
-            public DelegateElemenet(Drawer drawer) {
+            public DelegateElement(Action drawer) {
                 _drawer = drawer;
             }
 
-            public void OnGUI(){
+            public void OnGUI() {
                 _drawer();
             }
         }
 
-        public class CardElement {
+        public class CardElement : IDrawableElement  {
+            // GUI content & drawers
             private GUIContent _header;
-            private Action _contentDrawer;
+            private IDrawableElement _contentDrawer;
 
+            // Styling
             private GUIStyle _headerStyle;
-            private GUIStyle _rootContainerStyle;
-            private GUIStyle _contentContainerStyle;
+            private float _headerHeight;
 
             private bool _drawRootBackground;
-            private Color _rootBackgroundColor;
+            private Color _backgroundColor;
 
+            // Layout groups
             private readonly LayoutEngine.LayoutGroupBase _rootGroup;
             private readonly LayoutEngine.LayoutGroupBase _contentGroup;
 
-            public CardElement(GUIContent header, Action contentDrawer, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
+            public CardElement(GUIContent header, IDrawableElement contentDrawer, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
+                // GUI content & drawers
                 _header = header;
                 _contentDrawer = contentDrawer;
 
+                // Styling 
                 _headerStyle = headerStyle;
-                _rootContainerStyle = rootStyle;
-                _contentContainerStyle = contentStyle;
+                _headerHeight = headerStyle.GetContentHeight(header);
 
-                _rootBackgroundColor = rootStyle.normal.textColor;
-                _drawRootBackground = _rootBackgroundColor.a > 0f;
+                var rootNormalState = rootStyle.normal;
+                _backgroundColor = rootNormalState.textColor;
+                _drawRootBackground = _backgroundColor.a > 0f;
 
-                _rootGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, _rootContainerStyle);
-                _contentGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, EmptyStyle);
+                // Layout groups
+                _rootGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, rootStyle);
+                _contentGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, contentStyle);
             }
-            public CardElement(GUIContent header, Action contentDrawer)
+            public CardElement(GUIContent header, IDrawableElement contentDrawer)
                 : this(
                     header,
                     contentDrawer,
-                    ControlsResources.Label,
+                    GUIElementsResources.CardHeader,
                     GUIElementsResources.CardRoot,
                     GUIElementsResources.CardContent
                 ) {}
 
             public void OnGUI(){
-                // if (LayoutEngine.BeginVerticalGroup(GroupModifier.None, _rootContainerStyle)) {
+                RecalculateStyling();
+
                 if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
                     // Background
                     if(_drawRootBackground && Event.current.type == EventType.Repaint){
-                        EditorGUI.DrawRect(LayoutEngine.CurrentGroup.GetContentRect(), _rootBackgroundColor);
+                        EditorGUI.DrawRect(_rootGroup.GetContentRect(), _backgroundColor);
                     }
 
                     // Header
-                    if (LayoutEngine.GetRect(LabelHeight, LayoutEngine.AutoWidth, out var headerRect)) {
+                    if (LayoutEngine.GetRect(_headerHeight, LayoutEngine.AutoWidth, out var headerRect)) {
                         EditorGUI.LabelField(headerRect, _header, _headerStyle);
                     }
                 
@@ -81,100 +87,171 @@ namespace SoftKata.ExtendedEditorGUI {
 
                     // Content
                     if (LayoutEngine.BeginVerticalGroup(_contentGroup)) {
-                        _contentDrawer?.Invoke();
+                        _contentDrawer.OnGUI();
                     }
                     LayoutEngine.EndVerticalGroup();
                 }
                 LayoutEngine.EndVerticalGroup();
             }
+
+            [Conditional("DYNAMIC_STYLING")]
+            private void RecalculateStyling() {
+                _headerHeight = _headerStyle.GetContentHeight(_header);
+            }
         }
 
-        public class FoldableCardElement {
+        public class FoldableCardElement : IDrawableElement {
+            // Logic data
+            public bool Expanded => _expandedAnimator.target;
+
+            // GUI content & drawers
             private GUIContent _header;
-            private Action _contentDrawer;
+            private IDrawableElement _contentDrawer;
 
-            private AnimBool _expanded;
+            // Animators
+            private AnimBool _expandedAnimator;
 
-            private GUIStyle _headerContentStyle;
-            private GUIStyle _rootContainerStyle;
-            private GUIStyle _contentContainerStyle;
+            // Styling
+            private GUIStyle _headerStyle;
+            private float _headerHeight;
 
-            public FoldableCardElement(GUIContent header, Action contentDrawer, bool expanded, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
+            private bool _drawRootBackground;
+            private Color _rootBackgroundColor;
+
+            // Layout groups
+            private readonly LayoutEngine.LayoutGroupBase _rootGroup;
+            private readonly LayoutEngine.VerticalFadeGroup _expandingContentGroup;
+            private readonly LayoutEngine.LayoutGroupBase _expandedContentGroup;
+
+            public FoldableCardElement(GUIContent header, IDrawableElement contentDrawer, bool expanded, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
+                // GUI content & drawers
                 _header = header;
                 _contentDrawer = contentDrawer;
 
-                _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
+                // Animators
+                _expandedAnimator = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
 
-                _headerContentStyle = headerStyle;
-                _rootContainerStyle = rootStyle;
-                _contentContainerStyle = contentStyle;
+                // Styling
+                _headerStyle = headerStyle;
+                _headerHeight = headerStyle.GetContentHeight(header);
+
+                _rootBackgroundColor = rootStyle.normal.textColor;
+                _drawRootBackground = _rootBackgroundColor.a > 0f;
+
+                // Layout groups
+                _rootGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, GUIElementsResources.CardRoot);
+                _expandingContentGroup = new LayoutEngine.VerticalFadeGroup(_expandedAnimator.faded, GroupModifier.None, GUIElementsResources.CardContent);
+                _expandedContentGroup = new LayoutEngine.VerticalGroup(GroupModifier.None, GUIElementsResources.CardContent);
             }
+            public FoldableCardElement(GUIContent header, IDrawableElement contentDrawer, bool expanded)
+                : this(
+                    header,
+                    contentDrawer,
+                    expanded,
+                    GUIElementsResources.CardFoldoutHeader,
+                    GUIElementsResources.CardRoot,
+                    GUIElementsResources.CardContent
+                ) {}
 
             public void OnGUI(){
-                if (LayoutEngine.BeginVerticalGroup(GroupModifier.None, _rootContainerStyle)) {
+                RecalculateStyling();
+                
+                if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
                     // Background
-                    // if(_drawRootBackground && Event.current.type == EventType.Repaint){
-                    //     EditorGUI.DrawRect(LayoutEngine.CurrentGroup.GetContentRect(), _rootBackgroundColor);
-                    // }
+                    if(_drawRootBackground && Event.current.type == EventType.Repaint){
+                        EditorGUI.DrawRect(_rootGroup.GetContentRect(), _rootBackgroundColor);
+                    }
                     
                     // Header
-                    if (LayoutEngine.GetRect(LabelHeight, LayoutEngine.AutoWidth, out var headerRect)) {
-                        _expanded.target = EditorGUI.Foldout(headerRect, _expanded.target, _header, true, _headerContentStyle);
+                    var expanded = _expandedAnimator.target;
+                    if (LayoutEngine.GetRect(_headerHeight, LayoutEngine.AutoWidth, out var headerRect)) {
+                        expanded = EditorGUI.Foldout(headerRect, _expandedAnimator.target, _header, true, _headerStyle);
                     }
                     
                     // Separator
-                    if (_expanded.faded > 0.01f && LayoutEngine.GetRect(1f, LayoutEngine.AutoWidth, out var separatorRect)) {
+                    if (_expandedAnimator.faded > 0.01f && LayoutEngine.GetRect(1f, LayoutEngine.AutoWidth, out var separatorRect)) {
                         DrawSeparator(separatorRect);
                     }
                     
-                    if (LayoutEngine.BeginVerticalFadeGroup(_expanded.faded, GroupModifier.DiscardMargin, _contentContainerStyle)) {
-                        // Content
-                        _contentDrawer?.Invoke();
+                    // Content
+                    if(_expandedAnimator.isAnimating){
+                        _expandingContentGroup.Faded = _expandedAnimator.faded;
+                        if (LayoutEngine.BeginVerticalFadeGroup(_expandingContentGroup)) {
+                            _contentDrawer.OnGUI();
+                        }
+                        LayoutEngine.EndVerticalFadeGroup();
                     }
-                    LayoutEngine.EndVerticalFadeGroup();
+                    else if(_expandedAnimator.target) {
+                        if(LayoutEngine.BeginVerticalGroup(_expandedContentGroup)) {
+                            _contentDrawer.OnGUI();
+                        }
+                        LayoutEngine.EndVerticalGroup();
+                    }
+
+                    // Change check
+                    _expandedAnimator.target = expanded;
                 }
                 LayoutEngine.EndVerticalGroup();
             }
+
+            [Conditional("DYNAMIC_STYLING")]
+            private void RecalculateStyling() {
+                _headerHeight = _headerStyle.GetContentHeight(_header);
+            }
         }
 
-        public class TabsElement {
-            private readonly GUIContent[] _tabHeaders;
-            private readonly Action[] _contentDrawers;
+        public class TabsElement : IDrawableElement {
+            // Logic data
+            public int CurrentTab {get; set;}
             
+            // GUI content & drawers
+            private readonly GUIContent[] _tabHeaders;
+            private readonly IDrawableElement[] _contentDrawers;
+            
+            // Animators
             private readonly AnimFloat _animator;
 
-            private int _currentTab;
-            private int _previousTab;
+            // Styling
+            private readonly GUIStyle _tabHeaderStyle;
+            private float _tabHeaderHeight;
 
             private readonly Color _underlineColor;
-            private readonly float _underlineHeight;
+            private float _underlineHeight;
 
-            private readonly GUIStyle _tabStyle;
-
+            // Layout groups
             private readonly LayoutEngine.ScrollGroup _scrollGroup;
             private readonly LayoutEngine.LayoutGroupBase _horizontalGroup;
             
+            public TabsElement(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
+                // Data
+                CurrentTab = initialTab;
 
-            public TabsElement(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, Color underlineColor, GUIStyle tabStyle) {
-                _currentTab = currentTab;
+                // GUI content & drawers
                 _tabHeaders = tabHeaders;
                 _contentDrawers = contentDrawers;
                 
-                _underlineColor = underlineColor;
-                _underlineHeight = tabStyle.padding.bottom;
-                _tabStyle = tabStyle;
-                
-                _animator = new AnimFloat(currentTab, ExtendedEditorGUI.CurrentViewRepaint);
+                // Animators
+                _animator = new AnimFloat(initialTab, ExtendedEditorGUI.CurrentViewRepaint);
 
-                _scrollGroup = new LayoutEngine.ScrollGroup(new Vector2(-1, -1), new Vector2(currentTab / (_tabHeaders.Length - 1), 0f), true, GroupModifier.None, ExtendedEditorGUI.EmptyStyle);
+                // Styling
+                _tabHeaderStyle = tabHeaderStyle;
+                _tabHeaderHeight = tabHeaderStyle.GetContentHeight(tabHeaders[0]);
+
+                _underlineColor = underlineColor;
+                _underlineHeight = tabHeaderStyle.margin.bottom;
+
+                // Layout groups
+                _scrollGroup = new LayoutEngine.ScrollGroup(new Vector2(-1, -1), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, GroupModifier.None, ExtendedEditorGUI.EmptyStyle);
                 _horizontalGroup = new LayoutEngine.HorizontalGroup(GroupModifier.None, ExtendedEditorGUI.EmptyStyle);
             }
-            public TabsElement(int currentTab, GUIContent[] tabHeaders, Action[] contentDrawers, Color underlineColor) 
-                : this(currentTab, tabHeaders, contentDrawers, underlineColor, ControlsResources.TabHeader) { }
+            public TabsElement(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor) 
+                : this(initialTab, tabHeaders, contentDrawers, underlineColor, GUIElementsResources.TabHeader) { }
 
-            public int OnGUI() {
+            public void OnGUI() {
+                RecalculateStyling();
+
                 if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var selectedTabRect)) {
-                    EditorGUI.LabelField(selectedTabRect, $"Selected tab: {_currentTab + 1}");
+                    EditorGUI.LabelField(selectedTabRect, $"Selected tab: {CurrentTab + 1}");
                 }
                 if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var isAnimatingRect)) {
                     EditorGUI.LabelField(isAnimatingRect, $"Is animating: {_animator.isAnimating}");
@@ -186,13 +263,13 @@ namespace SoftKata.ExtendedEditorGUI {
                     EditorGUI.LabelField(scrollValueRect, $"Scroll pos: {_scrollGroup.ScrollPos}");
                 }
                 
-                int currentSelection = _currentTab;
+                int currentSelection = CurrentTab;
                 float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
 
                 // Tabs
-                if (LayoutEngine.GetRect(22f, LayoutEngine.AutoWidth, out var toolbarRect)) {
+                if (LayoutEngine.GetRect(_tabHeaderHeight, LayoutEngine.AutoWidth, out var toolbarRect)) {
                     // Tab control
-                    currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabStyle);
+                    currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
 
                     // Underline
                     var singleTabWidth = toolbarRect.width / _tabHeaders.Length;
@@ -204,11 +281,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Content
                 if (_animator.isAnimating) {
-                    _scrollGroup.ScrollPos = new Vector2(currentAnimationPosition, 0f);
+                    _scrollGroup.ScrollPosX = currentAnimationPosition;
                     if(LayoutEngine.BeginScrollGroup(_scrollGroup)) {
                         if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
-                                _contentDrawers[i].Invoke();
+                                _contentDrawers[i].OnGUI();
                             }
                         }
                         LayoutEngine.EndHorizontalGroup();
@@ -216,16 +293,20 @@ namespace SoftKata.ExtendedEditorGUI {
                     LayoutEngine.EndScrollGroup();
                 }
                 else {
-                    _contentDrawers[_currentTab].Invoke();
+                    _contentDrawers[CurrentTab].OnGUI();
                 }
 
                 // Change check
-                if (currentSelection != _currentTab) {
-                    _currentTab = currentSelection;
+                if (currentSelection != CurrentTab) {
+                    CurrentTab = currentSelection;
                     _animator.target = currentSelection;
                 }
-
-                return _currentTab;
+            }
+        
+            [Conditional("DYNAMIC_STYLING")]
+            private void RecalculateStyling() {
+                _tabHeaderHeight = _tabHeaderStyle.GetContentHeight(_tabHeaders[0]);
+                _underlineHeight = _tabHeaderStyle.margin.bottom;
             }
         }
     }

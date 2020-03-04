@@ -1,12 +1,14 @@
 using UnityEditor;
 using UnityEngine;
+using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 namespace SoftKata.ExtendedEditorGUI {
     public abstract class ExtendedEditorWindow : EditorWindow {
-        private Vector2 _windowScroll;
+        private LayoutEngine.ScrollGroup _rootScrollGroup;
 
         private void OnEnable(){
-            ExtendedEditorGUI.InitEditorWindow(this);
+            _rootScrollGroup = new LayoutEngine.ScrollGroup(Vector2.zero, Vector2.zero, false, GroupModifier.None, ExtendedEditorGUI.LayoutResources.ScrollGroup);
+            InitEditorWindow(this);
             Initialize();
         }
 
@@ -16,10 +18,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // ALWAYS use -1 as horizontal size for automatic layout
             // EditorWindow.position.width is 2 pixels lesser than EditorGUIUtility.currentViewWidth
-            // if (LayoutEngine.BeginScrollGroup(new Vector2(LayoutEngine.AutoWidth, position.size.y), _windowScroll)) {
+            _rootScrollGroup.ContainerSize = new Vector2(LayoutEngine.AutoWidth, position.size.y);
+            if (LayoutEngine.BeginScrollGroup(_rootScrollGroup)) {
                 IMGUI();
-            // }
-            // _windowScroll = LayoutEngine.EndScrollGroup();
+            }
+            LayoutEngine.EndScrollGroup();
         }
 
         protected abstract void Initialize();

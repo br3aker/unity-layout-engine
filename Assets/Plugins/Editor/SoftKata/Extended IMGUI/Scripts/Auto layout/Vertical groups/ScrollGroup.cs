@@ -39,7 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private readonly Color _backgroundColor;
 
-            private readonly Vector2 _containerSize;
+            public Vector2 ContainerSize;
 
             private Vector2 _containerToActualSizeRatio;
             private readonly Vector2 _horizontalScrollbarDelta;
@@ -57,15 +57,18 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly Color _scrollbarColor;
             private readonly Vector2 _verticalScrollbarDelta;
 
+            private Vector2 _scrollPos;
+            public Vector2 ScrollPos {get => _scrollPos; set => _scrollPos = value;}
+            public float ScrollPosX {get => _scrollPos.x; set => _scrollPos.x = value;}
+            public float ScrollPosY {get => _scrollPos.y; set => _scrollPos.y = value;}
 
-            internal Vector2 ScrollPos;
             private bool _disableScrollbars;
 
             public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                _containerSize = containerSize;
+                ContainerSize = containerSize;
 
                 // Scroll settings
-                ScrollPos = scrollPos;
+                _scrollPos = scrollPos;
 
                 _disableScrollbars = disableScrollbars;
 
@@ -88,15 +91,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Same can be done with content height
                 _actualContentWidth = RequestedWidth;
-                RequestedWidth = _containerSize.x;
+                RequestedWidth = ContainerSize.x;
                 
-                if (_containerSize.y > 0f && RequestedHeight > _containerSize.y) {
+                if (ContainerSize.y > 0f && RequestedHeight > ContainerSize.y) {
                     _needsVerticalScroll = true;
 
-                    _containerToActualSizeRatio.y = _containerSize.y / RequestedHeight;
-                    NextEntryPosition.y += Mathf.Lerp(0f, _containerSize.y - RequestedHeight, ScrollPos.y);
+                    _containerToActualSizeRatio.y = ContainerSize.y / RequestedHeight;
+                    NextEntryPosition.y += Mathf.Lerp(0f, ContainerSize.y - RequestedHeight, _scrollPos.y);
 
-                    RequestedHeight = _containerSize.y;
+                    RequestedHeight = ContainerSize.y;
                 }
             }
 
@@ -110,7 +113,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
 
-                    NextEntryPosition.x += Mathf.Lerp(0, allowedWidth - actualWidth, ScrollPos.x);
+                    NextEntryPosition.x += Mathf.Lerp(0, allowedWidth - actualWidth, _scrollPos.x);
                     _containerToActualSizeRatio.x = allowedWidth / actualWidth;
                 }
                 else {
@@ -127,7 +130,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 var actualContentRect = ContainerRect;
                 ContainerRect = Margin.Add(Border.Add(Padding.Add(ContainerRect)));
 
-
                 if (_needsVerticalScroll) {
                     var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
                         actualContentRect.height * MinimalScrollbarSizeMultiplier);
@@ -137,7 +139,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         current.Use();
                         GUIUtility.keyboardControl = 0;
 
-                        ScrollPos.y = Mathf.Clamp01(ScrollPos.y + current.delta.y / scrollMovementLength);
+                        _scrollPos.y = Mathf.Clamp01(_scrollPos.y + current.delta.y / scrollMovementLength);
                         return;
                     }
 
@@ -145,7 +147,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                     var verticalScrollbarRect = new Rect(
                         verticalScrollPos,
-                        actualContentRect.y + scrollMovementLength * ScrollPos.y,
+                        actualContentRect.y + scrollMovementLength * _scrollPos.y,
                         _verticalScrollBarWidth,
                         scrollbarHeight
                     );
@@ -157,10 +159,10 @@ namespace SoftKata.ExtendedEditorGUI {
                         actualContentRect.height
                     );
 
-                    ScrollPos.y =
+                    _scrollPos.y =
                         DoGenericScrollbar(
                             current,
-                            ScrollPos.y,
+                            _scrollPos.y,
                             verticalScrollbarRect, verticalScrollbarBackgroundRect,
                             _verticalScrollId,
                             true,
@@ -177,7 +179,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     var horizontalScrollPos = actualContentRect.yMax - _horizontalScrollBarHeight + Padding.bottom;
 
                     var horizontalScrollbarRect = new Rect(
-                        actualContentRect.x + scrollMovementLength * ScrollPos.x,
+                        actualContentRect.x + scrollMovementLength * _scrollPos.x,
                         horizontalScrollPos,
                         scrollBarWidth,
                         _horizontalScrollBarHeight
@@ -189,10 +191,10 @@ namespace SoftKata.ExtendedEditorGUI {
                         _horizontalScrollBarHeight
                     );
 
-                    ScrollPos.x =
+                    _scrollPos.x =
                         DoGenericScrollbar(
                             current,
-                            ScrollPos.x,
+                            _scrollPos.x,
                             horizontalScrollbarRect,
                             horizontalScrollbarBackgroundRect,
                             _horizontalScrollId,

@@ -1,31 +1,26 @@
 using System;
 using SoftKata.ExtendedEditorGUI;
 using UnityEditor;
-using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.Profiling;
+using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 namespace Development {
     public class ComplexElementsTestingWindow : ExtendedEditorWindow {
-        #region Window initialization & lifetime management
         [MenuItem("Window/Complex elements")]
         static void Init() {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
-        #endregion
 
         private bool _alwaysRepaint;
 
-        private int _selectedTab;
-        private GUIContent[] _tabHeaders;
-        private Action[] _tabContentDrawers;
-
-        private ExtendedEditorGUI.TabsElement _tabsDrawer;
+        private TabsElement _tabsDrawer;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
             }
-            else{
+            else {
                 EditorApplication.update -= Repaint;
             }
 
@@ -35,19 +30,13 @@ namespace Development {
                 new GUIContent("Tab 3")
             };
 
-            var cards = new[] {
-                new ExtendedEditorGUI.CardElement(tabHeaders[0], DrawTab),
-                new ExtendedEditorGUI.CardElement(tabHeaders[1], DrawTab),
-                new ExtendedEditorGUI.CardElement(tabHeaders[2], DrawTab)
-            };
-
-            var tabContentDrawers =  new Action[] {
-                cards[0].OnGUI,
-                cards[1].OnGUI,
-                cards[2].OnGUI
+            var cards = new IDrawableElement[] {
+                new FoldableCardElement(new GUIContent("Card for tab 1"), new DelegateElement(DrawTab), false),
+                new FoldableCardElement(new GUIContent("Card for tab 2"), new DelegateElement(DrawTab), false),
+                new CardElement(new GUIContent("Card for tab 3"), new DelegateElement(DrawTab))
             };
             
-            _tabsDrawer = new ExtendedEditorGUI.TabsElement(_selectedTab, tabHeaders, tabContentDrawers, new Color(0.06f, 0.51f, 0.75f));
+            _tabsDrawer = new TabsElement(0, tabHeaders, cards, new Color(0.06f, 0.51f, 0.75f));
         }
 
         protected override void IMGUI() {
@@ -68,7 +57,7 @@ namespace Development {
             }
 
 
-            _selectedTab = _tabsDrawer.OnGUI();
+            _tabsDrawer.OnGUI();
         }
 
         private static void DrawTab() {
