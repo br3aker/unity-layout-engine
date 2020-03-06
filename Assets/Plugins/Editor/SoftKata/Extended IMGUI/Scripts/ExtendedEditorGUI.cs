@@ -19,7 +19,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void InitEditor(Editor editor) {
             _currentViewRepaint = editor.Repaint;
         }
-
         public static void InitEditorWindow(EditorWindow editorWindow) {
             _currentViewRepaint = editorWindow.Repaint;
         }

@@ -213,7 +213,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     private void HorizontalGroupNestedVerticalGroupsTest() {
         if (LayoutEngine.BeginHorizontalGroup()) {
             for (int j = 0; j < _horizontalElementsCount; j++) {
-                if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+                if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.GetRect(16, 150);
                         if (rect.IsValid()) {
@@ -297,8 +297,8 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     }
 
     private void VerticalSeparatorGroupTest() {
-        if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
-            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+        if (LayoutEngine.BeginVerticalGroup()) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 for (int i = 0; i < _verticalElementsCount; i++) {
                     var rect = LayoutEngine.GetRect(16);
                     if (rect.IsValid()) {
@@ -323,7 +323,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         if (LayoutEngine.GetRect(16, 150, out var headerRect)) {
             folded.target = EditorGUI.Foldout(headerRect,folded.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, GroupModifier.DiscardMargin)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(folded.faded, Constraints.DiscardMargin)) {
             if (LayoutEngine.BeginTreeViewGroup()) {
                 for (int i = 0; i < 3; i++) {
                     if (LayoutEngine.GetRect(16, 150, out var rect)) {
@@ -340,7 +340,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         if (headerRect.IsValid()) {
             folded1.target = EditorGUI.Foldout(headerRect,folded1.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, GroupModifier.DiscardMargin)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(folded1.faded, Constraints.DiscardMargin)) {
             if (LayoutEngine.BeginTreeViewGroup()) {
                 for (int i = 0; i < 3; i++) {
                     var rect = LayoutEngine.GetRect(16, 150);
@@ -363,7 +363,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         if (rootHeaderRect.IsValid()) {
             _verticalFaded1.target = EditorGUI.Foldout(rootHeaderRect,_verticalFaded1.target, "Root", true);
         }
-        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, GroupModifier.DiscardMargin)) {
+        if (LayoutEngine.BeginVerticalFadeGroup(_verticalFaded1.faded, Constraints.DiscardMargin)) {
             if(LayoutEngine.BeginTreeViewGroup()) {
                 var rect = LayoutEngine.GetRect(16, 150);
                 if (rect.IsValid()) {
@@ -389,7 +389,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
         LayoutEngine.EndVerticalFadeGroup();
     }
     private void VerticalHierarchyWithSeparatorTest() {
-        if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+        if (LayoutEngine.BeginVerticalGroup()) {
             VerticalHierarchyGroupTest();
         }
         LayoutEngine.EndVerticalGroup();
@@ -463,7 +463,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             HorizontalGroupNestedVerticalGroupsTest();
             
             for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                if (LayoutEngine.BeginHorizontalGroup(Constraints.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
                         LayoutEngine.RegisterArray(_horizontalElementsCount, 16, 150);
                     }
@@ -479,7 +479,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
                 LayoutEngine.EndHorizontalGroup();
             }
 
-            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.GetRect(16, -1);
@@ -492,7 +492,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 if (LayoutEngine.BeginVerticalGroup()) {
                     for (int i = 0; i < _verticalElementsCount; i++) {
                         var rect = LayoutEngine.GetRect(16, 500);
@@ -505,9 +505,9 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-            if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+            if (LayoutEngine.BeginHorizontalGroup(Constraints.DiscardMargin)) {
                 for (int j = 0; j < 8; j++) {
-                    if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+                    if (LayoutEngine.BeginVerticalGroup()) {
                         for (int i = 0; i < 3; i++) {
                             var rect = LayoutEngine.GetRect(16, 150);
                             if (rect.IsValid()) {
@@ -525,7 +525,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             }
             LayoutEngine.EndVerticalGroup();
 
-            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 for (int i = 0; i < 16; i++) {
                     var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
@@ -535,7 +535,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
             }
             LayoutEngine.EndVerticalGroup();
             
-            if (LayoutEngine.BeginVerticalGroup(GroupModifier.DrawLeftSeparator)) {
+            if (LayoutEngine.BeginVerticalGroup()) {
                 for (int i = 0; i < 10; i++) {
                     var rect = LayoutEngine.GetRect(16, 150);
                     if (rect.IsValid()) {
@@ -553,7 +553,7 @@ public class ExtendedGuiPreviewWindow : ExtendedEditorWindow
     private void PerformanceTestingScrollGroup() {
         if (LayoutEngine.BeginScrollGroup(new Vector2(-1, 640), _hybridScrollPos)) {
             for (int i = 0; i < _verticalElementsCount; i++) {
-                if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                if (LayoutEngine.BeginHorizontalGroup(Constraints.DiscardMargin)) {
                     if (Event.current.type == EventType.Layout) {
                         LayoutEngine.RegisterArray(_horizontalElementsCount, 16, 150);
                     }

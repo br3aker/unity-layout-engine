@@ -21,7 +21,7 @@ namespace Development {
             
             if (LayoutEngine.BeginScrollGroup(new Vector2(-1, position.height - 18), _scrollPos)) {
                 for (int i = 0; i < 16; i++) {
-                    if (LayoutEngine.BeginHorizontalGroup(GroupModifier.DiscardMargin)) {
+                    if (LayoutEngine.BeginHorizontalGroup(Constraints.DiscardMargin)) {
                         if (Event.current.type == EventType.Layout) {
                             LayoutEngine.RegisterArray(16, 16, 150);
                         }

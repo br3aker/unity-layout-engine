@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
@@ -12,7 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
         // TODO: do we really need this constant for margin/border/padding?
         private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
-        // TODO: use list?
+        // TODO: use List<T>?
         private static readonly Queue<LayoutGroupBase> LayoutGroupQueue = new Queue<LayoutGroupBase>();
 
         private static LayoutGroupBase _topGroup;
@@ -38,9 +39,15 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect.IsValid();
         }
 
-        public static void RegisterArray(int count, float elementHeight, float elementWidth = AutoWidth) {
+        public static void RegisterArray(int count, float elementHeight, float elementWidth) {
             if (_topGroup != null)
                 _topGroup.RegisterArray(elementWidth, elementHeight, count);
+            else
+                GetRectFromRoot(elementHeight * count, elementWidth);
+        }
+        public static void RegisterArray(int count, float elementHeight) {
+            if (_topGroup != null)
+                _topGroup.RegisterArray(elementHeight, count);
             else
                 GetRectFromRoot(elementHeight * count);
         }

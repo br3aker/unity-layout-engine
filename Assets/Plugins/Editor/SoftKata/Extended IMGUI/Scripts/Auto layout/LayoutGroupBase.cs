@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
     [Flags]
-    public enum GroupModifier {
+    public enum Constraints : byte {
         None = 1 << 1,
         DiscardMargin = 1 << 2,
         DiscardBorder = 1 << 3,
         DiscardPadding = 1 << 4,
-        DrawLeftSeparator = 1 << 5
+        All = DiscardMargin | DiscardBorder | DiscardPadding
     }
 
     public static partial class LayoutEngine {
@@ -67,15 +67,14 @@ namespace SoftKata.ExtendedEditorGUI {
             protected readonly RectOffset Margin;
             protected readonly RectOffset Border;
             protected readonly RectOffset Padding;
+
             protected int ChildrenCount;
             public int _groupIndex;
 
-            private readonly GroupModifier _modifier;
-
             protected Rect ContainerRect;
-            protected Rect VisibleAreaRect;
+            public Rect VisibleAreaRect { get; protected set; }
 
-            protected float DistanceBetweenEntries;
+            public float SpaceBetweenEntries { get; protected set; }
 
             internal int EntriesCount;
             internal bool IsGroupValid;
@@ -86,8 +85,8 @@ namespace SoftKata.ExtendedEditorGUI {
             protected Vector2 CurrentEntryPosition;
             protected Vector2 NextEntryPosition;
 
-            protected float ConstraintsHeight;
-            protected float ConstraintsWidth;
+            public float ConstraintsHeight {get;}
+            public float ConstraintsWidth {get;}
 
             // group layouting data
             protected float RequestedHeight;
@@ -97,19 +96,17 @@ namespace SoftKata.ExtendedEditorGUI {
             protected float _visibleContentWidth;
             public float VisibleContentWidth => _visibleContentWidth;
 
-            protected LayoutGroupBase(GroupModifier modifier, GUIStyle style) {
+            protected LayoutGroupBase(Constraints modifier, GUIStyle style) {
                 _style = style;
-                
-                _modifier = modifier;
 
                 // group layout settings
-                Margin = (modifier & GroupModifier.DiscardMargin) == GroupModifier.DiscardMargin
+                Margin = (modifier & Constraints.DiscardMargin) == Constraints.DiscardMargin
                     ? ZeroRectOffset
                     : style.margin;
-                Border = (modifier & GroupModifier.DiscardBorder) == GroupModifier.DiscardBorder
+                Border = (modifier & Constraints.DiscardBorder) == Constraints.DiscardBorder
                     ? ZeroRectOffset
                     : style.border;
-                Padding = (modifier & GroupModifier.DiscardPadding) == GroupModifier.DiscardPadding
+                Padding = (modifier & Constraints.DiscardPadding) == Constraints.DiscardPadding
                     ? ZeroRectOffset
                     : style.padding;
                 
@@ -124,8 +121,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 IsGroupValid = EntriesCount > 0;
                 if (IsGroupValid) {
-                    _automaticWidth = _visibleContentWidth;
-
                     ModifyContainerSize();
 
                     VisibleAreaRect = _parent?.GetNextEntryRect(RequestedWidth, RequestedHeight) ??
@@ -148,6 +143,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                     if (IsGroupValid) {
                         IsLayout = false;
+                        _automaticWidth = _visibleContentWidth;
 
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
 
@@ -160,7 +156,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 ScrapGroups(ChildrenCount);
             }
 
-            internal Rect GetNextEntryRect(float width, float height) {
+            public Rect GetNextEntryRect(float width, float height) {
                 CurrentEntryPosition = NextEntryPosition;
 
                 if (width < 0f) width = _automaticWidth;
@@ -169,6 +165,10 @@ namespace SoftKata.ExtendedEditorGUI {
                     return GetEntryRect(CurrentEntryPosition.x, CurrentEntryPosition.y, width, height);
                 }
                 return InvalidRect;
+            }
+            public bool GetNextEntryRect(float width, float height, out Rect rect) {
+                rect = GetNextEntryRect(width, height);
+                return rect.IsValid();
             }
 
             internal GroupRenderingData GetGroupRectData(float width, float height) {
@@ -228,30 +228,32 @@ namespace SoftKata.ExtendedEditorGUI {
                 return new Rect(modifiedX, modifiedY, clippedWidth, clippedHeight);
             }
 
-            internal void RegisterArray(float elementHeight, int count) {
-                RegisterArray(_visibleContentWidth, elementHeight, count);
+            public void RegisterArray(float elementHeight, int count) {
+                RegisterArray(_automaticWidth, elementHeight, count);
             }
-
-            internal abstract void RegisterArray(float elemWidth, float elemHeight, int count);
+            public abstract void RegisterArray(float elemWidth, float elemHeight, int count);
 
             internal virtual void EndGroup(EventType eventType) {
                 EndGroupModifiersRoutine(eventType);
             }
 
             protected void EndGroupModifiersRoutine(EventType eventType) {
-                var paddedContentRect = Padding.Add(ContainerRect);
 
-                // Left separator line
-                if ((_modifier & GroupModifier.DrawLeftSeparator) == GroupModifier.DrawLeftSeparator &&
-                    eventType == EventType.Repaint) {
-                    var separatorLineRect = new Rect(paddedContentRect.x - Border.left, paddedContentRect.y,
-                        Border.left, paddedContentRect.height);
-                    EditorGUI.DrawRect(separatorLineRect, GUI.enabled ? _style.onNormal.textColor : _style.normal.textColor);
-                }
             }
 
-            public Rect GetContentRect() {
-                return Border.Add(Padding.Add(ContainerRect));
+            public virtual Rect GetContentRect(Constraints contraints = Constraints.DiscardMargin) {
+                var output = ContainerRect;
+                if((contraints & Constraints.DiscardMargin) != Constraints.DiscardMargin) {
+                    output = Margin.Add(output);
+                }
+                if ((contraints & Constraints.DiscardBorder) != Constraints.DiscardBorder) {
+                    output = Border.Add(output);
+                }
+                if ((contraints & Constraints.DiscardPadding) != Constraints.DiscardPadding) {
+                    output = Padding.Add(output);
+                }
+
+                return output;
             }
 
             public void InitializeForLayout(){

@@ -13,7 +13,7 @@ namespace SoftKata.ExtendedEditorGUI {
             currentGroup.CalculateScrollContainerSize();
             return currentGroup.IsGroupValid;
         }
-        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) {
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, Constraints modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new ScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, style));
 
@@ -21,7 +21,7 @@ namespace SoftKata.ExtendedEditorGUI {
             currentGroup.CalculateScrollContainerSize();
             return currentGroup.IsGroupValid;
         }
-        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, GroupModifier modifier = GroupModifier.None) {
+        public static bool BeginScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, Constraints modifier = Constraints.None) {
             return BeginScrollGroup(containerSize, scrollPos, disableScrollbars, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup);
         }
         
@@ -31,7 +31,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return group.ScrollPos;
         }
 
-        internal class ScrollGroup : VerticalClippingGroup {
+        public class ScrollGroup : VerticalClippingGroup {
             private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
             private float _actualContentWidth;
@@ -42,20 +42,20 @@ namespace SoftKata.ExtendedEditorGUI {
             public Vector2 ContainerSize;
 
             private Vector2 _containerToActualSizeRatio;
-            private readonly Vector2 _horizontalScrollbarDelta;
 
             // horizontal scrollbar settings
-            private readonly float _horizontalScrollBarHeight;
+            private readonly int _horizontalScrollBarHeight;
+            private readonly int _horizontalScrollBarOffset;
             private bool _needsHorizontalScroll;
             private int _horizontalScrollId;
 
             // vertical scrollbar settings
-            private readonly float _verticalScrollBarWidth;
+            private readonly int _verticalScrollBarWidth;
+            private readonly int _verticalScrollBarOffset;
             private bool _needsVerticalScroll;
             private int _verticalScrollId;
             
             private readonly Color _scrollbarColor;
-            private readonly Vector2 _verticalScrollbarDelta;
 
             private Vector2 _scrollPos;
             public Vector2 ScrollPos {get => _scrollPos; set => _scrollPos = value;}
@@ -64,7 +64,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private bool _disableScrollbars;
 
-            public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+            public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, Constraints modifier, GUIStyle style) : base(modifier, style) {
                 ContainerSize = containerSize;
 
                 // Scroll settings
@@ -74,10 +74,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 var overflow = style.overflow;
                 _verticalScrollBarWidth = overflow.right;
-                _verticalScrollbarDelta = new Vector2(_verticalScrollBarWidth - overflow.left, 0f);
-
+                _verticalScrollBarOffset = overflow.left;
                 _horizontalScrollBarHeight = overflow.bottom;
-                _horizontalScrollbarDelta = new Vector2(0f, _horizontalScrollBarHeight - overflow.top);
+                _horizontalScrollBarOffset = overflow.top;
 
                 // Colors
                 _backgroundColor = style.normal.textColor;
@@ -95,11 +94,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 if (ContainerSize.y > 0f && RequestedHeight > ContainerSize.y) {
                     _needsVerticalScroll = true;
+                    ClipSpacePadding.right = _verticalScrollBarOffset + _verticalScrollBarWidth;
 
                     _containerToActualSizeRatio.y = ContainerSize.y / RequestedHeight;
                     NextEntryPosition.y += Mathf.Lerp(0f, ContainerSize.y - RequestedHeight, _scrollPos.y);
 
                     RequestedHeight = ContainerSize.y;
+                }
+                else {
+                    _needsVerticalScroll = false;
+                    ClipSpacePadding.right = 0;
                 }
             }
 
@@ -112,12 +116,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if (actualWidth > allowedWidth) {
                     _needsHorizontalScroll = true;
+                    ClipSpacePadding.bottom = _horizontalScrollBarOffset + _horizontalScrollBarHeight;
 
                     NextEntryPosition.x += Mathf.Lerp(0, allowedWidth - actualWidth, _scrollPos.x);
                     _containerToActualSizeRatio.x = allowedWidth / actualWidth;
                 }
                 else {
                     _needsHorizontalScroll = false;
+                    ClipSpacePadding.bottom = 0;
                     ContainerRect.width = actualWidth;
                 }
             }
@@ -166,8 +172,7 @@ namespace SoftKata.ExtendedEditorGUI {
                             verticalScrollbarRect, verticalScrollbarBackgroundRect,
                             _verticalScrollId,
                             true,
-                            scrollMovementLength,
-                            _verticalScrollbarDelta
+                            scrollMovementLength
                         );
                 }
 
@@ -199,15 +204,13 @@ namespace SoftKata.ExtendedEditorGUI {
                             horizontalScrollbarBackgroundRect,
                             _horizontalScrollId,
                             false,
-                            scrollMovementLength,
-                            _horizontalScrollbarDelta
+                            scrollMovementLength
                         );
                 }
             }
 
             private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
-                Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength,
-                Vector2 renderingDelta) {
+                Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength) {
                 switch (currentEvent.type) {
                     case EventType.MouseDown:
                         var mousePos = currentEvent.mousePosition;
@@ -216,10 +219,11 @@ namespace SoftKata.ExtendedEditorGUI {
                             GUIUtility.keyboardControl = 0;
                             GUIUtility.hotControl = controlId;
 
-                            if (!scrollbarRect.Contains(mousePos))
+                            if (!scrollbarRect.Contains(mousePos)){
                                 scrollPos = verticalBar
                                     ? mousePos.y / ContainerRect.yMax
                                     : mousePos.x / ContainerRect.xMax;
+                            }
                         }
 
                         break;
@@ -237,15 +241,8 @@ namespace SoftKata.ExtendedEditorGUI {
                             var movementDelta = verticalBar ? dragDelta.y : dragDelta.x;
                             scrollPos = Mathf.Clamp01(scrollPos + movementDelta / totalMovementLength);
                         }
-
                         break;
                     case EventType.Repaint:
-                        // Check if we should render full-sized scrollbar
-                        if (!ContainerRect.Contains(currentEvent.mousePosition)) {
-                            scrollbarRect.min += renderingDelta;
-                            backgroundRect.min += renderingDelta;
-                        }
-
                         // Background
                         if (_backgroundColor.a > 0f) EditorGUI.DrawRect(backgroundRect, _backgroundColor);
 

@@ -7,13 +7,13 @@ namespace SoftKata.ExtendedEditorGUI {
         public static bool BeginTreeViewGroup(LayoutGroupBase group) {
             return BeginLayoutGroup(group);
         }
-        public static bool BeginTreeViewGroup(GroupModifier modifier, GUIStyle style) {
+        public static bool BeginTreeViewGroup(Constraints modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new TreeViewGroup(modifier, style));
 
             return RetrieveNextGroup().IsGroupValid;
         }
-        public static bool BeginTreeViewGroup(GroupModifier modifier = GroupModifier.None) {
+        public static bool BeginTreeViewGroup(Constraints modifier = Constraints.None) {
             return BeginTreeViewGroup(modifier, ExtendedEditorGUI.LayoutResources.Treeview);
         }
         
@@ -33,7 +33,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private float _entryPaddingFromConnector;
 
-            public TreeViewGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+            public TreeViewGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
                 var overflow = style.overflow;
                 _connectionLineWidth = overflow.left;
                 _connectionLineLength = overflow.left + overflow.right;
@@ -72,11 +72,11 @@ namespace SoftKata.ExtendedEditorGUI {
         public class TreeViewScope : IDisposable {
             public readonly bool Valid;
 
-            public TreeViewScope(GroupModifier modifier, GUIStyle style) {
+            public TreeViewScope(Constraints modifier, GUIStyle style) {
                 Valid = BeginTreeViewGroup(modifier, style);
             }
 
-            public TreeViewScope(GroupModifier modifier = GroupModifier.None) {
+            public TreeViewScope(Constraints modifier = Constraints.None) {
                 Valid = BeginTreeViewGroup(modifier);
             }
 

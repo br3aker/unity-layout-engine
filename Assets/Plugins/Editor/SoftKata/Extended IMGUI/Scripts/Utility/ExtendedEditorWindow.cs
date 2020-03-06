@@ -7,9 +7,13 @@ namespace SoftKata.ExtendedEditorGUI {
         private LayoutEngine.ScrollGroup _rootScrollGroup;
 
         private void OnEnable(){
-            _rootScrollGroup = new LayoutEngine.ScrollGroup(Vector2.zero, Vector2.zero, false, GroupModifier.None, ExtendedEditorGUI.LayoutResources.ScrollGroup);
+            _rootScrollGroup = new LayoutEngine.ScrollGroup(Vector2.zero, Vector2.zero, false, Constraints.None, ExtendedEditorGUI.LayoutResources.ScrollGroup);
             InitEditorWindow(this);
             Initialize();
+        }
+
+        private void OnFocus() {
+            InitEditorWindow(this);
         }
 
         public void OnGUI() {
@@ -18,11 +22,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // ALWAYS use -1 as horizontal size for automatic layout
             // EditorWindow.position.width is 2 pixels lesser than EditorGUIUtility.currentViewWidth
-            _rootScrollGroup.ContainerSize = new Vector2(LayoutEngine.AutoWidth, position.size.y);
-            if (LayoutEngine.BeginScrollGroup(_rootScrollGroup)) {
+            //_rootScrollGroup.ContainerSize = new Vector2(LayoutEngine.AutoWidth, position.size.y);
+            //if (LayoutEngine.BeginScrollGroup(_rootScrollGroup)) {
                 IMGUI();
-            }
-            LayoutEngine.EndScrollGroup();
+            //}
+            //LayoutEngine.EndScrollGroup();
         }
 
         protected abstract void Initialize();

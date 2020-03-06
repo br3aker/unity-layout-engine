@@ -49,11 +49,11 @@ namespace SoftKata.ExtendedEditorGUI {
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
         
         // GUIStyles
+        public GUIStyle CenteredGreyHeader;
         public GUIStyle InputFieldPostfix;
         public GUIStyle ButtonLeft;
         public GUIStyle ButtonMid;
         public GUIStyle ButtonRight;
-        public GUIStyle Label;
         public GUIStyle Foldout;
 
         // Textures
@@ -67,8 +67,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
-            // Classic styles
-            Label = skin.FindStyle("Label");
+            // Styles
+            CenteredGreyHeader = skin.FindStyle("Centered grey header");
             Foldout = skin.FindStyle("Foldout");
             InputFieldPostfix = skin.GetStyle("Postfix");
             ButtonLeft = skin.GetStyle("Button left");
@@ -77,7 +77,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Textures
             GreenGradient = Utility.LoadAssetAtPathAndAssert<Texture>(
-                ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/green_gradient.png");
+                ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/green_gradient.png"
+            );
             
             // Complex
             ShortcutRecorder = new KeyboardShortcutRecorder(skin);
@@ -100,12 +101,16 @@ namespace SoftKata.ExtendedEditorGUI {
         private const string LightSkinSubPath = "/Light Elements skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Elements skin.guiskin";
 
+        // Styles
         public GUIStyle CardRoot;
         public GUIStyle CardContent;
         public GUIStyle CardHeader;
         public GUIStyle CardFoldoutHeader;
 
         public GUIStyle TabHeader;
+
+        // Textures
+        public Texture EmptyListIcon;
 
         public GUIElementsResources() {
             var skinPath =
@@ -122,6 +127,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Tab element
             TabHeader = skin.GetStyle("Tab header");
+
+            // Textures
+            EmptyListIcon = Utility.LoadAssetAtPathAndAssert<Texture>(ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/empty_icon.png");
         }
     }
 }

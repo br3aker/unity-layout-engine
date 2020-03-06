@@ -4,7 +4,13 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         public class VerticalClippingGroup : VerticalGroup {
-            public VerticalClippingGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) { }
+            private Vector2 _globalSpacePosition;
+
+            protected readonly RectOffset ClipSpacePadding;
+
+            public VerticalClippingGroup(Constraints modifier, GUIStyle style) : base(modifier, style) { 
+                ClipSpacePadding = new RectOffset();
+            }
 
             internal override void RetrieveLayoutData() {
                 if (IsGroupValid) {
@@ -21,14 +27,16 @@ namespace SoftKata.ExtendedEditorGUI {
                     IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                     if (IsGroupValid) {
                         IsLayout = false;
-                        
+                        _automaticWidth = _visibleContentWidth - ClipSpacePadding.horizontal;
+
                         ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
-                        VisibleAreaRect = Utility.RectIntersection(VisibleAreaRect, ContainerRect);
+                        VisibleAreaRect = ClipSpacePadding.Remove(Utility.RectIntersection(VisibleAreaRect, ContainerRect));
 
                         NextEntryPosition += ContainerRect.position - VisibleAreaRect.position;
 
                         GUI.BeginClip(VisibleAreaRect);
-                        VisibleAreaRect.position = Vector2.zero;
+                        _globalSpacePosition = VisibleAreaRect.position;
+                        VisibleAreaRect = new Rect(Vector2.zero, VisibleAreaRect.size);
 
                         return;
                     }
@@ -40,6 +48,13 @@ namespace SoftKata.ExtendedEditorGUI {
             internal sealed override void EndGroup(EventType eventType) {
                 GUI.EndClip();
                 EndGroupModifiersRoutine(eventType);
+            }
+
+            public override Rect GetContentRect(Constraints contraints = Constraints.DiscardMargin) {
+                var output = base.GetContentRect();
+                output.position -= _globalSpacePosition;
+
+                return output;
             }
         }
     }

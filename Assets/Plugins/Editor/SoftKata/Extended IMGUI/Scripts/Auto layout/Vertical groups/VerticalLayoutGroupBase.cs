@@ -1,20 +1,21 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         public static bool BeginVerticalGroup(LayoutGroupBase group) {
             return BeginLayoutGroup(group);
         }
-        public static bool BeginVerticalGroup(GroupModifier modifier, GUIStyle style) {
+        public static bool BeginVerticalGroup(Constraints modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) {
                 return RegisterForLayout(new VerticalGroup(modifier, style));
             }
 
             return RetrieveNextGroup().IsGroupValid;
         }        
-        public static bool BeginVerticalGroup(GroupModifier modifier = GroupModifier.None) {
+        public static bool BeginVerticalGroup(Constraints modifier = Constraints.None) {
             return BeginVerticalGroup(modifier, ExtendedEditorGUI.LayoutResources.VerticalGroup);
         }
         
@@ -23,13 +24,13 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public class VerticalGroup : LayoutGroupBase {
-            public VerticalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                DistanceBetweenEntries = style.contentOffset.y;
+            public VerticalGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
+                SpaceBetweenEntries = style.contentOffset.y;
             }
 
             protected override void ModifyContainerSize() {
                 // vertical "service" height addition: margin/border/padding + space between entries
-                RequestedHeight += ConstraintsHeight + DistanceBetweenEntries * (EntriesCount - 1);
+                RequestedHeight += ConstraintsHeight + SpaceBetweenEntries * (EntriesCount - 1);
             }
             
             protected sealed override bool PrepareNextRect(float width, float height) {
@@ -43,14 +44,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if (!IsGroupValid) return false;
 
-                NextEntryPosition.y += height + DistanceBetweenEntries;
+                NextEntryPosition.y += height + SpaceBetweenEntries;
 
                 // occlusion
                 return CurrentEntryPosition.y + height >= VisibleAreaRect.y
                        && CurrentEntryPosition.y <= VisibleAreaRect.yMax;
             }
 
-            internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
+            public override void RegisterArray(float elemWidth, float elemHeight, int count) {
                 EntriesCount += count;
                 RequestedWidth = Mathf.Max(RequestedWidth, elemWidth);
                 RequestedHeight += elemHeight * count;
@@ -60,11 +61,11 @@ namespace SoftKata.ExtendedEditorGUI {
         public class VerticalScope : IDisposable {
             public readonly bool Valid;
 
-            public VerticalScope(GroupModifier modifier, GUIStyle style) {
+            public VerticalScope(Constraints modifier, GUIStyle style) {
                 Valid = BeginVerticalGroup(modifier, style);
             }
 
-            public VerticalScope(GroupModifier modifier = GroupModifier.None) {
+            public VerticalScope(Constraints modifier = Constraints.None) {
                 Valid = BeginVerticalGroup(modifier);
             }
 

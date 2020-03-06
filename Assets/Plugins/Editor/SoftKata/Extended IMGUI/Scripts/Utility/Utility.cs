@@ -57,6 +57,18 @@ namespace SoftKata.ExtendedEditorGUI {
             return (Func<T>) setterMethod.CreateDelegate(typeof(Func<T>));
         }
 
+        public static void SwapElementsInplace<T>(this IList<T> list, int firstIndex, int secondIndex) {
+            T tmp = list[firstIndex];
+            list[firstIndex] = list[secondIndex];
+            list[secondIndex] = tmp;
+        }
+
+        public static void Swap<T>(ref T a, ref T b) {
+            T tmp = a;
+            a = b;
+            b = tmp;
+        }
+
         [MenuItem("Utility/Recompile scripts")]
         public static void RequestRecompilation() {
             CompilationPipeline.RequestScriptCompilation();

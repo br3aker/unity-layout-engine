@@ -1,17 +1,18 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
         public static bool BeginHorizontalGroup(LayoutGroupBase group){
             return BeginLayoutGroup(group);
         }
-        public static bool BeginHorizontalGroup(GroupModifier modifier, GUIStyle style) {
+        public static bool BeginHorizontalGroup(Constraints modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout) return RegisterForLayout(new HorizontalGroup(modifier, style));
 
             return RetrieveNextGroup().IsGroupValid;
         }
-        public static bool BeginHorizontalGroup(GroupModifier modifier = GroupModifier.None) {
+        public static bool BeginHorizontalGroup(Constraints modifier = Constraints.None) {
             return BeginHorizontalGroup(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup);
         }
        
@@ -22,8 +23,8 @@ namespace SoftKata.ExtendedEditorGUI {
         internal class HorizontalGroup : LayoutGroupBase {
             protected int FixedWidthEntriesCount;
             
-            public HorizontalGroup(GroupModifier modifier, GUIStyle style) : base(modifier, style) {
-                DistanceBetweenEntries = style.contentOffset.x;
+            public HorizontalGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
+                SpaceBetweenEntries = style.contentOffset.x;
             }
 
             protected override void ModifyContainerSize() {
@@ -31,7 +32,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 RequestedHeight += ConstraintsHeight;
 
                 // fixed width is already calculated, adding automatic-width entries width sum
-                RequestedWidth += (EntriesCount - FixedWidthEntriesCount) * _visibleContentWidth + DistanceBetweenEntries * (EntriesCount - 1) + ConstraintsWidth;
+                RequestedWidth += (EntriesCount - FixedWidthEntriesCount) * _visibleContentWidth + SpaceBetweenEntries * (EntriesCount - 1) + ConstraintsWidth;
             }
 
             protected override bool PrepareNextRect(float width, float height) {
@@ -48,14 +49,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (!IsGroupValid) return false;
 
 
-                NextEntryPosition.x += width + DistanceBetweenEntries;
+                NextEntryPosition.x += width + SpaceBetweenEntries;
 
                 // occlusion
                 return CurrentEntryPosition.x + width >= VisibleAreaRect.x
                        && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
             }
             
-            internal override void RegisterArray(float elemWidth, float elemHeight, int count) {
+            public override void RegisterArray(float elemWidth, float elemHeight, int count) {
                 if (elemWidth > 0f) {
                     RequestedWidth += elemWidth * count;
                     FixedWidthEntriesCount += count;
@@ -68,11 +69,11 @@ namespace SoftKata.ExtendedEditorGUI {
         public class HorizontalScope : IDisposable {
             public readonly bool Valid;
 
-            public HorizontalScope(GroupModifier modifier, GUIStyle style) {
+            public HorizontalScope(Constraints modifier, GUIStyle style) {
                 Valid = BeginHorizontalGroup(modifier, style);
             }
 
-            public HorizontalScope(GroupModifier modifier = GroupModifier.None) {
+            public HorizontalScope(Constraints modifier = Constraints.None) {
                 Valid = BeginHorizontalGroup(modifier);
             }
 

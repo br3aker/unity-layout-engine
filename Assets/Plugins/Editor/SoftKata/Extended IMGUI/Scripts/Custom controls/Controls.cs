@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 
 
-// TODO [implement/control]: add underlined text control and use it in underlined foldout
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         private const int NoActiveControlId = int.MinValue;
@@ -87,7 +86,7 @@ namespace SoftKata.ExtendedEditorGUI {
             value.intValue = ToggleArray(rect, value.intValue, contents);
         }
 
-        private static T GenericAssertedField<T>(Rect rect, T value, string postfix) {
+        private static T GenericInputFieldWithPostfix<T>(Rect rect, T value, string postfix) {
             EditorGUI.BeginChangeCheck();
             var expression = EditorGUI.DelayedTextField(rect, value.ToString());
 
@@ -105,19 +104,19 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public static int IntDelayedField(Rect rect, int value, string postfix) {
-            return GenericAssertedField(rect, value, postfix);
+            return GenericInputFieldWithPostfix(rect, value, postfix);
         }
 
         public static void IntDelayedField(Rect rect, SerializedProperty value, string postfix) {
-            value.intValue = GenericAssertedField(rect, value.intValue, postfix);
+            value.intValue = GenericInputFieldWithPostfix(rect, value.intValue, postfix);
         }
 
         public static float FloatDelayedField(Rect rect, float value, string postfix) {
-            return GenericAssertedField(rect, value, postfix);
+            return GenericInputFieldWithPostfix(rect, value, postfix);
         }
 
         public static void FloatDelayedField(Rect rect, SerializedProperty value, string postfix) {
-            value.floatValue = GenericAssertedField(rect, value.floatValue, postfix);
+            value.floatValue = GenericInputFieldWithPostfix(rect, value.floatValue, postfix);
         }
 
         public static void DrawSeparator(Rect rect) {

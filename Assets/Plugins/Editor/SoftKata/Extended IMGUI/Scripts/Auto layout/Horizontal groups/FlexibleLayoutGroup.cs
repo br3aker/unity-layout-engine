@@ -12,7 +12,7 @@ namespace SoftKata.ExtendedEditorGUI {
             layoutGroup.CalculateLayout();
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginFlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) {
+        public static bool BeginFlexibleHorizontalGroup(float width, Constraints modifier, GUIStyle style) {
             if (Event.current.type == EventType.Layout)
                 return RegisterForLayout(new FlexibleHorizontalGroup(width, modifier, style));
 
@@ -20,7 +20,7 @@ namespace SoftKata.ExtendedEditorGUI {
             layoutGroup.CalculateLayout();
             return layoutGroup.IsGroupValid;
         }
-        public static bool BeginFlexibleHorizontalGroup(float width, GroupModifier modifier = GroupModifier.None) {
+        public static bool BeginFlexibleHorizontalGroup(float width, Constraints modifier = Constraints.None) {
             return BeginFlexibleHorizontalGroup(width, modifier,
                 ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup);
         }
@@ -36,7 +36,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private float _containerWidth;
             private float _fixedWidth;
 
-            public FlexibleHorizontalGroup(float width, GroupModifier modifier, GUIStyle style) : base(modifier, style) {
+            public FlexibleHorizontalGroup(float width, Constraints modifier, GUIStyle style) : base(modifier, style) {
                 _containerWidth = width;
             }
 
@@ -49,7 +49,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             
             internal void CalculateLayout() {
-                var totalFlexibleWidth = ContainerRect.width - _fixedWidth - DistanceBetweenEntries * (EntriesCount - 1);
+                var totalFlexibleWidth = ContainerRect.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
                 _automaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - FixedWidthEntriesCount), 0f);
             }
         }
@@ -57,11 +57,11 @@ namespace SoftKata.ExtendedEditorGUI {
         public class FlexibleHorizontalScope : IDisposable {
             public readonly bool Valid;
 
-            public FlexibleHorizontalScope(float width, GroupModifier modifier, GUIStyle style) {
+            public FlexibleHorizontalScope(float width, Constraints modifier, GUIStyle style) {
                 Valid = BeginFlexibleHorizontalGroup(width, modifier, style);
             }
 
-            public FlexibleHorizontalScope(float width, GroupModifier modifier = GroupModifier.None) {
+            public FlexibleHorizontalScope(float width, Constraints modifier = Constraints.None) {
                 Valid = BeginFlexibleHorizontalGroup(width, modifier);
             }
 
