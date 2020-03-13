@@ -48,6 +48,8 @@ namespace Development {
                 numbersList.Add(i);
             }
 
+            
+
             Action<int, IDrawableElement, bool> bind = (data, drawable, selected) => {
                 var stringLabel = drawable as StringLabelElement;
                 stringLabel.Content = data.ToString();
@@ -58,8 +60,11 @@ namespace Development {
                 ValidateDragData = () => {
                     return DragAndDropVisualMode.Link;
                 },
-                ExtractDragData = () => {
-                    return DragAndDrop.objectReferences.Select((obj) => obj.GetInstanceID());
+                AddDragDataToArray = (list) => {
+                    var references = DragAndDrop.objectReferences;
+                    for (int i = 0; i < references.Length; i++) {
+                        list.Add(references[i].GetInstanceID());
+                    }
                 },
 
                 // Selection

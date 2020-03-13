@@ -69,3 +69,6 @@ crashlytics-build.properties
 
 # Scenes (not used in this project)
 /[Aa]ssets/Scenes/
+
+# Do not save temporary files
+/[Aa]ssets/Development/

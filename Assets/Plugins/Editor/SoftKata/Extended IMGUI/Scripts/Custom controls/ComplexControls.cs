@@ -1,19 +1,16 @@
-#define DYNAMIC_STYLING
-
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using Debug = UnityEngine.Debug;
 
-
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.ExtendedEditorGUI
+{
     public static partial class ExtendedEditorGUI {
         public interface IDrawableElement {
             void OnGUI();
@@ -205,8 +202,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 ) {}
 
             public void OnGUI(){
-                RecalculateStyling();
-
                 if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
                     // Background
                     if(_drawRootBackground && Event.current.type == EventType.Repaint){
@@ -243,11 +238,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     _expandedAnimator.target = expanded;
                 }
                 LayoutEngine.EndVerticalGroup();
-            }
-
-            [Conditional("DYNAMIC_STYLING")]
-            private void RecalculateStyling() {
-                _headerHeight = _headerStyle.GetContentHeight(_header);
             }
         }
 
@@ -299,8 +289,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, GUIElementsResources.TabHeader) { }
 
             public void OnGUI() {
-                RecalculateStyling();
-
                 if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var selectedTabRect)) {
                     EditorGUI.LabelField(selectedTabRect, $"Selected tab: {CurrentTab + 1}");
                 }
@@ -353,63 +341,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     _animator.target = currentSelection;
                 }
             }
-
-            [Conditional("DYNAMIC_STYLING")]
-            private void RecalculateStyling() {
-                _tabHeaderHeight = _tabHeaderStyle.GetContentHeight(_tabHeaders[0]);
-                _underlineHeight = _tabHeaderStyle.margin.bottom;
-            }
-        }
-
-        // TODO: develop this
-        public class SerializedPropertyList : IList {
-            public object this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            public bool IsFixedSize => throw new NotImplementedException();
-
-            public bool IsReadOnly => throw new NotImplementedException();
-
-            public int Count => throw new NotImplementedException();
-
-            public bool IsSynchronized => throw new NotImplementedException();
-
-            public object SyncRoot => throw new NotImplementedException();
-
-            public int Add(object value) {
-                throw new NotImplementedException();
-            }
-
-            public void Clear() {
-                throw new NotImplementedException();
-            }
-
-            public bool Contains(object value) {
-                throw new NotImplementedException();
-            }
-
-            public void CopyTo(Array array, int index) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerator GetEnumerator() {
-                throw new NotImplementedException();
-            }
-
-            public int IndexOf(object value) {
-                throw new NotImplementedException();
-            }
-
-            public void Insert(int index, object value) {
-                throw new NotImplementedException();
-            }
-
-            public void Remove(object value) {
-                throw new NotImplementedException();
-            }
-
-            public void RemoveAt(int index) {
-                throw new NotImplementedException();
-            }
         }
 
         // MAYBE
@@ -447,12 +378,13 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
 
             /* Element selection */
+            public bool DeselectOnGapClick = false;
             private int _activeElementIndex = -1;
             private readonly HashSet<int> _selectedIndices = new HashSet<int>();
-            // Selection & Deselection callback
+            // Selection & Deselection callbacks
             public Action<int, IDrawableElement> OnElementSelected;
             public Action<int, IDrawableElement> OnElementDeselected;
-            // Double click callback logic
+            // Double click callback
             public Action<int, TData> OnElementDoubleClick;
             private double _lastClickTime;
             private const double DoubleClickTimingWindow = 0.25; // 1/4 second time window
@@ -461,10 +393,11 @@ namespace SoftKata.ExtendedEditorGUI {
             private bool _isDragDataValidated;
             private DragAndDropVisualMode _dragOperationType;
             public Func<DragAndDropVisualMode> ValidateDragData;
-            public Func<IEnumerable<TData>> ExtractDragData;
+            public Action<IList<TData>> AddDragDataToArray;
 
             /* Reordering */
             public Action<int, int> OnElementsReorder;
+            public Action<int, int> ReorderElements;
             private float _activeElementPosY;
             private Color _reorderableElementTint = Color.white;
             public float ReorderableElementAlpha {
@@ -499,7 +432,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) {
                 _bindDataToDrawer = bind;
-
                 _sourceList = source;
 
                 _labelStyle = _controlsResources.CenteredGreyHeader;
@@ -647,7 +579,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 switch(type) {
                     case EventType.DragUpdated:
-                        if(ValidateDragData == null || ExtractDragData == null) {
+                        if(ValidateDragData == null || AddDragDataToArray == null) {
                             type = EventType.Ignore;
                         }
                         break;
@@ -702,7 +634,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         _activeElementPosY = clickIndex * _elementHeightWithSpace;
                         MouseSelectIndex(clickIndex);
                     }
-                    else {
+                    else if(DeselectOnGapClick) {
                         DeselectEverything();
                     }
                 }
@@ -763,9 +695,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 evt.Use();
             }
             private void HandleDragPerform(Event evt) {
-                foreach(var element in ExtractDragData()) {
-                    _sourceList.Add(element);
-                }
+                AddDragDataToArray(_sourceList);
                 CalculateTotalHeight();
                 CalculateVisibleElements();
                 RebindDrawers();
@@ -834,13 +764,24 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             // Reordering
             private void HandleReorder(int activeIndex, int passiveIndex) {
-                _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
-                _activeElementIndex += activeIndex > passiveIndex ? -1 : 1;
+                var passiveDrawerIndex = GetDrawerIndexFromDataIndex(passiveIndex);
+                // abort if passive reorderable element in invisible
+                if (passiveDrawerIndex == -1) return;
 
                 var activeDrawerIndex = GetDrawerIndexFromDataIndex(activeIndex);
-                var passiveDrawerIndex = GetDrawerIndexFromDataIndex(passiveIndex);
 
-                if(activeDrawerIndex != -1 && passiveDrawerIndex != -1) {
+                // actual data reordering
+                if (ReorderElements != null) {
+                    ReorderElements(activeDrawerIndex, passiveDrawerIndex);
+                }
+                else {
+                    _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
+                }
+
+
+                _activeElementIndex += activeIndex > passiveIndex ? -1 : 1;
+
+                if (activeDrawerIndex != -1 && passiveDrawerIndex != -1) {
                     _drawers.SwapElementsInplace(activeDrawerIndex, passiveDrawerIndex);
                     _selectedIndices.Remove(activeIndex);
                     _selectedIndices.Add(passiveIndex);
@@ -983,6 +924,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 CalculateVisibleElements();
                 RebindDrawers();
             }
+        }
+
+        public class SerializedListView<TDrawer> {
+            private SerializedProperty _serializedArray;
         }
     }
 }
