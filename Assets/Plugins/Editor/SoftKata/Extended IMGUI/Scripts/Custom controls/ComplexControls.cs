@@ -8,6 +8,8 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+using Debug = UnityEngine.Debug;
+
 
 namespace SoftKata.ExtendedEditorGUI
 {
@@ -18,6 +20,10 @@ namespace SoftKata.ExtendedEditorGUI
 
         public interface IAbsoluteDrawableElement : IDrawableElement {
             void OnGUI(Vector2 position);
+        }
+
+        public interface ISelectable {
+            bool Selected { get; set; }
         }
 
         public class DelegateElement : IDrawableElement {
@@ -347,9 +353,17 @@ namespace SoftKata.ExtendedEditorGUI
         // TODO: rebind only changed data
         // TODO: drag and drop between lists
         // TODO: context scrolling
-        public class ListView<TData, TDrawer> : IDrawableElement where TDrawer : IDrawableElement, new() {
+        public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IDrawableElement, new() {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
+
+            /* Source */
+            public abstract int Count {
+                get;
+            }
+            public abstract TData this[int index] {
+                get;
+            }
 
             /* State for FSM */
             private enum State {
@@ -361,10 +375,6 @@ namespace SoftKata.ExtendedEditorGUI
 
             /* Control id */
             private int _currentControlId;
-
-            /* Source list */
-            private IList<TData> _sourceList;
-            public int Count => _sourceList.Count;
 
             /* Layout scroll group */
             private readonly LayoutEngine.ScrollGroup _contentScrollGroup;
@@ -393,11 +403,9 @@ namespace SoftKata.ExtendedEditorGUI
             private bool _isDragDataValidated;
             private DragAndDropVisualMode _dragOperationType;
             public Func<DragAndDropVisualMode> ValidateDragData;
-            public Action<IList<TData>> AddDragDataToArray;
 
             /* Reordering */
             public Action<int, int> OnElementsReorder;
-            public Action<int, int> ReorderElements;
             private float _activeElementPosY;
             private Color _reorderableElementTint = Color.white;
             public float ReorderableElementAlpha {
@@ -430,9 +438,9 @@ namespace SoftKata.ExtendedEditorGUI
             }
 
 
-            public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) {
+            /* Constructors */
+            public ListViewBase(Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) {
                 _bindDataToDrawer = bind;
-                _sourceList = source;
 
                 _labelStyle = _controlsResources.CenteredGreyHeader;
     
@@ -445,16 +453,12 @@ namespace SoftKata.ExtendedEditorGUI
                 _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;
                 _elementHeightWithSpace = _elementHeight + _spaceBetweenElements;
                 _visibleHeight = container.y - _contentScrollGroup.ConstraintsHeight;
-                Assert.AreNotApproximatelyEqual(_visibleHeight, 0f);
 
                 var maxVisibleElements = Mathf.CeilToInt(_visibleHeight / _elementHeightWithSpace);
                 var nextElementStart = maxVisibleElements * _elementHeightWithSpace;
                 var heightToNextElement = nextElementStart - _visibleHeight;
                 if(_elementHeight > heightToNextElement) {
                     maxVisibleElements += 1;
-                }
-                else {
-                    maxVisibleElements = Mathf.Min(maxVisibleElements, source.Count);
                 }
 
                 // creating new drawers
@@ -463,18 +467,15 @@ namespace SoftKata.ExtendedEditorGUI
                 }
                 
                 _canDrawInAbsoluteCoords = typeof(TDrawer).GetInterfaces().Contains(typeof(IAbsoluteDrawableElement));
-
-                CalculateTotalHeight();
-                CalculateVisibleElements();
-                RebindDrawers();
             }
-            public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IDrawableElement, bool> bind)
-                : this(source, new Vector2(-1, height), elementHeight, bind){}
+            public ListViewBase(float height, float elementHeight, Action<TData, IDrawableElement, bool> bind)
+                : this(new Vector2(-1, height), elementHeight, bind){}
 
+            /* Core method for rendering */
             public void OnGUI() {
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (LayoutEngine.BeginScrollGroup(_contentScrollGroup)) {
-                    if(_sourceList.Count != 0) {
+                    if(Count != 0) {
                         DoContent();
                     }
                     else {
@@ -496,7 +497,7 @@ namespace SoftKata.ExtendedEditorGUI
 
                 // register full array of elements
                 if (eventType == EventType.Layout) {
-                    _contentScrollGroup.RegisterArray(_elementHeight, _sourceList.Count);
+                    _contentScrollGroup.RegisterArray(_elementHeight, Count);
                     return;
                 }
 
@@ -579,7 +580,7 @@ namespace SoftKata.ExtendedEditorGUI
 
                 switch(type) {
                     case EventType.DragUpdated:
-                        if(ValidateDragData == null || AddDragDataToArray == null) {
+                        if(ValidateDragData == null) {
                             type = EventType.Ignore;
                         }
                         break;
@@ -660,7 +661,7 @@ namespace SoftKata.ExtendedEditorGUI
                         }
                     }
                     // doing down
-                    else if(_activeElementIndex < _sourceList.Count - 1) {
+                    else if(_activeElementIndex < Count - 1) {
                         var reorderBoundary = (_activeElementIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
                         if(_activeElementPosY >= reorderBoundary) {
                             HandleReorder(_activeElementIndex, _activeElementIndex + 1);
@@ -677,7 +678,7 @@ namespace SoftKata.ExtendedEditorGUI
                 else menu.AddDisabledItem(deleteSelectedContent);
                 // Delete all
                 var deleteAllContent = new GUIContent("Delete all");
-                if(_sourceList.Count != 0) menu.AddItem(deleteAllContent, false, Clear);
+                if(Count != 0) menu.AddItem(deleteAllContent, false, Clear);
                 else menu.AddDisabledItem(deleteAllContent);
 
                 menu.ShowAsContext();
@@ -695,7 +696,7 @@ namespace SoftKata.ExtendedEditorGUI
                 evt.Use();
             }
             private void HandleDragPerform(Event evt) {
-                AddDragDataToArray(_sourceList);
+                AcceptDragData();
                 CalculateTotalHeight();
                 CalculateVisibleElements();
                 RebindDrawers();
@@ -708,10 +709,11 @@ namespace SoftKata.ExtendedEditorGUI
                 _isDragDataValidated = false;
                 evt.Use();
             }
+            protected abstract void AcceptDragData();
 
             /* Helpers */
             private void CalculateTotalHeight() {
-                _totalElementsHeight = _sourceList.Count * _elementHeightWithSpace - _spaceBetweenElements;
+                _totalElementsHeight = Count * _elementHeightWithSpace - _spaceBetweenElements;
             }
             private bool PositionToDataIndex(float position, out int index) {
                 var absolutePosition = position + _visibleContentOffset;
@@ -724,7 +726,7 @@ namespace SoftKata.ExtendedEditorGUI
                 if(_totalElementsHeight <= _visibleHeight) {
                     _visibleContentOffset = 0;
                     _firstVisibleIndex = 0;
-                    _visibleElementsCount = _sourceList.Count;
+                    _visibleElementsCount = Count;
                     return;
                 }
 
@@ -739,12 +741,17 @@ namespace SoftKata.ExtendedEditorGUI
                 var lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
                 _visibleElementsCount = lastIndex - _firstVisibleIndex + 1;
             }
-            
+            public void Refresh() {
+                CalculateTotalHeight();
+                CalculateVisibleElements();
+                RebindDrawers();
+            }
+
             /* Drawers */
             private void RebindDrawers() {
                 for(int i = 0, dataIndex = _firstVisibleIndex; i < _visibleElementsCount; i++, dataIndex++) {
                     var selected = _selectedIndices.Contains(dataIndex);
-                    _bindDataToDrawer(_sourceList[dataIndex], _drawers[i], selected);
+                    _bindDataToDrawer(this[dataIndex], _drawers[i], selected);
                 }
             }
             private int GetDrawerIndexFromDataIndex(int index) {
@@ -771,12 +778,7 @@ namespace SoftKata.ExtendedEditorGUI
                 var activeDrawerIndex = GetDrawerIndexFromDataIndex(activeIndex);
 
                 // actual data reordering
-                if (ReorderElements != null) {
-                    ReorderElements(activeDrawerIndex, passiveDrawerIndex);
-                }
-                else {
-                    _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
-                }
+                SwapArrayElements(activeIndex, passiveIndex);
 
 
                 _activeElementIndex += activeIndex > passiveIndex ? -1 : 1;
@@ -791,13 +793,14 @@ namespace SoftKata.ExtendedEditorGUI
                 }
                 OnElementsReorder?.Invoke(activeIndex, passiveIndex);
             }
-            
+            protected abstract void SwapArrayElements(int activeIndex, int passiveIndex);
+
             /* Mouse clicks */
             // Element selection
             private void MouseSelectIndex(int index) {
                 var currentTime = EditorApplication.timeSinceStartup;
                 if(currentTime - _lastClickTime <= DoubleClickTimingWindow && index == _activeElementIndex) {
-                    OnElementDoubleClick?.Invoke(index, _sourceList[index]);
+                    OnElementDoubleClick?.Invoke(index, this[index]);
                 }
                 else {
                     switch(Event.current.modifiers) {
@@ -862,14 +865,13 @@ namespace SoftKata.ExtendedEditorGUI
             }
             // Context menu
             private void RemoveSelected() {
-                foreach(var index in _selectedIndices.OrderByDescending(i => i)) {
-                    _sourceList.RemoveAt(index);
-                }
+                RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
                 _selectedIndices.Clear();
                 CalculateTotalHeight();
                 CalculateVisibleElements();
                 RebindDrawers();
             }
+            protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
 
             /* Scroll to values */
             public void ScrollTo(int index) {
@@ -878,12 +880,6 @@ namespace SoftKata.ExtendedEditorGUI
                 CalculateVisibleElements();
                 RebindDrawers();
             }
-            public void ScrollToValue(TData item) {
-                int indexOfItem = _sourceList.IndexOf(item);
-                if(indexOfItem != -1) {
-                    ScrollTo(indexOfItem);
-                }
-            }
             public void ScrollToAnim(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _animator.value = _contentScrollGroup.ScrollPosY;
@@ -891,43 +887,103 @@ namespace SoftKata.ExtendedEditorGUI
 
                 _state = State.ScrollingToIndex;
             }
-            public void ScrollToValueAnim(TData item) {
-                int indexOfItem = _sourceList.IndexOf(item);
-                if(indexOfItem != -1) {
-                    ScrollToAnim(indexOfItem);
-                }
-            }
-            
+
             /* Basic IList operations */
-            public void Add(TData element) {
-                _sourceList.Add(element);
-                CalculateTotalHeight();
-                CalculateVisibleElements();
-                RebindDrawers();
-            }
-            public void Insert(int index, TData element) {
-                _sourceList.Insert(index, element);
-                CalculateTotalHeight();
-                CalculateVisibleElements();
-                RebindDrawers();
-            }
-            public void RemoveAt(int index) {
-                _sourceList.RemoveAt(index);
-                CalculateTotalHeight();
-                CalculateVisibleElements();
-                RebindDrawers();
-            }
             public void Clear() {
-                _sourceList.Clear();
+                ClearUnderlyingArray();
                 _selectedIndices.Clear();
                 CalculateTotalHeight();
                 CalculateVisibleElements();
                 RebindDrawers();
             }
+            protected abstract void ClearUnderlyingArray();
         }
 
-        public class SerializedListView<TDrawer> {
-            private SerializedProperty _serializedArray;
+        public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IDrawableElement, new() {
+            /* Source list */
+            public SerializedProperty _serializedArray;
+            public override int Count => _serializedArray.arraySize;
+            public override SerializedProperty this[int index] => _serializedArray.GetArrayElementAtIndex(index);
+
+            /* Callbacks */
+            public Action<SerializedProperty> AddDragDataToArray;
+
+            /* Constructors */
+            public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, Action<SerializedProperty, IDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+                _serializedArray = source;
+
+                Refresh();
+            }
+            public SerializedListView(SerializedProperty source, float height, float elementHeight, Action<SerializedProperty, IDrawableElement, bool> bind)
+                : this(source, new Vector2(-1, height), elementHeight, bind) { }
+
+            /* Overrides */
+            protected override void ClearUnderlyingArray() {
+                _serializedArray.ClearArray();
+                _serializedArray.serializedObject.ApplyModifiedProperties();
+            }
+            protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
+                _serializedArray.MoveArrayElement(activeIndex, passiveIndex);
+
+            }
+            protected override void AcceptDragData() {
+                AddDragDataToArray(_serializedArray);
+            }
+            protected override void RemoveSelectedIndices(IEnumerable<int> indices) {
+                foreach(var index in indices) {
+                    _serializedArray.DeleteArrayElementAtIndex(index);
+                }
+                _serializedArray.serializedObject.ApplyModifiedProperties();
+            }
+        }
+
+        public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IDrawableElement, new() {
+            /* Source list */
+            private IList<TData> _sourceList;
+            public override int Count => _sourceList.Count;
+            public override TData this[int index] => _sourceList[index];
+
+            /* Callbacks */
+            public Action<IList<TData>> AddDragDataToArray;
+
+            /* Constructors */
+            public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+                _sourceList = source;
+
+                Refresh();
+            }
+            public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IDrawableElement, bool> bind)
+                : this(source, new Vector2(-1, height), elementHeight, bind) { }
+
+            /* Overrides */
+            protected override void ClearUnderlyingArray() {
+                _sourceList.Clear();
+            }
+            protected override void RemoveSelectedIndices(IEnumerable<int> indices) {
+                foreach(var index in indices) {
+                    _sourceList.RemoveAt(index);
+                }
+            }
+            protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
+                _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
+            }
+
+            /* Basic IList operations */
+            public void RemoveAt(int index) {
+                _sourceList.RemoveAt(index);
+                Refresh();
+            }
+            public void Add(TData element) {
+                _sourceList.Add(element);
+                Refresh();
+            }
+            public void Insert(int index, TData element) {
+                _sourceList.Insert(index, element);
+                Refresh();
+            }
+            protected override void AcceptDragData() {
+                AddDragDataToArray(_sourceList);
+            }
         }
     }
 }
