@@ -50,6 +50,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 $"Group type mismatch at {nameof(EndLayoutGroup)}<{typeof(T).Name}>: Expected: {typeof(T).Name} | Got: {currentGroup.GetType().Name}");
         }
 
+        private static LayoutGroupBase RetrieveNextGroup(Rect visibleRect) {
+            _topGroup = LayoutGroupQueue.Dequeue();
+            _topGroup.RetrieveLayoutData(visibleRect);
+            return _topGroup;
+        }
+        public static bool BeginLayoutGroup(LayoutGroupBase group, Rect visibleRect) {
+            if(Event.current.type == EventType.Layout){
+                group.ResetLayout();
+                return RegisterForLayout(group);
+            }
+            return RetrieveNextGroup(visibleRect).IsGroupValid;
+        }
+
         internal struct GroupRenderingData {
             public Rect VisibleRect;
             public Rect FullContentRect;
@@ -128,7 +141,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
 
-            internal virtual void RetrieveLayoutData() {
+            internal virtual void CalculateLayoutData() {
+                _automaticWidth = _visibleContentWidth;
+                ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
+                NextEntryPosition = ContainerRect.position;
+            }
+
+            internal void RetrieveLayoutData() {
                 if (IsGroupValid) {
                     if (_parent != null) {
                         var rectData = _parent.GetGroupRectData(RequestedWidth, RequestedHeight);
@@ -139,20 +158,26 @@ namespace SoftKata.ExtendedEditorGUI {
                         VisibleAreaRect = GetRectFromRoot(RequestedHeight, RequestedWidth);
                         ContainerRect = VisibleAreaRect;
                     }
-                    
+
                     IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                     if (IsGroupValid) {
                         IsLayout = false;
-                        _automaticWidth = _visibleContentWidth;
-
-                        ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
-
-                        NextEntryPosition = ContainerRect.position;
-                        
+                        CalculateLayoutData();
                         return;
                     }
                 }
+                ScrapGroups(ChildrenCount);
+            }
 
+            internal void RetrieveLayoutData(Rect visibleRect) {
+                VisibleAreaRect = visibleRect;
+                ContainerRect = new Rect(visibleRect.position, new Vector2(RequestedWidth, RequestedHeight));
+                IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
+                if (IsGroupValid) {
+                    IsLayout = false;
+                    CalculateLayoutData();
+                    return;
+                }
                 ScrapGroups(ChildrenCount);
             }
 

@@ -172,8 +172,6 @@ namespace Development {
 
             public bool Selected {get; set;}
 
-            private readonly LayoutEngine.TreeViewGroup _group = new LayoutEngine.TreeViewGroup(Constraints.None, ExtendedEditorGUI.LayoutResources.Treeview);
-
             public void OnGUI() {
                 if(LayoutEngine.GetRect(40, -1, out var rect)) {
                     OnGUI(rect);
@@ -182,16 +180,16 @@ namespace Development {
 
             public void OnGUI(Rect rect) {
                 if(Selected) {
-                        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
-                    }
-                    else {
-                        EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
-                    }
-                    
-                    var typeRect = new Rect(rect.position, new Vector2(rect.width, 18));
-                    var valueRect = new Rect(new Vector2(typeRect.x, typeRect.y + 22), typeRect.size);
-                    EditorGUI.LabelField(typeRect, Type);
-                    EditorGUI.LabelField(valueRect, Value);
+                    EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
+                }
+                else {
+                    EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
+                }
+
+                var typeRect = new Rect(rect.position, new Vector2(rect.width, 18));
+                var valueRect = new Rect(new Vector2(typeRect.x, typeRect.y + 22), typeRect.size);
+                EditorGUI.LabelField(typeRect, Type);
+                EditorGUI.LabelField(valueRect, Value);
             }
         }
     }

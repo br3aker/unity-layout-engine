@@ -12,37 +12,17 @@ namespace SoftKata.ExtendedEditorGUI {
                 ClipSpacePadding = new RectOffset();
             }
 
-            internal override void RetrieveLayoutData() {
-                if (IsGroupValid) {
-                    if (_parent != null) {
-                        var rectData = _parent.GetGroupRectData(RequestedWidth, RequestedHeight);
-                        VisibleAreaRect = rectData.VisibleRect;
-                        ContainerRect = rectData.FullContentRect;
-                    }
-                    else {
-                        ContainerRect = GetRectFromRoot(RequestedHeight, RequestedWidth);
-                        VisibleAreaRect = ContainerRect;
-                    }
+            internal override void CalculateLayoutData() {
+                _automaticWidth = _visibleContentWidth - ClipSpacePadding.horizontal;
 
-                    IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
-                    if (IsGroupValid) {
-                        IsLayout = false;
-                        _automaticWidth = _visibleContentWidth - ClipSpacePadding.horizontal;
+                ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
+                VisibleAreaRect = ClipSpacePadding.Remove(Utility.RectIntersection(VisibleAreaRect, ContainerRect));
 
-                        ContainerRect = Padding.Remove(Border.Remove(Margin.Remove(ContainerRect)));
-                        VisibleAreaRect = ClipSpacePadding.Remove(Utility.RectIntersection(VisibleAreaRect, ContainerRect));
+                NextEntryPosition += ContainerRect.position - VisibleAreaRect.position;
 
-                        NextEntryPosition += ContainerRect.position - VisibleAreaRect.position;
-
-                        GUI.BeginClip(VisibleAreaRect);
-                        _globalSpacePosition = VisibleAreaRect.position;
-                        VisibleAreaRect = new Rect(Vector2.zero, VisibleAreaRect.size);
-
-                        return;
-                    }
-                }
-
-                ScrapGroups(ChildrenCount);
+                GUI.BeginClip(VisibleAreaRect);
+                _globalSpacePosition = VisibleAreaRect.position;
+                VisibleAreaRect = new Rect(Vector2.zero, VisibleAreaRect.size);
             }
 
             internal sealed override void EndGroup(EventType eventType) {

@@ -19,7 +19,6 @@ namespace SoftKata.ExtendedEditorGUI {
         
         public static void EndTreeView() {
             var group = EndLayoutGroup<TreeViewGroup>();
-            // TODO: move this to BeginTreeViewGroup(...) for consistency
             group.DrawMajorConnectionType();
         }
 
