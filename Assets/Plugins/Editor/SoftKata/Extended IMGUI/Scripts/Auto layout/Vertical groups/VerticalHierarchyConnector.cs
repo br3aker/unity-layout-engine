@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
             group.DrawMajorConnectionType();
         }
 
-        private class TreeViewGroup : VerticalGroup {
+        public class TreeViewGroup : VerticalGroup {
             private readonly Color _connectionLineColor;
             private readonly float _connectionLineLength;
             private readonly float _connectionLineWidth;

@@ -18,7 +18,10 @@ namespace SoftKata.ExtendedEditorGUI
             void OnGUI();
         }
         public interface IAbsoluteDrawableElement {
-            void OnGUI(Vector2 position);
+            void OnGUI(Rect position);
+        }
+        public interface ISelectable {
+            bool Selected {get; set;}
         }
         public interface IPropertyChangedNotifier {
             event Action<object> Notify;
@@ -342,7 +345,8 @@ namespace SoftKata.ExtendedEditorGUI
 
                 var color = GUI.color;
                 GUI.color *= _reorderableElementTint;
-                (_drawers[reorderableDrawerIndex] as IAbsoluteDrawableElement).OnGUI(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset));
+                (_drawers[reorderableDrawerIndex] as IAbsoluteDrawableElement)
+                    .OnGUI(new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), initialHeldRect.size));
                 GUI.color = color;
             }
             private void DoEmptyContent() {

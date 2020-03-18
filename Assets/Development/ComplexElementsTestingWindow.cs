@@ -18,7 +18,7 @@ namespace Development {
 
         private Tabs _tabsDrawer;
 
-        private ListView<int, StringLabelElement> _arrayDrawer;
+        private ListView<int, TypeStringLabelElement> _arrayDrawer;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
@@ -52,11 +52,12 @@ namespace Development {
             
 
             Action<int, IDrawableElement, bool> bind = (data, drawable, selected) => {
-                var stringLabel = drawable as StringLabelElement;
-                stringLabel.Content = data.ToString();
+                var stringLabel = drawable as TypeStringLabelElement;
+                stringLabel.Type = data.GetType().Name;
+                stringLabel.Value = data.ToString();
                 stringLabel.Selected = selected;
             };
-            _arrayDrawer = new ListView<int, StringLabelElement>(numbersList, 350, 40, bind) {
+            _arrayDrawer = new ListView<int, TypeStringLabelElement>(numbersList, 350, 40, bind) {
                 // Drag & drop
                 ValidateDragData = () => {
                     return DragAndDropVisualMode.Link;
@@ -71,12 +72,12 @@ namespace Development {
                 // Selection
                 OnElementSelected = (index, drawer) => {
                     if(drawer != null) {
-                        (drawer as StringLabelElement).Selected = true;
+                        (drawer as TypeStringLabelElement).Selected = true;
                     }
                 },
                 OnElementDeselected = (index, drawer) => {
                     if(drawer != null) {
-                        (drawer as StringLabelElement).Selected = false;
+                        (drawer as TypeStringLabelElement).Selected = false;
                     }
                 },
                 OnElementDoubleClick = (index, value) => {
@@ -159,10 +160,38 @@ namespace Development {
                     EditorGUI.LabelField(rect, Content);
                 }
             }
-            public void OnGUI(Vector2 position) {
-                var rect = new Rect(position, new Vector2(LayoutEngine.CurrentContentWidth, 40));
+            public void OnGUI(Rect rect) {
                 EditorGUI.DrawRect(rect, Color.grey);
                 EditorGUI.LabelField(rect, Content);
+            }
+        }
+
+        public class TypeStringLabelElement : IDrawableElement, IAbsoluteDrawableElement {
+            public string Type {get; set;}
+            public string Value {get; set;}
+
+            public bool Selected {get; set;}
+
+            private readonly LayoutEngine.TreeViewGroup _group = new LayoutEngine.TreeViewGroup(Constraints.None, ExtendedEditorGUI.LayoutResources.Treeview);
+
+            public void OnGUI() {
+                if(LayoutEngine.GetRect(40, -1, out var rect)) {
+                    OnGUI(rect);
+                }
+            }
+
+            public void OnGUI(Rect rect) {
+                if(Selected) {
+                        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
+                    }
+                    else {
+                        EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
+                    }
+                    
+                    var typeRect = new Rect(rect.position, new Vector2(rect.width, 18));
+                    var valueRect = new Rect(new Vector2(typeRect.x, typeRect.y + 22), typeRect.size);
+                    EditorGUI.LabelField(typeRect, Type);
+                    EditorGUI.LabelField(valueRect, Value);
             }
         }
     }
