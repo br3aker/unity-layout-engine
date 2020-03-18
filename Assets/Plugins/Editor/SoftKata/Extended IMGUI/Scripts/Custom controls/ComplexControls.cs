@@ -17,13 +17,12 @@ namespace SoftKata.ExtendedEditorGUI
         public interface IDrawableElement {
             void OnGUI();
         }
-
-        public interface IAbsoluteDrawableElement : IDrawableElement {
+        public interface IAbsoluteDrawableElement {
             void OnGUI(Vector2 position);
         }
-
-        public interface ISelectable {
-            bool Selected { get; set; }
+        public interface IPropertyChangedNotifier {
+            event Action<object> Notify;
+            void RaisePropertyChanged();
         }
 
         public class DelegateElement : IDrawableElement {
@@ -38,216 +37,7 @@ namespace SoftKata.ExtendedEditorGUI
             }
         }
 
-        // TODO: develop this
-        private class SerializedPropertyElement : IDrawableElement {
-            private GUIContent _header;
-
-            private SerializedProperty _property;
-            private SerializedProperty[] _children;
-
-            private bool _hasChildren;
-
-            private LayoutEngine.VerticalGroup _childrenContentGroup;
-
-            public SerializedPropertyElement(GUIContent header, SerializedProperty property) {
-                _property = property;
-
-                _hasChildren = property.hasChildren;
-                if(_hasChildren){
-                    var list = new List<SerializedProperty>();
-                    var it = _property.Copy();
-                    while(it.Next(false)){
-                        list.Add(it);
-                    }
-                    _children = list.ToArray();
-                }
-            }
-            public SerializedPropertyElement(SerializedProperty property)
-                : this(new GUIContent(property.displayName), property) {}
-
-            public void OnGUI() {
-
-            }
-        }
-
-        public class Card : IDrawableElement  {
-            // GUI content & drawers
-            private GUIContent _header;
-            private IDrawableElement _contentDrawer;
-
-            // Styling
-            private GUIStyle _headerStyle;
-            private float _headerHeight;
-
-            private bool _drawRootBackground;
-            private Color _backgroundColor;
-
-            private int _gradientIndex;
-
-            // Layout groups
-            private readonly LayoutEngine.LayoutGroupBase _rootGroup;
-            private readonly LayoutEngine.LayoutGroupBase _contentGroup;
-
-            public Card(GUIContent header, IDrawableElement contentDrawer, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
-                // GUI content & drawers
-                _header = header;
-                _contentDrawer = contentDrawer;
-
-                // Styling
-                _headerStyle = headerStyle;
-                _headerHeight = headerStyle.GetContentHeight(header);
-
-                var rootNormalState = rootStyle.normal;
-                _backgroundColor = rootNormalState.textColor;
-                _drawRootBackground = _backgroundColor.a > 0f;
-
-                _gradientIndex = rootStyle.fontSize;
-
-                // Layout groups
-                _rootGroup = new LayoutEngine.VerticalGroup(Constraints.None, rootStyle);
-                _contentGroup = new LayoutEngine.VerticalGroup(Constraints.None, contentStyle);
-            }
-            public Card(GUIContent header, IDrawableElement contentDrawer)
-                : this(
-                    header,
-                    contentDrawer,
-                    GUIElementsResources.CardHeader,
-                    GUIElementsResources.CardRoot,
-                    GUIElementsResources.CardContent
-                ) {}
-
-            public void OnGUI(){
-                RecalculateStyling();
-
-                if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
-                    // Background
-                    if (_drawRootBackground && Event.current.type == EventType.Repaint){
-                        EditorGUI.DrawRect(_rootGroup.GetContentRect(), _backgroundColor);
-                    }
-
-                    // Header
-                    if (LayoutEngine.GetRect(_headerHeight, LayoutEngine.AutoWidth, out var headerRect)) {
-                        EditorGUI.LabelField(headerRect, _header, _headerStyle);
-                    }
-
-                    // Separator
-                    if (LayoutEngine.GetRect(1f, LayoutEngine.AutoWidth, out var separatorRect)) {
-                        DrawSeparator(separatorRect);
-                    }
-
-                    // Content
-                    if (LayoutEngine.BeginVerticalGroup(_contentGroup)) {
-                        _contentDrawer.OnGUI();
-                    }
-                    LayoutEngine.EndVerticalGroup();
-                }
-                LayoutEngine.EndVerticalGroup();
-            }
-
-            [Conditional("DYNAMIC_STYLING")]
-            private void RecalculateStyling() {
-                _headerHeight = _headerStyle.GetContentHeight(_header);
-            }
-        }
-
-        public class FoldableCard : IDrawableElement {
-            // Logic data
-            public bool Expanded => _expandedAnimator.target;
-
-            // GUI content & drawers
-            private GUIContent _header;
-            private IDrawableElement _contentDrawer;
-
-            // Animators
-            private AnimBool _expandedAnimator;
-
-            // Styling
-            private GUIStyle _headerStyle;
-            private float _headerHeight;
-
-            private bool _drawRootBackground;
-            private Color _rootBackgroundColor;
-
-            private int _gradientIndex;
-
-            // Layout groups
-            private readonly LayoutEngine.LayoutGroupBase _rootGroup;
-            private readonly LayoutEngine.VerticalFadeGroup _expandingContentGroup;
-            private readonly LayoutEngine.LayoutGroupBase _expandedContentGroup;
-
-            public FoldableCard(GUIContent header, IDrawableElement contentDrawer, bool expanded, GUIStyle headerStyle, GUIStyle rootStyle, GUIStyle contentStyle){
-                // GUI content & drawers
-                _header = header;
-                _contentDrawer = contentDrawer;
-
-                // Animators
-                _expandedAnimator = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
-
-                // Styling
-                _headerStyle = headerStyle;
-                _headerHeight = headerStyle.GetContentHeight(header);
-
-                _rootBackgroundColor = rootStyle.normal.textColor;
-                _drawRootBackground = _rootBackgroundColor.a > 0f;
-
-                _gradientIndex = rootStyle.fontSize;
-
-                // Layout groups
-                _rootGroup = new LayoutEngine.VerticalGroup(Constraints.None, rootStyle);
-                _expandingContentGroup = new LayoutEngine.VerticalFadeGroup(_expandedAnimator.faded, Constraints.None, contentStyle);
-                _expandedContentGroup = new LayoutEngine.VerticalGroup(Constraints.None, contentStyle);
-            }
-            public FoldableCard(GUIContent header, IDrawableElement contentDrawer, bool expanded)
-                : this(
-                    header,
-                    contentDrawer,
-                    expanded,
-                    GUIElementsResources.CardFoldoutHeader,
-                    GUIElementsResources.CardRoot,
-                    GUIElementsResources.CardContent
-                ) {}
-
-            public void OnGUI(){
-                if (LayoutEngine.BeginVerticalGroup(_rootGroup)) {
-                    // Background
-                    if(_drawRootBackground && Event.current.type == EventType.Repaint){
-                        EditorGUI.DrawRect(_rootGroup.GetContentRect(), _rootBackgroundColor);
-                    }
-
-                    // Header
-                    var expanded = _expandedAnimator.target;
-                    if (LayoutEngine.GetRect(_headerHeight, LayoutEngine.AutoWidth, out var headerRect)) {
-                        expanded = EditorGUI.Foldout(headerRect, _expandedAnimator.target, _header, true, _headerStyle);
-                    }
-
-                    // Separator
-                    if (_expandedAnimator.faded > 0.01f && LayoutEngine.GetRect(1f, LayoutEngine.AutoWidth, out var separatorRect)) {
-                        DrawSeparator(separatorRect);
-                    }
-
-                    // Content
-                    if(_expandedAnimator.isAnimating){
-                        _expandingContentGroup.Faded = _expandedAnimator.faded;
-                        if (LayoutEngine.BeginVerticalFadeGroup(_expandingContentGroup)) {
-                            _contentDrawer.OnGUI();
-                        }
-                        LayoutEngine.EndVerticalFadeGroup();
-                    }
-                    else if(_expandedAnimator.target) {
-                        if(LayoutEngine.BeginVerticalGroup(_expandedContentGroup)) {
-                            _contentDrawer.OnGUI();
-                        }
-                        LayoutEngine.EndVerticalGroup();
-                    }
-
-                    // Change check
-                    _expandedAnimator.target = expanded;
-                }
-                LayoutEngine.EndVerticalGroup();
-            }
-        }
-
-        public class Tabs : IDrawableElement {
+        public class Tabs : IDrawableElement, IPropertyChangedNotifier {
             // Logic data
             public int CurrentTab {get; set;}
 
@@ -268,6 +58,9 @@ namespace SoftKata.ExtendedEditorGUI
             // Layout groups
             private readonly LayoutEngine.ScrollGroup _scrollGroup;
             private readonly LayoutEngine.LayoutGroupBase _horizontalGroup;
+
+            // Events
+            public event Action<object> Notify;
 
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
                 // Data
@@ -295,19 +88,6 @@ namespace SoftKata.ExtendedEditorGUI
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, GUIElementsResources.TabHeader) { }
 
             public void OnGUI() {
-                if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var selectedTabRect)) {
-                    EditorGUI.LabelField(selectedTabRect, $"Selected tab: {CurrentTab + 1}");
-                }
-                if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var isAnimatingRect)) {
-                    EditorGUI.LabelField(isAnimatingRect, $"Is animating: {_animator.isAnimating}");
-                }
-                if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var animValueRect)) {
-                    EditorGUI.LabelField(animValueRect, $"Animation value: {_animator.value}");
-                }
-                if (LayoutEngine.GetRect(18f, LayoutEngine.AutoWidth, out var scrollValueRect)) {
-                    EditorGUI.LabelField(scrollValueRect, $"Scroll pos: {_scrollGroup.ScrollPos}");
-                }
-
                 int currentSelection = CurrentTab;
                 float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
 
@@ -345,7 +125,13 @@ namespace SoftKata.ExtendedEditorGUI
                 if (currentSelection != CurrentTab) {
                     CurrentTab = currentSelection;
                     _animator.target = currentSelection;
+
+                    RaisePropertyChanged();
                 }
+            }
+
+            public void RaisePropertyChanged() {
+                Notify?.Invoke(this);
             }
         }
 
@@ -867,6 +653,7 @@ namespace SoftKata.ExtendedEditorGUI
             private void RemoveSelected() {
                 RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
                 _selectedIndices.Clear();
+
                 CalculateTotalHeight();
                 CalculateVisibleElements();
                 RebindDrawers();
@@ -898,9 +685,9 @@ namespace SoftKata.ExtendedEditorGUI
             }
             protected abstract void ClearUnderlyingArray();
         }
-
         public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IDrawableElement, new() {
             /* Source list */
+            public SerializedObject _serializedObject;
             public SerializedProperty _serializedArray;
             public override int Count => _serializedArray.arraySize;
             public override SerializedProperty this[int index] => _serializedArray.GetArrayElementAtIndex(index);
@@ -910,6 +697,7 @@ namespace SoftKata.ExtendedEditorGUI
 
             /* Constructors */
             public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, Action<SerializedProperty, IDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+                _serializedObject = source.serializedObject;
                 _serializedArray = source;
 
                 Refresh();
@@ -924,7 +712,7 @@ namespace SoftKata.ExtendedEditorGUI
             }
             protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
                 _serializedArray.MoveArrayElement(activeIndex, passiveIndex);
-
+                _serializedObject.ApplyModifiedProperties();
             }
             protected override void AcceptDragData() {
                 AddDragDataToArray(_serializedArray);
@@ -936,7 +724,6 @@ namespace SoftKata.ExtendedEditorGUI
                 _serializedArray.serializedObject.ApplyModifiedProperties();
             }
         }
-
         public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IDrawableElement, new() {
             /* Source list */
             private IList<TData> _sourceList;

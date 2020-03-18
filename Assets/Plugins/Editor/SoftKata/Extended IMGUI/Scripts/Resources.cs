@@ -55,9 +55,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public GUIStyle ButtonMid;
         public GUIStyle ButtonRight;
         public GUIStyle Foldout;
-
-        // Textures
-        public Texture GreenGradient;
         
         // Complex
         public KeyboardShortcutRecorder ShortcutRecorder;
@@ -74,11 +71,6 @@ namespace SoftKata.ExtendedEditorGUI {
             ButtonLeft = skin.GetStyle("Button left");
             ButtonMid = skin.GetStyle("Button mid");
             ButtonRight = skin.GetStyle("Button right");
-
-            // Textures
-            GreenGradient = Utility.LoadAssetAtPathAndAssert<Texture>(
-                ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/green_gradient.png"
-            );
             
             // Complex
             ShortcutRecorder = new KeyboardShortcutRecorder(skin);

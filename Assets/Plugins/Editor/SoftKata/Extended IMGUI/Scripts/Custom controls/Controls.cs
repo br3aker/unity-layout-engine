@@ -23,15 +23,6 @@ namespace SoftKata.ExtendedEditorGUI {
         // Element list
         public const int ShortcutRecorderWidth = 200;
 
-        public static readonly Func<int> GetLastControlId =
-            Utility.CreateStaticGetter<int>(
-                typeof(EditorGUIUtility).GetField(
-                    "s_LastControlID",
-                    BindingFlags.Static | BindingFlags.NonPublic
-                )
-            );
-
-
         private static readonly GUIContent _tempContent = new GUIContent();
 
         private static void ClearTempContent() {
@@ -117,10 +108,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public static void FloatDelayedField(Rect rect, SerializedProperty value, string postfix) {
             value.floatValue = GenericInputFieldWithPostfix(rect, value.floatValue, postfix);
-        }
-
-        public static void DrawSeparator(Rect rect) {
-            GUI.DrawTexture(rect, ControlsResources.GreenGradient);
         }
     }
 }

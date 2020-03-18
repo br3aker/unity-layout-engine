@@ -48,15 +48,6 @@ namespace SoftKata.ExtendedEditorGUI {
             for (var i = startIndex; i <= endIndex; i++) list[i] = value;
         }
 
-        public static Func<T> CreateStaticGetter<T>(FieldInfo field) {
-            var methodName = $"{field.ReflectedType.FullName}.get_{field.Name}";
-            var setterMethod = new DynamicMethod(methodName, typeof(T), null, true);
-            var gen = setterMethod.GetILGenerator();
-            gen.Emit(OpCodes.Ldsfld, field);
-            gen.Emit(OpCodes.Ret);
-            return (Func<T>) setterMethod.CreateDelegate(typeof(Func<T>));
-        }
-
         public static void SwapElementsInplace<T>(this IList<T> list, int firstIndex, int secondIndex) {
             T tmp = list[firstIndex];
             list[firstIndex] = list[secondIndex];

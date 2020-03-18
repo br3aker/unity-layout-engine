@@ -18,7 +18,7 @@ namespace Development {
 
         private Tabs _tabsDrawer;
 
-        private FoldableCard _cardWithArray;
+        private ListView<int, StringLabelElement> _arrayDrawer;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
@@ -35,12 +35,13 @@ namespace Development {
             };
 
             var cards = new IDrawableElement[] {
-                new FoldableCard(new GUIContent("Card for tab 1"), new DelegateElement(DrawTab), false),
-                new FoldableCard(new GUIContent("Card for tab 2"), new DelegateElement(DrawTab), false),
-                new Card(new GUIContent("Card for tab 3"), new DelegateElement(DrawTab))
+                new DelegateElement(DrawTab),
+                new DelegateElement(DrawTab),
+                new DelegateElement(DrawTab)
             };
             
             _tabsDrawer = new Tabs(0, tabHeaders, cards, new Color(0.06f, 0.51f, 0.75f));
+            // _tabsDrawer.Notify += (sender) => Debug.Log($"Current tab: {(sender as Tabs).CurrentTab}");
 
             var listSize = 16;
             var numbersList = new List<int>(listSize);
@@ -55,7 +56,7 @@ namespace Development {
                 stringLabel.Content = data.ToString();
                 stringLabel.Selected = selected;
             };
-            var fixedListView = new ListView<int, StringLabelElement>(numbersList, 350, 40, bind) {
+            _arrayDrawer = new ListView<int, StringLabelElement>(numbersList, 350, 40, bind) {
                 // Drag & drop
                 ValidateDragData = () => {
                     return DragAndDropVisualMode.Link;
@@ -88,16 +89,15 @@ namespace Development {
                     Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
                 }
             };
-
-            _cardWithArray = new FoldableCard(new GUIContent("Card with array contents"), fixedListView, true);
         }
 
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            //_tabsDrawer.OnGUI();
+            _tabsDrawer.OnGUI();
+
             Profiler.BeginSample("ListView test");
-            _cardWithArray.OnGUI();
+            _arrayDrawer.OnGUI();
             Profiler.EndSample();
         }
 
@@ -137,7 +137,7 @@ namespace Development {
             LayoutEngine.EndVerticalGroup();
         }
     
-        public class StringLabelElement : IAbsoluteDrawableElement {
+        public class StringLabelElement : IDrawableElement, IAbsoluteDrawableElement {
             public string Content { get; set; }
 
             public bool Selected {get; set;}
