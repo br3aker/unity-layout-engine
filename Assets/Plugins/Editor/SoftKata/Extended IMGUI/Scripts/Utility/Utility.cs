@@ -15,10 +15,6 @@ namespace SoftKata.ExtendedEditorGUI {
             return asset;
         }
 
-        [Obsolete("Use GetContentHeight(this GUIStyle style, GUIContent content) instead")]
-        public static int GetContentHeight(this GUIStyle style) {
-            return (int) Mathf.Ceil(style.CalcSize(GUIContent.none).y);
-        }
         public static int GetContentHeight(this GUIStyle style, GUIContent content) {
             return (int)Mathf.Ceil(style.CalcSize(content).y);
         }
@@ -36,7 +32,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return new Rect();
         }
-
 
         public static void ResetToDefaults<T>(this IList<T> list) {
             for (var i = 0; i < list.Count; i++) list[i] = default;
@@ -58,6 +53,13 @@ namespace SoftKata.ExtendedEditorGUI {
             T tmp = a;
             a = b;
             b = tmp;
+        }
+
+        public static void Accumulate(this RectOffset rectOffset, RectOffset source) {
+            rectOffset.left += source.left;
+            rectOffset.right += source.right;
+            rectOffset.top += source.top;
+            rectOffset.bottom += source.bottom;
         }
 
         [MenuItem("Utility/Recompile scripts")]

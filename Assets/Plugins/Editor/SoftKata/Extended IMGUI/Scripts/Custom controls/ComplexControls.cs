@@ -11,8 +11,7 @@ using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
 
 
-namespace SoftKata.ExtendedEditorGUI
-{
+namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         public interface IDrawableElement {
             void OnGUI();
@@ -22,10 +21,6 @@ namespace SoftKata.ExtendedEditorGUI
         }
         public interface ISelectable {
             bool Selected {get; set;}
-        }
-        public interface IPropertyChangedNotifier {
-            event Action<object> Notify;
-            void RaisePropertyChanged();
         }
 
         public class DelegateElement : IDrawableElement {
@@ -40,7 +35,7 @@ namespace SoftKata.ExtendedEditorGUI
             }
         }
 
-        public class Tabs : IDrawableElement, IPropertyChangedNotifier {
+        public class Tabs : IDrawableElement {
             // Logic data
             public int CurrentTab {get; set;}
 
@@ -59,11 +54,8 @@ namespace SoftKata.ExtendedEditorGUI
             private float _underlineHeight;
 
             // Layout groups
-            private readonly LayoutEngine.ScrollGroup _scrollGroup;
-            private readonly LayoutEngine.LayoutGroupBase _horizontalGroup;
-
-            // Events
-            public event Action<object> Notify;
+            private readonly ScrollGroup _scrollGroup;
+            private readonly LayoutGroup _horizontalGroup;
 
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
                 // Data
@@ -84,8 +76,8 @@ namespace SoftKata.ExtendedEditorGUI
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new LayoutEngine.ScrollGroup(new Vector2(-1, -1), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, Constraints.None, ExtendedEditorGUI.EmptyStyle);
-                _horizontalGroup = new LayoutEngine.HorizontalGroup(Constraints.None, ExtendedEditorGUI.EmptyStyle);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, -1), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, Constraints.None, ExtendedEditorGUI.EmptyStyle);
+                _horizontalGroup = new HorizontalGroup(Constraints.None, ExtendedEditorGUI.EmptyStyle);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, GUIElementsResources.TabHeader) { }
@@ -110,15 +102,19 @@ namespace SoftKata.ExtendedEditorGUI
                 // Content
                 if (_animator.isAnimating) {
                     _scrollGroup.ScrollPosX = currentAnimationPosition;
-                    if(LayoutEngine.BeginScrollGroup(_scrollGroup)) {
+                    // if(LayoutEngine.BeginScrollGroup(_scrollGroup)) {
+                    if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
+                        // if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                         if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
                         }
-                        LayoutEngine.EndHorizontalGroup();
+                        // LayoutEngine.EndHorizontalGroup();
+                        LayoutEngine.EndLayoutGroup<HorizontalGroup>();
                     }
-                    LayoutEngine.EndScrollGroup();
+                    // LayoutEngine.EndScrollGroup();
+                    LayoutEngine.EndLayoutGroup<ScrollGroup>();
                 }
                 else {
                     _contentDrawers[CurrentTab].OnGUI();
@@ -128,13 +124,7 @@ namespace SoftKata.ExtendedEditorGUI
                 if (currentSelection != CurrentTab) {
                     CurrentTab = currentSelection;
                     _animator.target = currentSelection;
-
-                    RaisePropertyChanged();
                 }
-            }
-
-            public void RaisePropertyChanged() {
-                Notify?.Invoke(this);
             }
         }
 
@@ -166,7 +156,7 @@ namespace SoftKata.ExtendedEditorGUI
             private int _currentControlId;
 
             /* Layout scroll group */
-            private readonly LayoutEngine.ScrollGroup _contentScrollGroup;
+            private readonly ScrollGroup _contentScrollGroup;
 
             /* Drawers */
             private readonly List<IDrawableElement> _drawers = new List<IDrawableElement>();
@@ -231,17 +221,18 @@ namespace SoftKata.ExtendedEditorGUI
             public ListViewBase(Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) {
                 _bindDataToDrawer = bind;
 
-                _labelStyle = _controlsResources.CenteredGreyHeader;
+                _labelStyle = ControlsResources.CenteredGreyHeader;
     
                 EmptyListLabel = new GUIContent("This list is empty");
-                _emptyListIcon = _guiElementsResources.EmptyListIcon;
+                _emptyListIcon = GUIElementsResources.EmptyListIcon;
 
-                _contentScrollGroup = new LayoutEngine.ScrollGroup(container, Vector2.zero, false, Constraints.None, LayoutResources.ScrollGroup);
+                _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false, Constraints.None, LayoutResources.ScrollGroup);
 
                 _elementHeight = elementHeight;
                 _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;
                 _elementHeightWithSpace = _elementHeight + _spaceBetweenElements;
-                _visibleHeight = container.y - _contentScrollGroup.ConstraintsHeight;
+                // TODO: this must use "pure" visible container size without TotalOffset.verical which is calculated dynamically
+                _visibleHeight = container.y;// - _contentScrollGroup.TotalOffset.vertical;
 
                 var maxVisibleElements = Mathf.CeilToInt(_visibleHeight / _elementHeightWithSpace);
                 var nextElementStart = maxVisibleElements * _elementHeightWithSpace;
@@ -263,7 +254,7 @@ namespace SoftKata.ExtendedEditorGUI
             /* Core method for rendering */
             public void OnGUI() {
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
-                if (LayoutEngine.BeginScrollGroup(_contentScrollGroup)) {
+                if (LayoutEngine.BeginLayoutGroup(_contentScrollGroup)) {
                     if(Count != 0) {
                         DoContent();
                     }
@@ -271,10 +262,10 @@ namespace SoftKata.ExtendedEditorGUI
                         DoEmptyContent();
                     }
                 }
-                var postScrollPos = LayoutEngine.EndScrollGroup().y;
+                LayoutEngine.EndLayoutGroup<ScrollGroup>();
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
-                if(!Mathf.Approximately(preScrollPos, postScrollPos) && Event.current.type != EventType.Layout) {
+                if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {
                     CalculateVisibleElements();
                     RebindDrawers();
                 }

@@ -1,53 +1,30 @@
 using System;
 using UnityEngine;
+using UnityEditor.AnimatedValues;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public static partial class LayoutEngine {
-        public static bool BeginVerticalFadeGroup(LayoutGroupBase group){
-            return BeginLayoutGroup(group);
-        }
-        public static bool BeginVerticalFadeGroup(float faded, Constraints modifier, GUIStyle style) {
-            if (Event.current.type == EventType.Layout)
-                return RegisterForLayout(new VerticalFadeGroup(faded, modifier, style));
-
-            return RetrieveNextGroup().IsGroupValid;
-        }
-        public static bool BeginVerticalFadeGroup(float faded, Constraints modifier = Constraints.None) {
-            return BeginVerticalFadeGroup(faded, modifier, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup);
-        }
-        
-        public static void EndVerticalFadeGroup() {
-            EndLayoutGroup<VerticalFadeGroup>();
-        }
-
-        public class VerticalFadeGroup : VerticalClippingGroup {
-            public float Faded {get; set;}
-
-            public VerticalFadeGroup(float faded, Constraints modifier, GUIStyle style) : base(modifier, style) {
-                Faded = faded;
-            }
-
-            protected override void ModifyContainerSize() {
-                base.ModifyContainerSize();
-
-                RequestedHeight *= Faded;
+    public class VerticalFadeGroup : VerticalGroup {
+        private AnimBool _expanded;
+        public bool Expanded {
+            get => _expanded.target;
+            set {
+                _expanded.target = value;
             }
         }
 
-        public class VerticalFadeScope : IDisposable {
-            public readonly bool Valid;
+        public VerticalFadeGroup(bool expanded, Constraints modifier, GUIStyle style) : base(modifier, style) {
+            Clip = true;
 
-            public VerticalFadeScope(float faded, Constraints modifier, GUIStyle style) {
-                Valid = BeginVerticalFadeGroup(faded, modifier, style);
-            }
+            _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
+        }
+        public VerticalFadeGroup(bool expanded = false, Constraints modifier = Constraints.None) 
+            : this(expanded, modifier, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup) {}
 
-            public VerticalFadeScope(float faded, Constraints modifier = Constraints.None) {
-                Valid = BeginVerticalFadeGroup(faded, modifier);
-            }
+        protected override void PreLayoutRequest() {
+            base.PreLayoutRequest();
 
-            public void Dispose() {
-                EndVerticalFadeGroup();
-            }
+            Clip = _expanded.isAnimating;
+            TotalHeight *= _expanded.faded;
         }
     }
 }

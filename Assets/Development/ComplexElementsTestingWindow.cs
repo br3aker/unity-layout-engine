@@ -20,6 +20,9 @@ namespace Development {
 
         private ListView<int, TypeStringLabelElement> _arrayDrawer;
 
+        private ScrollViewTest _scrollViewTest;
+        private ScrollViewExpander _scrollViewExpander;
+
         protected override void Initialize() {
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
@@ -28,28 +31,12 @@ namespace Development {
                 EditorApplication.update -= Repaint;
             }
 
-            var tabHeaders = new[] {
-                new GUIContent("Tab 1"),
-                new GUIContent("Tab 2"),
-                new GUIContent("Tab 3")
-            };
-
-            var cards = new IDrawableElement[] {
-                new DelegateElement(DrawTab),
-                new DelegateElement(DrawTab),
-                new DelegateElement(DrawTab)
-            };
-            
-            _tabsDrawer = new Tabs(0, tabHeaders, cards, new Color(0.06f, 0.51f, 0.75f));
-            // _tabsDrawer.Notify += (sender) => Debug.Log($"Current tab: {(sender as Tabs).CurrentTab}");
-
+            // List
             var listSize = 16;
             var numbersList = new List<int>(listSize);
             for(int i = 0; i < listSize; i++) {
                 numbersList.Add(i);
             }
-
-            
 
             Action<int, IDrawableElement, bool> bind = (data, drawable, selected) => {
                 var stringLabel = drawable as TypeStringLabelElement;
@@ -90,16 +77,44 @@ namespace Development {
                     Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
                 }
             };
+
+
+            // Tabs
+            var tabHeaders = new[] {
+                new GUIContent("Tab 1"),
+                new GUIContent("Tab 2"),
+                new GUIContent("Tab 3")
+            };
+            var tabsContents = new IDrawableElement[] {
+                new StringLabelElement("Tab content #1"),
+                new StringLabelElement("Tab content #2"),
+                _arrayDrawer
+            };
+            _tabsDrawer = new Tabs(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
+
+
+            // Scroll view for general groups testing
+            _scrollViewTest = new ScrollViewTest(10);
+            _scrollViewExpander = new ScrollViewExpander();
         }
 
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            _tabsDrawer.OnGUI();
+            // _tabsDrawer.OnGUI();
 
-            Profiler.BeginSample("ListView test");
-            _arrayDrawer.OnGUI();
+            // Profiler.BeginSample("ListView test");
+            // _arrayDrawer.OnGUI();
+            // Profiler.EndSample();
+
+            
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
             Profiler.EndSample();
+
+
+            // _scrollViewExpander.OnGUI();
+            // _tabsDrawer.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -120,24 +135,6 @@ namespace Development {
             }
         }
 
-        private static void DrawTab() {
-            if (LayoutEngine.BeginVerticalGroup(Constraints.DiscardBorder | Constraints.DiscardMargin | Constraints.DiscardPadding)) {
-                if (LayoutEngine.GetRect(18f, -1, out var contentRect2)) {
-                    EditorGUI.ToggleLeft(contentRect2, "Sub-header", true);
-                }
-
-                if (LayoutEngine.BeginTreeViewGroup()) {
-                    for (int i = 0; i < 3; i++) {
-                        if (LayoutEngine.GetRect(18f, -1, out var hierarchyRect)) {
-                            EditorGUI.LabelField(hierarchyRect, $"Very long label with info #{i}");
-                        }
-                    }
-                }
-                LayoutEngine.EndTreeView();
-            }
-            LayoutEngine.EndVerticalGroup();
-        }
-    
         public class StringLabelElement : IDrawableElement, IAbsoluteDrawableElement {
             public string Content { get; set; }
 
@@ -188,8 +185,107 @@ namespace Development {
 
                 var typeRect = new Rect(rect.position, new Vector2(rect.width, 18));
                 var valueRect = new Rect(new Vector2(typeRect.x, typeRect.y + 22), typeRect.size);
-                EditorGUI.LabelField(typeRect, Type);
+                EditorGUI.LabelField(typeRect, $"Current: {rect.width} | Visible {EditorGUIUtility.currentViewWidth}");
                 EditorGUI.LabelField(valueRect, Value);
+            }
+        }
+
+        public class ScrollViewTest : IDrawableElement {
+            private ScrollGroup _scrollGroup;
+            private LayoutGroup[] _nestedHorizontalGroups;
+            private VerticalFadeGroup _fadeGroup;
+            private LayoutGroup _fadeNestedVerticalGroup;
+
+
+            public ScrollViewTest(int nestedGroupCount) {
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
+
+                _nestedHorizontalGroups = new LayoutGroup[nestedGroupCount];
+                for(int i = 0; i < nestedGroupCount; i++) {
+                    _nestedHorizontalGroups[i] = new HorizontalGroup();
+                }
+
+                _fadeGroup = new VerticalFadeGroup();
+                _fadeNestedVerticalGroup = new VerticalGroup();
+            }
+
+            public void OnGUI() {
+                if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
+                    // first chunk
+                    for(int i = 0; i < _nestedHorizontalGroups.Length / 2; i++) {
+                        if(LayoutEngine.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
+                            for(int j = 0; j < 1; j++) {
+                                if(LayoutEngine.GetRect(30f, -1, out var rect)) {
+                                    EditorGUI.DrawRect(rect, Color.black);
+                                    EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
+                                }
+                            }
+                        }
+                        LayoutEngine.EndLayoutGroup<HorizontalGroup>();
+                    }
+
+                    // fade group in the center
+                    if(LayoutEngine.GetRect(30f, -1, out var foldoutRect)) {
+                        EditorGUI.DrawRect(foldoutRect, Color.green);
+                        _fadeGroup.Expanded = EditorGUI.Foldout(foldoutRect, _fadeGroup.Expanded, $"Expanded: [{_fadeGroup.Expanded}] | W: {foldoutRect.width}");
+                    }
+                    if(LayoutEngine.BeginLayoutGroup(_fadeGroup)) {
+                        if(LayoutEngine.BeginLayoutGroup(_fadeNestedVerticalGroup)) {
+                            for(int j = 0; j < 3; j++) {
+                                if(LayoutEngine.GetRect(45f, -1, out var rect)) {
+                                    EditorGUI.DrawRect(rect, Color.red);
+                                    EditorGUI.LabelField(rect, $"W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
+                                }
+                            }
+                        }
+                        LayoutEngine.EndLayoutGroup<VerticalGroup>();
+
+                        for(int j = 0; j < 3; j++) {
+                            if(LayoutEngine.GetRect(45f, -1, out var rect)) {
+                                EditorGUI.DrawRect(rect, Color.red);
+                                EditorGUI.LabelField(rect, "Some long text here");
+                            }
+                        }
+                    }
+                    LayoutEngine.EndLayoutGroup<VerticalFadeGroup>();
+
+                    // second chunk
+                    for(int i = _nestedHorizontalGroups.Length / 2; i < _nestedHorizontalGroups.Length; i++) {
+                        if(LayoutEngine.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
+                            for(int j = 0; j < 1; j++) {
+                                if(LayoutEngine.GetRect(30f, -1, out var rect)) {
+                                    EditorGUI.DrawRect(rect, Color.black);
+                                    EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
+                                }
+                            }
+                        }
+                        LayoutEngine.EndLayoutGroup<HorizontalGroup>();
+                    }
+                }
+                LayoutEngine.EndLayoutGroup<ScrollGroup>();
+            }
+        }
+
+        public class ScrollViewExpander : IDrawableElement {
+            private ScrollGroup _scrollGroup;
+            private Vector2Int _contentSize = new Vector2Int(200, 400);
+
+
+            public ScrollViewExpander() {
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 400), Vector2.zero);
+            }
+
+            public void OnGUI() {
+                _contentSize.x = EditorGUI.IntField(LayoutEngine.GetRect(16), "X size", _contentSize.x);
+                _contentSize.y = EditorGUI.IntField(LayoutEngine.GetRect(16), "Y size", _contentSize.y);
+
+                if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
+                    if(LayoutEngine.GetRect(_contentSize.y, _contentSize.x, out var rect)) {
+                        EditorGUI.DrawRect(rect, Color.red);
+                        EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
+                    }
+                }
+                LayoutEngine.EndLayoutGroup<ScrollGroup>();
             }
         }
     }

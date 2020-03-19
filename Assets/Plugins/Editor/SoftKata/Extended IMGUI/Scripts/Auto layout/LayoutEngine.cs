@@ -1,64 +1,66 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class LayoutEngine {
-        //  TODO: move to ExtendedEditorGUI class?
         public const float AutoWidth = -1f;
 
-        private static readonly Rect InvalidRect = new Rect(float.MaxValue, float.MaxValue, -1, -1);
+        internal static LayoutGroup _currentGroup;
 
-        // TODO: do we really need this constant for margin/border/padding?
-        private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
+        public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? EditorGUIUtility.currentViewWidth;
 
-        // TODO: use List<T>?
-        private static readonly Queue<LayoutGroupBase> LayoutGroupQueue = new Queue<LayoutGroupBase>();
-
-        private static LayoutGroupBase _topGroup;
-        public static LayoutGroupBase CurrentGroup => _topGroup;
-        public static float CurrentContentWidth => _topGroup?.VisibleContentWidth ?? EditorGUIUtility.currentViewWidth;
-
-        public static int GetGroupQueueSize() {
-            return LayoutGroupQueue.Count;
-        }
-
-        private static Rect GetRectFromRoot(float height, float width = AutoWidth) {
+        // Native Unity layout system get rect call
+        internal static Rect GetRectFromUnityLayout(float height, float width = AutoWidth) {
             var rect = GUILayoutUtility.GetRect(width, height);
             rect.width = width > 0f ? width : EditorGUIUtility.currentViewWidth;
             return rect;
         }
 
-        public static Rect GetRect(float height, float width = AutoWidth) {
-            return _topGroup?.GetNextEntryRect(width, height) ?? GetRectFromRoot(height, width);
+        // Layout group management
+        public static bool BeginLayoutGroup(LayoutGroup group) {
+            if(Event.current.type == EventType.Layout) {
+                group.ResetLayout();
+                group.BeginLayout(_currentGroup);
+                _currentGroup = group;
+                return true;
+            }
+            group.BeginNonLayout();
+            _currentGroup = group;
+            return group.IsGroupValid;
+        }
+        public static void EndLayoutGroup<T>() {
+            var group = _currentGroup;
+            if(Event.current.type == EventType.Layout) {
+                group.EndLayout();
+            }
+            else if(group.IsGroupValid) {
+                group.EndNonLayout();
+            }
+            _currentGroup = group.Parent;
         }
 
+        // Get rect from layout system
+        public static Rect GetRect(float height, float width = AutoWidth) {
+            return _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
+        }
         public static bool GetRect(float height, float width, out Rect rect) {
-            rect = _topGroup?.GetNextEntryRect(width, height) ?? GetRectFromRoot(height, width);
+            rect = _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
             return rect.IsValid();
         }
 
+        // Register array of equal elements in one batch
         public static void RegisterArray(int count, float elementHeight, float elementWidth) {
-            if (_topGroup != null)
-                _topGroup.RegisterArray(elementWidth, elementHeight, count);
+            if (_currentGroup != null)
+                _currentGroup.RegisterArray(elementWidth, elementHeight, count);
             else
-                GetRectFromRoot(elementHeight * count, elementWidth);
+                GetRectFromUnityLayout(elementHeight * count, elementWidth);
         }
         public static void RegisterArray(int count, float elementHeight) {
-            if (_topGroup != null)
-                _topGroup.RegisterArray(elementHeight, count);
+            if (_currentGroup != null)
+                _currentGroup.RegisterArray(elementHeight, count);
             else
-                GetRectFromRoot(elementHeight * count);
-        }
-
-        private static void ScrapGroups(int count) {
-            for (; count > 0; count--) LayoutGroupQueue.Dequeue();
-        }
-
-        public static void ResetEngine() {
-            _topGroup = null;
-            LayoutGroupQueue.Clear();
+                GetRectFromUnityLayout(elementHeight * count);
         }
     }
 }
