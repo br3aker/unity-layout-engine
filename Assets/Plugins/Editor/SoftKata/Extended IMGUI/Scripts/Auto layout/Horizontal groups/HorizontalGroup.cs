@@ -13,18 +13,13 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup) {}
 
         protected override void PreLayoutRequest() {
-            // vertical "service" height addition: margin/border/padding + space between entries
             TotalHeight += TotalOffset.vertical;
-            TotalWidth += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1) + (EntriesCount - FixedWidthEntriesCount) * AutomaticWidth;
+            TotalWidth += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override bool PrepareNextRect(float width, float height) {
             if (IsLayoutEvent) {
-                if (width > 0f) {
-                    TotalWidth += width;
-                    // TODO: don't count fixed entries - use _visibleContentWidth instead
-                    FixedWidthEntriesCount++;
-                }
+                TotalWidth += width;
                 EntriesCount++;
                 TotalHeight = Mathf.Max(TotalHeight, height);
                 return false;

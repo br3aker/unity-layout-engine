@@ -25,6 +25,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
         private static readonly Rect InvalidRect = new Rect(float.MinValue, 0, -1, -1);
+        [Obsolete]
         private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
         internal LayoutGroup Parent { get; private set; }
@@ -52,6 +53,8 @@ namespace SoftKata.ExtendedEditorGUI {
         // group layouting data
         protected float TotalHeight;
         protected float TotalWidth = -1;
+        protected Vector2 ContentPosition;
+        protected Rect ContentRect;
 
         // Automatic width for entries
         public float AutomaticWidth {get; private set;}
@@ -85,19 +88,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // Non-layout
-        protected void CalculateLayoutData() {
-            // Default calculations
-            ContainerRect = TotalOffset.Remove(ContainerRect);
-            NextEntryPosition += ContainerRect.position;
-
-            // Clipspace extra calculations
-            if(Clip) {
-                GUI.BeginClip(ContainerRect);
-                NextEntryPosition -= ContainerRect.position;
-                _clipGlobalPosition = ContainerRect.position;
-                VisibleAreaRect = new Rect(VisibleAreaRect.position - ContainerRect.position, VisibleAreaRect.size);
-            }
-        }
         internal void RetrieveLayoutData() {
             if (IsGroupValid) {
                 if (Parent != null) {
@@ -106,14 +96,31 @@ namespace SoftKata.ExtendedEditorGUI {
                     ContainerRect = rectData.FullContentRect;
                 }
                 else {
-                    VisibleAreaRect = LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth);
-                    ContainerRect = VisibleAreaRect;
+                    ContainerRect = VisibleAreaRect = LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth);
                 }
 
                 IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
                 if (IsGroupValid) {
                     IsLayoutEvent = false;
-                    CalculateLayoutData();
+
+                    // Default calculations
+                    ContainerRect = TotalOffset.Remove(ContainerRect);
+                    NextEntryPosition += ContainerRect.position;
+                    ContentPosition = NextEntryPosition;
+
+                    var containerRectProxy = TotalOffset.Add(ContainerRect);
+                    ContentRect = new Rect(containerRectProxy.position, new Vector2(TotalWidth, TotalHeight));
+                    EditorGUI.DrawRect(ContentRect, new Color(0, 1, 0, 0.35f));
+                    ContentRect = TotalOffset.Remove(ContentRect);
+                    EditorGUI.DrawRect(ContentRect, new Color(0, 0, 1, 0.35f));
+
+                    // Clipspace extra calculations
+                    if(Clip) {
+                        GUI.BeginClip(ContainerRect);
+                        NextEntryPosition -= ContainerRect.position;
+                        _clipGlobalPosition = ContainerRect.position;
+                        VisibleAreaRect = new Rect(VisibleAreaRect.position - ContainerRect.position, VisibleAreaRect.size);
+                    }
                     return;
                 }
             }
