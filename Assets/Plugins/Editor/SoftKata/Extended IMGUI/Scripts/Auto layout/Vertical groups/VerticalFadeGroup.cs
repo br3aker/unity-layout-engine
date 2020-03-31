@@ -22,7 +22,7 @@ namespace SoftKata.ExtendedEditorGUI {
             base.PreLayoutRequest();
 
             Clip = _expanded.isAnimating;
-            TotalHeight *= _expanded.faded;
+            ContentRect.height *= _expanded.faded;
         }
     }
 }

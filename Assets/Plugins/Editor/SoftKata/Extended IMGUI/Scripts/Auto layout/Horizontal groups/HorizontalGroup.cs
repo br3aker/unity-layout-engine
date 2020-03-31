@@ -13,15 +13,15 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup) {}
 
         protected override void PreLayoutRequest() {
-            TotalHeight += TotalOffset.vertical;
-            TotalWidth += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
+            ContentRect.height += TotalOffset.vertical;
+            ContentRect.width += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override bool PrepareNextRect(float width, float height) {
             if (IsLayoutEvent) {
-                TotalWidth += width;
+                ContentRect.width += width;
                 EntriesCount++;
-                TotalHeight = Mathf.Max(TotalHeight, height);
+                ContentRect.height = Mathf.Max(ContentRect.height, height);
                 return false;
             }
 
@@ -37,11 +37,11 @@ namespace SoftKata.ExtendedEditorGUI {
         
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0f) {
-                TotalWidth += elemWidth * count;
+                ContentRect.width += elemWidth * count;
                 FixedWidthEntriesCount += count;
             }
             EntriesCount += count; ;
-            TotalHeight = Mathf.Max(TotalHeight, elemHeight);
+            ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
         }
     }
 }

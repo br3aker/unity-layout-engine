@@ -39,10 +39,6 @@ namespace SoftKata.ExtendedEditorGUI {
         // entries layout data
         protected Vector2 NextEntryPosition;
 
-        // group layouting data
-        protected float TotalHeight;
-        protected float TotalWidth = -1;
-
         protected Rect ContentRect;
         protected Rect ContainerRect;
 
@@ -72,8 +68,8 @@ namespace SoftKata.ExtendedEditorGUI {
             if (IsGroupValid) {
                 PreLayoutRequest();
 
-                var iDontCareRect = Parent?.GetNextEntryRect(TotalWidth, TotalHeight) 
-                                        ?? LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth);
+                var iDontCareRect = Parent?.GetNextEntryRect(ContentRect.width, ContentRect.height) 
+                                        ?? LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
             }
         }
 
@@ -82,15 +78,16 @@ namespace SoftKata.ExtendedEditorGUI {
             if (IsGroupValid) {
                 if (Parent != null) {
                     // Content & container rects
-                    ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, new Vector2(TotalWidth, TotalHeight)));
-                    ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(TotalWidth, TotalHeight), ContentRect);
+                    var requestedSize = ContentRect.size;
+                    ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, requestedSize));
+                    ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(requestedSize.x, requestedSize.y), ContentRect);
 
                     // Content offset
                     NextEntryPosition += ContentRect.position;
                 }
                 else {
                     // Content & container rects
-                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
+                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
                     ContentRect = ContainerRect;
 
                     // Content offset
@@ -173,8 +170,8 @@ namespace SoftKata.ExtendedEditorGUI {
             IsLayoutEvent = true;
 
             // _automaticWidth = -1;
-            TotalWidth = -1;
-            TotalHeight = 0;
+            ContentRect.width = -1;
+            ContentRect.height = 0;
 
             NextEntryPosition = Vector2.zero;
 
