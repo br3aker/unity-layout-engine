@@ -33,11 +33,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
             if (!IsGroupValid) return false;
 
+            var currentEntryPositionY = NextEntryPosition.y;
             NextEntryPosition.y += height + SpaceBetweenEntries;
             
             // occlusion
-            return CurrentEntryPosition.y + height >= _ContainerRect.y
-                    && CurrentEntryPosition.y <= _ContainerRect.yMax;
+            return currentEntryPositionY + height >= _ContainerRect.y
+                    && currentEntryPositionY <= _ContainerRect.yMax;
         }
 
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {

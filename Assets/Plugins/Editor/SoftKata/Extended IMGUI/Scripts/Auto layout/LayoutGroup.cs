@@ -48,6 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
         protected bool IsLayoutEvent = true;
 
         // entries layout data
+        [Obsolete]
         protected Vector2 CurrentEntryPosition;
         protected Vector2 NextEntryPosition;
 
@@ -136,12 +137,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Getting rects
         public Rect GetNextEntryRect(float width, float height) {
-            CurrentEntryPosition = NextEntryPosition;
+            var currentEntryPosition = NextEntryPosition;
 
             if (width < 0f) width = AutomaticWidth;
             
             if (PrepareNextRect(width, height)) {
-                return new Rect(CurrentEntryPosition, new Vector2(width, height));
+                return new Rect(currentEntryPosition, new Vector2(width, height));
             }
             return InvalidRect;
         }
@@ -151,8 +152,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         private Rect GetVisibleContentRect(float width, float height) {
-            CurrentEntryPosition = NextEntryPosition;
-
             if (width <= 0f) width = AutomaticWidth;
 
             if (PrepareNextRect(width, height)) {
