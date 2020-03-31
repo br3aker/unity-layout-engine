@@ -33,8 +33,8 @@ namespace SoftKata.ExtendedEditorGUI {
         // offset settings - Padding/Border/Margin
         public RectOffset TotalOffset {get;}
 
-        protected Rect ContainerRect;
-        public Rect VisibleAreaRect { get; protected set; }
+        // protected Rect ContainerRect;
+        // public Rect VisibleAreaRect { get; protected set; }
 
         public bool Clip {get; set;}
         private Vector2 _clipGlobalPosition;
@@ -54,7 +54,9 @@ namespace SoftKata.ExtendedEditorGUI {
         protected float TotalHeight;
         protected float TotalWidth = -1;
         protected Vector2 ContentPosition;
-        protected Rect ContentRect;
+
+        protected Rect _ContentRect;
+        protected Rect _ContainerRect;
 
         // Automatic width for entries
         public float AutomaticWidth {get; private set;}
@@ -82,7 +84,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (IsGroupValid) {
                 PreLayoutRequest();
 
-                VisibleAreaRect = Parent?.GetNextEntryRect(TotalWidth, TotalHeight) 
+                var iDontCareRect = Parent?.GetNextEntryRect(TotalWidth, TotalHeight) 
                                         ?? LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth);
             }
         }
@@ -91,37 +93,32 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void RetrieveLayoutData() {
             if (IsGroupValid) {
                 if (Parent != null) {
-                    var rectData = Parent.GetGroupRectData(TotalWidth, TotalHeight);
-                    VisibleAreaRect = rectData.VisibleRect;
-                    ContainerRect = rectData.FullContentRect;
+                    _ContainerRect = Parent.GetVisibleContentRect(TotalWidth, TotalHeight, out var offset);
+                    _ContentRect = TotalOffset.Remove(new Rect(NextEntryPosition += offset, new Vector2(TotalWidth, TotalHeight)));
                 }
                 else {
-                    ContainerRect = VisibleAreaRect = LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth);
+                    _ContentRect = _ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
                 }
 
-                IsGroupValid = VisibleAreaRect.IsValid() && Event.current.type != EventType.Used;
+                IsGroupValid = _ContainerRect.IsValid() && Event.current.type != EventType.Used;
                 if (IsGroupValid) {
+                    // Default calculations
                     IsLayoutEvent = false;
 
-                    // Default calculations
-                    ContainerRect = TotalOffset.Remove(ContainerRect);
-                    NextEntryPosition += ContainerRect.position;
-                    ContentPosition = NextEntryPosition;
-
-                    var containerRectProxy = TotalOffset.Add(ContainerRect);
-                    ContentRect = new Rect(containerRectProxy.position, new Vector2(TotalWidth, TotalHeight));
-                    EditorGUI.DrawRect(ContentRect, new Color(0, 1, 0, 0.35f));
-                    ContentRect = TotalOffset.Remove(ContentRect);
-                    EditorGUI.DrawRect(ContentRect, new Color(0, 0, 1, 0.35f));
+                    // Visualization
+                    EditorGUI.DrawRect(TotalOffset.Add(_ContentRect), new Color(0, 1, 0, 0.25f));
+                    EditorGUI.DrawRect(_ContentRect, new Color(0, 0, 1, 0.25f));
 
                     // Clipspace extra calculations
                     if(Clip) {
-                        GUI.BeginClip(ContainerRect);
-                        NextEntryPosition -= ContainerRect.position;
-                        _clipGlobalPosition = ContainerRect.position;
-                        VisibleAreaRect = new Rect(VisibleAreaRect.position - ContainerRect.position, VisibleAreaRect.size);
+                        GUI.BeginClip(_ContainerRect);
+                        _ContentRect.position -= _ContainerRect.position;
+                        _clipGlobalPosition = _ContainerRect.position;
+                        _ContainerRect.position = Vector2.zero;
                     }
-                    return;
+                    else {
+                        NextEntryPosition += new Vector2(TotalOffset.left, TotalOffset.top);
+                    }
                 }
             }
         }
@@ -142,19 +139,19 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect.IsValid();
         }
 
-        private GroupRenderingData GetGroupRectData(float width, float height) {
+        private Rect GetVisibleContentRect(float width, float height, out Vector2 originOffset) {
             CurrentEntryPosition = NextEntryPosition;
+            originOffset = CurrentEntryPosition;
 
             if (width <= 0f) width = AutomaticWidth;
 
-            var visibleRect = InvalidRect;
-            if (PrepareNextRect(width, height))
-                visibleRect = Utility.RectIntersection(new Rect(CurrentEntryPosition, new Vector2(width, height)), VisibleAreaRect);
+            // Debug.Log($"[{GetType().Name}] GetVisibleContentRect | w: {width} h: {height}");
+            if (PrepareNextRect(width, height)) {
+                var visibleGroupRect = Utility.RectIntersection(new Rect(CurrentEntryPosition, new Vector2(width, height)), _ContainerRect);
+                return visibleGroupRect;
+            }
 
-            return new GroupRenderingData {
-                VisibleRect = visibleRect,
-                FullContentRect = new Rect(CurrentEntryPosition, new Vector2(width, height))
-            };
+            return InvalidRect;
         }
 
         protected abstract bool PrepareNextRect(float width, float height);
@@ -164,8 +161,8 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public abstract void RegisterArray(float elemWidth, float elemHeight, int count);
 
-        public virtual Rect GetContentRect(bool fullRect = false) {
-            var output = ContainerRect;
+        public Rect GetContentRect(bool fullRect = false) {
+            var output = _ContainerRect;
 
             if(fullRect) {
                 output = TotalOffset.Add(output);
@@ -204,6 +201,8 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
+                _ContainerRect.position = _clipGlobalPosition;
+                _ContentRect.position = _clipGlobalPosition;
             }
             EndNonLayoutRoutine();
         }

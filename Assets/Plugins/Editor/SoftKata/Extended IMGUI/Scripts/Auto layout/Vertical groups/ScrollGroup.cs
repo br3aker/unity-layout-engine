@@ -117,8 +117,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
                         if (!scrollbarRect.Contains(mousePos)){
                             scrollPos = verticalBar
-                                ? mousePos.y / ContainerRect.yMax
-                                : mousePos.x / ContainerRect.xMax;
+                                ? mousePos.y / _ContentRect.yMax
+                                : mousePos.x / _ContentRect.xMax;
                         }
                     }
 
@@ -162,14 +162,14 @@ namespace SoftKata.ExtendedEditorGUI {
             var current = Event.current;
             var eventType = current.type;
 
-            var actualContentRect = ContainerRect;
+            var actualContentRect = _ContentRect;
 
             if (_needsVerticalScroll) {
                 var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
                     actualContentRect.height * MinimalScrollbarSizeMultiplier);
                 var scrollMovementLength = actualContentRect.height - scrollbarHeight;
 
-                if (eventType == EventType.ScrollWheel && ContainerRect.Contains(current.mousePosition)) {
+                if (eventType == EventType.ScrollWheel && actualContentRect.Contains(current.mousePosition)) {
                     current.Use();
                     GUIUtility.keyboardControl = 0;
 

@@ -31,8 +31,8 @@ namespace SoftKata.ExtendedEditorGUI {
             NextEntryPosition.x += width + SpaceBetweenEntries;
 
             // occlusion
-            return CurrentEntryPosition.x + width >= VisibleAreaRect.x
-                    && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
+            return CurrentEntryPosition.x + width >= _ContainerRect.x
+                    && CurrentEntryPosition.x <= _ContainerRect.xMax;
         }
         
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {

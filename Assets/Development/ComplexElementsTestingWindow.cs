@@ -94,7 +94,7 @@ namespace Development {
 
 
             // Scroll view for general groups testing
-            _scrollViewTest = new ScrollViewTest(100);
+            _scrollViewTest = new ScrollViewTest(25);
             _scrollViewExpander = new ScrollViewExpander();
         }
 
@@ -226,7 +226,7 @@ namespace Development {
                                         Debug.Log("Blyat");
                                     }
 
-                                    EditorGUI.DrawRect(rect, Color.black);
+                                    // EditorGUI.DrawRect(rect, Color.black);
                                     EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
                                 }
                             }
@@ -266,7 +266,7 @@ namespace Development {
                                 if(LayoutEngine.GetRect(30f, -1, out var rect)) {
                                     validRectCount++;
 
-                                    EditorGUI.DrawRect(rect, Color.black);
+                                    // EditorGUI.DrawRect(rect, Color.black);
                                     EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
                                 }
                             }
