@@ -155,7 +155,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public abstract void RegisterArray(float elemWidth, float elemHeight, int count);
 
         public Rect GetContentRect(bool fullRect = false) {
-            var output = ContainerRect;
+            var output = ContentRect;
 
             if(fullRect) {
                 output = TotalOffset.Add(output);
