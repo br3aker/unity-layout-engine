@@ -34,11 +34,13 @@ namespace SoftKata.ExtendedEditorGUI {
         // offset settings - Padding/Border/Margin
         public RectOffset TotalOffset {get;}
 
-        // protected Rect ContainerRect;
-        // public Rect VisibleAreaRect { get; protected set; }
+        [Obsolete]
+        protected Rect _ContainerRect;
+        [Obsolete]
+        public Rect _VisibleAreaRect { get; protected set; }
 
         public bool Clip {get; set;}
-        private Vector2 _clipGlobalPosition;
+        private Vector2 _clipWorldPositionOffset;
 
         public float SpaceBetweenEntries { get; protected set; }
 
@@ -55,10 +57,11 @@ namespace SoftKata.ExtendedEditorGUI {
         // group layouting data
         protected float TotalHeight;
         protected float TotalWidth = -1;
+        [Obsolete]
         protected Vector2 ContentPosition;
 
-        protected Rect _ContentRect;
-        protected Rect _ContainerRect;
+        protected Rect ContentRect;
+        protected Rect ContainerRect;
 
         // Automatic width for entries
         public float AutomaticWidth {get; private set;}
@@ -96,40 +99,40 @@ namespace SoftKata.ExtendedEditorGUI {
             if (IsGroupValid) {
                 if (Parent != null) {
                     // Content & container rects
-                    _ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, new Vector2(TotalWidth, TotalHeight)));
-                    _ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(TotalWidth, TotalHeight), _ContentRect);
+                    ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, new Vector2(TotalWidth, TotalHeight)));
+                    ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(TotalWidth, TotalHeight), ContentRect);
 
                     // Content offset
-                    NextEntryPosition += _ContentRect.position;
+                    NextEntryPosition += ContentRect.position;
                 }
                 else {
                     // Content & container rects
-                    _ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
-                    _ContentRect = _ContainerRect;
+                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
+                    ContentRect = ContainerRect;
 
                     // Content offset
-                    NextEntryPosition += _ContentRect.position;
+                    NextEntryPosition += ContentRect.position;
                 }
 
-                IsGroupValid = _ContainerRect.IsValid() && Event.current.type != EventType.Used;
+                IsGroupValid = ContainerRect.IsValid() && Event.current.type != EventType.Used;
                 if (IsGroupValid) {
                     IsLayoutEvent = false;
 
                     // Visualization
-                    EditorGUI.DrawRect(TotalOffset.Add(_ContentRect), new Color(0, 1, 0, 0.25f));
-                    EditorGUI.DrawRect(_ContentRect, new Color(0, 0, 1, 0.25f));
+                    EditorGUI.DrawRect(TotalOffset.Add(ContentRect), new Color(0, 1, 0, 0.25f));
+                    EditorGUI.DrawRect(ContentRect, new Color(0, 0, 1, 0.25f));
 
                     // Clipspace extra calculations
                     if(Clip) {
-                        GUI.BeginClip(_ContainerRect);
+                        GUI.BeginClip(ContainerRect);
                         // Clipspace changes world space to local space
                         // Coordinates should be recalculated
-                        _clipGlobalPosition = _ContainerRect.position;
+                        _clipWorldPositionOffset = ContainerRect.position;
 
-                        _ContentRect.position -= _ContainerRect.position;
-                        NextEntryPosition -= _ContainerRect.position;
+                        ContentRect.position -= ContainerRect.position;
+                        NextEntryPosition -= ContainerRect.position;
 
-                        _ContainerRect.position = Vector2.zero;
+                        ContainerRect.position = Vector2.zero;
                     }
                 }
             }
@@ -155,7 +158,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (width <= 0f) width = AutomaticWidth;
 
             if (PrepareNextRect(width, height)) {
-                return _ContainerRect;
+                return ContainerRect;
             }
 
             return InvalidRect;
@@ -169,7 +172,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public abstract void RegisterArray(float elemWidth, float elemHeight, int count);
 
         public Rect GetContentRect(bool fullRect = false) {
-            var output = _ContainerRect;
+            var output = ContainerRect;
 
             if(fullRect) {
                 output = TotalOffset.Add(output);
@@ -177,7 +180,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // World pos -> Local pos
             if(Clip) {
-                output.position -= _clipGlobalPosition;
+                output.position -= _clipWorldPositionOffset;
             }
 
             return output;
@@ -208,8 +211,8 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
-                _ContainerRect.position = _clipGlobalPosition;
-                _ContentRect.position += _clipGlobalPosition;
+                ContainerRect.position = _clipWorldPositionOffset;
+                ContentRect.position += _clipWorldPositionOffset;
             }
             EndNonLayoutRoutine();
         }

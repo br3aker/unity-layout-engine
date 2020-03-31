@@ -117,8 +117,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
                         if (!scrollbarRect.Contains(mousePos)){
                             scrollPos = verticalBar
-                                ? mousePos.y / _ContentRect.yMax
-                                : mousePos.x / _ContentRect.xMax;
+                                ? mousePos.y / ContentRect.yMax
+                                : mousePos.x / ContentRect.xMax;
                         }
                     }
 
@@ -162,7 +162,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var current = Event.current;
             var eventType = current.type;
 
-            var actualContentRect = _ContentRect;
+            var actualContentRect = ContentRect;
 
             if (_needsVerticalScroll) {
                 var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,

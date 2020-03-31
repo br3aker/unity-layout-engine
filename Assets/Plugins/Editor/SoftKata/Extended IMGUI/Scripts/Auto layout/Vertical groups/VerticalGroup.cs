@@ -37,8 +37,8 @@ namespace SoftKata.ExtendedEditorGUI {
             NextEntryPosition.y += height + SpaceBetweenEntries;
             
             // occlusion
-            return currentEntryPositionY + height >= _ContainerRect.y
-                    && currentEntryPositionY <= _ContainerRect.yMax;
+            return currentEntryPositionY + height >= ContainerRect.y
+                    && currentEntryPositionY <= ContainerRect.yMax;
         }
 
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {
