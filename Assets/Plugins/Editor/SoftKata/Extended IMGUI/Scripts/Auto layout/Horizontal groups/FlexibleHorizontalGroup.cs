@@ -18,15 +18,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
         protected override void PreLayoutRequest() {
             // vertical "service" height addition: margin/border/padding
-            TotalHeight += TotalOffset.vertical;
+            ContentRect.height += TotalOffset.vertical;
 
-            _fixedWidth = TotalWidth;
-            TotalWidth = _containerWidth;
+            _fixedWidth = ContentRect.width;
+            ContentRect.width = _containerWidth;
         }
     
         internal override void BeginNonLayout() {
             RetrieveLayoutData();
-            var totalFlexibleWidth = ContainerRect.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
+            var totalFlexibleWidth = ContentRect.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
             // AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - FixedWidthEntriesCount), 0f);
         }
     }

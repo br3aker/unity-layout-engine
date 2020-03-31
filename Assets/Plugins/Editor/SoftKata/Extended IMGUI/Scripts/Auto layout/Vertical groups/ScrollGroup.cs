@@ -73,12 +73,12 @@ namespace SoftKata.ExtendedEditorGUI {
             TotalOffset.bottom = _bottomOffset;
 
             /* VERTICAL */
-            TotalHeight += SpaceBetweenEntries * (EntriesCount - 1);
-            if (_needsVerticalScroll = TotalHeight > ContainerSize.y) {
-                _containerToActualSizeRatio.y = ContainerSize.y / TotalHeight;
-                NextEntryPosition.y += Mathf.Lerp(0, ContainerSize.y - TotalHeight, _scrollPos.y);
+            ContentRect.height += SpaceBetweenEntries * (EntriesCount - 1);
+            if (_needsVerticalScroll = ContentRect.height > ContainerSize.y) {
+                _containerToActualSizeRatio.y = ContainerSize.y / ContentRect.height;
+                NextEntryPosition.y += Mathf.Lerp(0, ContainerSize.y - ContentRect.height, _scrollPos.y);
 
-                TotalHeight = ContainerSize.y;
+                ContentRect.height = ContainerSize.y;
 
                 if(!_disableScrollbars) {
                     TotalOffset.right += _verticalScrollBarOffset + _verticalScrollBarWidth;
@@ -88,12 +88,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* HORIZONTAL */
             ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : LayoutEngine.CurrentContentWidth;
-            TotalWidth = TotalWidth > 0 ? TotalWidth : ContainerWidth;
-            if(_needsHorizontalScroll = TotalWidth > ContainerWidth) {
-                _containerToActualSizeRatio.x = ContainerWidth / TotalWidth;
-                NextEntryPosition.x += Mathf.Lerp(0, ContainerWidth - TotalWidth, _scrollPos.x);
+            ContentRect.width = ContentRect.width > 0 ? ContentRect.width : ContainerWidth;
+            if(_needsHorizontalScroll = ContentRect.width > ContainerWidth) {
+                _containerToActualSizeRatio.x = ContainerWidth / ContentRect.width;
+                NextEntryPosition.x += Mathf.Lerp(0, ContainerWidth - ContentRect.width, _scrollPos.x);
 
-                TotalWidth = ContainerWidth;
+                ContentRect.width = ContainerWidth;
 
                 if(!_disableScrollbars) {
                     TotalOffset.bottom += _horizontalScrollBarOffset + _horizontalScrollBarHeight;
@@ -101,8 +101,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             // Applying offsets
-            TotalHeight += TotalOffset.vertical;
-            TotalWidth += TotalOffset.horizontal;
+            ContentRect.height += TotalOffset.vertical;
+            ContentRect.width += TotalOffset.horizontal;
         }
 
         private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
@@ -117,8 +117,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
                         if (!scrollbarRect.Contains(mousePos)){
                             scrollPos = verticalBar
-                                ? mousePos.y / ContainerRect.yMax
-                                : mousePos.x / ContainerRect.xMax;
+                                ? mousePos.y / ContentRect.yMax
+                                : mousePos.x / ContentRect.xMax;
                         }
                     }
 
@@ -162,14 +162,14 @@ namespace SoftKata.ExtendedEditorGUI {
             var current = Event.current;
             var eventType = current.type;
 
-            var actualContentRect = ContainerRect;
+            var actualContentRect = ContentRect;
 
             if (_needsVerticalScroll) {
                 var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
                     actualContentRect.height * MinimalScrollbarSizeMultiplier);
                 var scrollMovementLength = actualContentRect.height - scrollbarHeight;
 
-                if (eventType == EventType.ScrollWheel && ContainerRect.Contains(current.mousePosition)) {
+                if (eventType == EventType.ScrollWheel && actualContentRect.Contains(current.mousePosition)) {
                     current.Use();
                     GUIUtility.keyboardControl = 0;
 

@@ -13,8 +13,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public VerticalFadeGroup(bool expanded, Constraints modifier, GUIStyle style) : base(modifier, style) {
-            Clip = true;
-
             _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
         }
         public VerticalFadeGroup(bool expanded = false, Constraints modifier = Constraints.None) 
@@ -24,7 +22,7 @@ namespace SoftKata.ExtendedEditorGUI {
             base.PreLayoutRequest();
 
             Clip = _expanded.isAnimating;
-            TotalHeight *= _expanded.faded;
+            ContentRect.height *= _expanded.faded;
         }
     }
 }

@@ -13,40 +13,35 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup) {}
 
         protected override void PreLayoutRequest() {
-            // vertical "service" height addition: margin/border/padding + space between entries
-            TotalHeight += TotalOffset.vertical;
-            TotalWidth += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1) + (EntriesCount - FixedWidthEntriesCount) * AutomaticWidth;
+            ContentRect.height += TotalOffset.vertical;
+            ContentRect.width += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override bool PrepareNextRect(float width, float height) {
             if (IsLayoutEvent) {
-                if (width > 0f) {
-                    TotalWidth += width;
-                    // TODO: don't count fixed entries - use _visibleContentWidth instead
-                    FixedWidthEntriesCount++;
-                }
+                ContentRect.width += width;
                 EntriesCount++;
-                TotalHeight = Mathf.Max(TotalHeight, height);
+                ContentRect.height = Mathf.Max(ContentRect.height, height);
                 return false;
             }
 
             if (!IsGroupValid) return false;
 
-
+            var currentEntryPositionX = NextEntryPosition.x;
             NextEntryPosition.x += width + SpaceBetweenEntries;
 
             // occlusion
-            return CurrentEntryPosition.x + width >= VisibleAreaRect.x
-                    && CurrentEntryPosition.x <= VisibleAreaRect.xMax;
+            return currentEntryPositionX + width >= ContainerRect.x
+                    && currentEntryPositionX <= ContainerRect.xMax;
         }
         
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0f) {
-                TotalWidth += elemWidth * count;
+                ContentRect.width += elemWidth * count;
                 FixedWidthEntriesCount += count;
             }
             EntriesCount += count; ;
-            TotalHeight = Mathf.Max(TotalHeight, elemHeight);
+            ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
         }
     }
 }
