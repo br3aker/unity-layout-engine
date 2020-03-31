@@ -37,7 +37,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public class Tabs : IDrawableElement {
             // Logic data
-            public int CurrentTab {get; set;}
+            public int CurrentTab { get; set; }
 
             // GUI content & drawers
             private readonly GUIContent[] _tabHeaders;
@@ -76,7 +76,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, -1), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, Constraints.None, ExtendedEditorGUI.EmptyStyle);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, Constraints.None, ExtendedEditorGUI.EmptyStyle);
                 _horizontalGroup = new HorizontalGroup(Constraints.None, ExtendedEditorGUI.EmptyStyle);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
@@ -102,18 +102,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Content
                 if (_animator.isAnimating) {
                     _scrollGroup.ScrollPosX = currentAnimationPosition;
-                    // if(LayoutEngine.BeginScrollGroup(_scrollGroup)) {
                     if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
-                        // if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                         if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
                         }
-                        // LayoutEngine.EndHorizontalGroup();
                         LayoutEngine.EndLayoutGroup<HorizontalGroup>();
                     }
-                    // LayoutEngine.EndScrollGroup();
                     LayoutEngine.EndLayoutGroup<ScrollGroup>();
                 }
                 else {
