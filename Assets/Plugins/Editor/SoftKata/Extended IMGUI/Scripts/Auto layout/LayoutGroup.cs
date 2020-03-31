@@ -18,26 +18,13 @@ namespace SoftKata.ExtendedEditorGUI {
     // TODO: fix horizontal group
     // TODO: implement automatic height in parented to horizontal-like group
     public abstract class LayoutGroup {
-        [Obsolete]
-        private struct GroupRenderingData {
-            public Rect VisibleRect;
-            public Rect FullContentRect;
-        }
-
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
         private static readonly Rect InvalidRect = new Rect(float.MinValue, 0, -1, -1);
-        [Obsolete]
-        private static readonly RectOffset ZeroRectOffset = new RectOffset(0, 0, 0, 0);
 
         internal LayoutGroup Parent { get; private set; }
 
         // offset settings - Padding/Border/Margin
         public RectOffset TotalOffset {get;}
-
-        [Obsolete]
-        protected Rect _ContainerRect;
-        [Obsolete]
-        public Rect _VisibleAreaRect { get; protected set; }
 
         public bool Clip {get; set;}
         private Vector2 _clipWorldPositionOffset;
@@ -50,15 +37,11 @@ namespace SoftKata.ExtendedEditorGUI {
         protected bool IsLayoutEvent = true;
 
         // entries layout data
-        [Obsolete]
-        protected Vector2 CurrentEntryPosition;
         protected Vector2 NextEntryPosition;
 
         // group layouting data
         protected float TotalHeight;
         protected float TotalWidth = -1;
-        [Obsolete]
-        protected Vector2 ContentPosition;
 
         protected Rect ContentRect;
         protected Rect ContainerRect;
