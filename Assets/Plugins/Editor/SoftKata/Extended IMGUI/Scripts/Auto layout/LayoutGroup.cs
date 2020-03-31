@@ -18,6 +18,7 @@ namespace SoftKata.ExtendedEditorGUI {
     // TODO: fix horizontal group
     // TODO: implement automatic height in parented to horizontal-like group
     public abstract class LayoutGroup {
+        [Obsolete]
         private struct GroupRenderingData {
             public Rect VisibleRect;
             public Rect FullContentRect;
@@ -93,16 +94,24 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void RetrieveLayoutData() {
             if (IsGroupValid) {
                 if (Parent != null) {
-                    _ContainerRect = Parent.GetVisibleContentRect(TotalWidth, TotalHeight, out var offset);
-                    _ContentRect = TotalOffset.Remove(new Rect(NextEntryPosition += offset, new Vector2(TotalWidth, TotalHeight)));
+                    // Content & container rects
+                    _ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, new Vector2(TotalWidth, TotalHeight)));
+                    _ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(TotalWidth, TotalHeight), _ContentRect);
+
+                    // Content offset
+                    NextEntryPosition += _ContentRect.position;
                 }
                 else {
-                    _ContentRect = _ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
+                    // Content & container rects
+                    _ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(TotalHeight, TotalWidth));
+                    _ContentRect = _ContainerRect;
+
+                    // Content offset
+                    NextEntryPosition += _ContentRect.position;
                 }
 
                 IsGroupValid = _ContainerRect.IsValid() && Event.current.type != EventType.Used;
                 if (IsGroupValid) {
-                    // Default calculations
                     IsLayoutEvent = false;
 
                     // Visualization
@@ -112,12 +121,14 @@ namespace SoftKata.ExtendedEditorGUI {
                     // Clipspace extra calculations
                     if(Clip) {
                         GUI.BeginClip(_ContainerRect);
-                        _ContentRect.position -= _ContainerRect.position;
+                        // Clipspace changes world space to local space
+                        // Coordinates should be recalculated
                         _clipGlobalPosition = _ContainerRect.position;
+
+                        _ContentRect.position -= _ContainerRect.position;
+                        NextEntryPosition -= _ContainerRect.position;
+
                         _ContainerRect.position = Vector2.zero;
-                    }
-                    else {
-                        NextEntryPosition += new Vector2(TotalOffset.left, TotalOffset.top);
                     }
                 }
             }
@@ -139,16 +150,13 @@ namespace SoftKata.ExtendedEditorGUI {
             return rect.IsValid();
         }
 
-        private Rect GetVisibleContentRect(float width, float height, out Vector2 originOffset) {
+        private Rect GetVisibleContentRect(float width, float height) {
             CurrentEntryPosition = NextEntryPosition;
-            originOffset = CurrentEntryPosition;
 
             if (width <= 0f) width = AutomaticWidth;
 
-            // Debug.Log($"[{GetType().Name}] GetVisibleContentRect | w: {width} h: {height}");
             if (PrepareNextRect(width, height)) {
-                var visibleGroupRect = Utility.RectIntersection(new Rect(CurrentEntryPosition, new Vector2(width, height)), _ContainerRect);
-                return visibleGroupRect;
+                return _ContainerRect;
             }
 
             return InvalidRect;
@@ -202,7 +210,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if(Clip) {
                 GUI.EndClip();
                 _ContainerRect.position = _clipGlobalPosition;
-                _ContentRect.position = _clipGlobalPosition;
+                _ContentRect.position += _clipGlobalPosition;
             }
             EndNonLayoutRoutine();
         }
