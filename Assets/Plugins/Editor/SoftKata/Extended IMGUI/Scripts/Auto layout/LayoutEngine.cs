@@ -8,12 +8,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
         internal static LayoutGroup _currentGroup;
 
-        public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? EditorGUIUtility.currentViewWidth;
+        public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Native Unity layout system get rect call
         internal static Rect GetRectFromUnityLayout(float height, float width = AutoWidth) {
             var rect = GUILayoutUtility.GetRect(width, height);
-            rect.width = width > 0f ? width : EditorGUIUtility.currentViewWidth;
+            rect.width = width > 0f ? width : (EditorGUIUtility.currentViewWidth - 2);
             return rect;
         }
 
