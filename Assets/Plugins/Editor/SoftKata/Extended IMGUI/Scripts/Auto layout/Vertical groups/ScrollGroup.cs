@@ -64,7 +64,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _backgroundColor = style.normal.textColor;
             _scrollbarColor = style.onNormal.textColor;
         }
-        public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, Constraints modifier = Constraints.None)
+        public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, Constraints modifier = Constraints.All)
             : this(containerSize, scrollPos, disableScrollbars, modifier, ExtendedEditorGUI.LayoutResources.ScrollGroup) {}
 
         protected override void PreLayoutRequest() {

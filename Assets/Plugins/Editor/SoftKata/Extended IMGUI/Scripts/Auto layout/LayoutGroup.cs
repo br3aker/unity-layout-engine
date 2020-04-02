@@ -8,10 +8,10 @@ namespace SoftKata.ExtendedEditorGUI {
     [Flags]
     public enum Constraints : byte {
         None = 1 << 1,
-        DiscardMargin = 1 << 2,
-        DiscardBorder = 1 << 3,
-        DiscardPadding = 1 << 4,
-        All = DiscardMargin | DiscardBorder | DiscardPadding
+        Margin = 1 << 2,
+        Border = 1 << 3,
+        Padding = 1 << 4,
+        All = Margin | Border | Padding
     }
 
     // TODO: fix flexible horizontal group
@@ -50,13 +50,13 @@ namespace SoftKata.ExtendedEditorGUI {
         protected LayoutGroup(Constraints modifier, GUIStyle style) {
             TotalOffset = new RectOffset();
 
-            if((modifier & Constraints.DiscardMargin) != Constraints.DiscardMargin) {
+            if((modifier & Constraints.Margin) == Constraints.Margin) {
                 TotalOffset.Accumulate(style.margin);
             }
-            if((modifier & Constraints.DiscardBorder) != Constraints.DiscardBorder) {
+            if((modifier & Constraints.Border) == Constraints.Border) {
                 TotalOffset.Accumulate(style.border);
             }
-            if((modifier & Constraints.DiscardPadding) != Constraints.DiscardPadding) {
+            if((modifier & Constraints.Padding) == Constraints.Padding) {
                 TotalOffset.Accumulate(style.padding);
             };
         }
