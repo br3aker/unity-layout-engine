@@ -114,7 +114,6 @@ namespace Development {
 
 
             _scrollViewExpander.OnGUI();
-            // _tabsDrawer.OnGUI();
         }
 
         private void DrawServiceInfo() {

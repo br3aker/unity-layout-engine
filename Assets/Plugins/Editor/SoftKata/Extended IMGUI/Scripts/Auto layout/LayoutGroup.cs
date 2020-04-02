@@ -98,10 +98,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (IsGroupValid) {
                     IsLayoutEvent = false;
 
-                    // Visualization
-                    EditorGUI.DrawRect(TotalOffset.Add(ContentRect), new Color(0, 1, 0, 0.25f));
-                    EditorGUI.DrawRect(ContentRect, new Color(0, 0, 1, 0.25f));
-
                     // Clipspace extra calculations
                     if(Clip) {
                         GUI.BeginClip(ContainerRect);
