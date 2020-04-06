@@ -5,15 +5,6 @@ using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
-    [Flags]
-    public enum Constraints : byte {
-        None = 1 << 1,
-        Margin = 1 << 2,
-        Border = 1 << 3,
-        Padding = 1 << 4,
-        All = Margin | Border | Padding
-    }
-
     // TODO: fix flexible horizontal group
     // TODO: fix horizontal group
     // TODO: implement automatic height in parented to horizontal-like group
@@ -47,18 +38,13 @@ namespace SoftKata.ExtendedEditorGUI {
         protected float AvailableWidth => Parent?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Constructor
-        protected LayoutGroup(Constraints modifier, GUIStyle style) {
+        protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
             TotalOffset = new RectOffset();
 
-            if((modifier & Constraints.Margin) == Constraints.Margin) {
-                TotalOffset.Accumulate(style.margin);
-            }
-            if((modifier & Constraints.Border) == Constraints.Border) {
-                TotalOffset.Accumulate(style.border);
-            }
-            if((modifier & Constraints.Padding) == Constraints.Padding) {
-                TotalOffset.Accumulate(style.padding);
-            };
+            if(ignoreConstaints) return;
+            TotalOffset.Accumulate(style.margin);
+            TotalOffset.Accumulate(style.border);
+            TotalOffset.Accumulate(style.padding);
         }
 
         // Layout

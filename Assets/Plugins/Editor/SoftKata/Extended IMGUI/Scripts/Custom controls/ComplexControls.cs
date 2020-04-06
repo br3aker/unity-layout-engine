@@ -76,8 +76,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, Constraints.None, ExtendedEditorGUI.EmptyStyle);
-                _horizontalGroup = new HorizontalGroup(Constraints.None, ExtendedEditorGUI.EmptyStyle);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true);
+                _horizontalGroup = new HorizontalGroup(true);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, GUIElementsResources.TabHeader) { }
@@ -222,7 +222,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 EmptyListLabel = new GUIContent("This list is empty");
                 _emptyListIcon = GUIElementsResources.EmptyListIcon;
 
-                _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false, Constraints.None, LayoutResources.ScrollGroup);
+                _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
 
                 _elementHeight = elementHeight;
                 _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;

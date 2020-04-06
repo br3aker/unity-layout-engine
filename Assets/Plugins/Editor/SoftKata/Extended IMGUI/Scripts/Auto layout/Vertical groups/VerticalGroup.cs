@@ -5,12 +5,12 @@ using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public class VerticalGroup : LayoutGroup {
-        public VerticalGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
+        public VerticalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.y;
         }
 
-        public VerticalGroup(Constraints modifier = Constraints.None) 
-            : this(modifier, ExtendedEditorGUI.LayoutResources.VerticalGroup) {}
+        public VerticalGroup(bool ignoreConstaints = false) 
+            : this(ExtendedEditorGUI.LayoutResources.VerticalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             if(ContentRect.width < 0) {

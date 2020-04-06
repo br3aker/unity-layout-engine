@@ -12,11 +12,11 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        public VerticalFadeGroup(bool expanded, Constraints modifier, GUIStyle style) : base(modifier, style) {
+        public VerticalFadeGroup(bool expanded, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
         }
-        public VerticalFadeGroup(bool expanded = false, Constraints modifier = Constraints.None) 
-            : this(expanded, modifier, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup) {}
+        public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
+            : this(expanded, ExtendedEditorGUI.LayoutResources.VerticalFadeGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             base.PreLayoutRequest();

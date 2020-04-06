@@ -10,11 +10,11 @@ namespace SoftKata.ExtendedEditorGUI {
         private float _containerWidth;
         private float _fixedWidth;
 
-        public FlexibleHorizontalGroup(float width, Constraints modifier, GUIStyle style) : base(modifier, style) {
+        public FlexibleHorizontalGroup(float width, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _containerWidth = width;
         }
-        public FlexibleHorizontalGroup(float width, Constraints modifier)
-            : this(width, modifier, ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup) {}
+        public FlexibleHorizontalGroup(float width, bool ignoreConstaints = false)
+            : this(width, ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             // vertical "service" height addition: margin/border/padding

@@ -13,15 +13,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private float _entryPaddingFromConnector;
 
-        public TreeViewGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
-            // var overflow = style.overflow;
-            // _connectionLineWidth = overflow.left;
-            // _connectionLineLength = overflow.left + overflow.right;
+        // public TreeViewGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
+        //     // var overflow = style.overflow;
+        //     // _connectionLineWidth = overflow.left;
+        //     // _connectionLineLength = overflow.left + overflow.right;
 
-            // _connectionLineColor = style.normal.textColor;
+        //     // _connectionLineColor = style.normal.textColor;
 
-            // _entryPaddingFromConnector = Padding.left;
-        }
+        //     // _entryPaddingFromConnector = Padding.left;
+        // }
 
         // protected override Rect GetEntryRect(float x, float y, float width, float height) {
         //     _lastEntryHalfHeight = height / 2;

@@ -6,11 +6,11 @@ namespace SoftKata.ExtendedEditorGUI {
     public class HorizontalGroup : LayoutGroup {
         protected int FixedWidthEntriesCount;
         
-        public HorizontalGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
+        public HorizontalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.x;
         }
-        public HorizontalGroup(Constraints modifier = Constraints.All)
-            : this(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup) {}
+        public HorizontalGroup(bool ignoreConstaints = false)
+            : this(ExtendedEditorGUI.LayoutResources.HorizontalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             ContentRect.height += TotalOffset.vertical;

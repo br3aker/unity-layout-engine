@@ -7,7 +7,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private ScrollGroup _rootScrollGroup;
 
         private void OnEnable(){
-            _rootScrollGroup = new ScrollGroup(Vector2.zero, Vector2.zero, false, Constraints.All, ExtendedEditorGUI.LayoutResources.ScrollGroup);
+            _rootScrollGroup = new ScrollGroup(Vector2.zero, Vector2.zero, false, ExtendedEditorGUI.LayoutResources.ScrollGroup);
             InitEditorWindow(this);
             Initialize();
         }

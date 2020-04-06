@@ -256,7 +256,7 @@ namespace Development {
             private LayoutGroup _flexibleHorizontalGroup;
 
             public FlexibleHorizontalGroupTest() {
-                _flexibleHorizontalGroup = new FlexibleHorizontalGroup(-1, Constraints.All);
+                _flexibleHorizontalGroup = new FlexibleHorizontalGroup(-1);
             }
             
             public void OnGUI() {
