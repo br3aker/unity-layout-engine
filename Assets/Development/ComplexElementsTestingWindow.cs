@@ -22,6 +22,7 @@ namespace Development {
 
         private ScrollViewTest _scrollViewTest;
         private ScrollViewExpander _scrollViewExpander;
+        private FlexibleHorizontalGroupTest _flexibleHorizontalGroupTest;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
@@ -96,6 +97,7 @@ namespace Development {
             // Scroll view for general groups testing
             _scrollViewTest = new ScrollViewTest(25);
             _scrollViewExpander = new ScrollViewExpander();
+            _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
         }
 
         protected override void IMGUI() {
@@ -114,6 +116,8 @@ namespace Development {
 
 
             _scrollViewExpander.OnGUI();
+
+            // _flexibleHorizontalGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -215,34 +219,6 @@ namespace Development {
             }
 
             public void OnGUI() {
-                if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
-                    for(int j = 0; j < 2; j++) {
-                        if(LayoutEngine.GetRect(30f, -1, out var rect)) {
-                            EditorGUI.LabelField(rect, $"[{j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                        }
-                    }
-
-                    if(LayoutEngine.BeginLayoutGroup(_nestedScrollGroup1)) {
-                        for(int j = 0; j < 16; j++) {
-                            if(LayoutEngine.GetRect(30f, -1, out var rect)) {
-                                EditorGUI.LabelField(rect, $"[{j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                            }
-                        }
-                    }
-                    LayoutEngine.EndLayoutGroup<ScrollGroup>();
-
-                    if(LayoutEngine.BeginLayoutGroup(_nestedScrollGroup2)) {
-                        for(int j = 0; j < 16; j++) {
-                            if(LayoutEngine.GetRect(30f, -1, out var rect)) {
-                                EditorGUI.LabelField(rect, $"[{j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                            }
-                        }
-                    }
-                    LayoutEngine.EndLayoutGroup<ScrollGroup>();
-                }
-                LayoutEngine.EndLayoutGroup<ScrollGroup>();
-                return;
-
                 if(LayoutEngine.GetRect(30f, -1, out var foldoutRect)) {
                     _fadeGroup.Expanded = EditorGUI.Foldout(foldoutRect, _fadeGroup.Expanded, $"Expanded: [{_fadeGroup.Expanded}] | W: {foldoutRect.width}");
                 }
@@ -338,7 +314,6 @@ namespace Development {
             private ScrollGroup _scrollGroup;
             private Vector2Int _contentSize = new Vector2Int(200, 400);
 
-
             public ScrollViewExpander() {
                 _scrollGroup = new ScrollGroup(new Vector2(-1, 400), Vector2.zero);
             }
@@ -354,6 +329,29 @@ namespace Development {
                     }
                 }
                 LayoutEngine.EndLayoutGroup<ScrollGroup>();
+            }
+        }
+
+        public class FlexibleHorizontalGroupTest : IDrawableElement {
+            private LayoutGroup _flexibleHorizontalGroup;
+
+            public FlexibleHorizontalGroupTest() {
+                _flexibleHorizontalGroup = new FlexibleHorizontalGroup(-1, Constraints.All);
+            }
+            
+            public void OnGUI() {
+                if(LayoutEngine.BeginLayoutGroup(_flexibleHorizontalGroup)) {
+                    var fixedRect = LayoutEngine.GetRect(40, 55);
+                    EditorGUI.DrawRect(fixedRect, Color.black);
+                    EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
+
+                    for(int i = 0; i < 3; i++) {
+                        var rect = LayoutEngine.GetRect(40, 55);
+                        EditorGUI.DrawRect(rect, Color.black);
+                        EditorGUI.LabelField(rect, rect.width.ToString());
+                    }
+                }
+                LayoutEngine.EndLayoutGroup<FlexibleHorizontalGroup>();
             }
         }
     }

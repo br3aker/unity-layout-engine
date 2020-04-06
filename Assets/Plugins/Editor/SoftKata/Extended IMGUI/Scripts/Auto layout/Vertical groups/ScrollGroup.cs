@@ -7,8 +7,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private readonly Color _backgroundColor;
 
-        protected override float GetAutomaticWidth() => LayoutEngine.CurrentContentWidth - TotalOffset.horizontal;
-
         public Vector2 ContainerSize;
         private float ContainerWidth;
 

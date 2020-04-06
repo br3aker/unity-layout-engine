@@ -9,7 +9,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public HorizontalGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
             SpaceBetweenEntries = style.contentOffset.x;
         }
-        public HorizontalGroup(Constraints modifier = Constraints.None)
+        public HorizontalGroup(Constraints modifier = Constraints.All)
             : this(modifier, ExtendedEditorGUI.LayoutResources.HorizontalGroup) {}
 
         protected override void PreLayoutRequest() {

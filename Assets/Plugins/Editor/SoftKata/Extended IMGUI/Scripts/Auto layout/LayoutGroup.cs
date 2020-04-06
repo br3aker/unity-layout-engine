@@ -43,8 +43,9 @@ namespace SoftKata.ExtendedEditorGUI {
         protected Rect ContainerRect;
 
         // Automatic width for entries
-        public float AutomaticWidth {get; private set;}
-        protected virtual float GetAutomaticWidth() => LayoutEngine.CurrentContentWidth - TotalOffset.horizontal;
+        public float AutomaticWidth {get; protected set;}
+        protected virtual float GetAutomaticWidth() => AvailableWidth - TotalOffset.horizontal;
+        protected float AvailableWidth => Parent?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Constructor
         protected LayoutGroup(Constraints modifier, GUIStyle style) {
@@ -165,7 +166,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public void ResetLayout() {
             IsLayoutEvent = true;
 
-            // _automaticWidth = -1;
             ContentRect.width = -1;
             ContentRect.height = 0;
 
