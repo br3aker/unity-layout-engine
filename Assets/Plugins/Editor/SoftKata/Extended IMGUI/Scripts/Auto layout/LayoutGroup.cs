@@ -116,22 +116,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // Getting rects
-        public Rect GetNextEntryRect(float width, float height) {
-            var currentEntryPosition = NextEntryPosition;
-
-            if (width < 0f) width = AutomaticWidth;
-            
-            if (PrepareNextRect(width, height) && IsGroupValid) {
-                return new Rect(currentEntryPosition, new Vector2(width, height));
-            }
-            return InvalidRect;
-        }
         public bool GetNextEntryRect(float width, float height, out Rect rect) {
-            rect = GetNextEntryRect(width, height);
-            return rect.IsValid();
-        }
-
-        public bool _GetNextEntryRect(float width, float height, out Rect rect) {
             var currentEntryPosition = NextEntryPosition;
 
             if (width < 0f) width = AutomaticWidth;
@@ -142,7 +127,8 @@ namespace SoftKata.ExtendedEditorGUI {
             rect = new Rect();
             return false;
         }
-        public Rect _GetNextEntryRect(float width, float height) {
+
+        public Rect GetNextEntryRect(float width, float height) {
             GetNextEntryRect(width, height, out Rect rect);
             return rect;
         }

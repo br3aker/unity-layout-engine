@@ -44,24 +44,12 @@ namespace SoftKata.ExtendedEditorGUI {
         public static Rect GetRect(float height, float width = AutoWidth) {
             return _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
         }
-
-        // public static bool GetRect(float height, float width, out Rect rect) {
-        //     UnityEngine.Profiling.Profiler.BeginSample("GetRect");
-        //     rect = _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
-        //     var valid = rect.IsValid();
-        //     UnityEngine.Profiling.Profiler.EndSample();
-        //     return valid;
-        // }
-
         public static bool GetRect(float height, float width, out Rect rect) {
-            UnityEngine.Profiling.Profiler.BeginSample("_GetRect");
             if(_currentGroup != null) {
-                var valid = _currentGroup._GetNextEntryRect(width, height, out rect);
-                UnityEngine.Profiling.Profiler.EndSample();
+                var valid = _currentGroup.GetNextEntryRect(width, height, out rect);
                 return valid;
             }
             rect = GetRectFromUnityLayout(height, width);
-            UnityEngine.Profiling.Profiler.EndSample();
             return true;
         }
 
