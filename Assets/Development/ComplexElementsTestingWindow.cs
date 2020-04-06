@@ -95,7 +95,7 @@ namespace Development {
 
 
             // Scroll view for general groups testing
-            _scrollViewTest = new ScrollViewTest(25);
+            _scrollViewTest = new ScrollViewTest(2500);
             _scrollViewExpander = new ScrollViewExpander();
             _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
         }
@@ -110,12 +110,12 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            // Profiler.BeginSample("Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
+            Profiler.EndSample();
 
 
-            _scrollViewExpander.OnGUI();
+            // _scrollViewExpander.OnGUI();
 
             // _flexibleHorizontalGroupTest.OnGUI();
         }
@@ -195,107 +195,29 @@ namespace Development {
 
         public class ScrollViewTest : IDrawableElement {
             private ScrollGroup _scrollGroup;
-            private ScrollGroup _nestedScrollGroup1;
-            private ScrollGroup _nestedScrollGroup2;
             private LayoutGroup[] _nestedHorizontalGroups;
-            private VerticalFadeGroup _fadeGroup;
-            private LayoutGroup _fadeNestedVerticalGroup;
 
-            private int _validRectCountCached;
+            private int _horizontalEntriesCount = 250;
 
 
             public ScrollViewTest(int nestedGroupCount) {
                 _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
-                _nestedScrollGroup1 = new ScrollGroup(new Vector2(-1, 320), Vector2.zero, false);
-                _nestedScrollGroup2 = new ScrollGroup(new Vector2(-1, 320), Vector2.zero, false);
 
                 _nestedHorizontalGroups = new LayoutGroup[nestedGroupCount];
                 for(int i = 0; i < nestedGroupCount; i++) {
                     _nestedHorizontalGroups[i] = new HorizontalGroup();
                 }
-
-                _fadeGroup = new VerticalFadeGroup(true);
-                _fadeNestedVerticalGroup = new VerticalGroup();
             }
 
             public void OnGUI() {
-                if(LayoutEngine.GetRect(30f, -1, out var foldoutRect)) {
-                    _fadeGroup.Expanded = EditorGUI.Foldout(foldoutRect, _fadeGroup.Expanded, $"Expanded: [{_fadeGroup.Expanded}] | W: {foldoutRect.width}");
-                }
-                if(LayoutEngine.BeginLayoutGroup(_fadeGroup)) {
-                    if(LayoutEngine.BeginLayoutGroup(_fadeNestedVerticalGroup)) {
-                        for(int j = 0; j < 3; j++) {
-                            if(LayoutEngine.GetRect(45f, -1, out var rect)) {
-                                EditorGUI.LabelField(rect, $"W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                            }
-                        }
-                    }
-                    LayoutEngine.EndLayoutGroup<VerticalGroup>();
-
-                    for(int j = 0; j < 3; j++) {
-                        if(LayoutEngine.GetRect(45f, -1, out var rect)) {
-                            EditorGUI.LabelField(rect, "Some long text here");
-                        }
-                    }
-                }
-                LayoutEngine.EndLayoutGroup<VerticalFadeGroup>();
-
-                int validRectCount = 0;
-                EditorGUI.LabelField(LayoutEngine.GetRect(16), $"Valid rect count: {_validRectCountCached}");
-
+                var newEntriesCount = EditorGUI.IntField(LayoutEngine.GetRect(16), _horizontalEntriesCount);
                 if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
                     // first chunk
-                    for(int i = 0; i < _nestedHorizontalGroups.Length / 2; i++) {
+                    for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                         if(LayoutEngine.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
-                            for(int j = 0; j < 3; j++) {
+                            for(int j = 0; j < _horizontalEntriesCount; j++) {
                                 if(LayoutEngine.GetRect(30f, -1, out var rect)) {
-                                    validRectCount++;
-                                    if(Event.current.type == EventType.Layout) {
-                                        Debug.Log("Blyat");
-                                    }
-
-                                    // EditorGUI.DrawRect(rect, Color.black);
-                                    EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                                }
-                            }
-                        }
-                        LayoutEngine.EndLayoutGroup<HorizontalGroup>();
-                    }
-
-                    // fade group in the center
-                    // if(LayoutEngine.GetRect(30f, -1, out var foldoutRect)) {
-                    //     EditorGUI.DrawRect(foldoutRect, Color.green);
-                    //     _fadeGroup.Expanded = EditorGUI.Foldout(foldoutRect, _fadeGroup.Expanded, $"Expanded: [{_fadeGroup.Expanded}] | W: {foldoutRect.width}");
-                    // }
-                    // if(LayoutEngine.BeginLayoutGroup(_fadeGroup)) {
-                    //     if(LayoutEngine.BeginLayoutGroup(_fadeNestedVerticalGroup)) {
-                    //         for(int j = 0; j < 3; j++) {
-                    //             if(LayoutEngine.GetRect(45f, -1, out var rect)) {
-                    //                 EditorGUI.DrawRect(rect, Color.red);
-                    //                 EditorGUI.LabelField(rect, $"W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
-                    //             }
-                    //         }
-                    //     }
-                    //     LayoutEngine.EndLayoutGroup<VerticalGroup>();
-
-                    //     for(int j = 0; j < 3; j++) {
-                    //         if(LayoutEngine.GetRect(45f, -1, out var rect)) {
-                    //             EditorGUI.DrawRect(rect, Color.red);
-                    //             EditorGUI.LabelField(rect, "Some long text here");
-                    //         }
-                    //     }
-                    // }
-                    // LayoutEngine.EndLayoutGroup<VerticalFadeGroup>();
-
-                    // second chunk
-                    for(int i = _nestedHorizontalGroups.Length / 2; i < _nestedHorizontalGroups.Length; i++) {
-                        if(LayoutEngine.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
-                            for(int j = 0; j < 3; j++) {
-                                if(LayoutEngine.GetRect(30f, -1, out var rect)) {
-                                    validRectCount++;
-
-                                    // EditorGUI.DrawRect(rect, Color.black);
-                                    EditorGUI.LabelField(rect, $"[{i} -> {j}] W: {rect.width}/{LayoutEngine.CurrentContentWidth}");
+                                    EditorGUI.DrawRect(rect, Color.black);
                                 }
                             }
                         }
@@ -303,10 +225,8 @@ namespace Development {
                     }
                 }
                 LayoutEngine.EndLayoutGroup<ScrollGroup>();
-            
-                if(Event.current.type != EventType.Layout) {
-                    _validRectCountCached = validRectCount;
-                }
+
+                _horizontalEntriesCount = newEntriesCount;
             }
         }
 
