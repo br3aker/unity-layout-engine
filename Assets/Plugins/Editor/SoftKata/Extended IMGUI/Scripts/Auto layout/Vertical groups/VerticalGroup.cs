@@ -31,8 +31,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 return false;
             }
 
-            if (!IsGroupValid) return false;
-
             var currentEntryPositionY = NextEntryPosition.y;
             NextEntryPosition.y += height + SpaceBetweenEntries;
             

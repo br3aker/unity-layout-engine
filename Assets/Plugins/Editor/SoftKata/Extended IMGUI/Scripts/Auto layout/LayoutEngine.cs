@@ -45,8 +45,12 @@ namespace SoftKata.ExtendedEditorGUI {
             return _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
         }
         public static bool GetRect(float height, float width, out Rect rect) {
-            rect = _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
-            return rect.IsValid();
+            if(_currentGroup != null) {
+                var valid = _currentGroup.GetNextEntryRect(width, height, out rect);
+                return valid;
+            }
+            rect = GetRectFromUnityLayout(height, width);
+            return true;
         }
 
         // Register array of equal elements in one batch

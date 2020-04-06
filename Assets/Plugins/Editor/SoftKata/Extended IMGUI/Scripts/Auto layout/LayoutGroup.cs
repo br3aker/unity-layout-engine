@@ -19,8 +19,7 @@ namespace SoftKata.ExtendedEditorGUI {
     // TODO: implement automatic height in parented to horizontal-like group
     public abstract class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
-        private static readonly Rect InvalidRect = new Rect(float.MinValue, 0, -1, -1);
-
+        
         internal LayoutGroup Parent { get; private set; }
 
         // offset settings - Padding/Border/Margin
@@ -76,34 +75,31 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Non-layout
         internal void RetrieveLayoutData() {
-            if (IsGroupValid) {
+            if (Event.current.type != EventType.Used && IsGroupValid) {
                 if (Parent != null) {
-                    // Content & container rects
                     var requestedSize = ContentRect.size;
-                    ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, requestedSize));
-                    ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(requestedSize.x, requestedSize.y), ContentRect);
-
-                    // Content offset
-                    NextEntryPosition += ContentRect.position;
+                    if(IsGroupValid = Parent.GetNextEntryRect(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                        // Content & container rects
+                        ContentRect = TotalOffset.Remove(requestedRect);
+                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
+                    }
                 }
                 else {
                     // Content & container rects
                     ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
                     ContentRect = ContainerRect;
+                }
+
+                if (IsGroupValid) {
+                    IsLayoutEvent = false;
 
                     // Content offset
                     NextEntryPosition += ContentRect.position;
-                }
-
-                IsGroupValid = ContainerRect.IsValid() && Event.current.type != EventType.Used;
-                if (IsGroupValid) {
-                    IsLayoutEvent = false;
 
                     // Clipspace extra calculations
                     if(Clip) {
                         GUI.BeginClip(ContainerRect);
                         // Clipspace changes world space to local space
-                        // Coordinates should be recalculated
                         _clipWorldPositionOffset = ContainerRect.position;
 
                         ContentRect.position -= ContainerRect.position;
@@ -116,29 +112,20 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // Getting rects
-        public Rect GetNextEntryRect(float width, float height) {
+        public bool GetNextEntryRect(float width, float height, out Rect rect) {
             var currentEntryPosition = NextEntryPosition;
 
             if (width < 0f) width = AutomaticWidth;
-            
-            if (PrepareNextRect(width, height)) {
-                return new Rect(currentEntryPosition, new Vector2(width, height));
+            if(PrepareNextRect(width, height) && IsGroupValid) {
+                rect = new Rect(currentEntryPosition, new Vector2(width, height));
+                return true;
             }
-            return InvalidRect;
+            rect = new Rect();
+            return false;
         }
-        public bool GetNextEntryRect(float width, float height, out Rect rect) {
-            rect = GetNextEntryRect(width, height);
-            return rect.IsValid();
-        }
-
-        private Rect GetVisibleContentRect(float width, float height) {
-            if (width <= 0f) width = AutomaticWidth;
-
-            if (PrepareNextRect(width, height)) {
-                return ContainerRect;
-            }
-
-            return InvalidRect;
+        public Rect GetNextEntryRect(float width, float height) {
+            GetNextEntryRect(width, height, out Rect rect);
+            return rect;
         }
 
         protected abstract bool PrepareNextRect(float width, float height);
@@ -164,8 +151,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public void ResetLayout() {
-            IsLayoutEvent = true;
-
             ContentRect.width = -1;
             ContentRect.height = 0;
 
@@ -177,6 +162,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void BeginLayout(LayoutGroup parent) {
             Parent = parent;
             AutomaticWidth = GetAutomaticWidth();
+            IsLayoutEvent = true;
         }
         internal virtual void EndLayout() {
             RequestLayout();

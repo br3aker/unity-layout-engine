@@ -19,13 +19,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
         protected override bool PrepareNextRect(float width, float height) {
             if (IsLayoutEvent) {
-                ContentRect.width += width;
                 EntriesCount++;
+                ContentRect.width += width;
                 ContentRect.height = Mathf.Max(ContentRect.height, height);
+
                 return false;
             }
-
-            if (!IsGroupValid) return false;
 
             var currentEntryPositionX = NextEntryPosition.x;
             NextEntryPosition.x += width + SpaceBetweenEntries;
