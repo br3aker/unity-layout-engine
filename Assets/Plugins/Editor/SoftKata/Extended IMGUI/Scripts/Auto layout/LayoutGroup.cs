@@ -75,36 +75,31 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Non-layout
         internal void RetrieveLayoutData() {
-            if (IsGroupValid) {
+            if (Event.current.type != EventType.Used && IsGroupValid) {
                 if (Parent != null) {
-                    // Content & container rects
                     var requestedSize = ContentRect.size;
-                    IsGroupValid = Parent.GetNextEntryRect(requestedSize.x, requestedSize.y, out Rect requestedRect);
-                    ContentRect = TotalOffset.Remove(requestedRect);
-                    ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
-
-                    // Content offset
-                    NextEntryPosition += ContentRect.position;
+                    if(IsGroupValid = Parent.GetNextEntryRect(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                        // Content & container rects
+                        ContentRect = TotalOffset.Remove(requestedRect);
+                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
+                    }
                 }
                 else {
                     // Content & container rects
                     ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
                     ContentRect = ContainerRect;
+                }
+
+                if (IsGroupValid) {
+                    IsLayoutEvent = false;
 
                     // Content offset
                     NextEntryPosition += ContentRect.position;
-                }
-
-                IsGroupValid &= Event.current.type != EventType.Used;
-                // IsGroupValid = ContainerRect.width > 0 && ContainerRect.height > 0 && Event.current.type != EventType.Used;
-                if (IsGroupValid) {
-                    IsLayoutEvent = false;
 
                     // Clipspace extra calculations
                     if(Clip) {
                         GUI.BeginClip(ContainerRect);
                         // Clipspace changes world space to local space
-                        // Coordinates should be recalculated
                         _clipWorldPositionOffset = ContainerRect.position;
 
                         ContentRect.position -= ContainerRect.position;
