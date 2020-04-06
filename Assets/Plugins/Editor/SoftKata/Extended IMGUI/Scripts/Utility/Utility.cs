@@ -19,10 +19,6 @@ namespace SoftKata.ExtendedEditorGUI {
             return (int)Mathf.Ceil(style.CalcSize(content).y);
         }
 
-        public static bool IsValid(this Rect rect) {
-            return rect.height > 0f && rect.width > 0f;
-        }
-
         public static Rect RectIntersection(Rect a, Rect b) {
             var x = Mathf.Max(a.x, b.x);
             var num2 = Mathf.Min(a.x + a.width, b.x + b.width);

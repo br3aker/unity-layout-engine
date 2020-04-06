@@ -19,8 +19,7 @@ namespace SoftKata.ExtendedEditorGUI {
     // TODO: implement automatic height in parented to horizontal-like group
     public abstract class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
-        private static readonly Rect InvalidRect = new Rect(float.MinValue, 0, -1, -1);
-
+        
         internal LayoutGroup Parent { get; private set; }
 
         // offset settings - Padding/Border/Margin
@@ -80,8 +79,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (Parent != null) {
                     // Content & container rects
                     var requestedSize = ContentRect.size;
-                    ContentRect = TotalOffset.Remove(new Rect(Parent.NextEntryPosition, requestedSize));
-                    ContainerRect = Utility.RectIntersection(Parent.GetVisibleContentRect(requestedSize.x, requestedSize.y), ContentRect);
+                    IsGroupValid = Parent.GetNextEntryRect(requestedSize.x, requestedSize.y, out Rect requestedRect);
+                    ContentRect = TotalOffset.Remove(requestedRect);
+                    ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
 
                     // Content offset
                     NextEntryPosition += ContentRect.position;
@@ -95,7 +95,8 @@ namespace SoftKata.ExtendedEditorGUI {
                     NextEntryPosition += ContentRect.position;
                 }
 
-                IsGroupValid = ContainerRect.IsValid() && Event.current.type != EventType.Used;
+                IsGroupValid &= Event.current.type != EventType.Used;
+                // IsGroupValid = ContainerRect.width > 0 && ContainerRect.height > 0 && Event.current.type != EventType.Used;
                 if (IsGroupValid) {
                     IsLayoutEvent = false;
 
@@ -127,20 +128,9 @@ namespace SoftKata.ExtendedEditorGUI {
             rect = new Rect();
             return false;
         }
-
         public Rect GetNextEntryRect(float width, float height) {
             GetNextEntryRect(width, height, out Rect rect);
             return rect;
-        }
-
-        private Rect GetVisibleContentRect(float width, float height) {
-            if (width <= 0f) width = AutomaticWidth;
-
-            if (PrepareNextRect(width, height)) {
-                return ContainerRect;
-            }
-
-            return InvalidRect;
         }
 
         protected abstract bool PrepareNextRect(float width, float height);
