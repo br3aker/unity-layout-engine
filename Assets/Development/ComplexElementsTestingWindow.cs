@@ -197,7 +197,7 @@ namespace Development {
             private ScrollGroup _scrollGroup;
             private LayoutGroup[] _nestedHorizontalGroups;
 
-            private int _horizontalEntriesCount = 250;
+            private int _horizontalEntriesCount = 50;
 
 
             public ScrollViewTest(int nestedGroupCount) {

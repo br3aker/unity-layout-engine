@@ -121,7 +121,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             if (width < 0f) width = AutomaticWidth;
             
-            if (PrepareNextRect(width, height)) {
+            if (PrepareNextRect(width, height) && IsGroupValid) {
                 return new Rect(currentEntryPosition, new Vector2(width, height));
             }
             return InvalidRect;
@@ -129,6 +129,22 @@ namespace SoftKata.ExtendedEditorGUI {
         public bool GetNextEntryRect(float width, float height, out Rect rect) {
             rect = GetNextEntryRect(width, height);
             return rect.IsValid();
+        }
+
+        public bool _GetNextEntryRect(float width, float height, out Rect rect) {
+            var currentEntryPosition = NextEntryPosition;
+
+            if (width < 0f) width = AutomaticWidth;
+            if(PrepareNextRect(width, height) && IsGroupValid) {
+                rect = new Rect(currentEntryPosition, new Vector2(width, height));
+                return true;
+            }
+            rect = new Rect();
+            return false;
+        }
+        public Rect _GetNextEntryRect(float width, float height) {
+            GetNextEntryRect(width, height, out Rect rect);
+            return rect;
         }
 
         private Rect GetVisibleContentRect(float width, float height) {
@@ -164,8 +180,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         public void ResetLayout() {
-            IsLayoutEvent = true;
-
             ContentRect.width = -1;
             ContentRect.height = 0;
 
@@ -177,6 +191,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void BeginLayout(LayoutGroup parent) {
             Parent = parent;
             AutomaticWidth = GetAutomaticWidth();
+            IsLayoutEvent = true;
         }
         internal virtual void EndLayout() {
             RequestLayout();
