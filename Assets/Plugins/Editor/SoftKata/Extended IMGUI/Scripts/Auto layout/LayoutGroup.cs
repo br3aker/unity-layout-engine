@@ -50,12 +50,15 @@ namespace SoftKata.ExtendedEditorGUI {
         // Layout
         protected abstract void PreLayoutRequest();
         private void RequestLayout() {
-            IsGroupValid = EntriesCount > 0;
-            if (IsGroupValid) {
+            if (IsGroupValid = EntriesCount > 0) {
                 PreLayoutRequest();
 
-                var iDontCareRect = Parent?.GetNextEntryRect(ContentRect.width, ContentRect.height) 
-                                        ?? LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                if(Parent != null) {
+                    Parent.PrepareNextRect(ContentRect.width, ContentRect.height);
+                }
+                else {
+                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                }
             }
         }
 
