@@ -55,7 +55,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if(Parent != null) {
                     ++Parent.EntriesCount;
-                    Parent._RegisterEntry(ContentRect.width, ContentRect.height);
+                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
                 }
                 else {
                     LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
@@ -68,7 +68,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (Event.current.type != EventType.Used && IsGroupValid) {
                 if (Parent != null) {
                     var requestedSize = ContentRect.size;
-                    if(IsGroupValid = Parent._QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                    if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
                         // Content & container rects
                         ContentRect = TotalOffset.Remove(requestedRect);
                         ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
@@ -153,28 +153,29 @@ namespace SoftKata.ExtendedEditorGUI {
 
         }
     
+        // Registering entry
+        protected abstract void RegisterEntry(float width, float height);
 
-        // experimental APi
-        protected abstract void _RegisterEntry(float width, float height);
-
-        protected abstract bool _EntryQueryCallback(Vector2 entrySize);
-        private bool _QueryEntry(float width, float height, out Rect rect) {
+        // Gettings entry
+        protected abstract bool QueryAndOcclude(Vector2 entrySize);
+        private bool QueryEntry(float width, float height, out Rect rect) {
             rect = new Rect(NextEntryPosition, new Vector2(width, height));
-            return _EntryQueryCallback(rect.size);
+            return QueryAndOcclude(rect.size);
         }
 
-        public bool _GetRect(float height, float width, out Rect rect) {
+        // Getting actual rect from layout group
+        public bool GetRect(float height, float width, out Rect rect) {
             if(width < 0f) width = AutomaticWidth;
             if(IsLayoutEvent) {
                 ++EntriesCount;
-                _RegisterEntry(width, height);
+                RegisterEntry(width, height);
                 rect = new Rect();
                 return false;
             }
-            return _QueryEntry(width, height, out rect);
+            return QueryEntry(width, height, out rect);
         }
-        public Rect _GetRect(float height, float width) {
-            _GetRect(height, width, out var rect);
+        public Rect GetRect(float height, float width) {
+            GetRect(height, width, out var rect);
             return rect;
         }
     }

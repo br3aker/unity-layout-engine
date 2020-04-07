@@ -27,12 +27,12 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRect.height += elemHeight * count;
         }
 
-        // experimental APi
-        protected override void _RegisterEntry(float width, float height) {
+        // Entry registration and querying
+        protected override void RegisterEntry(float width, float height) {
             ContentRect.width = Mathf.Max(ContentRect.width, width);
             ContentRect.height += height;
         }
-        protected override bool _EntryQueryCallback(Vector2 entrySize) {
+        protected override bool QueryAndOcclude(Vector2 entrySize) {
             var currentEntryPositionY = NextEntryPosition.y;
             NextEntryPosition.y += entrySize.y + SpaceBetweenEntries;
             
