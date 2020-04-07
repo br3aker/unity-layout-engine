@@ -216,7 +216,7 @@ namespace Development {
                     for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                         if(LayoutEngine.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
                             for(int j = 0; j < _horizontalEntriesCount; j++) {
-                                if(LayoutEngine.GetRect(30f, -1, out var rect)) {
+                                if(LayoutEngine._GetRect(30f, -1, out var rect)) {
                                     EditorGUI.DrawRect(rect, Color.black);
                                 }
                             }

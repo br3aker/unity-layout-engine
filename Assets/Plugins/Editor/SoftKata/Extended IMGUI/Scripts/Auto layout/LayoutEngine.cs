@@ -46,8 +46,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public static bool GetRect(float height, float width, out Rect rect) {
             if(_currentGroup != null) {
-                var valid = _currentGroup.GetNextEntryRect(width, height, out rect);
-                return valid;
+                return _currentGroup.GetNextEntryRect(width, height, out rect);
             }
             rect = GetRectFromUnityLayout(height, width);
             return true;
@@ -65,6 +64,16 @@ namespace SoftKata.ExtendedEditorGUI {
                 _currentGroup.RegisterArray(elementHeight, count);
             else
                 GetRectFromUnityLayout(elementHeight * count);
+        }
+    
+
+        // experimental API
+        public static bool _GetRect(float height, float width, out Rect rect) {
+            if(_currentGroup != null) {
+                return _currentGroup._GetRect(height, width, out rect);
+            }
+            rect = GetRectFromUnityLayout(height, width);
+            return true;
         }
     }
 }

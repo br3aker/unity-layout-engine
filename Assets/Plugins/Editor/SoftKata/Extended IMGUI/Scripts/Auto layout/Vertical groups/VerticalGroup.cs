@@ -8,7 +8,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public VerticalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.y;
         }
-
         public VerticalGroup(bool ignoreConstaints = false) 
             : this(ExtendedEditorGUI.LayoutResources.VerticalGroup, ignoreConstaints) {}
 
@@ -43,6 +42,21 @@ namespace SoftKata.ExtendedEditorGUI {
             EntriesCount += count;
             ContentRect.width = Mathf.Max(ContentRect.width, elemWidth);
             ContentRect.height += elemHeight * count;
+        }
+
+
+        // experimental APi
+        protected override void _RegisterEntry(float width, float height) {
+            ContentRect.width = Mathf.Max(ContentRect.width, width);
+            ContentRect.height += height;
+        }
+        protected override bool _EntryQueryCallback(Vector2 entrySize) {
+            var currentEntryPositionY = NextEntryPosition.y;
+            NextEntryPosition.y += entrySize.y + SpaceBetweenEntries;
+            
+            // occlusion
+            return currentEntryPositionY + entrySize.y >= ContainerRect.y
+                    && currentEntryPositionY <= ContainerRect.yMax;
         }
     }
 }

@@ -42,5 +42,20 @@ namespace SoftKata.ExtendedEditorGUI {
             EntriesCount += count; ;
             ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
         }
+
+
+        // experimental APi
+        protected override void _RegisterEntry(float width, float height) {
+            ContentRect.width += width;
+            ContentRect.height = Mathf.Max(ContentRect.height, height);
+        }
+        protected override bool _EntryQueryCallback(Vector2 entrySize) {
+            var currentEntryPositionX = NextEntryPosition.x;
+            NextEntryPosition.x += entrySize.x + SpaceBetweenEntries;
+
+            // occlusion
+            return currentEntryPositionX + entrySize.x >= ContainerRect.x
+                    && currentEntryPositionX <= ContainerRect.xMax;
+        }
     }
 }

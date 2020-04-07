@@ -170,5 +170,26 @@ namespace SoftKata.ExtendedEditorGUI {
         protected virtual void EndNonLayoutRoutine() {
 
         }
+    
+
+        // experimental APi
+        protected abstract void _RegisterEntry(float width, float height);
+
+        protected abstract bool _EntryQueryCallback(Vector2 entrySize);
+        private bool _QueryEntry(float width, float height, out Rect rect) {
+            rect = new Rect(NextEntryPosition, new Vector2(width, height));
+            return _EntryQueryCallback(rect.size);
+        }
+
+        public bool _GetRect(float height, float width, out Rect rect) {
+            if(width < 0f) width = AutomaticWidth;
+            if(IsLayoutEvent) {
+                ++EntriesCount;
+                _RegisterEntry(width, height);
+                rect = new Rect();
+                return false;
+            }
+            return _QueryEntry(width, height, out rect);
+        }
     }
 }
