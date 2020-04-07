@@ -20,30 +20,12 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             ContentRect.height += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
         }
-        
-        protected sealed override bool PrepareNextRect(float width, float height) {
-            if (IsLayoutEvent) {
-                EntriesCount++;
-                ContentRect.width = Mathf.Max(ContentRect.width, width);
-                ContentRect.height += height;
-
-                return false;
-            }
-
-            var currentEntryPositionY = NextEntryPosition.y;
-            NextEntryPosition.y += height + SpaceBetweenEntries;
-            
-            // occlusion
-            return currentEntryPositionY + height >= ContainerRect.y
-                    && currentEntryPositionY <= ContainerRect.yMax;
-        }
 
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {
             EntriesCount += count;
             ContentRect.width = Mathf.Max(ContentRect.width, elemWidth);
             ContentRect.height += elemHeight * count;
         }
-
 
         // experimental APi
         protected override void _RegisterEntry(float width, float height) {

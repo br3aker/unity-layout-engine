@@ -54,7 +54,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 PreLayoutRequest();
 
                 if(Parent != null) {
-                    Parent.PrepareNextRect(ContentRect.width, ContentRect.height);
+                    ++Parent.EntriesCount;
+                    Parent._RegisterEntry(ContentRect.width, ContentRect.height);
                 }
                 else {
                     LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
@@ -67,7 +68,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (Event.current.type != EventType.Used && IsGroupValid) {
                 if (Parent != null) {
                     var requestedSize = ContentRect.size;
-                    if(IsGroupValid = Parent.GetNextEntryRect(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                    if(IsGroupValid = Parent._QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
                         // Content & container rects
                         ContentRect = TotalOffset.Remove(requestedRect);
                         ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
@@ -99,25 +100,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
         }
-
-        // Getting rects
-        public bool GetNextEntryRect(float width, float height, out Rect rect) {
-            var currentEntryPosition = NextEntryPosition;
-
-            if (width < 0f) width = AutomaticWidth;
-            if(PrepareNextRect(width, height) && IsGroupValid) {
-                rect = new Rect(currentEntryPosition, new Vector2(width, height));
-                return true;
-            }
-            rect = new Rect();
-            return false;
-        }
-        public Rect GetNextEntryRect(float width, float height) {
-            GetNextEntryRect(width, height, out Rect rect);
-            return rect;
-        }
-
-        protected abstract bool PrepareNextRect(float width, float height);
 
         public void RegisterArray(float elementHeight, int count) {
             RegisterArray(LayoutEngine.AutoWidth, elementHeight, count);

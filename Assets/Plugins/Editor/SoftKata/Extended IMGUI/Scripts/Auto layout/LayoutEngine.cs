@@ -39,19 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             _currentGroup = group.Parent;
         }
-
-        // Get rect from layout system
-        public static Rect GetRect(float height, float width = AutoWidth) {
-            return _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
-        }
-        public static bool GetRect(float height, float width, out Rect rect) {
-            if(_currentGroup != null) {
-                return _currentGroup.GetNextEntryRect(width, height, out rect);
-            }
-            rect = GetRectFromUnityLayout(height, width);
-            return true;
-        }
-
+        
         // Register array of equal elements in one batch
         public static void RegisterArray(int count, float elementHeight, float elementWidth) {
             if (_currentGroup != null)
