@@ -39,20 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             _currentGroup = group.Parent;
         }
-
-        // Get rect from layout system
-        public static Rect GetRect(float height, float width = AutoWidth) {
-            return _currentGroup?.GetNextEntryRect(width, height) ?? GetRectFromUnityLayout(height, width);
-        }
-        public static bool GetRect(float height, float width, out Rect rect) {
-            if(_currentGroup != null) {
-                var valid = _currentGroup.GetNextEntryRect(width, height, out rect);
-                return valid;
-            }
-            rect = GetRectFromUnityLayout(height, width);
-            return true;
-        }
-
+        
         // Register array of equal elements in one batch
         public static void RegisterArray(int count, float elementHeight, float elementWidth) {
             if (_currentGroup != null)
@@ -65,6 +52,18 @@ namespace SoftKata.ExtendedEditorGUI {
                 _currentGroup.RegisterArray(elementHeight, count);
             else
                 GetRectFromUnityLayout(elementHeight * count);
+        }
+    
+        // Getting rect from layout engine
+        public static bool GetRect(float height, float width, out Rect rect) {
+            if(_currentGroup != null) {
+                return _currentGroup.GetRect(height, width, out rect);
+            }
+            rect = GetRectFromUnityLayout(height, width);
+            return true;
+        }
+        public static Rect GetRect(float height, float width = AutoWidth) {
+            return _currentGroup?.GetRect(height, width) ?? GetRectFromUnityLayout(height, width);
         }
     }
 }
