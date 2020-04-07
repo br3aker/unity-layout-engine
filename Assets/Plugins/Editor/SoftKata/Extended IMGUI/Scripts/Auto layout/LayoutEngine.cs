@@ -75,5 +75,8 @@ namespace SoftKata.ExtendedEditorGUI {
             rect = GetRectFromUnityLayout(height, width);
             return true;
         }
+        public static Rect _GetRect(float height, float width = AutoWidth) {
+            return _currentGroup?._GetRect(height, width) ?? GetRectFromUnityLayout(height, width);
+        }
     }
 }

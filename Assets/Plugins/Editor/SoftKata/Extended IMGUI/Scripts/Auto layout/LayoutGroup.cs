@@ -191,5 +191,9 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             return _QueryEntry(width, height, out rect);
         }
+        public Rect _GetRect(float width, float height) {
+            _GetRect(height, width, out var rect);
+            return rect;
+        }
     }
 }

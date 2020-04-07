@@ -87,7 +87,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
 
                 // Tabs
-                if (LayoutEngine.GetRect(_tabHeaderHeight, LayoutEngine.AutoWidth, out var toolbarRect)) {
+                if (LayoutEngine._GetRect(_tabHeaderHeight, LayoutEngine.AutoWidth, out var toolbarRect)) {
                     // Tab control
                     currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
 
