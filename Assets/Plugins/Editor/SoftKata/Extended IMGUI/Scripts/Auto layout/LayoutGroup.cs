@@ -49,21 +49,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Layout
         protected abstract void PreLayoutRequest();
-        private void RequestLayout() {
-            if (IsGroupValid = EntriesCount > 0) {
-                PreLayoutRequest();
 
-                if(Parent != null) {
-                    ++Parent.EntriesCount;
-                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
-                }
-                else {
-                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
-                }
-            }
-        }
-
-        // Non-layout
+        // non-Layout
         internal void RetrieveLayoutData() {
             if (Event.current.type != EventType.Used && IsGroupValid) {
                 if (Parent != null) {
@@ -121,6 +108,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return output;
         }
     
+        // Layout event
         internal void BeginLayout(LayoutGroup parent) {
             ContentRect.width = -1;
             ContentRect.height = 0;
@@ -132,9 +120,21 @@ namespace SoftKata.ExtendedEditorGUI {
             IsLayoutEvent = true;
             AutomaticWidth = GetAutomaticWidth();
         }
-        internal virtual void EndLayout() {
-            RequestLayout();
+        internal void EndLayout() {
+            if (IsGroupValid = EntriesCount > 0) {
+                PreLayoutRequest();
+
+                if(Parent != null) {
+                    ++Parent.EntriesCount;
+                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
+                }
+                else {
+                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                }
+            }
         }
+        
+        // non-Layout event
         internal virtual void BeginNonLayout() {
             RetrieveLayoutData();
         } 
@@ -146,6 +146,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
     
+
         // Registering entry
         protected abstract void RegisterEntry(float width, float height);
 
