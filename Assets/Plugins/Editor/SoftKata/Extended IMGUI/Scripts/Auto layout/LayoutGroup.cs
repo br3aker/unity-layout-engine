@@ -141,16 +141,12 @@ namespace SoftKata.ExtendedEditorGUI {
         internal virtual void BeginNonLayout() {
             RetrieveLayoutData();
         } 
-        internal void EndNonLayout() {
+        internal virtual void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
                 ContainerRect.position = _clipWorldPositionOffset;
                 ContentRect.position += _clipWorldPositionOffset;
             }
-            EndNonLayoutRoutine();
-        }
-        protected virtual void EndNonLayoutRoutine() {
-
         }
     
         // Registering entry

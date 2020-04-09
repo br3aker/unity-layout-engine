@@ -155,7 +155,12 @@ namespace SoftKata.ExtendedEditorGUI {
             _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
             _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
         } 
-        protected override void EndNonLayoutRoutine() {
+        internal override void EndNonLayout() {
+            base.EndNonLayout();
+            DoScrollbars();
+        }
+        
+        private void DoScrollbars() {
             if (!IsGroupValid || _disableScrollbars) return;
             var current = Event.current;
             var eventType = current.type;
