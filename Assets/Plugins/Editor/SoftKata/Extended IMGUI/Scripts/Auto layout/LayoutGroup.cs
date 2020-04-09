@@ -120,20 +120,17 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return output;
         }
-
-        public void ResetLayout() {
+    
+        internal void BeginLayout(LayoutGroup parent) {
             ContentRect.width = -1;
             ContentRect.height = 0;
 
             NextEntryPosition = Vector2.zero;
-
             EntriesCount = 0;
-        }
-    
-        internal void BeginLayout(LayoutGroup parent) {
+
             Parent = parent;
-            AutomaticWidth = GetAutomaticWidth();
             IsLayoutEvent = true;
+            AutomaticWidth = GetAutomaticWidth();
         }
         internal virtual void EndLayout() {
             RequestLayout();
