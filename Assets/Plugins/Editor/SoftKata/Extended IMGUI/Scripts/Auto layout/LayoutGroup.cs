@@ -70,20 +70,18 @@ namespace SoftKata.ExtendedEditorGUI {
                 if (IsGroupValid) {
                     IsLayoutEvent = false;
 
-                    // Content offset
-                    NextEntryPosition += ContentRect.position;
-
-                    // Clipspace extra calculations
+                    // Clipspace
                     if(Clip) {
                         GUI.BeginClip(ContainerRect);
                         // Clipspace changes world space to local space
                         _clipWorldPositionOffset = ContainerRect.position;
-
                         ContentRect.position -= ContainerRect.position;
-                        NextEntryPosition -= ContainerRect.position;
 
                         ContainerRect.position = Vector2.zero;
                     }
+
+                    // Content offset
+                    NextEntryPosition += ContentRect.position;
                 }
             }
         }
