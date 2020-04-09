@@ -50,42 +50,6 @@ namespace SoftKata.ExtendedEditorGUI {
         // Layout
         protected abstract void PreLayoutRequest();
 
-        // non-Layout
-        internal void RetrieveLayoutData() {
-            if (Event.current.type != EventType.Used && IsGroupValid) {
-                if (Parent != null) {
-                    var requestedSize = ContentRect.size;
-                    if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
-                        // Content & container rects
-                        ContentRect = TotalOffset.Remove(requestedRect);
-                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
-                    }
-                }
-                else {
-                    // Content & container rects
-                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
-                    ContentRect = ContainerRect;
-                }
-
-                if (IsGroupValid) {
-                    IsLayoutEvent = false;
-
-                    // Clipspace
-                    if(Clip) {
-                        GUI.BeginClip(ContainerRect);
-                        // Clipspace changes world space to local space
-                        _clipWorldPositionOffset = ContainerRect.position;
-                        ContentRect.position -= ContainerRect.position;
-
-                        ContainerRect.position = Vector2.zero;
-                    }
-
-                    // Content offset
-                    NextEntryPosition += ContentRect.position;
-                }
-            }
-        }
-
         public void RegisterArray(float elementHeight, int count) {
             RegisterArray(LayoutEngine.AutoWidth, elementHeight, count);
         }
@@ -134,7 +98,38 @@ namespace SoftKata.ExtendedEditorGUI {
         
         // non-Layout event
         internal virtual void BeginNonLayout() {
-            RetrieveLayoutData();
+            if (Event.current.type != EventType.Used && IsGroupValid) {
+                if (Parent != null) {
+                    var requestedSize = ContentRect.size;
+                    if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                        // Content & container rects
+                        ContentRect = TotalOffset.Remove(requestedRect);
+                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
+                    }
+                }
+                else {
+                    // Content & container rects
+                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
+                    ContentRect = ContainerRect;
+                }
+
+                if (IsGroupValid) {
+                    IsLayoutEvent = false;
+
+                    // Clipspace
+                    if(Clip) {
+                        GUI.BeginClip(ContainerRect);
+                        // Clipspace changes world space to local space
+                        _clipWorldPositionOffset = ContainerRect.position;
+                        ContentRect.position -= ContainerRect.position;
+
+                        ContainerRect.position = Vector2.zero;
+                    }
+
+                    // Content offset
+                    NextEntryPosition += ContentRect.position;
+                }
+            }
         } 
         internal virtual void EndNonLayout() {
             if(Clip) {
