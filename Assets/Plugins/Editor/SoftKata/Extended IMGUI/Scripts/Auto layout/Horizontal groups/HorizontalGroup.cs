@@ -4,8 +4,6 @@ using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
     public class HorizontalGroup : LayoutGroup {
-        protected int FixedWidthEntriesCount;
-        
         public HorizontalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.x;
         }
@@ -20,7 +18,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public override void RegisterArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0f) {
                 ContentRect.width += elemWidth * count;
-                FixedWidthEntriesCount += count;
             }
             EntriesCount += count; ;
             ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);

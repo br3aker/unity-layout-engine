@@ -110,14 +110,14 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
 
             // _scrollViewExpander.OnGUI();
 
-            // _flexibleHorizontalGroupTest.OnGUI();
+            _flexibleHorizontalGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -256,7 +256,7 @@ namespace Development {
             private LayoutGroup _flexibleHorizontalGroup;
 
             public FlexibleHorizontalGroupTest() {
-                _flexibleHorizontalGroup = new FlexibleHorizontalGroup(-1);
+                _flexibleHorizontalGroup = new FlexibleHorizontalGroup(LayoutEngine.AutoWidth);
             }
             
             public void OnGUI() {
@@ -266,7 +266,7 @@ namespace Development {
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
 
                     for(int i = 0; i < 3; i++) {
-                        var rect = LayoutEngine.GetRect(40, 55);
+                        var rect = LayoutEngine.GetRect(40, -1);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
