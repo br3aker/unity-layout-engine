@@ -20,7 +20,6 @@ namespace SoftKata.ExtendedEditorGUI {
         // Layout group management
         public static bool BeginLayoutGroup(LayoutGroup group) {
             if(Event.current.type == EventType.Layout) {
-                group.ResetLayout();
                 group.BeginLayout(_currentGroup);
                 _currentGroup = group;
                 return true;

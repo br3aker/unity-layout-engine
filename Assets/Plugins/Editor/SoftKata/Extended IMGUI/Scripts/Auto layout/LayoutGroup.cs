@@ -49,57 +49,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Layout
         protected abstract void PreLayoutRequest();
-        private void RequestLayout() {
-            if (IsGroupValid = EntriesCount > 0) {
-                PreLayoutRequest();
-
-                if(Parent != null) {
-                    ++Parent.EntriesCount;
-                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
-                }
-                else {
-                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
-                }
-            }
-        }
-
-        // Non-layout
-        internal void RetrieveLayoutData() {
-            if (Event.current.type != EventType.Used && IsGroupValid) {
-                if (Parent != null) {
-                    var requestedSize = ContentRect.size;
-                    if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
-                        // Content & container rects
-                        ContentRect = TotalOffset.Remove(requestedRect);
-                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
-                    }
-                }
-                else {
-                    // Content & container rects
-                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
-                    ContentRect = ContainerRect;
-                }
-
-                if (IsGroupValid) {
-                    IsLayoutEvent = false;
-
-                    // Content offset
-                    NextEntryPosition += ContentRect.position;
-
-                    // Clipspace extra calculations
-                    if(Clip) {
-                        GUI.BeginClip(ContainerRect);
-                        // Clipspace changes world space to local space
-                        _clipWorldPositionOffset = ContainerRect.position;
-
-                        ContentRect.position -= ContainerRect.position;
-                        NextEntryPosition -= ContainerRect.position;
-
-                        ContainerRect.position = Vector2.zero;
-                    }
-                }
-            }
-        }
 
         public void RegisterArray(float elementHeight, int count) {
             RegisterArray(LayoutEngine.AutoWidth, elementHeight, count);
@@ -120,39 +69,77 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return output;
         }
-
-        public void ResetLayout() {
+    
+        // Layout event
+        internal void BeginLayout(LayoutGroup parent) {
             ContentRect.width = -1;
             ContentRect.height = 0;
 
             NextEntryPosition = Vector2.zero;
-
             EntriesCount = 0;
-        }
-    
-        internal void BeginLayout(LayoutGroup parent) {
+
             Parent = parent;
-            AutomaticWidth = GetAutomaticWidth();
             IsLayoutEvent = true;
+            AutomaticWidth = GetAutomaticWidth();
         }
-        internal virtual void EndLayout() {
-            RequestLayout();
+        internal void EndLayout() {
+            if (IsGroupValid = EntriesCount > 0) {
+                PreLayoutRequest();
+
+                if(Parent != null) {
+                    ++Parent.EntriesCount;
+                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
+                }
+                else {
+                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                }
+            }
         }
+        
+        // non-Layout event
         internal virtual void BeginNonLayout() {
-            RetrieveLayoutData();
+            if (Event.current.type != EventType.Used && IsGroupValid) {
+                if (Parent != null) {
+                    var requestedSize = ContentRect.size;
+                    if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                        // Content & container rects
+                        ContentRect = TotalOffset.Remove(requestedRect);
+                        ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
+                    }
+                }
+                else {
+                    // Content & container rects
+                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
+                    ContentRect = ContainerRect;
+                }
+
+                if (IsGroupValid) {
+                    IsLayoutEvent = false;
+
+                    // Clipspace
+                    if(Clip) {
+                        GUI.BeginClip(ContainerRect);
+                        // Clipspace changes world space to local space
+                        _clipWorldPositionOffset = ContainerRect.position;
+                        ContentRect.position -= ContainerRect.position;
+
+                        ContainerRect.position = Vector2.zero;
+                    }
+
+                    // Content offset
+                    NextEntryPosition += ContentRect.position;
+                }
+            }
         } 
-        internal void EndNonLayout() {
+        internal virtual void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
                 ContainerRect.position = _clipWorldPositionOffset;
                 ContentRect.position += _clipWorldPositionOffset;
             }
-            EndNonLayoutRoutine();
-        }
-        protected virtual void EndNonLayoutRoutine() {
-
         }
     
+
         // Registering entry
         protected abstract void RegisterEntry(float width, float height);
 
