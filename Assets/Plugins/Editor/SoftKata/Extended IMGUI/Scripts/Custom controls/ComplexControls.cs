@@ -273,7 +273,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // register full array of elements
                 if (eventType == EventType.Layout) {
-                    _contentScrollGroup.RegisterArray(_elementHeight, Count);
+                    _contentScrollGroup.RegisterEntriesArray(_elementHeight, Count);
                     return;
                 }
 

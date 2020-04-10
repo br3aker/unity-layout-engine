@@ -47,14 +47,6 @@ namespace SoftKata.ExtendedEditorGUI {
             TotalOffset.Accumulate(style.padding);
         }
 
-        // Layout
-        protected abstract void PreLayoutRequest();
-
-        public void RegisterArray(float elementHeight, int count) {
-            RegisterArray(LayoutEngine.AutoWidth, elementHeight, count);
-        }
-        public abstract void RegisterArray(float elemWidth, float elemHeight, int count);
-
         public Rect GetContentRect(bool fullRect = false) {
             var output = ContentRect;
 
@@ -71,6 +63,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
     
         // Layout event
+        protected abstract void PreLayoutRequest();
         internal void BeginLayout(LayoutGroup parent) {
             ContentRect.width = -1;
             ContentRect.height = 0;
@@ -139,11 +132,14 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
     
-
-        // Registering entry
+        // Registering entry(s)
         protected abstract void RegisterEntry(float width, float height);
-
-        // Gettings entry
+        public abstract void RegisterEntriesArray(float elemWidth, float elemHeight, int count);
+        public void RegisterEntriesArray(float elementHeight, int count) {
+            RegisterEntriesArray(LayoutEngine.AutoWidth, elementHeight, count);
+        }
+        
+        // Getting entry
         protected abstract bool QueryAndOcclude(Vector2 entrySize);
         private bool QueryEntry(float width, float height, out Rect rect) {
             rect = new Rect(NextEntryPosition, new Vector2(width, height));

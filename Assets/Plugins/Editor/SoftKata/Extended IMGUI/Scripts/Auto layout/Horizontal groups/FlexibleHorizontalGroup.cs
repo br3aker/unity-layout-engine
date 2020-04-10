@@ -5,7 +5,6 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public class FlexibleHorizontalGroup : HorizontalGroup {
         private int _fixedEntriesCount;
-        private float _fixedEntriesWidth;
 
         private float _containerWidth;
         private float _fixedWidth;
@@ -37,15 +36,6 @@ namespace SoftKata.ExtendedEditorGUI {
             AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
         }
 
-        public override void RegisterArray(float elemWidth, float elemHeight, int count) {
-            if (elemWidth > 0) {
-                ContentRect.width += elemWidth * count;
-                ++_fixedEntriesCount;
-            }
-            EntriesCount += count;
-            ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
-        }
-
         // Entry registration and querying
         protected override void RegisterEntry(float width, float height) {
             if(width > 0) {
@@ -53,6 +43,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 ++_fixedEntriesCount;
             }
             ContentRect.height = Mathf.Max(ContentRect.height, height);
+        }
+        public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
+            if (elemWidth > 0) {
+                ContentRect.width += elemWidth * count;
+                ++_fixedEntriesCount;
+            }
+            EntriesCount += count;
+            ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
         }
     }
 }

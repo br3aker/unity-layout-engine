@@ -102,7 +102,18 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRect.height += TotalOffset.vertical;
             ContentRect.width += TotalOffset.horizontal;
         }
+    
+        internal override void BeginNonLayout() {
+            base.BeginNonLayout();
 
+            _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+            _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+        } 
+        internal override void EndNonLayout() {
+            base.EndNonLayout();
+            DoScrollbars();
+        }
+        
         private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
             Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength) {
             switch (currentEvent.type) {
@@ -148,18 +159,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return scrollPos;
         }
-    
-        internal override void BeginNonLayout() {
-            base.BeginNonLayout();
-
-            _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-            _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-        } 
-        internal override void EndNonLayout() {
-            base.EndNonLayout();
-            DoScrollbars();
-        }
-        
         private void DoScrollbars() {
             if (!IsGroupValid || _disableScrollbars) return;
             var current = Event.current;

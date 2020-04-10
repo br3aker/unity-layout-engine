@@ -21,17 +21,16 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRect.height += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
-        public override void RegisterArray(float elemWidth, float elemHeight, int count) {
+        protected override void RegisterEntry(float width, float height) {
+            ContentRect.width = Mathf.Max(ContentRect.width, width);
+            ContentRect.height += height;
+        }
+        public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             EntriesCount += count;
             ContentRect.width = Mathf.Max(ContentRect.width, elemWidth);
             ContentRect.height += elemHeight * count;
         }
 
-        // Entry registration and querying
-        protected override void RegisterEntry(float width, float height) {
-            ContentRect.width = Mathf.Max(ContentRect.width, width);
-            ContentRect.height += height;
-        }
         protected override bool QueryAndOcclude(Vector2 entrySize) {
             var currentEntryPositionY = NextEntryPosition.y;
             NextEntryPosition.y += entrySize.y + SpaceBetweenEntries;
