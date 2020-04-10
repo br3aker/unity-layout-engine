@@ -19,7 +19,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public FlexibleHorizontalGroup(float width, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _containerWidth = width;
         }
-        public FlexibleHorizontalGroup(float width, bool ignoreConstaints = false)
+        public FlexibleHorizontalGroup(float width = Layout.AutoWidth, bool ignoreConstaints = false)
             : this(width, ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
