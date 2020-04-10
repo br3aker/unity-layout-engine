@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public static partial class LayoutEngine {
+    public static partial class Layout {
         public const float AutoWidth = -1f;
 
         internal static LayoutGroup _currentGroup;

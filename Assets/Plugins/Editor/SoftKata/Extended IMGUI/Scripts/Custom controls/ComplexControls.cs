@@ -87,7 +87,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
 
                 // Tabs
-                if (LayoutEngine.GetRect(_tabHeaderHeight, LayoutEngine.AutoWidth, out var toolbarRect)) {
+                if (Layout.GetRect(_tabHeaderHeight, Layout.AutoWidth, out var toolbarRect)) {
                     // Tab control
                     currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
 
@@ -102,15 +102,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Content
                 if (_animator.isAnimating) {
                     _scrollGroup.ScrollPosX = currentAnimationPosition;
-                    if(LayoutEngine.BeginLayoutGroup(_scrollGroup)) {
-                        if(LayoutEngine.BeginLayoutGroup(_horizontalGroup)) {
+                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                        if(Layout.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
                         }
-                        LayoutEngine.EndLayoutGroup<HorizontalGroup>();
+                        Layout.EndLayoutGroup<HorizontalGroup>();
                     }
-                    LayoutEngine.EndLayoutGroup<ScrollGroup>();
+                    Layout.EndLayoutGroup<ScrollGroup>();
                 }
                 else {
                     _contentDrawers[CurrentTab].OnGUI();
@@ -250,7 +250,7 @@ namespace SoftKata.ExtendedEditorGUI {
             /* Core method for rendering */
             public void OnGUI() {
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
-                if (LayoutEngine.BeginLayoutGroup(_contentScrollGroup)) {
+                if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
                     if(Count != 0) {
                         DoContent();
                     }
@@ -258,7 +258,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         DoEmptyContent();
                     }
                 }
-                LayoutEngine.EndLayoutGroup<ScrollGroup>();
+                Layout.EndLayoutGroup<ScrollGroup>();
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
                 if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {
@@ -280,7 +280,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // skip invisible elements
                 if(_firstVisibleIndex > 0) {
                     var totalSkipHeight = _firstVisibleIndex * _elementHeightWithSpace - _spaceBetweenElements;
-                    _contentScrollGroup.GetRect(LayoutEngine.AutoWidth, totalSkipHeight);
+                    _contentScrollGroup.GetRect(Layout.AutoWidth, totalSkipHeight);
                 }
 
                 switch(_state) {
@@ -323,7 +323,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 // Requesting held element space
-                var initialHeldRect = _contentScrollGroup.GetRect(LayoutEngine.AutoWidth, _elementHeight);
+                var initialHeldRect = _contentScrollGroup.GetRect(Layout.AutoWidth, _elementHeight);
 
                 // drawing after held element
                 for (int i = reorderableDrawerIndex + 1; i < _visibleElementsCount; i++) {
@@ -337,13 +337,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUI.color = color;
             }
             private void DoEmptyContent() {
-                if(_contentScrollGroup.GetRect(LayoutEngine.AutoWidth, IconSize, out var iconRect)) {
+                if(_contentScrollGroup.GetRect(Layout.AutoWidth, IconSize, out var iconRect)) {
                     iconRect.x += (iconRect.width / 2) - IconSize / 2;
                     iconRect.width = IconSize;
 
                     GUI.DrawTexture(iconRect, _emptyListIcon);
                 }
-                if(_contentScrollGroup.GetRect(LayoutEngine.AutoWidth, _emptyListLabelHeight, out var labelRect)) {
+                if(_contentScrollGroup.GetRect(Layout.AutoWidth, _emptyListLabelHeight, out var labelRect)) {
                     EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
                 }
 

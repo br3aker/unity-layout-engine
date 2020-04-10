@@ -84,7 +84,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     Parent.RegisterEntry(ContentRect.width, ContentRect.height);
                 }
                 else {
-                    LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                    Layout.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 else {
                     // Content & container rects
-                    ContainerRect = TotalOffset.Remove(LayoutEngine.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
+                    ContainerRect = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
                     ContentRect = ContainerRect;
                 }
 
@@ -136,7 +136,7 @@ namespace SoftKata.ExtendedEditorGUI {
         protected abstract void RegisterEntry(float width, float height);
         public abstract void RegisterEntriesArray(float elemWidth, float elemHeight, int count);
         public void RegisterEntriesArray(float elementHeight, int count) {
-            RegisterEntriesArray(LayoutEngine.AutoWidth, elementHeight, count);
+            RegisterEntriesArray(Layout.AutoWidth, elementHeight, count);
         }
         
         // Getting entry

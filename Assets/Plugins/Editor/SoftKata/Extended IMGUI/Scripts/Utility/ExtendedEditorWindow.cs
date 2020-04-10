@@ -19,11 +19,11 @@ namespace SoftKata.ExtendedEditorGUI {
         public void OnGUI() {
             if (Event.current.type == EventType.Used) return;
 
-            _rootScrollGroup.ContainerSize = new Vector2(LayoutEngine.AutoWidth, position.size.y);
-            if (LayoutEngine.BeginLayoutGroup(_rootScrollGroup)) {
+            _rootScrollGroup.ContainerSize = new Vector2(Layout.AutoWidth, position.size.y);
+            if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
                 IMGUI();
             }
-            LayoutEngine.EndLayoutGroup<ScrollGroup>();
+            Layout.EndLayoutGroup<ScrollGroup>();
         }
 
         protected abstract void Initialize();
