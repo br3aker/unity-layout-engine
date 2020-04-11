@@ -28,7 +28,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _currentGroup = group;
             return group.IsGroupValid;
         }
-        public static void EndLayoutGroup<T>() {
+        public static void EndLayoutGroup() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
                 group.EndLayout();

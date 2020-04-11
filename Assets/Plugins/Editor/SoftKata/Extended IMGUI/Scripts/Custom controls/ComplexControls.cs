@@ -108,9 +108,9 @@ namespace SoftKata.ExtendedEditorGUI {
                                 _contentDrawers[i].OnGUI();
                             }
                         }
-                        Layout.EndLayoutGroup<HorizontalGroup>();
+                        Layout.EndLayoutGroup();
                     }
-                    Layout.EndLayoutGroup<ScrollGroup>();
+                    Layout.EndLayoutGroup();
                 }
                 else {
                     _contentDrawers[CurrentTab].OnGUI();
@@ -258,7 +258,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         DoEmptyContent();
                     }
                 }
-                Layout.EndLayoutGroup<ScrollGroup>();
+                Layout.EndLayoutGroup();
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
                 if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {

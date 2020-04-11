@@ -221,10 +221,10 @@ namespace Development {
                                 }
                             }
                         }
-                        Layout.EndLayoutGroup<HorizontalGroup>();
+                        Layout.EndLayoutGroup();
                     }
                 }
-                Layout.EndLayoutGroup<ScrollGroup>();
+                Layout.EndLayoutGroup();
 
                 _horizontalEntriesCount = newEntriesCount;
             }
@@ -248,7 +248,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
                     }
                 }
-                Layout.EndLayoutGroup<ScrollGroup>();
+                Layout.EndLayoutGroup();
             }
         }
 
@@ -271,7 +271,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
                 }
-                Layout.EndLayoutGroup<FlexibleHorizontalGroup>();
+                Layout.EndLayoutGroup();
             }
         }
     }

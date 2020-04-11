@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
                 IMGUI();
             }
-            Layout.EndLayoutGroup<ScrollGroup>();
+            Layout.EndLayoutGroup();
         }
 
         protected abstract void Initialize();
