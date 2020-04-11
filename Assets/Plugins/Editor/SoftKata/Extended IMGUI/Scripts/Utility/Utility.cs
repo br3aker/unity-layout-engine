@@ -24,9 +24,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var num2 = Mathf.Min(a.x + a.width, b.x + b.width);
             var y = Mathf.Max(a.y, b.y);
             var num4 = Mathf.Min(a.y + a.height, b.y + b.height);
-            if (num2 >= x && num4 >= y) return new Rect(x, y, num2 - x, num4 - y);
-
-            return new Rect();
+            return new Rect(x, y, num2 - x, num4 - y);
         }
 
         public static void ResetToDefaults<T>(this IList<T> list) {
