@@ -3,47 +3,53 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public class TreeViewGroup : VerticalGroup {
-        private readonly Color _connectionLineColor;
-        private readonly float _connectionLineLength;
-        private readonly float _connectionLineWidth;
+    // public class TreeViewGroup : VerticalGroup {
+    //     private readonly Color _connectionLineColor;
+    //     private readonly float _connectionLineLength;
+    //     private readonly float _connectionLineWidth;
 
-        private float _lastEntryHalfHeight;
-        private float _lastEntryY;
+    //     private float _lastEntryHalfHeight;
+    //     private float _lastEntryY;
 
-        private float _entryPaddingFromConnector;
+    //     private float _entryPaddingFromConnector;
+    //     private float _rootBottomPadding;
 
-        // public TreeViewGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
-        //     // var overflow = style.overflow;
-        //     // _connectionLineWidth = overflow.left;
-        //     // _connectionLineLength = overflow.left + overflow.right;
+    //     public TreeViewGroup(GUIStyle style) : base(style, false) {
+    //         var overflow = style.overflow;
+    //         _connectionLineWidth = overflow.left;
+    //         _connectionLineLength = overflow.left + overflow.right;
 
-        //     // _connectionLineColor = style.normal.textColor;
+    //         _connectionLineColor = style.normal.textColor;
 
-        //     // _entryPaddingFromConnector = Padding.left;
-        // }
-
-        // protected override Rect GetEntryRect(float x, float y, float width, float height) {
-        //     _lastEntryHalfHeight = height / 2;
-        //     _lastEntryY = y;
-
-        //     var horizontalLine = new Rect(
-        //         x - _entryPaddingFromConnector, y + _lastEntryHalfHeight,
-        //         _connectionLineLength, _connectionLineWidth
-        //     );
-        //     EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
-
-        //     return new Rect(x, y, width, height);
-        // } 
+    //         _entryPaddingFromConnector = style.padding.left;
+    //         _rootBottomPadding = style.padding.top;
+    //     }
+    //     public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
     
-        // internal override void EndNonLayout() {
-        //     var verticalLineRect = new Rect(
-        //         ContainerRect.x - _entryPaddingFromConnector, ContainerRect.y,
-        //         _connectionLineWidth,
-        //         _lastEntryY + _lastEntryHalfHeight - ContainerRect.y + Padding.top
-        //     );
+    //     internal override void EndNonLayout() {
+    //         var verticalLineRect = new Rect(
+    //             ContainerRect.x - _entryPaddingFromConnector, ContainerRect.y,
+    //             _connectionLineWidth,
+    //             _lastEntryY + _lastEntryHalfHeight - ContainerRect.y + _rootBottomPadding
+    //         );
 
-        //     EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
-        // }
-    }
+    //         EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
+    //     }
+
+    //     protected override bool QueryEntry(float width, float height, out Rect rect) {
+    //         var position = NextEntryPosition;
+    //         rect = new Rect(position, new Vector2(width, height));
+
+    //         _lastEntryHalfHeight = height / 2;
+    //         _lastEntryY = position.y;
+
+    //         var horizontalLine = new Rect(
+    //             position.x - _entryPaddingFromConnector, position.y + _lastEntryHalfHeight,
+    //             _connectionLineLength, _connectionLineWidth
+    //         );
+    //         EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
+
+    //         return QueryAndOcclude(rect.size);
+    //     }
+    // }
 }

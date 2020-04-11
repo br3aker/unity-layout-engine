@@ -23,6 +23,7 @@ namespace Development {
         private ScrollViewTest _scrollViewTest;
         private ScrollViewExpander _scrollViewExpander;
         private FlexibleHorizontalGroupTest _flexibleHorizontalGroupTest;
+        private TreeViewGroupTest _treeViewGroupTest;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
@@ -98,6 +99,7 @@ namespace Development {
             _scrollViewTest = new ScrollViewTest(2500);
             _scrollViewExpander = new ScrollViewExpander();
             _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
+            _treeViewGroupTest = new TreeViewGroupTest();
         }
 
         protected override void IMGUI() {
@@ -114,10 +116,11 @@ namespace Development {
             _scrollViewTest.OnGUI();
             Profiler.EndSample();
 
-
             // _scrollViewExpander.OnGUI();
 
             // _flexibleHorizontalGroupTest.OnGUI();
+            
+            // _treeViewGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -212,7 +215,6 @@ namespace Development {
             public void OnGUI() {
                 var newEntriesCount = EditorGUI.IntField(Layout.GetRect(16), _horizontalEntriesCount);
                 if(Layout.BeginLayoutGroup(_scrollGroup)) {
-                    // first chunk
                     for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                         if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
                             for(int j = 0; j < _horizontalEntriesCount; j++) {
@@ -264,6 +266,42 @@ namespace Development {
                     var fixedRect = Layout.GetRect(40, 55);
                     EditorGUI.DrawRect(fixedRect, Color.black);
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
+
+                    for(int i = 0; i < 3; i++) {
+                        var rect = Layout.GetRect(40, -1);
+                        EditorGUI.DrawRect(rect, Color.black);
+                        EditorGUI.LabelField(rect, rect.width.ToString());
+                    }
+                }
+                Layout.EndLayoutGroup();
+            }
+        }
+    
+        public class TreeViewGroupTest : IDrawableElement {
+            private LayoutGroup _treeViewGroup;
+            private LayoutGroup _treeViewChildGroup;
+
+            public TreeViewGroupTest() {
+                // _treeViewGroup = new TreeViewGroup();
+                // _treeViewChildGroup = new TreeViewGroup();
+            }
+            
+            public void OnGUI() {
+                if(Layout.BeginLayoutGroup(_treeViewGroup)) {
+                    for(int i = 0; i < 3; i++) {
+                        var rect = Layout.GetRect(40, -1);
+                        EditorGUI.DrawRect(rect, Color.black);
+                        EditorGUI.LabelField(rect, rect.width.ToString());
+                    }
+
+                    if(Layout.BeginLayoutGroup(_treeViewChildGroup)) {
+                        for(int i = 0; i < 3; i++) {
+                            var rect = Layout.GetRect(40, -1);
+                            EditorGUI.DrawRect(rect, Color.black);
+                            EditorGUI.LabelField(rect, rect.width.ToString());
+                        }
+                    }
+                    Layout.EndLayoutGroup();
 
                     for(int i = 0; i < 3; i++) {
                         var rect = Layout.GetRect(40, -1);
