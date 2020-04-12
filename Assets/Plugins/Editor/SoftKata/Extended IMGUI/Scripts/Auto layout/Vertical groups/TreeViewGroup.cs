@@ -5,45 +5,73 @@ using UnityEngine;
 namespace SoftKata.ExtendedEditorGUI {
     public class TreeViewGroup : VerticalGroup {
         private readonly Color _connectionLineColor;
-        private readonly float _connectionLineLength;
         private readonly float _connectionLineWidth;
+        private readonly float _connectorContentOffset;
+        private readonly float _leftPadding;
 
-        private float _lastEntryHalfHeight;
-        private float _lastEntryY;
+        private bool _notRepaintEvent;
 
-        private float _entryPaddingFromConnector;
+        private float _lastConnectionPoint;
+        private float _connectorOrigin;
+        private float _connectorOriginWithOffset;
+        
 
-        // public TreeViewGroup(Constraints modifier, GUIStyle style) : base(modifier, style) {
-        //     // var overflow = style.overflow;
-        //     // _connectionLineWidth = overflow.left;
-        //     // _connectionLineLength = overflow.left + overflow.right;
+        public TreeViewGroup(GUIStyle style) : base(style, false) {
+            var overflow = style.overflow;
+            _connectionLineWidth = overflow.left;
+            _connectorContentOffset = overflow.right;
 
-        //     // _connectionLineColor = style.normal.textColor;
+            _connectionLineColor = style.normal.textColor;
 
-        //     // _entryPaddingFromConnector = Padding.left;
-        // }
-
-        // protected override Rect GetEntryRect(float x, float y, float width, float height) {
-        //     _lastEntryHalfHeight = height / 2;
-        //     _lastEntryY = y;
-
-        //     var horizontalLine = new Rect(
-        //         x - _entryPaddingFromConnector, y + _lastEntryHalfHeight,
-        //         _connectionLineLength, _connectionLineWidth
-        //     );
-        //     EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
-
-        //     return new Rect(x, y, width, height);
-        // } 
+            _leftPadding = style.padding.left;
+        }
+        public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
     
-        // internal override void EndNonLayout() {
-        //     var verticalLineRect = new Rect(
-        //         ContainerRect.x - _entryPaddingFromConnector, ContainerRect.y,
-        //         _connectionLineWidth,
-        //         _lastEntryY + _lastEntryHalfHeight - ContainerRect.y + Padding.top
-        //     );
+        internal override void BeginNonLayout() {   
+            base.BeginNonLayout();
 
-        //     EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
-        // }
+            _notRepaintEvent = Event.current.type != EventType.Repaint;
+            _connectorOrigin = ContentRect.x - _leftPadding;
+            _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
+        }
+        internal override void EndNonLayout() {
+            base.EndNonLayout();
+
+            if(_notRepaintEvent) return;
+            var verticalLineRect = new Rect(
+                _connectorOrigin, 
+                ContentRect.y,
+                _connectionLineWidth,
+                _lastConnectionPoint - ContentRect.y
+            );
+
+            EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
+        }
+
+        private void DrawConnectionLine(Vector2 position, float height) {
+            if(_notRepaintEvent) return;
+            _lastConnectionPoint = position.y + height / 2;
+
+            var horizontalLine = new Rect(
+                _connectorOrigin, 
+                _lastConnectionPoint,
+                position.x - _connectorOriginWithOffset,
+                _connectionLineWidth
+            );
+            EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
+        }
+
+        public bool GetLeafRect(float height, float width, out Rect rect) {
+            DrawConnectionLine(NextEntryPosition, height);
+            return GetRect(height, width, out rect);
+        }
+        public Rect GetLeafRect(float height, float width) {
+            GetLeafRect(height, width, out var rect);
+            return rect;
+        }
+
+        public void DrawConnection(Rect rect) {
+            DrawConnectionLine(rect.position, rect.height);
+        }
     }
 }
