@@ -6,15 +6,14 @@ namespace SoftKata.ExtendedEditorGUI {
     public class TreeViewGroup : VerticalGroup {
         private readonly Color _connectionLineColor;
         private readonly float _connectionLineWidth;
+        private readonly float _connectorContentOffset;
+        private readonly float _leftPadding;
+
+        private bool _notRepaintEvent;
 
         private float _lastConnectionPoint;
-
-        private float _leftPadding;
         private float _connectorOrigin;
         private float _connectorOriginWithOffset;
-        private float _connectorContentOffset;
-
-        private bool _notRepaint;
         
 
         public TreeViewGroup(GUIStyle style) : base(style, false) {
@@ -28,19 +27,17 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
     
-        internal override void BeginNonLayout() {
+        internal override void BeginNonLayout() {   
             base.BeginNonLayout();
 
+            _notRepaintEvent = Event.current.type != EventType.Repaint;
             _connectorOrigin = ContentRect.x - _leftPadding;
             _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
-
-            _notRepaint = Event.current.type != EventType.Repaint;
         }
-
         internal override void EndNonLayout() {
             base.EndNonLayout();
 
-            if(_notRepaint) return;
+            if(_notRepaintEvent) return;
             var verticalLineRect = new Rect(
                 _connectorOrigin, 
                 ContentRect.y,
@@ -52,9 +49,9 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         private void DrawConnectionLine(Vector2 position, float height) {
-            if(_notRepaint) return;
+            if(_notRepaintEvent) return;
             _lastConnectionPoint = position.y + height / 2;
-            
+
             var horizontalLine = new Rect(
                 _connectorOrigin, 
                 _lastConnectionPoint,
