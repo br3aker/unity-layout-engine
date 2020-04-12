@@ -7,9 +7,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private readonly Color _connectionLineColor;
         private readonly float _connectionLineWidth;
 
-        // this can be calculated using variable
-        private float _lastEntryHalfHeight;
-        private float _lastEntryY;
+        private float _lastConnectionPoint;
 
         private float _leftPadding;
         private float _connectorOrigin;
@@ -41,13 +39,13 @@ namespace SoftKata.ExtendedEditorGUI {
 
         internal override void EndNonLayout() {
             base.EndNonLayout();
-            if(_notRepaint) return;
 
+            if(_notRepaint) return;
             var verticalLineRect = new Rect(
                 _connectorOrigin, 
                 ContentRect.y,
                 _connectionLineWidth,
-                _lastEntryY + _lastEntryHalfHeight - ContentRect.y
+                _lastConnectionPoint - ContentRect.y
             );
 
             EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
@@ -55,13 +53,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private void DrawConnectionLine(Vector2 position, float height) {
             if(_notRepaint) return;
-
-            _lastEntryHalfHeight = height / 2;
-            _lastEntryY = position.y;
-
+            _lastConnectionPoint = position.y + height / 2;
+            
             var horizontalLine = new Rect(
                 _connectorOrigin, 
-                position.y + _lastEntryHalfHeight,
+                _lastConnectionPoint,
                 position.x - _connectorOriginWithOffset,
                 _connectionLineWidth
             );
