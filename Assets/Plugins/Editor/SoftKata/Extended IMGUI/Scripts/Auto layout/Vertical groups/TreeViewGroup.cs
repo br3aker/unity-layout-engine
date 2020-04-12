@@ -3,53 +3,82 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
-    // public class TreeViewGroup : VerticalGroup {
-    //     private readonly Color _connectionLineColor;
-    //     private readonly float _connectionLineLength;
-    //     private readonly float _connectionLineWidth;
+    public class TreeViewGroup : VerticalGroup {
+        private readonly Color _connectionLineColor;
+        private readonly float _connectionLineWidth;
 
-    //     private float _lastEntryHalfHeight;
-    //     private float _lastEntryY;
+        // this can be calculated using variable
+        private float _lastEntryHalfHeight;
+        private float _lastEntryY;
 
-    //     private float _entryPaddingFromConnector;
-    //     private float _rootBottomPadding;
+        private float _leftPadding;
+        private float _connectorOrigin;
+        private float _connectorOriginWithOffset;
+        private float _connectorContentOffset;
 
-    //     public TreeViewGroup(GUIStyle style) : base(style, false) {
-    //         var overflow = style.overflow;
-    //         _connectionLineWidth = overflow.left;
-    //         _connectionLineLength = overflow.left + overflow.right;
+        private bool _notRepaint;
+        
 
-    //         _connectionLineColor = style.normal.textColor;
+        public TreeViewGroup(GUIStyle style) : base(style, false) {
+            var overflow = style.overflow;
+            _connectionLineWidth = overflow.left;
+            _connectorContentOffset = overflow.right;
 
-    //         _entryPaddingFromConnector = style.padding.left;
-    //         _rootBottomPadding = style.padding.top;
-    //     }
-    //     public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
+            _connectionLineColor = style.normal.textColor;
+
+            _leftPadding = style.padding.left;
+        }
+        public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
     
-    //     internal override void EndNonLayout() {
-    //         var verticalLineRect = new Rect(
-    //             ContainerRect.x - _entryPaddingFromConnector, ContainerRect.y,
-    //             _connectionLineWidth,
-    //             _lastEntryY + _lastEntryHalfHeight - ContainerRect.y + _rootBottomPadding
-    //         );
+        internal override void BeginNonLayout() {
+            base.BeginNonLayout();
 
-    //         EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
-    //     }
+            _connectorOrigin = ContentRect.x - _leftPadding;
+            _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
 
-    //     protected override bool QueryEntry(float width, float height, out Rect rect) {
-    //         var position = NextEntryPosition;
-    //         rect = new Rect(position, new Vector2(width, height));
+            _notRepaint = Event.current.type != EventType.Repaint;
+        }
 
-    //         _lastEntryHalfHeight = height / 2;
-    //         _lastEntryY = position.y;
+        internal override void EndNonLayout() {
+            base.EndNonLayout();
+            if(_notRepaint) return;
 
-    //         var horizontalLine = new Rect(
-    //             position.x - _entryPaddingFromConnector, position.y + _lastEntryHalfHeight,
-    //             _connectionLineLength, _connectionLineWidth
-    //         );
-    //         EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
+            var verticalLineRect = new Rect(
+                _connectorOrigin, 
+                ContentRect.y,
+                _connectionLineWidth,
+                _lastEntryY + _lastEntryHalfHeight - ContentRect.y
+            );
 
-    //         return QueryAndOcclude(rect.size);
-    //     }
-    // }
+            EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
+        }
+
+        private void DrawConnectionLine(Vector2 position, float height) {
+            if(_notRepaint) return;
+
+            _lastEntryHalfHeight = height / 2;
+            _lastEntryY = position.y;
+
+            var horizontalLine = new Rect(
+                _connectorOrigin, 
+                position.y + _lastEntryHalfHeight,
+                position.x - _connectorOriginWithOffset,
+                _connectionLineWidth
+            );
+            EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
+        }
+
+        public bool GetLeafRect(float height, float width, out Rect rect) {
+            DrawConnectionLine(NextEntryPosition, height);
+            return GetRect(height, width, out rect);
+        }
+        public Rect GetLeafRect(float height, float width) {
+            GetLeafRect(height, width, out var rect);
+            return rect;
+        }
+
+        public void DrawConnection(Rect rect) {
+            DrawConnectionLine(rect.position, rect.height);
+        }
+    }
 }

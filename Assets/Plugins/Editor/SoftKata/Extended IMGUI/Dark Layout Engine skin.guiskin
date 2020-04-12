@@ -1602,7 +1602,7 @@ MonoBehaviour:
       m_Bottom: 0
     m_Overflow:
       m_Left: 1
-      m_Right: 12
+      m_Right: 6
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 0}
@@ -1613,7 +1613,7 @@ MonoBehaviour:
     m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 3}
+    m_ContentOffset: {x: 0, y: 2}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 0

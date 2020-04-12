@@ -112,15 +112,15 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
             // _flexibleHorizontalGroupTest.OnGUI();
             
-            // _treeViewGroupTest.OnGUI();
+            _treeViewGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -278,33 +278,35 @@ namespace Development {
         }
     
         public class TreeViewGroupTest : IDrawableElement {
-            private LayoutGroup _treeViewGroup;
-            private LayoutGroup _treeViewChildGroup;
+            private TreeViewGroup _treeViewGroup;
+            private TreeViewGroup _treeViewChildGroup;
 
             public TreeViewGroupTest() {
-                // _treeViewGroup = new TreeViewGroup();
-                // _treeViewChildGroup = new TreeViewGroup();
+                _treeViewGroup = new TreeViewGroup();
+                _treeViewChildGroup = new TreeViewGroup();
             }
             
             public void OnGUI() {
                 if(Layout.BeginLayoutGroup(_treeViewGroup)) {
                     for(int i = 0; i < 3; i++) {
-                        var rect = Layout.GetRect(40, -1);
+                        var rect = _treeViewGroup.GetLeafRect(40, -1);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
 
                     if(Layout.BeginLayoutGroup(_treeViewChildGroup)) {
                         for(int i = 0; i < 3; i++) {
-                            var rect = Layout.GetRect(40, -1);
+                            var rect = _treeViewChildGroup.GetLeafRect(40, -1);
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
                     }
                     Layout.EndLayoutGroup();
+                    // _treeViewGroup.AddLeafRect(_treeViewChildGroup.GetContentRect());
+                    
 
                     for(int i = 0; i < 3; i++) {
-                        var rect = Layout.GetRect(40, -1);
+                        var rect =  _treeViewGroup.GetLeafRect(40, -1);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
