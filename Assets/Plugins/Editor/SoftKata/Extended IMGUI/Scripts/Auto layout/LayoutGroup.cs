@@ -5,9 +5,6 @@ using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
-    // TODO: fix flexible horizontal group
-    // TODO: fix horizontal group
-    // TODO: implement automatic height in parented to horizontal-like group
     public abstract class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
         
