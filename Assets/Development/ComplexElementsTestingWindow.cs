@@ -112,15 +112,15 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            // Profiler.BeginSample("Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
+            Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
             // _flexibleHorizontalGroupTest.OnGUI();
             
-            _treeViewGroupTest.OnGUI();
+            // _treeViewGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {
@@ -222,11 +222,11 @@ namespace Development {
                                     EditorGUI.DrawRect(rect, Color.black);
                                 }
                             }
+                            Layout.EndLayoutGroup();
                         }
-                        Layout.EndLayoutGroup();
                     }
+                    Layout.EndLayoutGroup();
                 }
-                Layout.EndLayoutGroup();
 
                 _horizontalEntriesCount = newEntriesCount;
             }

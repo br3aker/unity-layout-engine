@@ -103,11 +103,13 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRect.width += TotalOffset.horizontal;
         }
     
-        internal override void BeginNonLayout() {
-            base.BeginNonLayout();
-
-            _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-            _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+        internal override bool BeginNonLayout() {
+            if(base.BeginNonLayout()) {
+                _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                return true;
+            }
+            return false;
         } 
         internal override void EndNonLayout() {
             base.EndNonLayout();

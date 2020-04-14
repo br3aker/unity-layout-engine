@@ -30,10 +30,13 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRect.width = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
         }
     
-        internal override void BeginNonLayout() {
-            base.BeginNonLayout();
-            var totalFlexibleWidth = ContentRect.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
-            AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
+        internal override bool BeginNonLayout() {
+            if(base.BeginNonLayout()) {
+                var totalFlexibleWidth = ContentRect.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
+                AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
+                return true;
+            }
+            return false;
         }
 
         // Entry registration and querying

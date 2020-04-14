@@ -27,12 +27,14 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
     
-        internal override void BeginNonLayout() {   
-            base.BeginNonLayout();
-
-            _notRepaintEvent = Event.current.type != EventType.Repaint;
-            _connectorOrigin = ContentRect.x - _leftPadding;
-            _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
+        internal override bool BeginNonLayout() {
+            if(base.BeginNonLayout()) {
+                _notRepaintEvent = Event.current.type != EventType.Repaint;
+                _connectorOrigin = ContentRect.x - _leftPadding;
+                _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
+                return true;
+            }
+            return false;
         }
         internal override void EndNonLayout() {
             base.EndNonLayout();
