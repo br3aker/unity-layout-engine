@@ -25,8 +25,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return true;
             }
             if(group.IsGroupValid) {
-                group.BeginNonLayout();
-                if(group.IsGroupValid) {
+                if(group.BeginNonLayout()) {
                     _currentGroup = group;
                     return true;
                 }

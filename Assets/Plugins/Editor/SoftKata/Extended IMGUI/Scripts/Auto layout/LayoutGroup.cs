@@ -86,7 +86,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         
         // non-Layout event
-        internal virtual void BeginNonLayout() {
+        internal virtual bool BeginNonLayout() {
             if (Parent != null) {
                 var requestedSize = ContentRect.size;
                 if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
@@ -116,7 +116,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Content offset
                 NextEntryPosition += ContentRect.position;
+
+                return true;
             }
+            return false;
         } 
         internal virtual void EndNonLayout() {
             if(Clip) {
