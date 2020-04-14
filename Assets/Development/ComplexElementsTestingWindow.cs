@@ -222,11 +222,11 @@ namespace Development {
                                     EditorGUI.DrawRect(rect, Color.black);
                                 }
                             }
+                            Layout.EndLayoutGroup();
                         }
-                        Layout.EndLayoutGroup();
                     }
+                    Layout.EndLayoutGroup();
                 }
-                Layout.EndLayoutGroup();
 
                 _horizontalEntriesCount = newEntriesCount;
             }
