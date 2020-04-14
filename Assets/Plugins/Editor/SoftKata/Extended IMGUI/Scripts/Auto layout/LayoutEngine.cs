@@ -64,5 +64,21 @@ namespace SoftKata.ExtendedEditorGUI {
         public static Rect GetRect(float height, float width = AutoWidth) {
             return _currentGroup?.GetRect(height, width) ?? GetRectFromUnityLayout(height, width);
         }
+    
+        // Extensions
+        public static void DrawLeftSeparator(this LayoutGroup group, Color color) {
+            var contentRect = group.GetContentRect();
+            var style = group.Style;
+
+            var padding = style.padding;
+            var width = style.border.left;
+            var separatorRect = new Rect(
+                contentRect.x - padding.left - width,
+                contentRect.y - padding.top,
+                width,
+                contentRect.height + padding.vertical
+            );
+            EditorGUI.DrawRect(separatorRect, color);
+        }
     }
 }

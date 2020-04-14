@@ -302,7 +302,7 @@ namespace Development {
                         }
                     }
                     Layout.EndLayoutGroup();
-                    // _treeViewGroup.AddLeafRect(_treeViewChildGroup.GetContentRect());
+                    _treeViewGroup.DrawConnection(_treeViewChildGroup.GetContentRect());
                     
 
                     for(int i = 0; i < 3; i++) {

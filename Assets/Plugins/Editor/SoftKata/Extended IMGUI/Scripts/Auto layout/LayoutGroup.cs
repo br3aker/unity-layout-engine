@@ -10,6 +10,8 @@ namespace SoftKata.ExtendedEditorGUI {
         
         internal LayoutGroup Parent { get; private set; }
 
+        public readonly GUIStyle Style;
+
         // offset settings - Padding/Border/Margin
         public RectOffset TotalOffset {get;}
 
@@ -36,8 +38,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Constructor
         protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
-            TotalOffset = new RectOffset();
+            Style = style;
 
+            TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
             TotalOffset.Accumulate(style.margin);
             TotalOffset.Accumulate(style.border);
@@ -46,10 +49,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public Rect GetContentRect(bool fullRect = false) {
             var output = ContentRect;
-
-            if(fullRect) {
-                output = TotalOffset.Add(output);
-            }
 
             // World pos -> Local pos
             if(Clip) {
