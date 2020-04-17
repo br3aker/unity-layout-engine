@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
+using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class Layout {

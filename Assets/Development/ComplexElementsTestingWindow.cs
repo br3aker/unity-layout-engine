@@ -203,7 +203,6 @@ namespace Development {
 
             private int _horizontalEntriesCount = 50;
 
-
             public ScrollViewTest(int nestedGroupCount) {
                 _fadeGroup = new VerticalFadeGroup(true);
                 _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
@@ -217,7 +216,6 @@ namespace Development {
             public void OnGUI() {
                 _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
-                    var newEntriesCount = EditorGUI.IntField(Layout.GetRect(16), _horizontalEntriesCount);
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                             if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
@@ -231,8 +229,6 @@ namespace Development {
                         }
                         Layout.EndLayoutGroup();
                     }
-
-                    _horizontalEntriesCount = newEntriesCount;
 
                     Layout.EndLayoutGroup();
                 }
