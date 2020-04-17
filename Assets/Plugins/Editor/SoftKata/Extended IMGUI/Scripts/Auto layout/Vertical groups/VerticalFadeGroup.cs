@@ -4,13 +4,12 @@ using UnityEditor.AnimatedValues;
 
 namespace SoftKata.ExtendedEditorGUI {
     public class VerticalFadeGroup : VerticalGroup {
-        private AnimBool _expanded;
+        public AnimBool _expanded;
         public bool Expanded {
             get => _expanded.target;
-            set {
-                _expanded.target = value;
-            }
+            set => _expanded.target = value;
         }
+        public bool Visible => !Mathf.Approximately(_expanded.faded, 0);
 
         public VerticalFadeGroup(bool expanded, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);

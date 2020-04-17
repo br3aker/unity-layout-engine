@@ -216,7 +216,7 @@ namespace Development {
 
             public void OnGUI() {
                 _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
-                if(Layout.BeginLayoutGroup(_fadeGroup)) {
+                if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     var newEntriesCount = EditorGUI.IntField(Layout.GetRect(16), _horizontalEntriesCount);
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
