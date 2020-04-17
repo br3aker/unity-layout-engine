@@ -197,6 +197,7 @@ namespace Development {
         }
 
         public class ScrollViewTest : IDrawableElement {
+            private VerticalFadeGroup _fadeGroup;
             private ScrollGroup _scrollGroup;
             private LayoutGroup[] _nestedHorizontalGroups;
 
@@ -204,6 +205,7 @@ namespace Development {
 
 
             public ScrollViewTest(int nestedGroupCount) {
+                _fadeGroup = new VerticalFadeGroup(true);
                 _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
 
                 _nestedHorizontalGroups = new LayoutGroup[nestedGroupCount];
@@ -213,22 +215,27 @@ namespace Development {
             }
 
             public void OnGUI() {
-                var newEntriesCount = EditorGUI.IntField(Layout.GetRect(16), _horizontalEntriesCount);
-                if(Layout.BeginLayoutGroup(_scrollGroup)) {
-                    for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
-                        if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
-                            for(int j = 0; j < _horizontalEntriesCount; j++) {
-                                if(Layout.GetRect(30f, -1, out var rect)) {
-                                    EditorGUI.DrawRect(rect, Color.black);
+                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
+                    var newEntriesCount = EditorGUI.IntField(Layout.GetRect(16), _horizontalEntriesCount);
+                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                        for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
+                            if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
+                                for(int j = 0; j < _horizontalEntriesCount; j++) {
+                                    if(Layout.GetRect(30f, -1, out var rect)) {
+                                        EditorGUI.DrawRect(rect, Color.black);
+                                    }
                                 }
+                                Layout.EndLayoutGroup();
                             }
-                            Layout.EndLayoutGroup();
                         }
+                        Layout.EndLayoutGroup();
                     }
+
+                    _horizontalEntriesCount = newEntriesCount;
+
                     Layout.EndLayoutGroup();
                 }
-
-                _horizontalEntriesCount = newEntriesCount;
             }
         }
 
