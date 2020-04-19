@@ -5,16 +5,20 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         internal const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
 
-        private static ControlsResources _controlsResources;
-        public static ControlsResources ControlsResources => _controlsResources ?? (_controlsResources = new ControlsResources());
+        private static Resources _controlsResources;
+        public static Resources ControlsResources => _controlsResources ?? (_controlsResources = new Resources());
 
+        [System.Obsolete]
         private static GUIElementsResources _guiElementsResources;
+        [System.Obsolete]
         public static GUIElementsResources GUIElementsResources => _guiElementsResources ?? (_guiElementsResources = new GUIElementsResources());
     }
-    public class ControlsResources {
+    public class Resources {
+        [System.Obsolete]
         private const string LightSkinSubPath = "/Light Controls skin.guiskin";
+        [System.Obsolete]
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
-        private const string GuiSkinFileName = "/{}/Controls.guiskin";
+        private const string GuiSkinFileName = "/{0}/Controls.guiskin";
         
         // GUIStyles
         public GUIStyle CenteredGreyHeader;
@@ -27,9 +31,10 @@ namespace SoftKata.ExtendedEditorGUI {
         // Complex
         public KeyboardShortcutRecorder ShortcutRecorder;
         
-        internal ControlsResources() {
+        internal Resources() {
             var skinPath =
                 ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFileName, EditorGUIUtility.isProSkin ? "Dark" : "Light");
+            Debug.Log(skinPath);
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             // Styles
@@ -56,6 +61,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
     }
+
+    [System.Obsolete]
     public class GUIElementsResources {
         private const string LightSkinSubPath = "/Light Elements skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Elements skin.guiskin";
