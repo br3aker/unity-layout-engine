@@ -20,7 +20,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _containerWidth = width;
         }
         public FlexibleHorizontalGroup(float width = Layout.AutoWidth, bool ignoreConstaints = false)
-            : this(width, ExtendedEditorGUI.LayoutResources.HorizontalRestrictedGroup, ignoreConstaints) {}
+            : this(width, StyleResources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             // vertical "service" height addition: margin/border/padding
