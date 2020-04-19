@@ -5,9 +5,10 @@ using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public abstract class LayoutGroup {
+    public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
-        
+
+
         internal LayoutGroup Parent { get; private set; }
 
         public readonly GUIStyle Style;
@@ -148,6 +149,37 @@ namespace SoftKata.ExtendedEditorGUI {
         public Rect GetRect(float height, float width) {
             GetRect(height, width, out var rect);
             return rect;
+        }
+    }
+
+    public partial class LayoutGroup {
+        private static Resources _resources;
+        protected static Resources StyleResources => _resources ?? (_resources = new Resources());
+
+        protected class Resources {
+            private const string LightSkinSubPath = "/Light Layout Engine skin.guiskin";
+            private const string DarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
+
+            public GUIStyle VerticalGroup;
+            public GUIStyle VerticalFadeGroup;
+            public GUIStyle Treeview;
+
+            public GUIStyle HorizontalGroup;
+            public GUIStyle HorizontalRestrictedGroup;
+
+            public GUIStyle ScrollGroup;
+            
+            internal Resources() {
+                var skinPath = ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
+                var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
+                
+                VerticalGroup = skin.GetStyle("Vertical group");
+                VerticalFadeGroup = skin.GetStyle("Vertical fade group");
+                ScrollGroup = skin.GetStyle("Scroll group");
+                Treeview = skin.GetStyle("Treeview");
+                HorizontalGroup = skin.GetStyle("Horizontal group");
+                HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
+            }
         }
     }
 }

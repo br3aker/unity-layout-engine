@@ -25,7 +25,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             _leftPadding = style.padding.left;
         }
-        public TreeViewGroup() : this(ExtendedEditorGUI.LayoutResources.Treeview) {}
+        public TreeViewGroup() : this(StyleResources.Treeview) {}
     
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {

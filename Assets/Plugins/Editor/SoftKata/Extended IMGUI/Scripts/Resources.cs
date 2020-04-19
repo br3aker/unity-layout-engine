@@ -5,7 +5,9 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         internal const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
 
+        [System.Obsolete]
         private static LayoutResources _layoutResources;
+        [System.Obsolete]
         public static LayoutResources LayoutResources => _layoutResources ?? (_layoutResources = new LayoutResources());
 
         private static ControlsResources _controlsResources;
@@ -13,10 +15,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private static GUIElementsResources _guiElementsResources;
         public static GUIElementsResources GUIElementsResources => _guiElementsResources ?? (_guiElementsResources = new GUIElementsResources());
-
-        private static GUIStyle EmptyStyle = new GUIStyle();
     }
 
+    [System.Obsolete]
     public class LayoutResources {
         private const string LightSkinSubPath = "/Light Layout Engine skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
@@ -31,8 +32,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public GUIStyle ScrollGroup;
         
         internal LayoutResources() {
-            var skinPath =
-                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
+            var skinPath = ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             VerticalGroup = skin.GetStyle("Vertical group");
@@ -43,7 +43,6 @@ namespace SoftKata.ExtendedEditorGUI {
             HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
         }
     }
-
     public class ControlsResources {
         private const string LightSkinSubPath = "/Light Controls skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
@@ -88,7 +87,6 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
     }
-
     public class GUIElementsResources {
         private const string LightSkinSubPath = "/Light Elements skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Elements skin.guiskin";
