@@ -73,3 +73,6 @@ crashlytics-build.properties
 # Do not save temporary files
 /[Aa]ssets/Development/
 Assets/Plugins/Editor/SoftKata/Extended IMGUI/Dark/Controls skin.guiskin
+
+# png textures
+*.png
