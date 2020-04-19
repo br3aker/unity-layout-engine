@@ -305,7 +305,7 @@ namespace Development {
                         }
                     }
                     Layout.EndLayoutGroup();
-                    _treeViewGroup.DrawConnection(_treeViewChildGroup.GetContentRect());
+                    _treeViewGroup.DrawConnection(_treeViewChildGroup.ContentRect);
                     
 
                     for(int i = 0; i < 3; i++) {

@@ -28,8 +28,10 @@ namespace SoftKata.ExtendedEditorGUI {
         // entries layout data
         protected Vector2 NextEntryPosition;
 
-        protected Rect ContentRect;
-        protected Rect ContainerRect;
+        protected Rect ContainerRectInternal;
+        protected Rect ContentRectInternal;
+
+        public Rect ContentRect => ContentRectInternal;
 
         // Automatic width for entries
         public float AutomaticWidth {get; protected set;}
@@ -47,22 +49,11 @@ namespace SoftKata.ExtendedEditorGUI {
             TotalOffset.Accumulate(style.padding);
         }
 
-        public Rect GetContentRect(bool fullRect = false) {
-            var output = ContentRect;
-
-            // World pos -> Local pos
-            if(Clip) {
-                output.position -= _clipWorldPositionOffset;
-            }
-
-            return output;
-        }
-    
         // Layout event
         protected abstract void PreLayoutRequest();
         internal void BeginLayout(LayoutGroup parent) {
-            ContentRect.width = -1;
-            ContentRect.height = 0;
+            ContentRectInternal.width = -1;
+            ContentRectInternal.height = 0;
 
             NextEntryPosition = Vector2.zero;
             EntriesCount = 0;
@@ -77,10 +68,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if(Parent != null) {
                     ++Parent.EntriesCount;
-                    Parent.RegisterEntry(ContentRect.width, ContentRect.height);
+                    Parent.RegisterEntry(ContentRectInternal.width, ContentRectInternal.height);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(ContentRect.height, ContentRect.width);
+                    Layout.GetRectFromUnityLayout(ContentRectInternal.height, ContentRectInternal.width);
                 }
             }
         }
@@ -88,17 +79,17 @@ namespace SoftKata.ExtendedEditorGUI {
         // non-Layout event
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
-                var requestedSize = ContentRect.size;
+                var requestedSize = ContentRectInternal.size;
                 if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
                     // Content & container rects
-                    ContentRect = TotalOffset.Remove(requestedRect);
-                    ContainerRect = Utility.RectIntersection(ContentRect, Parent.ContainerRect);
+                    ContentRectInternal = TotalOffset.Remove(requestedRect);
+                    ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
                 }
             }
             else {
                 // Content & container rects
-                ContainerRect = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRect.height, ContentRect.width));
-                ContentRect = ContainerRect;
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.height, ContentRectInternal.width));
+                ContentRectInternal = ContainerRectInternal;
             }
 
             if (IsGroupValid) {
@@ -106,16 +97,16 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Clipspace
                 if(Clip) {
-                    GUI.BeginClip(ContainerRect);
+                    GUI.BeginClip(ContainerRectInternal);
                     // Clipspace changes world space to local space
-                    _clipWorldPositionOffset = ContainerRect.position;
-                    ContentRect.position -= ContainerRect.position;
+                    _clipWorldPositionOffset = ContainerRectInternal.position;
+                    ContentRectInternal.position -= ContainerRectInternal.position;
 
-                    ContainerRect.position = Vector2.zero;
+                    ContainerRectInternal.position = Vector2.zero;
                 }
 
                 // Content offset
-                NextEntryPosition += ContentRect.position;
+                NextEntryPosition += ContentRectInternal.position;
 
                 return true;
             }
@@ -124,8 +115,8 @@ namespace SoftKata.ExtendedEditorGUI {
         internal virtual void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
-                ContainerRect.position = _clipWorldPositionOffset;
-                ContentRect.position += _clipWorldPositionOffset;
+                ContainerRectInternal.position = _clipWorldPositionOffset;
+                ContentRectInternal.position += _clipWorldPositionOffset;
             }
         }
     

@@ -11,20 +11,20 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(ExtendedEditorGUI.LayoutResources.HorizontalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            ContentRect.height += TotalOffset.vertical;
-            ContentRect.width += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
+            ContentRectInternal.height += TotalOffset.vertical;
+            ContentRectInternal.width += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {
-            ContentRect.width += width;
-            ContentRect.height = Mathf.Max(ContentRect.height, height);
+            ContentRectInternal.width += width;
+            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, height);
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0f) {
-                ContentRect.width += elemWidth * count;
+                ContentRectInternal.width += elemWidth * count;
             }
             EntriesCount += count; ;
-            ContentRect.height = Mathf.Max(ContentRect.height, elemHeight);
+            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, elemHeight);
         }
         
         protected override bool QueryAndOcclude(Vector2 entrySize) {
@@ -32,8 +32,8 @@ namespace SoftKata.ExtendedEditorGUI {
             NextEntryPosition.x += entrySize.x + SpaceBetweenEntries;
 
             // occlusion
-            return currentEntryPositionX + entrySize.x >= ContainerRect.x
-                    && currentEntryPositionX <= ContainerRect.xMax;
+            return currentEntryPositionX + entrySize.x >= ContainerRectInternal.x
+                    && currentEntryPositionX <= ContainerRectInternal.xMax;
         }
     }
 }

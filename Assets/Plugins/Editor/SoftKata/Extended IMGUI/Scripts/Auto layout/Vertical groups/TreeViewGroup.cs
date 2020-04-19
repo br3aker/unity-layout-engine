@@ -30,7 +30,7 @@ namespace SoftKata.ExtendedEditorGUI {
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {
                 _notRepaintEvent = Event.current.type != EventType.Repaint;
-                _connectorOrigin = ContentRect.x - _leftPadding;
+                _connectorOrigin = ContentRectInternal.x - _leftPadding;
                 _connectorOriginWithOffset = _connectorOrigin + _connectorContentOffset;
                 return true;
             }
@@ -42,9 +42,9 @@ namespace SoftKata.ExtendedEditorGUI {
             if(_notRepaintEvent) return;
             var verticalLineRect = new Rect(
                 _connectorOrigin, 
-                ContentRect.y,
+                ContentRectInternal.y,
                 _connectionLineWidth,
-                _lastConnectionPoint - ContentRect.y
+                _lastConnectionPoint - ContentRectInternal.y
             );
 
             EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);

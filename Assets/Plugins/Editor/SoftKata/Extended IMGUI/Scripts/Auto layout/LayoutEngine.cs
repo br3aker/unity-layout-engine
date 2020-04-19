@@ -71,7 +71,7 @@ namespace SoftKata.ExtendedEditorGUI {
     
         // Extensions
         public static void DrawLeftSeparator(this LayoutGroup group, Color color) {
-            var contentRect = group.GetContentRect();
+            var contentRect = group.ContentRect;
             var style = group.Style;
 
             var padding = style.padding;

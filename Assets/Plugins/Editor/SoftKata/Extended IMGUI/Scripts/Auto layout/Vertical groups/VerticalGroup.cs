@@ -12,23 +12,23 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(ExtendedEditorGUI.LayoutResources.VerticalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            if(ContentRect.width < 0) {
-                ContentRect.width = AutomaticWidth;
+            if(ContentRectInternal.width < 0) {
+                ContentRectInternal.width = AutomaticWidth;
             }
             else {
-                ContentRect.width += TotalOffset.horizontal;
+                ContentRectInternal.width += TotalOffset.horizontal;
             }
-            ContentRect.height += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
+            ContentRectInternal.height += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {
-            ContentRect.width = Mathf.Max(ContentRect.width, width);
-            ContentRect.height += height;
+            ContentRectInternal.width = Mathf.Max(ContentRectInternal.width, width);
+            ContentRectInternal.height += height;
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             EntriesCount += count;
-            ContentRect.width = Mathf.Max(ContentRect.width, elemWidth);
-            ContentRect.height += elemHeight * count;
+            ContentRectInternal.width = Mathf.Max(ContentRectInternal.width, elemWidth);
+            ContentRectInternal.height += elemHeight * count;
         }
 
         protected override bool QueryAndOcclude(Vector2 entrySize) {
@@ -36,8 +36,8 @@ namespace SoftKata.ExtendedEditorGUI {
             NextEntryPosition.y += entrySize.y + SpaceBetweenEntries;
             
             // occlusion
-            return currentEntryPositionY + entrySize.y >= ContainerRect.y
-                    && currentEntryPositionY <= ContainerRect.yMax;
+            return currentEntryPositionY + entrySize.y >= ContainerRectInternal.y
+                    && currentEntryPositionY <= ContainerRectInternal.yMax;
         }
     }
 }
