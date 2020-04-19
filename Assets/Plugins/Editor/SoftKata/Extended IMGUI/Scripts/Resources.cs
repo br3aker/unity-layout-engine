@@ -18,34 +18,37 @@ namespace SoftKata.ExtendedEditorGUI {
         private const string LightSkinSubPath = "/Light Controls skin.guiskin";
         [System.Obsolete]
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
-        private const string GuiSkinFileName = "/{0}/Controls.guiskin";
+        private const string GuiSkinFilePath = "/{0}/Controls.guiskin";
         
-        // GUIStyles
+        // GUIStyles for primitive elements
         public GUIStyle CenteredGreyHeader;
         public GUIStyle InputFieldPostfix;
         public GUIStyle ButtonLeft;
         public GUIStyle ButtonMid;
         public GUIStyle ButtonRight;
         public GUIStyle Foldout;
+
+        public GUIStyle TabHeader;
         
-        // Complex
+        // Resources for complex elements
         public KeyboardShortcutRecorder ShortcutRecorder;
         
         internal Resources() {
             var skinPath =
-                ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFileName, EditorGUIUtility.isProSkin ? "Dark" : "Light");
-            Debug.Log(skinPath);
+                ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFilePath, EditorGUIUtility.isProSkin ? "Dark" : "Light");
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
-            // Styles
+            // Primitive elements
             CenteredGreyHeader = skin.FindStyle("Centered grey header");
             Foldout = skin.FindStyle("Foldout");
             InputFieldPostfix = skin.GetStyle("Postfix");
             ButtonLeft = skin.GetStyle("Button left");
             ButtonMid = skin.GetStyle("Button mid");
             ButtonRight = skin.GetStyle("Button right");
+
+            TabHeader = skin.GetStyle("Tab header");
             
-            // Complex
+            // Complex elements
             ShortcutRecorder = new KeyboardShortcutRecorder(skin);
         }
         
@@ -60,6 +63,12 @@ namespace SoftKata.ExtendedEditorGUI {
                         ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
             }
         }
+    
+        // public struct ListView {
+        //     public ListView(GUISkin skin, path) {
+
+        //     }
+        // }
     }
 
     [System.Obsolete]
