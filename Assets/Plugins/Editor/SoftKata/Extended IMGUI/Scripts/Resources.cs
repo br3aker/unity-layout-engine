@@ -14,6 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
     public class ControlsResources {
         private const string LightSkinSubPath = "/Light Controls skin.guiskin";
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
+        private const string GuiSkinFileName = "/{}/Controls.guiskin";
         
         // GUIStyles
         public GUIStyle CenteredGreyHeader;
@@ -28,7 +29,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
         internal ControlsResources() {
             var skinPath =
-                ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
+                ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFileName, EditorGUIUtility.isProSkin ? "Dark" : "Light");
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             // Styles
