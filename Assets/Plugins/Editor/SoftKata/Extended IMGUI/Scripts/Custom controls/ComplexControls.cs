@@ -220,7 +220,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _labelStyle = ControlsResources.CenteredGreyHeader;
     
                 EmptyListLabel = new GUIContent("This list is empty");
-                _emptyListIcon = GUIElementsResources.EmptyListIcon;
+                _emptyListIcon = ControlsResources.ListView.EmptyIcon;
 
                 _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
 

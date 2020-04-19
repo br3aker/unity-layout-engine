@@ -18,9 +18,11 @@ namespace SoftKata.ExtendedEditorGUI {
         private const string LightSkinSubPath = "/Light Controls skin.guiskin";
         [System.Obsolete]
         private const string DarkSkinSubPath = "/Dark Controls skin.guiskin";
+
         private const string GuiSkinFilePath = "/{0}/Controls.guiskin";
+        private const string TextureFolderPath = "/{0}/Textures/";
         
-        // GUIStyles for primitive elements
+        // Primitive elements styles
         public GUIStyle CenteredGreyHeader;
         public GUIStyle InputFieldPostfix;
         public GUIStyle ButtonLeft;
@@ -30,12 +32,16 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public GUIStyle TabHeader;
         
-        // Resources for complex elements
-        public KeyboardShortcutRecorder ShortcutRecorder;
+        // Complex elements resources
+        public ShortcutRecorderRecources ShortcutRecorder;
+        public ListViewResources ListView;
         
         internal Resources() {
-            var skinPath =
-                ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFilePath, EditorGUIUtility.isProSkin ? "Dark" : "Light");
+            var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
+
+            var skinPath = ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFilePath, styleTypeString);
+            var textureFolderPath = ExtendedEditorGUI.PluginPath + string.Format(TextureFolderPath, styleTypeString);
+
             var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
             
             // Primitive elements
@@ -49,26 +55,29 @@ namespace SoftKata.ExtendedEditorGUI {
             TabHeader = skin.GetStyle("Tab header");
             
             // Complex elements
-            ShortcutRecorder = new KeyboardShortcutRecorder(skin);
+            ShortcutRecorder = new ShortcutRecorderRecources(skin, textureFolderPath);
+            ListView = new ListViewResources(skin, textureFolderPath);
         }
         
-        public struct KeyboardShortcutRecorder {
+        public struct ShortcutRecorderRecources {
             public GUIStyle Style;
             public Texture RecordStateIconSet;
 
-            public KeyboardShortcutRecorder(GUISkin skin) {
+            public ShortcutRecorderRecources(GUISkin skin, string textureFolderPath) {
                 Style = skin.GetStyle("Keyboard shortcut main");
                 RecordStateIconSet =
-                    Utility.LoadAssetAtPathAndAssert<Texture>(
-                        ExtendedEditorGUI.PluginPath + "/Resources/Dark/Textures/recording_icon_set.png");
+                    Utility.LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "recording_icon_set.png");
             }
         }
     
-        // public struct ListView {
-        //     public ListView(GUISkin skin, path) {
+        public struct ListViewResources {
+            public Texture EmptyIcon;
 
-        //     }
-        // }
+            public ListViewResources(GUISkin skin, string textureFolderPath) {
+                EmptyIcon = 
+                    Utility.LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "empty_list_icon.png");
+            }
+        }
     }
 
     [System.Obsolete]
