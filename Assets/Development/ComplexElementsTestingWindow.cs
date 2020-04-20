@@ -34,7 +34,7 @@ namespace Development {
             }
 
             // List
-            var listSize = 16;
+            var listSize = 10;
             var numbersList = new List<int>(listSize);
             for(int i = 0; i < listSize; i++) {
                 numbersList.Add(i);

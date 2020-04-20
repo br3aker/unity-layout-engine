@@ -280,7 +280,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // skip invisible elements
                 if(_firstVisibleIndex > 0) {
                     var totalSkipHeight = _firstVisibleIndex * _elementHeightWithSpace - _spaceBetweenElements;
-                    _contentScrollGroup.GetRect(Layout.AutoWidth, totalSkipHeight);
+                    _contentScrollGroup.GetRect(totalSkipHeight, Layout.AutoWidth);
                 }
 
                 switch(_state) {
@@ -332,8 +332,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 var color = GUI.color;
                 GUI.color *= _reorderableElementTint;
-                (_drawers[reorderableDrawerIndex] as IAbsoluteDrawableElement)
-                    .OnGUI(new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), initialHeldRect.size));
+                _drawers[reorderableDrawerIndex].OnGUI(
+                    new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), 
+                    initialHeldRect.size)
+                );
                 GUI.color = color;
             }
             private void DoEmptyContent() {
