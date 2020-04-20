@@ -43,7 +43,8 @@ namespace SoftKata.ExtendedEditorGUI {
             // Scroll settings
             _scrollPos = scrollPos;
 
-            _disableScrollbars = disableScrollbars;
+
+            if(_disableScrollbars = disableScrollbars) return;
 
             var padding = style.padding;
             var border = style.border;
@@ -51,11 +52,12 @@ namespace SoftKata.ExtendedEditorGUI {
             // Vertical
             _verticalScrollBarWidth = border.right;
             _verticalScrollBarOffset = padding.right;
-            _rightOffset = margin.right;
 
             // Horizontal
             _horizontalScrollBarHeight = border.bottom;
             _horizontalScrollBarOffset = padding.bottom;
+
+            _rightOffset = margin.right;
             _bottomOffset = margin.bottom;
 
             // Colors

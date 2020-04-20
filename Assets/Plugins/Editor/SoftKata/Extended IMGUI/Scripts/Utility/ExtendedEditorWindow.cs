@@ -18,8 +18,8 @@ namespace SoftKata.ExtendedEditorGUI {
             _rootScrollGroup.ContainerSize = new Vector2(Layout.AutoWidth, position.size.y);
             if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
                 IMGUI();
+                Layout.EndLayoutGroup();
             }
-            Layout.EndLayoutGroup();
         }
 
         protected abstract void Initialize();

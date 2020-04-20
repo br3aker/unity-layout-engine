@@ -76,7 +76,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, true);
                 _horizontalGroup = new HorizontalGroup(true);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
@@ -107,10 +107,10 @@ namespace SoftKata.ExtendedEditorGUI {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
+                            Layout.EndLayoutGroup();
                         }
                         Layout.EndLayoutGroup();
                     }
-                    Layout.EndLayoutGroup();
                 }
                 else {
                     _contentDrawers[CurrentTab].OnGUI();
@@ -128,7 +128,7 @@ namespace SoftKata.ExtendedEditorGUI {
         // TODO: rebind only changed data
         // TODO: drag and drop between lists
         // TODO: context scrolling
-        public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IDrawableElement, new() {
+        public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
 
@@ -155,8 +155,8 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly ScrollGroup _contentScrollGroup;
 
             /* Drawers */
-            private readonly List<IDrawableElement> _drawers = new List<IDrawableElement>();
-            private readonly Action<TData, IDrawableElement, bool> _bindDataToDrawer;
+            private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
+            private readonly Action<TData, IAbsoluteDrawableElement, bool> _bindDataToDrawer;
             private readonly bool _canDrawInAbsoluteCoords;
 
             /* Animated scrolling */
@@ -167,8 +167,8 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _activeElementIndex = -1;
             private readonly HashSet<int> _selectedIndices = new HashSet<int>();
             // Selection & Deselection callbacks
-            public Action<int, IDrawableElement> OnElementSelected;
-            public Action<int, IDrawableElement> OnElementDeselected;
+            public Action<int, IAbsoluteDrawableElement> OnElementSelected;
+            public Action<int, IAbsoluteDrawableElement> OnElementDeselected;
             // Double click callback
             public Action<int, TData> OnElementDoubleClick;
             private double _lastClickTime;
@@ -214,7 +214,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             /* Constructors */
-            public ListViewBase(Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) {
+            public ListViewBase(Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) {
                 _bindDataToDrawer = bind;
 
                 _labelStyle = ControlsResources.CenteredGreyHeader;
@@ -244,7 +244,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 _canDrawInAbsoluteCoords = typeof(TDrawer).GetInterfaces().Contains(typeof(IAbsoluteDrawableElement));
             }
-            public ListViewBase(float height, float elementHeight, Action<TData, IDrawableElement, bool> bind)
+            public ListViewBase(float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
                 : this(new Vector2(-1, height), elementHeight, bind){}
 
             /* Core method for rendering */
@@ -257,8 +257,8 @@ namespace SoftKata.ExtendedEditorGUI {
                     else {
                         DoEmptyContent();
                     }
+                    Layout.EndLayoutGroup();
                 }
-                Layout.EndLayoutGroup();
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
                 if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {
@@ -280,7 +280,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // skip invisible elements
                 if(_firstVisibleIndex > 0) {
                     var totalSkipHeight = _firstVisibleIndex * _elementHeightWithSpace - _spaceBetweenElements;
-                    _contentScrollGroup.GetRect(Layout.AutoWidth, totalSkipHeight);
+                    _contentScrollGroup.GetRect(totalSkipHeight, Layout.AutoWidth);
                 }
 
                 switch(_state) {
@@ -312,14 +312,14 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             private void DoVisibleContent() {
                 for (int i = 0; i < _visibleElementsCount; i++) {
-                    _drawers[i].OnGUI();
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
                 }
             }
             private void DoReorderingContent() {
                 var reorderableDrawerIndex = GetDrawerIndexFromDataIndex(_activeElementIndex);
                 // drawing before held element
                 for (int i = 0; i < reorderableDrawerIndex; i++) {
-                    _drawers[i].OnGUI();
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
                 }
 
                 // Requesting held element space
@@ -327,13 +327,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // drawing after held element
                 for (int i = reorderableDrawerIndex + 1; i < _visibleElementsCount; i++) {
-                    _drawers[i].OnGUI();
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
                 }
 
                 var color = GUI.color;
                 GUI.color *= _reorderableElementTint;
-                (_drawers[reorderableDrawerIndex] as IAbsoluteDrawableElement)
-                    .OnGUI(new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), initialHeldRect.size));
+                _drawers[reorderableDrawerIndex].OnGUI(
+                    new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), 
+                    initialHeldRect.size)
+                );
                 GUI.color = color;
             }
             private void DoEmptyContent() {
@@ -539,7 +541,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private bool DoesDataHasVisibleDrawer(int index) {
                 return GetDrawerIndexFromDataIndex(index) != -1;
             }
-            private IDrawableElement GetDataDrawer(int index) {
+            private IAbsoluteDrawableElement GetDataDrawer(int index) {
                 var drawerIndex = GetDrawerIndexFromDataIndex(index);
                 if(drawerIndex != -1) {
                     return _drawers[drawerIndex];
@@ -676,7 +678,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             protected abstract void ClearUnderlyingArray();
         }
-        public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IDrawableElement, new() {
+        public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             /* Source list */
             public SerializedObject _serializedObject;
             public SerializedProperty _serializedArray;
@@ -687,13 +689,13 @@ namespace SoftKata.ExtendedEditorGUI {
             public Action<SerializedProperty> AddDragDataToArray;
 
             /* Constructors */
-            public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, Action<SerializedProperty, IDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+            public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, Action<SerializedProperty, IAbsoluteDrawableElement, bool> bind) : base(container, elementHeight, bind) {
                 _serializedObject = source.serializedObject;
                 _serializedArray = source;
 
                 Refresh();
             }
-            public SerializedListView(SerializedProperty source, float height, float elementHeight, Action<SerializedProperty, IDrawableElement, bool> bind)
+            public SerializedListView(SerializedProperty source, float height, float elementHeight, Action<SerializedProperty, IAbsoluteDrawableElement, bool> bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
 
             /* Overrides */
@@ -715,7 +717,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedArray.serializedObject.ApplyModifiedProperties();
             }
         }
-        public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IDrawableElement, new() {
+        public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             /* Source list */
             private IList<TData> _sourceList;
             public override int Count => _sourceList.Count;
@@ -725,12 +727,12 @@ namespace SoftKata.ExtendedEditorGUI {
             public Action<IList<TData>> AddDragDataToArray;
 
             /* Constructors */
-            public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+            public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) : base(container, elementHeight, bind) {
                 _sourceList = source;
 
                 Refresh();
             }
-            public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IDrawableElement, bool> bind)
+            public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
 
             /* Overrides */
