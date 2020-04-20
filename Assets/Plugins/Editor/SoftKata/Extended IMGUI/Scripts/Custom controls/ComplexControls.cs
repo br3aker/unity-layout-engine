@@ -280,7 +280,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // skip invisible elements
                 if(_firstVisibleIndex > 0) {
                     var totalSkipHeight = _firstVisibleIndex * _elementHeightWithSpace - _spaceBetweenElements;
-                    _contentScrollGroup.GetRect(totalSkipHeight, Layout.AutoWidth);
+                    _contentScrollGroup.GetRect(Layout.AutoWidth, totalSkipHeight);
                 }
 
                 switch(_state) {
@@ -312,22 +312,22 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             private void DoVisibleContent() {
                 for (int i = 0; i < _visibleElementsCount; i++) {
-                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(Layout.AutoWidth, _elementHeight));
                 }
             }
             private void DoReorderingContent() {
                 var reorderableDrawerIndex = GetDrawerIndexFromDataIndex(_activeElementIndex);
                 // drawing before held element
                 for (int i = 0; i < reorderableDrawerIndex; i++) {
-                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(Layout.AutoWidth, _elementHeight));
                 }
 
                 // Requesting held element space
-                var initialHeldRect = _contentScrollGroup.GetRect(Layout.AutoWidth, _elementHeight);
+                var initialHeldRect = _contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth);
 
                 // drawing after held element
                 for (int i = reorderableDrawerIndex + 1; i < _visibleElementsCount; i++) {
-                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight, Layout.AutoWidth));
+                    _drawers[i].OnGUI(_contentScrollGroup.GetRect(Layout.AutoWidth, _elementHeight));
                 }
 
                 var color = GUI.color;
@@ -339,13 +339,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUI.color = color;
             }
             private void DoEmptyContent() {
-                if(_contentScrollGroup.GetRect(Layout.AutoWidth, IconSize, out var iconRect)) {
+                if(_contentScrollGroup.GetRect(IconSize, Layout.AutoWidth, out var iconRect)) {
                     iconRect.x += (iconRect.width / 2) - IconSize / 2;
                     iconRect.width = IconSize;
 
                     GUI.DrawTexture(iconRect, _emptyListIcon);
                 }
-                if(_contentScrollGroup.GetRect(Layout.AutoWidth, _emptyListLabelHeight, out var labelRect)) {
+                if(_contentScrollGroup.GetRect(_emptyListLabelHeight, Layout.AutoWidth, out var labelRect)) {
                     EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
                 }
 

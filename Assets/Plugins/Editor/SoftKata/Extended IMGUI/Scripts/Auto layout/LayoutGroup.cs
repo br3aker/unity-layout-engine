@@ -136,7 +136,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // Getting actual rect from layout group
-        public bool GetRect(float height, float width, out Rect rect) {
+        public bool GetRect(float width, float height, out Rect rect) {
             if(width < 0f) width = AutomaticWidth;
             if(IsLayoutEvent) {
                 ++EntriesCount;
@@ -146,8 +146,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             return QueryEntry(width, height, out rect);
         }
-        public Rect GetRect(float height, float width) {
-            GetRect(height, width, out var rect);
+        public Rect GetRect(float width, float height) {
+            GetRect(width, height, out var rect);
             return rect;
         }
     }
