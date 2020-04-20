@@ -76,7 +76,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, true);
                 _horizontalGroup = new HorizontalGroup(true);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
