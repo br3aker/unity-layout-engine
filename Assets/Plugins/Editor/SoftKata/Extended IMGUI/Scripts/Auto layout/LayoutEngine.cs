@@ -47,7 +47,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         
         // Register array of equal elements in one batch
-        public static void RegisterArray(int count, float elementHeight, float elementWidth) {
+        public static void RegisterArray(int count, float elementWidth, float elementHeight) {
             if (_currentGroup != null)
                 _currentGroup.RegisterEntriesArray(elementWidth, elementHeight, count);
             else
