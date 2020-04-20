@@ -107,14 +107,14 @@ namespace Development {
 
             // _tabsDrawer.OnGUI();
 
-            Profiler.BeginSample("ListView test");
-            _arrayDrawer.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("ListView test");
+            // _arrayDrawer.OnGUI();
+            // Profiler.EndSample();
 
             
-            // Profiler.BeginSample("Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
+            Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -124,11 +124,11 @@ namespace Development {
         }
 
         private void DrawServiceInfo() {
-            if (Layout.GetRect(-1, ExtendedEditorGUI.LabelHeight, out var labelRect)) {
+            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, out var labelRect)) {
                 EditorGUI.LabelField(labelRect,
                     $"Always repaint: [{_alwaysRepaint}] | [{Mathf.Sin((float) EditorApplication.timeSinceStartup)}]");
             }
-            if (Layout.GetRect(-1, ExtendedEditorGUI.LabelHeight, out var updateButtonRect)) {
+            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, out var updateButtonRect)) {
                 if (GUI.Button(updateButtonRect, _alwaysRepaint ? "Always update" : "Update on action")) {
                     _alwaysRepaint = !_alwaysRepaint;
                     if (_alwaysRepaint) {
@@ -212,9 +212,11 @@ namespace Development {
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
-                            if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
+                            var group = _nestedHorizontalGroups[i];
+                            if(Layout.BeginLayoutGroup(group)) {
+                                var width = group.AutomaticWidth;
                                 for(int j = 0; j < _horizontalEntriesCount; j++) {
-                                    if(Layout.GetRect(-1, 30f, out var rect)) {
+                                    if(group.GetRect(width, 30, out var rect)) {
                                         EditorGUI.DrawRect(rect, Color.black);
                                     }
                                 }
