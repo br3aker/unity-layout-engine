@@ -40,7 +40,7 @@ namespace Development {
                 numbersList.Add(i);
             }
 
-            Action<int, IDrawableElement, bool> bind = (data, drawable, selected) => {
+            Action<int, IAbsoluteDrawableElement, bool> bind = (data, drawable, selected) => {
                 var stringLabel = drawable as TypeStringLabelElement;
                 stringLabel.Type = data.GetType().Name;
                 stringLabel.Value = data.ToString();
@@ -105,11 +105,11 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            _tabsDrawer.OnGUI();
+            // _tabsDrawer.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
-            // _arrayDrawer.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("ListView test");
+            _arrayDrawer.OnGUI();
+            Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");
@@ -169,17 +169,11 @@ namespace Development {
             }
         }
 
-        public class TypeStringLabelElement : IDrawableElement, IAbsoluteDrawableElement {
+        public class TypeStringLabelElement : IAbsoluteDrawableElement {
             public string Type {get; set;}
             public string Value {get; set;}
 
             public bool Selected {get; set;}
-
-            public void OnGUI() {
-                if(Layout.GetRect(40, -1, out var rect)) {
-                    OnGUI(rect);
-                }
-            }
 
             public void OnGUI(Rect rect) {
                 if(Selected) {
