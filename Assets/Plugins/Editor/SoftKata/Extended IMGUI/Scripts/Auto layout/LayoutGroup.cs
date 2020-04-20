@@ -72,7 +72,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     Parent.RegisterEntry(ContentRectInternal.width, ContentRectInternal.height);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(ContentRectInternal.height, ContentRectInternal.width);
+                    Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height);
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.height, ContentRectInternal.width));
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height));
                 ContentRectInternal = ContainerRectInternal;
             }
 

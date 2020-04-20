@@ -11,10 +11,13 @@ namespace SoftKata.ExtendedEditorGUI {
         public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Native Unity layout system get rect call
-        internal static Rect GetRectFromUnityLayout(float height, float width = AutoWidth) {
+        internal static Rect GetRectFromUnityLayout(float width, float height) {
             var rect = GUILayoutUtility.GetRect(width, height);
-            rect.width = width > 0f ? width : (EditorGUIUtility.currentViewWidth - 2);
+            rect.width = width;
             return rect;
+        }
+        internal static Rect GetRectFromUnityLayout(float height) {
+            return GetRectFromUnityLayout(EditorGUIUtility.currentViewWidth - 2, height);
         }
 
         // Layout group management
@@ -48,7 +51,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if (_currentGroup != null)
                 _currentGroup.RegisterEntriesArray(elementWidth, elementHeight, count);
             else
-                GetRectFromUnityLayout(elementHeight * count, elementWidth);
+                GetRectFromUnityLayout(elementWidth, elementHeight * count);
         }
         public static void RegisterArray(int count, float elementHeight) {
             if (_currentGroup != null)
@@ -62,11 +65,11 @@ namespace SoftKata.ExtendedEditorGUI {
             if(_currentGroup != null) {
                 return _currentGroup.GetRect(height, width, out rect);
             }
-            rect = GetRectFromUnityLayout(height, width);
+            rect = GetRectFromUnityLayout(width, height);
             return true;
         }
         public static Rect GetRect(float height) {
-            return _currentGroup?.GetRect(height, AutoWidth) ?? GetRectFromUnityLayout(height, AutoWidth);
+            return _currentGroup?.GetRect(height, AutoWidth) ?? GetRectFromUnityLayout(AutoWidth, height);
         }
     
         // Extensions
