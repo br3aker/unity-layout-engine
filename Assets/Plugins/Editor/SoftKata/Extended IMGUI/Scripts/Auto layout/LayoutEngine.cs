@@ -58,15 +58,15 @@ namespace SoftKata.ExtendedEditorGUI {
         }
     
         // Getting rect from layout engine
-        public static bool GetRect(float height, float width, out Rect rect) {
+        public static bool GetRect(float width, float height, out Rect rect) {
             if(_currentGroup != null) {
                 return _currentGroup.GetRect(height, width, out rect);
             }
             rect = GetRectFromUnityLayout(height, width);
             return true;
         }
-        public static Rect GetRect(float height, float width = AutoWidth) {
-            return _currentGroup?.GetRect(height, width) ?? GetRectFromUnityLayout(height, width);
+        public static Rect GetRect(float height) {
+            return _currentGroup?.GetRect(height, AutoWidth) ?? GetRectFromUnityLayout(height, AutoWidth);
         }
     
         // Extensions
