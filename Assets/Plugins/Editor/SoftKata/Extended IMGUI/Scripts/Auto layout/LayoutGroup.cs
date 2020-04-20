@@ -162,8 +162,7 @@ namespace SoftKata.ExtendedEditorGUI {
         protected static Resources StyleResources => _resources ?? (_resources = new Resources());
 
         protected class Resources {
-            private const string LightSkinSubPath = "/Light Layout Engine skin.guiskin";
-            private const string DarkSkinSubPath = "/Dark Layout Engine skin.guiskin";
+            private const string GuiSkinFilePath = "/{0}/Layout.guiskin";
 
             public GUIStyle VerticalGroup;
             public GUIStyle VerticalFadeGroup;
@@ -175,7 +174,9 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle ScrollGroup;
             
             internal Resources() {
-                var skinPath = ExtendedEditorGUI.PluginPath + (EditorGUIUtility.isProSkin ? DarkSkinSubPath : LightSkinSubPath);
+                var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
+                var skinPath = ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFilePath, styleTypeString);
+
                 var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
                 
                 VerticalGroup = skin.GetStyle("Vertical group");
