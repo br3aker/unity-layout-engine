@@ -124,11 +124,11 @@ namespace Development {
         }
 
         private void DrawServiceInfo() {
-            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, -1, out var labelRect)) {
+            if (Layout.GetRect(-1, ExtendedEditorGUI.LabelHeight, out var labelRect)) {
                 EditorGUI.LabelField(labelRect,
                     $"Always repaint: [{_alwaysRepaint}] | [{Mathf.Sin((float) EditorApplication.timeSinceStartup)}]");
             }
-            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, -1, out var updateButtonRect)) {
+            if (Layout.GetRect(-1, ExtendedEditorGUI.LabelHeight, out var updateButtonRect)) {
                 if (GUI.Button(updateButtonRect, _alwaysRepaint ? "Always update" : "Update on action")) {
                     _alwaysRepaint = !_alwaysRepaint;
                     if (_alwaysRepaint) {
@@ -152,7 +152,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                if(Layout.GetRect(40, -1, out var rect)) {
+                if(Layout.GetRect(-1, 40, out var rect)) {
                     if(Selected) {
                         EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
                     }
@@ -214,7 +214,7 @@ namespace Development {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                             if(Layout.BeginLayoutGroup(_nestedHorizontalGroups[i])) {
                                 for(int j = 0; j < _horizontalEntriesCount; j++) {
-                                    if(Layout.GetRect(30f, -1, out var rect)) {
+                                    if(Layout.GetRect(-1, 30f, out var rect)) {
                                         EditorGUI.DrawRect(rect, Color.black);
                                     }
                                 }
@@ -242,7 +242,7 @@ namespace Development {
                 _contentSize.y = EditorGUI.IntField(Layout.GetRect(16), "Y size", _contentSize.y);
 
                 if(Layout.BeginLayoutGroup(_scrollGroup)) {
-                    if(Layout.GetRect(_contentSize.y, _contentSize.x, out var rect)) {
+                    if(Layout.GetRect(_contentSize.x, _contentSize.y, out var rect)) {
                         EditorGUI.DrawRect(rect, Color.red);
                         EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
                     }
@@ -260,12 +260,12 @@ namespace Development {
             
             public void OnGUI() {
                 if(Layout.BeginLayoutGroup(_flexibleHorizontalGroup)) {
-                    var fixedRect = Layout.GetRect(40, 55);
+                    Layout.GetRect(40, 55, out var fixedRect);
                     EditorGUI.DrawRect(fixedRect, Color.black);
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
 
                     for(int i = 0; i < 3; i++) {
-                        var rect = Layout.GetRect(40, -1);
+                        var rect = Layout.GetRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }

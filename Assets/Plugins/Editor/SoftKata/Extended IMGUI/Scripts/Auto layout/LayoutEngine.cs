@@ -11,10 +11,13 @@ namespace SoftKata.ExtendedEditorGUI {
         public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Native Unity layout system get rect call
-        internal static Rect GetRectFromUnityLayout(float height, float width = AutoWidth) {
+        internal static Rect GetRectFromUnityLayout(float width, float height) {
             var rect = GUILayoutUtility.GetRect(width, height);
-            rect.width = width > 0f ? width : (EditorGUIUtility.currentViewWidth - 2);
+            rect.width = width;
             return rect;
+        }
+        internal static Rect GetRectFromUnityLayout(float height) {
+            return GetRectFromUnityLayout(EditorGUIUtility.currentViewWidth - 2, height);
         }
 
         // Layout group management
@@ -44,11 +47,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         
         // Register array of equal elements in one batch
-        public static void RegisterArray(int count, float elementHeight, float elementWidth) {
+        public static void RegisterArray(int count, float elementWidth, float elementHeight) {
             if (_currentGroup != null)
                 _currentGroup.RegisterEntriesArray(elementWidth, elementHeight, count);
             else
-                GetRectFromUnityLayout(elementHeight * count, elementWidth);
+                GetRectFromUnityLayout(elementWidth, elementHeight * count);
         }
         public static void RegisterArray(int count, float elementHeight) {
             if (_currentGroup != null)
@@ -58,15 +61,15 @@ namespace SoftKata.ExtendedEditorGUI {
         }
     
         // Getting rect from layout engine
-        public static bool GetRect(float height, float width, out Rect rect) {
+        public static bool GetRect(float width, float height, out Rect rect) {
             if(_currentGroup != null) {
-                return _currentGroup.GetRect(height, width, out rect);
+                return _currentGroup.GetRect(width, height, out rect);
             }
-            rect = GetRectFromUnityLayout(height, width);
+            rect = GetRectFromUnityLayout(width, height);
             return true;
         }
-        public static Rect GetRect(float height, float width = AutoWidth) {
-            return _currentGroup?.GetRect(height, width) ?? GetRectFromUnityLayout(height, width);
+        public static Rect GetRect(float height) {
+            return _currentGroup?.GetRect(AutoWidth, height) ?? GetRectFromUnityLayout(AutoWidth, height);
         }
     
         // Extensions

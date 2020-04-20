@@ -65,7 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public bool GetLeafRect(float height, float width, out Rect rect) {
             DrawConnectionLine(NextEntryPosition, height);
-            return GetRect(height, width, out rect);
+            return GetRect(width, height, out rect);
         }
         public Rect GetLeafRect(float height, float width) {
             GetLeafRect(height, width, out var rect);
