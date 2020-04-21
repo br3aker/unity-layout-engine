@@ -76,7 +76,7 @@ namespace Development {
                 // Reordering
                 ReorderableElementAlpha = 0.65f,
                 OnElementsReorder = (oldIndex, newIndex) => {
-                    Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
+                    // Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
                 }
             };
 
@@ -105,11 +105,11 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            _tabsDrawer.OnGUI();
+            // _tabsDrawer.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
-            // _arrayDrawer.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("ListView test");
+            _arrayDrawer.OnGUI();
+            Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");

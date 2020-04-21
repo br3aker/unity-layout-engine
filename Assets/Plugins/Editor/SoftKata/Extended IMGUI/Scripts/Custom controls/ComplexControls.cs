@@ -122,7 +122,6 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // MAYBE
-        // TODO: rebind only changed data
         // TODO: drag and drop between lists
         // TODO: context scrolling
         public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
@@ -256,7 +255,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
                 if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {
-                    CalculateVisibleElements();
                     RebindDrawers();
                 }
             }
@@ -283,7 +281,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         HandleEventsAtDefault();
                         break;
                     case State.Reordering:
-                        DoVisibleContent();
+                        DoReorderingContent();
                         HandleEventsAtReordering();
                         break;
                     case State.ScrollingToIndex:
@@ -466,7 +464,6 @@ namespace SoftKata.ExtendedEditorGUI {
             private void HandleDragPerform(Event evt) {
                 AcceptDragData();
                 CalculateTotalHeight();
-                CalculateVisibleElements();
                 RebindDrawers();
 
                 _state = State.Default;
@@ -490,7 +487,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
                 return indexElementBottomBorder > absolutePosition;
             }
-            private void CalculateVisibleElements() {
+            private void _CalculateVisibleElements() {
                 if(_totalElementsHeight <= _visibleHeight) {
                     _visibleContentOffset = 0;
                     _firstVisibleIndex = 0;
@@ -511,12 +508,45 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             public void Refresh() {
                 CalculateTotalHeight();
-                CalculateVisibleElements();
                 RebindDrawers();
             }
 
-            /* Drawers */
+
             private void RebindDrawers() {
+                // List have enough space to render all available elements
+                if(_totalElementsHeight <= _visibleHeight) {           
+                    _visibleContentOffset = 0;
+                    _firstVisibleIndex = 0;
+                    _visibleElementsCount = 0;
+                    return;
+                }
+                // List does not have enough space
+                else {
+                    _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.ScrollPosY;
+
+                    // First index
+                    if(!PositionToDataIndex(0, out int firstIndex)) {
+                        firstIndex += 1;
+                    }
+
+                    // Last  index
+                    int lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
+
+
+                    
+                    _firstVisibleIndex = firstIndex;
+                    _visibleElementsCount = lastIndex - firstIndex + 1;
+                }
+
+                // This rebinds EVERYTHING
+                _RebindDrawers();
+            }
+
+            /* Drawers */
+            // TODO: rebind only if visible indices are changed
+            // This method is always called after CalculateVisibleElements method
+            // Furthermore, we can only rebind only changed indices
+            private void _RebindDrawers() {
                 for(int i = 0, dataIndex = _firstVisibleIndex; i < _visibleElementsCount; i++, dataIndex++) {
                     var selected = _selectedIndices.Contains(dataIndex);
                     _bindDataToDrawer(this[dataIndex], _drawers[i], selected);
@@ -637,7 +667,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 _selectedIndices.Clear();
 
                 CalculateTotalHeight();
-                CalculateVisibleElements();
                 RebindDrawers();
             }
             protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
@@ -646,7 +675,6 @@ namespace SoftKata.ExtendedEditorGUI {
             public void ScrollTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _contentScrollGroup.ScrollPosY = indexScrollPos;
-                CalculateVisibleElements();
                 RebindDrawers();
             }
             public void ScrollToAnim(int index) {
@@ -662,7 +690,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 ClearUnderlyingArray();
                 _selectedIndices.Clear();
                 CalculateTotalHeight();
-                CalculateVisibleElements();
                 RebindDrawers();
             }
             protected abstract void ClearUnderlyingArray();
