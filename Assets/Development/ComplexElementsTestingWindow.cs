@@ -60,12 +60,12 @@ namespace Development {
                 // Selection
                 OnElementSelected = (index, drawer) => {
                     if(drawer != null) {
-                        (drawer as TypeStringLabelElement).Selected = true;
+                        (drawer as StringLabelElement).Selected = true;
                     }
                 },
                 OnElementDeselected = (index, drawer) => {
                     if(drawer != null) {
-                        (drawer as TypeStringLabelElement).Selected = false;
+                        (drawer as StringLabelElement).Selected = false;
                     }
                 },
                 OnElementDoubleClick = (index, value) => {
