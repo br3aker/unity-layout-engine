@@ -18,7 +18,7 @@ namespace Development {
 
         private Tabs _tabsDrawer;
 
-        private ListView<int, TypeStringLabelElement> _arrayDrawer;
+        private ListView<int, StringLabelElement> _arrayDrawer;
 
         private ScrollViewTest _scrollViewTest;
         private ScrollViewExpander _scrollViewExpander;
@@ -34,19 +34,18 @@ namespace Development {
             }
 
             // List
-            var listSize = 10;
+            var listSize = 100;
             var numbersList = new List<int>(listSize);
             for(int i = 0; i < listSize; i++) {
                 numbersList.Add(i);
             }
 
             Action<int, IAbsoluteDrawableElement, bool> bind = (data, drawable, selected) => {
-                var stringLabel = drawable as TypeStringLabelElement;
-                stringLabel.Type = data.GetType().Name;
-                stringLabel.Value = data.ToString();
+                var stringLabel = drawable as StringLabelElement;
+                stringLabel.Content = data.ToString();
                 stringLabel.Selected = selected;
             };
-            _arrayDrawer = new ListView<int, TypeStringLabelElement>(numbersList, 350, 40, bind) {
+            _arrayDrawer = new ListView<int, StringLabelElement>(numbersList, 350, 40, bind) {
                 // Drag & drop
                 ValidateDragData = () => {
                     return DragAndDropVisualMode.Link;
@@ -163,8 +162,14 @@ namespace Development {
                     EditorGUI.LabelField(rect, Content);
                 }
             }
-            public void OnGUI(Rect rect) {
-                EditorGUI.DrawRect(rect, Color.grey);
+            public void OnGUI(Rect rect) {                   
+                if(Selected) {
+                    EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
+                }
+                else {
+                    EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
+                }
+                
                 EditorGUI.LabelField(rect, Content);
             }
         }

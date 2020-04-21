@@ -517,7 +517,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 if(_totalElementsHeight <= _visibleHeight) {           
                     _visibleContentOffset = 0;
                     _firstVisibleIndex = 0;
-                    _visibleElementsCount = 0;
+                    _visibleElementsCount = Count;
                     return;
                 }
                 // List does not have enough space
