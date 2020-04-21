@@ -121,9 +121,6 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        // MAYBE
-        // TODO: drag and drop between lists
-        // TODO: context scrolling
         public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
@@ -487,25 +484,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
                 return indexElementBottomBorder > absolutePosition;
             }
-            private void _CalculateVisibleElements() {
-                if(_totalElementsHeight <= _visibleHeight) {
-                    _visibleContentOffset = 0;
-                    _firstVisibleIndex = 0;
-                    _visibleElementsCount = Count;
-                    return;
-                }
-
-                _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.ScrollPosY;
-
-                // First index
-                if(!PositionToDataIndex(0, out _firstVisibleIndex)) {
-                    _firstVisibleIndex += 1;
-                }
-
-                // Last  index
-                var lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
-                _visibleElementsCount = lastIndex - _firstVisibleIndex + 1;
-            }
             public void Refresh() {
                 CalculateTotalHeight();
                 RebindDrawers();
@@ -559,28 +537,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 for(int i = lastBindedDrawerIndex + 1; i < newCount; i++) {
                     var dataIndex = newIndex + i;
                     _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
-                    Debug.Log("Rebinded");
                 }
 
                 _firstVisibleIndex = newIndex;
                 _visibleElementsCount = newCount;
             }
-            [Obsolete] private void _RebindDrawers() {
-                int bindCount = 0;
-                for(int i = 0, dataIndex = _firstVisibleIndex; i < _visibleElementsCount; i++, dataIndex++) {
-                    var selected = _selectedIndices.Contains(dataIndex);
-                    _bindDataToDrawer(this[dataIndex], _drawers[i], selected);
-                    bindCount++;
-                }
-                Debug.Log($"Binded {bindCount} drawers");
-            }
             private int GetDrawerIndexFromDataIndex(int index) {
                 var shiftedIndex = index - _firstVisibleIndex;
                 var drawerIndexInVisibleRange = shiftedIndex >= 0 && shiftedIndex < _visibleElementsCount;
                 return drawerIndexInVisibleRange ? shiftedIndex : -1;
-            }
-            [Obsolete] private bool DoesDataHasVisibleDrawer(int index) {
-                return GetDrawerIndexFromDataIndex(index) != -1;
             }
             private IAbsoluteDrawableElement GetDataDrawer(int index) {
                 var drawerIndex = GetDrawerIndexFromDataIndex(index);
