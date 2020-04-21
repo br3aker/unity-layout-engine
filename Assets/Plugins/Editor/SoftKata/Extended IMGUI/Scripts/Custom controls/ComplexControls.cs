@@ -154,7 +154,6 @@ namespace SoftKata.ExtendedEditorGUI {
             /* Drawers */
             private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
             private readonly Action<TData, IAbsoluteDrawableElement, bool> _bindDataToDrawer;
-            private readonly bool _canDrawInAbsoluteCoords;
 
             /* Animated scrolling */
             private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
@@ -238,8 +237,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 for (int i = 0; i < maxVisibleElements; i++) {
                     _drawers.Add(new TDrawer());
                 }
-                
-                _canDrawInAbsoluteCoords = typeof(TDrawer).GetInterfaces().Contains(typeof(IAbsoluteDrawableElement));
             }
             public ListViewBase(float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
                 : this(new Vector2(-1, height), elementHeight, bind){}
@@ -286,12 +283,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         HandleEventsAtDefault();
                         break;
                     case State.Reordering:
-                        if(_canDrawInAbsoluteCoords) {
-                            DoReorderingContent();
-                        }
-                        else {
-                            DoVisibleContent();
-                        }
+                        DoVisibleContent();
                         HandleEventsAtReordering();
                         break;
                     case State.ScrollingToIndex:
