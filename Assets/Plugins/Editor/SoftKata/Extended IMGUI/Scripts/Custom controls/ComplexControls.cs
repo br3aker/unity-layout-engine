@@ -19,9 +19,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public interface IAbsoluteDrawableElement {
             void OnGUI(Rect position);
         }
-        public interface ISelectable {
-            bool Selected {get; set;}
-        }
 
         public class DelegateElement : IDrawableElement {
             private Action _drawer;
