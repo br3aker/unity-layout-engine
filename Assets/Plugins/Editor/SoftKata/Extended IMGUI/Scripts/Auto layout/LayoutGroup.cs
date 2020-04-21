@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
+    // Main logic
     public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
 
@@ -157,6 +158,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
     }
 
+    // Resources
     public partial class LayoutGroup {
         private static Resources _resources;
         protected static Resources StyleResources => _resources ?? (_resources = new Resources());

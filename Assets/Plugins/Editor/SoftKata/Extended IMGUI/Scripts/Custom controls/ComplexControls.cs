@@ -80,7 +80,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalGroup = new HorizontalGroup(true);
             }
             public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
-                : this(initialTab, tabHeaders, contentDrawers, underlineColor, ControlsResources.TabHeader) { }
+                : this(initialTab, tabHeaders, contentDrawers, underlineColor, ElementsResources.TabHeader) { }
 
             public void OnGUI() {
                 int currentSelection = CurrentTab;
@@ -217,10 +217,10 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListViewBase(Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) {
                 _bindDataToDrawer = bind;
 
-                _labelStyle = ControlsResources.CenteredGreyHeader;
+                _labelStyle = ElementsResources.CenteredGreyHeader;
     
                 EmptyListLabel = new GUIContent("This list is empty");
-                _emptyListIcon = ControlsResources.ListView.EmptyIcon;
+                _emptyListIcon = ElementsResources.ListView.EmptyIcon;
 
                 _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
 

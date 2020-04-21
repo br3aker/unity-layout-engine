@@ -39,7 +39,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
         public static int ToggleArray(Rect rect, int value, GUIContent[] contents) {
-            var resources = ControlsResources;
+            var resources = ElementsResources;
             var leftStyle = resources.ButtonLeft;
             var midStyle = resources.ButtonMid;
             var rightStyle = resources.ButtonRight;
@@ -88,7 +88,7 @@ namespace SoftKata.ExtendedEditorGUI {
             // Postfix
             if (Event.current.type == EventType.Repaint) {
                 var postfixRect = new Rect(rect.xMax - PostfixTextAreaWidth, rect.y, PostfixTextAreaWidth, rect.height);
-                ControlsResources.InputFieldPostfix.Draw(postfixRect, TempContent(postfix), false, false, false, false);
+                ElementsResources.InputFieldPostfix.Draw(postfixRect, TempContent(postfix), false, false, false, false);
             }
 
             return value;
