@@ -126,7 +126,7 @@ namespace SoftKata.ExtendedEditorGUI {
         protected abstract void RegisterEntry(float width, float height);
         public abstract void RegisterEntriesArray(float elemWidth, float elemHeight, int count);
         public void RegisterEntriesArray(float elementHeight, int count) {
-            RegisterEntriesArray(Layout.AutoWidth, elementHeight, count);
+            RegisterEntriesArray(AutomaticWidth, elementHeight, count);
         }
         
         // Getting entry
