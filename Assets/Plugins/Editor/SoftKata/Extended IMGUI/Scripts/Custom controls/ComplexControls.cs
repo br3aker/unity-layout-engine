@@ -513,11 +513,18 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             private void RebindDrawers() {
+                int initialIndex = _firstVisibleIndex;
+                int initialCount = _visibleElementsCount;
+
+                int newIndex = 0;
+                int newCount;
+
+                int lastIndex;
+
                 // List have enough space to render all available elements
-                if(_totalElementsHeight <= _visibleHeight) {           
+                if (_totalElementsHeight <= _visibleHeight) {           
                     _visibleContentOffset = 0;
-                    _firstVisibleIndex = 0;
-                    _visibleElementsCount = Count;
+                    newCount = Count;
                     return;
                 }
                 // List does not have enough space
@@ -525,21 +532,45 @@ namespace SoftKata.ExtendedEditorGUI {
                     _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.ScrollPosY;
 
                     // First index
-                    if(!PositionToDataIndex(0, out int firstIndex)) {
-                        firstIndex += 1;
+                    if(!PositionToDataIndex(0, out newIndex)) {
+                        newIndex += 1;
                     }
 
-                    // Last  index
-                    int lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
-
-
-                    
-                    _firstVisibleIndex = firstIndex;
-                    _visibleElementsCount = lastIndex - firstIndex + 1;
+                    // Last index
+                    lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
+                    newCount = lastIndex - newIndex + 1;
                 }
 
-                // This rebinds EVERYTHING
-                _RebindDrawers();
+
+                int firstIndexDiff = newIndex - initialIndex;
+                int lastBindedDrawerIndex = initialCount - 1;
+                // new index is greater than initial
+                if(firstIndexDiff > 0) {
+                    var newFirstDrawer = _drawers[0];
+                    _drawers.RemoveAt(0);
+                    _drawers.Add(newFirstDrawer);
+
+                    lastBindedDrawerIndex -= 1;
+                }
+                // new index is lesser than initial
+                else if(firstIndexDiff < 0) {
+                    var lastDrawerIndex = _drawers.Count - 1;
+                    var newFirstDrawer = _drawers[lastDrawerIndex];
+                    _drawers.RemoveAt(lastDrawerIndex);
+                    _drawers.Insert(0, newFirstDrawer);
+                    _bindDataToDrawer(this[newIndex], newFirstDrawer, _selectedIndices.Contains(newIndex));
+                }
+
+
+                int totalCountDiff = newCount - initialCount;
+                for(int i = lastBindedDrawerIndex + 1; i < newCount; i++) {
+                    var dataIndex = newIndex + i;
+                    _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                }
+
+                _firstVisibleIndex = newIndex;
+                _visibleElementsCount = newCount;
+                // _RebindDrawers();
             }
 
             /* Drawers */
@@ -547,10 +578,13 @@ namespace SoftKata.ExtendedEditorGUI {
             // This method is always called after CalculateVisibleElements method
             // Furthermore, we can only rebind only changed indices
             private void _RebindDrawers() {
+                int bindCount = 0;
                 for(int i = 0, dataIndex = _firstVisibleIndex; i < _visibleElementsCount; i++, dataIndex++) {
                     var selected = _selectedIndices.Contains(dataIndex);
                     _bindDataToDrawer(this[dataIndex], _drawers[i], selected);
+                    bindCount++;
                 }
+                Debug.Log($"Binded {bindCount} drawers");
             }
             private int GetDrawerIndexFromDataIndex(int index) {
                 var shiftedIndex = index - _firstVisibleIndex;
