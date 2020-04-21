@@ -105,11 +105,11 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            // _tabsDrawer.OnGUI();
+            _tabsDrawer.OnGUI();
 
-            Profiler.BeginSample("ListView test");
-            _arrayDrawer.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("ListView test");
+            // _arrayDrawer.OnGUI();
+            // Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");
@@ -152,7 +152,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                if(Layout.GetRect(-1, 40, out var rect)) {
+                if(Layout.GetRect(40, out var rect)) {
                     if(Selected) {
                         EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
                     }
