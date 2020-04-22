@@ -678,7 +678,6 @@ namespace SoftKata.ExtendedEditorGUI {
             public void Clear() {
                 ClearUnderlyingArray();
                 _selectedIndices.Clear();
-                RebindDrawers();
             }
             protected abstract void ClearUnderlyingArray();
         }
