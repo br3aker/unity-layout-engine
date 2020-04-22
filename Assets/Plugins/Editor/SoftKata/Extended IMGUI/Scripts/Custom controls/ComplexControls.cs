@@ -490,39 +490,35 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             /* Drawers */
-            private void RebindDrawers() {
-                int initialIndex = _firstVisibleIndex;
-                int initialCount = _visibleElementsCount;
-                int newIndex = 0;
-                int newCount;
-
-                // Calculating visible indices
+            private void CalculateVisibleData(out int firstVisibleIndex, out int visibleCount) {
                 if (_totalElementsHeight <= _visibleHeight) {           
                     _visibleContentOffset = 0;
-                    newCount = Count;
+                    firstVisibleIndex = 0;
+                    visibleCount = Count;
                 }
                 else {
                     _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.ScrollPosY;
 
-                    // First index
-                    if(!PositionToDataIndex(0, out newIndex)) {
-                        newIndex += 1;
+                    if(!PositionToDataIndex(0, out firstVisibleIndex)) {
+                        firstVisibleIndex += 1;
                     }
 
-                    // Last index
                     int lastIndex = (int)((_visibleHeight + _visibleContentOffset) / _elementHeightWithSpace);
-                    newCount = lastIndex - newIndex + 1;
+                    visibleCount = lastIndex - firstVisibleIndex + 1;
                 }
+            }
+            private void RebindDrawers() {
+                int initialIndex = _firstVisibleIndex;
+                int initialCount = _visibleElementsCount;
+                CalculateVisibleData(out int newIndex, out int newCount);
 
                 // Rebinding if needed
                 int lastBindedDrawerIndex = initialCount - 1;
-                // new index is greater than initial
                 if(newIndex > initialIndex) {
                     var newFirstDrawer = _drawers[0];
                     _drawers.RemoveAt(0);
                     _drawers.Add(newFirstDrawer);
                 }
-                // new index is lesser than initial
                 else if(newIndex < initialIndex) {
                     var lastDrawerIndex = _drawers.Count - 1;
                     var newFirstDrawer = _drawers[lastDrawerIndex];
@@ -539,9 +535,19 @@ namespace SoftKata.ExtendedEditorGUI {
                     _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
                 }
 
+                
                 _firstVisibleIndex = newIndex;
                 _visibleElementsCount = newCount;
             }
+            private void RebindAllDrawers() {
+                CalculateVisibleData(out _firstVisibleIndex, out _visibleElementsCount);
+                int dataFirstVisibleIndex = _firstVisibleIndex;
+                for(int i = 0; i < _visibleElementsCount; i++) {
+                    var dataIndex = dataFirstVisibleIndex + i;
+                    _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                }
+            }
+            
             private int GetDrawerIndexFromDataIndex(int index) {
                 var shiftedIndex = index - _firstVisibleIndex;
                 var drawerIndexInVisibleRange = shiftedIndex >= 0 && shiftedIndex < _visibleElementsCount;
@@ -654,7 +660,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _selectedIndices.Clear();
 
                 CalculateTotalHeight();
-                RebindDrawers();
+                RebindAllDrawers();
             }
             protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
 
