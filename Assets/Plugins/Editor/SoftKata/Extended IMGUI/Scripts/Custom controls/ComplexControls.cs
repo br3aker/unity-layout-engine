@@ -460,7 +460,6 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             private void HandleDragPerform(Event evt) {
                 AcceptDragData();
-                CalculateTotalHeight();
                 RebindDrawers();
 
                 _state = State.Default;
@@ -474,9 +473,6 @@ namespace SoftKata.ExtendedEditorGUI {
             protected abstract void AcceptDragData();
 
             /* Helpers */
-            private void CalculateTotalHeight() {
-                _totalElementsHeight = Count * _elementHeightWithSpace - _spaceBetweenElements;
-            }
             private bool PositionToDataIndex(float position, out int index) {
                 var absolutePosition = position + _visibleContentOffset;
                 index = (int)(absolutePosition / _elementHeightWithSpace);
@@ -485,12 +481,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 return indexElementBottomBorder > absolutePosition;
             }
             public void Refresh() {
-                CalculateTotalHeight();
                 RebindDrawers();
             }
 
             /* Drawers */
             private void CalculateVisibleData(out int firstVisibleIndex, out int visibleCount) {
+                _totalElementsHeight = Count * _elementHeightWithSpace - _spaceBetweenElements;
+
                 if (_totalElementsHeight <= _visibleHeight) {           
                     _visibleContentOffset = 0;
                     firstVisibleIndex = 0;
@@ -659,7 +656,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
                 _selectedIndices.Clear();
 
-                CalculateTotalHeight();
                 RebindAllDrawers();
             }
             protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
@@ -682,7 +678,6 @@ namespace SoftKata.ExtendedEditorGUI {
             public void Clear() {
                 ClearUnderlyingArray();
                 _selectedIndices.Clear();
-                CalculateTotalHeight();
                 RebindDrawers();
             }
             protected abstract void ClearUnderlyingArray();
