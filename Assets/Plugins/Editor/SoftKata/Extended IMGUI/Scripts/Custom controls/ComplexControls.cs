@@ -653,7 +653,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 RebindAllDrawers();
             }
-            protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
+            protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
 
             /* Scroll to values */
             public void GoTo(int index) {
@@ -707,7 +707,7 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void AcceptDragData() {
                 AddDragDataToArray(_serializedArray);
             }
-            protected override void RemoveSelectedIndices(IEnumerable<int> indices) {
+            protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
                 foreach(var index in indices) {
                     _serializedArray.DeleteArrayElementAtIndex(index);
                 }
@@ -736,7 +736,7 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void ClearUnderlyingArray() {
                 _sourceList.Clear();
             }
-            protected override void RemoveSelectedIndices(IEnumerable<int> indices) {
+            protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
                 foreach(var index in indices) {
                     _sourceList.RemoveAt(index);
                 }
