@@ -575,8 +575,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 return null;
             }
-            // Reordering
-            protected abstract void SwapArrayElements(int activeIndex, int passiveIndex);
 
             /* Mouse clicks */
             // Element selection
@@ -703,10 +701,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedArray.ClearArray();
                 _serializedArray.serializedObject.ApplyModifiedProperties();
             }
-            protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
-                _serializedArray.MoveArrayElement(activeIndex, passiveIndex);
-                _serializedObject.ApplyModifiedProperties();
-            }
             protected override void MoveElement(int from, int to) {
                 _serializedArray.MoveArrayElement(from, to);
             }
@@ -746,9 +740,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 foreach(var index in indices) {
                     _sourceList.RemoveAt(index);
                 }
-            }
-            protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
-                _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
             }
             protected override void MoveElement(int from, int to) {
                 _sourceList.MoveElement(from, to);
