@@ -498,9 +498,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
                 return indexElementBottomBorder > absolutePosition;
             }
-            public void Refresh() {
-                RebindDrawers();
-            }
 
             /* Drawers */
             private void CalculateVisibleData(out int firstVisibleIndex, out int visibleCount) {
@@ -522,7 +519,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     visibleCount = lastIndex - firstVisibleIndex + 1;
                 }
             }
-            private void RebindDrawers() {
+            protected void RebindDrawers() {
                 int initialIndex = _firstVisibleIndex;
                 int initialCount = _visibleElementsCount;
                 CalculateVisibleData(out int newIndex, out int newCount);
@@ -576,29 +573,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 return null;
             }
             // Reordering
-            private void HandleReorder(int activeIndex, int passiveIndex) {
-                var passiveDrawerIndex = GetDrawerIndexFromDataIndex(passiveIndex);
-                // abort if passive reorderable element in invisible
-                if (passiveDrawerIndex == -1) return;
-
-                var activeDrawerIndex = GetDrawerIndexFromDataIndex(activeIndex);
-
-                // actual data reordering
-                SwapArrayElements(activeIndex, passiveIndex);
-
-
-                _activeDataIndex += activeIndex > passiveIndex ? -1 : 1;
-
-                if (activeDrawerIndex != -1 && passiveDrawerIndex != -1) {
-                    _drawers.SwapElementsInplace(activeDrawerIndex, passiveDrawerIndex);
-                    _selectedIndices.Remove(activeIndex);
-                    _selectedIndices.Add(passiveIndex);
-                }
-                else {
-                    _state = State.Default;
-                }
-                OnElementsReorder?.Invoke(activeIndex, passiveIndex);
-            }
             protected abstract void SwapArrayElements(int activeIndex, int passiveIndex);
 
             /* Mouse clicks */
@@ -713,7 +687,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedObject = source.serializedObject;
                 _serializedArray = source;
 
-                Refresh();
+                RebindDrawers();
             }
             public SerializedListView(SerializedProperty source, float height, float elementHeight, Action<SerializedProperty, IAbsoluteDrawableElement, bool> bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
@@ -753,7 +727,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) : base(container, elementHeight, bind) {
                 _sourceList = source;
 
-                Refresh();
+                RebindDrawers();
             }
             public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
@@ -777,15 +751,15 @@ namespace SoftKata.ExtendedEditorGUI {
             /* Basic IList operations */
             public void RemoveAt(int index) {
                 _sourceList.RemoveAt(index);
-                Refresh();
+                RebindDrawers();
             }
             public void Add(TData element) {
                 _sourceList.Add(element);
-                Refresh();
+                RebindDrawers();
             }
             public void Insert(int index, TData element) {
                 _sourceList.Insert(index, element);
-                Refresh();
+                RebindDrawers();
             }
             protected override void AcceptDragData() {
                 AddDragDataToArray(_sourceList);
