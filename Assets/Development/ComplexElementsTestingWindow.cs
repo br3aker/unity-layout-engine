@@ -40,7 +40,7 @@ namespace Development {
                 numbersList.Add(i);
             }
 
-            Action<int, IAbsoluteDrawableElement, bool> bind = (data, drawable, selected) => {
+            ListView<int, StringLabelElement>.DataDrawerBinder bind = (index, data, drawable, selected) => {
                 var stringLabel = drawable as StringLabelElement;
                 stringLabel.Content = data.ToString();
                 stringLabel.Selected = selected;
@@ -57,32 +57,27 @@ namespace Development {
                     }
                 },
 
-                // Selection
-                OnElementSelected = (index, drawer) => {
+                // etc
+                ReorderableElementAlpha = 0.65f
+            };
+            _arrayDrawer.OnElementSelected += (index, data, drawer) => {
                     if(drawer != null) {
                         (drawer as StringLabelElement).Selected = true;
                         // Debug.Log($"Selected data index {index}");
                     }
-                },
-                OnElementDeselected = (index, drawer) => {
+                };
+            _arrayDrawer.OnElementDeselected += (index, data, drawer) => {
                     if(drawer != null) {
                         (drawer as StringLabelElement).Selected = false;
                         // Debug.Log($"Deselected data index {index}");
                     }
-                },
-                OnElementDoubleClick = (index, value) => {
+                };
+            _arrayDrawer.OnElementDoubleClick += (index, data, drawer) => {
                     // Debug.Log($"Double click on {index} at {value}");
-                },
-
-                // Reordering
-                ReorderableElementAlpha = 0.65f,
-                OnElementsReorder = (oldIndex, newIndex) => {
+                };
+            _arrayDrawer.OnElementsReorder += (oldIndex, newIndex) => {
                     Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
-                },
-
-                // etc
-                DeselectOnGapClick = true
-            };
+                };
 
 
             // Tabs

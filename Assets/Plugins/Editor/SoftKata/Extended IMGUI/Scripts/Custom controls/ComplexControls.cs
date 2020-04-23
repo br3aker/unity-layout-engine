@@ -125,6 +125,9 @@ namespace SoftKata.ExtendedEditorGUI {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
 
+            public delegate void DataDrawerBinder(int dataIndex, TData data, IAbsoluteDrawableElement drawer, bool isSelected);
+            public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
+
             /* Source */
             public abstract int Count {
                 get;
@@ -149,7 +152,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* Drawers */
             private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
-            private readonly Action<TData, IAbsoluteDrawableElement, bool> _bindDataToDrawer;
+            private readonly DataDrawerBinder _bindDataToDrawer;
 
             /* Animated scrolling */
             private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
@@ -159,10 +162,10 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _activeDataIndex = -1;
             private readonly HashSet<int> _selectedIndices = new HashSet<int>();
             // Selection & Deselection callbacks
-            public Action<int, IAbsoluteDrawableElement> OnElementSelected;
-            public Action<int, IAbsoluteDrawableElement> OnElementDeselected;
+            public event DrawerActionCallback OnElementSelected;
+            public event DrawerActionCallback OnElementDeselected;
             // Double click callback
-            public Action<int, TData> OnElementDoubleClick;
+            public event DrawerActionCallback OnElementDoubleClick;
             private double _lastClickTime;
             private const double DoubleClickTimingWindow = 0.25; // 1/4 second time window
 
@@ -172,7 +175,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public Func<DragAndDropVisualMode> ValidateDragData;
 
             /* Reordering */
-            public Action<int, int> OnElementsReorder;
+            public event Action<int, int> OnElementsReorder;
             private float _activeElementPosY;
             private Color _reorderableElementTint = Color.white;
             public float ReorderableElementAlpha {
@@ -206,7 +209,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             /* Constructors */
-            public ListViewBase(Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) {
+            public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder bind) {
                 _bindDataToDrawer = bind;
 
                 _labelStyle = ElementsResources.CenteredGreyHeader;
@@ -234,7 +237,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     _drawers.Add(new TDrawer());
                 }
             }
-            public ListViewBase(float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
+            public ListViewBase(float height, float elementHeight, DataDrawerBinder bind)
                 : this(new Vector2(-1, height), elementHeight, bind){}
 
             /* Core method for rendering */
@@ -536,7 +539,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     var newFirstDrawer = _drawers[lastDrawerIndex];
                     _drawers.RemoveAt(lastDrawerIndex);
                     _drawers.Insert(0, newFirstDrawer);
-                    _bindDataToDrawer(this[newIndex], newFirstDrawer, _selectedIndices.Contains(newIndex));
+                    _bindDataToDrawer(newIndex, this[newIndex], newFirstDrawer, _selectedIndices.Contains(newIndex));
 
                     lastBindedDrawerIndex += 1;
                 }
@@ -544,7 +547,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 int totalCountDiff = newCount - initialCount;
                 for(int i = lastBindedDrawerIndex + 1; i < newCount; i++) {
                     var dataIndex = newIndex + i;
-                    _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                    _bindDataToDrawer(dataIndex, this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
                 }
 
                 
@@ -556,7 +559,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 int dataFirstVisibleIndex = _firstVisibleIndex;
                 for(int i = 0; i < _visibleElementsCount; i++) {
                     var dataIndex = dataFirstVisibleIndex + i;
-                    _bindDataToDrawer(this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                    _bindDataToDrawer(dataIndex, this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
                 }
             }
             
@@ -580,7 +583,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private void MouseSelectIndex(int index) {
                 var currentTime = EditorApplication.timeSinceStartup;
                 if(currentTime - _lastClickTime <= DoubleClickTimingWindow && index == _activeDataIndex) {
-                    OnElementDoubleClick?.Invoke(index, this[index]);
+                    OnElementDoubleClick?.Invoke(index, this[index], _drawers[GetDrawerIndexFromDataIndex(index)]);
                 }
                 else {
                     switch(Event.current.modifiers) {
@@ -601,7 +604,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private void GreedySelection(int index) {
                 DeselectEverything();
                 if(index != _activeDataIndex) {
-                    OnElementSelected?.Invoke(index, GetDataDrawer(index));
+                    OnElementSelected?.Invoke(index, this[index], GetDataDrawer(index));
                 }
             }
             private void ShiftSelection(int index) {
@@ -616,17 +619,17 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 if(OnElementSelected != null) {
                     for(int i = start; i <= end; i++) {
-                        OnElementSelected.Invoke(i, GetDataDrawer(i));
+                        OnElementSelected.Invoke(i, this[i], GetDataDrawer(i));
                     }
                 }
             }
             private void ControlSelection(int index) {
                 if(_selectedIndices.Contains(index)) {
-                    OnElementDeselected?.Invoke(index, GetDataDrawer(index));
+                    OnElementDeselected?.Invoke(index, this[index], GetDataDrawer(index));
                     _selectedIndices.Remove(index);
                 }
                 else {
-                    OnElementSelected?.Invoke(index, GetDataDrawer(index));
+                    OnElementSelected?.Invoke(index, this[index], GetDataDrawer(index));
                     _selectedIndices.Add(_activeDataIndex);
                 }
             }
@@ -635,9 +638,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if(OnElementDeselected != null) {
                     foreach(var index in _selectedIndices) {
-                        OnElementDeselected(index, GetDataDrawer(index));
+                        OnElementDeselected(index, this[index], GetDataDrawer(index));
                     }
-                    OnElementDeselected(_activeDataIndex, GetDataDrawer(_activeDataIndex));
+                    OnElementDeselected(_activeDataIndex, this[_activeDataIndex], GetDataDrawer(_activeDataIndex));
                 }
                 _selectedIndices.Clear();
                 _activeDataIndex = -1;
@@ -686,13 +689,13 @@ namespace SoftKata.ExtendedEditorGUI {
             public Action<SerializedProperty> AddDragDataToArray;
 
             /* Constructors */
-            public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, Action<SerializedProperty, IAbsoluteDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+            public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
                 _serializedObject = source.serializedObject;
                 _serializedArray = source;
 
                 RebindDrawers();
             }
-            public SerializedListView(SerializedProperty source, float height, float elementHeight, Action<SerializedProperty, IAbsoluteDrawableElement, bool> bind)
+            public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
 
             /* Overrides */
@@ -727,12 +730,12 @@ namespace SoftKata.ExtendedEditorGUI {
             public Action<IList<TData>> AddDragDataToArray;
 
             /* Constructors */
-            public ListView(IList<TData> source, Vector2 container, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind) : base(container, elementHeight, bind) {
+            public ListView(IList<TData> source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
                 _sourceList = source;
 
                 RebindDrawers();
             }
-            public ListView(IList<TData> source, float height, float elementHeight, Action<TData, IAbsoluteDrawableElement, bool> bind)
+            public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
 
             /* Overrides */
