@@ -554,7 +554,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _firstVisibleIndex = newIndex;
                 _visibleElementsCount = newCount;
             }
-            private void RebindAllDrawers() {
+            protected void RebindAllDrawers() {
                 CalculateVisibleData(out _firstVisibleIndex, out _visibleElementsCount);
                 int dataFirstVisibleIndex = _firstVisibleIndex;
                 for(int i = 0; i < _visibleElementsCount; i++) {
@@ -717,7 +717,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             /* Source list */
-            private IList<TData> _sourceList;
+            private readonly IList<TData> _sourceList;
             public override int Count => _sourceList.Count;
             public override TData this[int index] => _sourceList[index];
 
@@ -728,7 +728,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListView(IList<TData> source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
                 _sourceList = source;
 
-                RebindDrawers();
+                RebindAllDrawers();
             }
             public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(-1, height), elementHeight, bind) { }
@@ -737,8 +737,8 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void ClearUnderlyingArray() {
                 _sourceList.Clear();
             }
-            protected override void MoveElement(int from, int to) {
-                _sourceList.MoveElement(from, to);
+            protected override void MoveElement(int srcIndex, int dstIndex) {
+                _sourceList.MoveElement(srcIndex, dstIndex);
             }
             protected override void AcceptDragData() {
                 AddDragDataToArray(_sourceList);
