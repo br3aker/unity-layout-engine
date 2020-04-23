@@ -673,6 +673,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public void Clear() {
                 ClearUnderlyingArray();
                 _selectedIndices.Clear();
+                _activeDataIndex = -1;
             }
             protected abstract void ClearUnderlyingArray();
         }
@@ -736,30 +737,16 @@ namespace SoftKata.ExtendedEditorGUI {
             protected override void ClearUnderlyingArray() {
                 _sourceList.Clear();
             }
+            protected override void MoveElement(int from, int to) {
+                _sourceList.MoveElement(from, to);
+            }
+            protected override void AcceptDragData() {
+                AddDragDataToArray(_sourceList);
+            }
             protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
                 foreach(var index in indices) {
                     _sourceList.RemoveAt(index);
                 }
-            }
-            protected override void MoveElement(int from, int to) {
-                _sourceList.MoveElement(from, to);
-            }
-
-            /* Basic IList operations */
-            public void RemoveAt(int index) {
-                _sourceList.RemoveAt(index);
-                RebindDrawers();
-            }
-            public void Add(TData element) {
-                _sourceList.Add(element);
-                RebindDrawers();
-            }
-            public void Insert(int index, TData element) {
-                _sourceList.Insert(index, element);
-                RebindDrawers();
-            }
-            protected override void AcceptDragData() {
-                AddDragDataToArray(_sourceList);
             }
         }
     }
