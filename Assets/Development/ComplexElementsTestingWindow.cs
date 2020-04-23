@@ -61,11 +61,13 @@ namespace Development {
                 OnElementSelected = (index, drawer) => {
                     if(drawer != null) {
                         (drawer as StringLabelElement).Selected = true;
+                        Debug.Log($"Selected data index {index}");
                     }
                 },
                 OnElementDeselected = (index, drawer) => {
                     if(drawer != null) {
                         (drawer as StringLabelElement).Selected = false;
+                        Debug.Log($"Deselected data index {index}");
                     }
                 },
                 OnElementDoubleClick = (index, value) => {
@@ -75,7 +77,7 @@ namespace Development {
                 // Reordering
                 ReorderableElementAlpha = 0.65f,
                 OnElementsReorder = (oldIndex, newIndex) => {
-                    // Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
+                    Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
                 }
             };
 

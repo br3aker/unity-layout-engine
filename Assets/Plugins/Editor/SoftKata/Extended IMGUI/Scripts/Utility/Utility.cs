@@ -33,6 +33,12 @@ namespace SoftKata.ExtendedEditorGUI {
             list[secondIndex] = tmp;
         }
 
+        public static void MoveElement<T>(this IList<T> list, int from, int to) {
+            T item = list[from];
+            list.RemoveAt(from);
+            list.Insert(to, item);
+        }
+
         public static void Swap<T>(ref T a, ref T b) {
             T tmp = a;
             a = b;

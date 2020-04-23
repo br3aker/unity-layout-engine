@@ -156,7 +156,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* Element selection */
             public bool DeselectOnGapClick = false;
-            private int _activeElementIndex = -1;
+            private int _activeDataIndex = -1;
             private readonly HashSet<int> _selectedIndices = new HashSet<int>();
             // Selection & Deselection callbacks
             public Action<int, IAbsoluteDrawableElement> OnElementSelected;
@@ -239,6 +239,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* Core method for rendering */
             public void OnGUI() {
+                EditorGUI.LabelField(Layout.GetRect(16), $"_activeIndex: {_activeDataIndex}");
+                EditorGUI.LabelField(Layout.GetRect(16), $"_selectedIndices.Count: {_selectedIndices.Count}");
+
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
                     if(Count != 0) {
@@ -300,7 +303,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
             private void DoReorderingContent() {
-                var reorderableDrawerIndex = GetDrawerIndexFromDataIndex(_activeElementIndex);
+                var reorderableDrawerIndex = _activeDrawerIndex;
                 // drawing before held element
                 for (int i = 0; i < reorderableDrawerIndex; i++) {
                     _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight));
@@ -397,6 +400,8 @@ namespace SoftKata.ExtendedEditorGUI {
                         _state = State.Reordering;
                         _activeElementPosY = clickIndex * _elementHeightWithSpace;
                         MouseSelectIndex(clickIndex);
+                        _activeDataOriginalIndex = clickIndex;
+                        _activeDrawerIndex = GetDrawerIndexFromDataIndex(clickIndex);
                     }
                     else if(DeselectOnGapClick) {
                         DeselectEverything();
@@ -409,30 +414,43 @@ namespace SoftKata.ExtendedEditorGUI {
                     _state = State.Default;
                     GUIUtility.hotControl = 0;
                     evt.Use();
+
+                    if(_activeDataOriginalIndex != _activeDataIndex) {
+                        MoveElement(_activeDataOriginalIndex, _activeDataIndex);
+                        OnElementsReorder?.Invoke(_activeDataOriginalIndex, _activeDataIndex);
+                        _selectedIndices.Remove(_activeDataOriginalIndex);
+                        _selectedIndices.Add(_activeDataIndex);
+                    }
                 }
             }
+            
+            private int _activeDataOriginalIndex;
+            private int _activeDrawerIndex;
             private void HandleMouseDrag(Event evt) {
-                var draggableStartPos = _activeElementIndex * _elementHeightWithSpace;
+                var draggableStartPos = _activeDataIndex * _elementHeightWithSpace;
                     var movementDelta = evt.delta.y;
                     _activeElementPosY += movementDelta;
 
                     // going up
-                    if(movementDelta < 0 && _activeElementIndex > 0) {
-                        var reorderBoundary = (_activeElementIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
-                        if(_activeElementPosY <= reorderBoundary) {
-                            HandleReorder(_activeElementIndex, _activeElementIndex - 1);
+                    if(movementDelta < 0 && _activeDataIndex > 0) {
+                        var reorderBoundary = (_activeDataIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
+                        if(_activeElementPosY <= reorderBoundary && _activeDrawerIndex > 0) {
+                            _activeDataIndex -= 1;
+                            _drawers.SwapElementsInplace(_activeDrawerIndex, --_activeDrawerIndex);
                         }
                     }
                     // doing down
-                    else if(_activeElementIndex < Count - 1) {
-                        var reorderBoundary = (_activeElementIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
-                        if(_activeElementPosY >= reorderBoundary) {
-                            HandleReorder(_activeElementIndex, _activeElementIndex + 1);
+                    else if(_activeDataIndex < Count - 1) {
+                        var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
+                        if(_activeElementPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
+                            _activeDataIndex += 1;
+                            _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
                         }
                     }
 
                     CurrentViewRepaint();
             }
+            protected abstract void MoveElement(int from, int to);
             private void HandleContextClick() {
                 var menu = new GenericMenu();
                 // Delete selected
@@ -569,7 +587,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 SwapArrayElements(activeIndex, passiveIndex);
 
 
-                _activeElementIndex += activeIndex > passiveIndex ? -1 : 1;
+                _activeDataIndex += activeIndex > passiveIndex ? -1 : 1;
 
                 if (activeDrawerIndex != -1 && passiveDrawerIndex != -1) {
                     _drawers.SwapElementsInplace(activeDrawerIndex, passiveDrawerIndex);
@@ -587,7 +605,7 @@ namespace SoftKata.ExtendedEditorGUI {
             // Element selection
             private void MouseSelectIndex(int index) {
                 var currentTime = EditorApplication.timeSinceStartup;
-                if(currentTime - _lastClickTime <= DoubleClickTimingWindow && index == _activeElementIndex) {
+                if(currentTime - _lastClickTime <= DoubleClickTimingWindow && index == _activeDataIndex) {
                     OnElementDoubleClick?.Invoke(index, this[index]);
                 }
                 else {
@@ -602,7 +620,7 @@ namespace SoftKata.ExtendedEditorGUI {
                             ControlSelection(index);
                             break; 
                     }
-                    _activeElementIndex = index;
+                    _activeDataIndex = index;
                 }
                 _lastClickTime = currentTime;
             }
@@ -617,7 +635,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _selectedIndices.Add(index);
             }
             private void ShiftSelection(int index) {
-                var start = _activeElementIndex + 1;
+                var start = _activeDataIndex + 1;
                 var end = index;
                 if(start > end) {
                     start -= 2;
@@ -649,7 +667,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
                 }
                 _selectedIndices.Clear();
-                _activeElementIndex = -1;
+                _activeDataIndex = -1;
             }
             // Context menu
             private void RemoveSelected() {
@@ -710,6 +728,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedArray.MoveArrayElement(activeIndex, passiveIndex);
                 _serializedObject.ApplyModifiedProperties();
             }
+            protected override void MoveElement(int from, int to) {
+                _serializedArray.MoveArrayElement(from, to);
+            }
             protected override void AcceptDragData() {
                 AddDragDataToArray(_serializedArray);
             }
@@ -749,6 +770,9 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             protected override void SwapArrayElements(int activeIndex, int passiveIndex) {
                 _sourceList.SwapElementsInplace(activeIndex, passiveIndex);
+            }
+            protected override void MoveElement(int from, int to) {
+                _sourceList.MoveElement(from, to);
             }
 
             /* Basic IList operations */
