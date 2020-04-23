@@ -455,7 +455,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var menu = new GenericMenu();
                 // Delete selected
                 var deleteSelectedContent = new GUIContent("Delete selected");
-                if(_selectedIndices.Count != 0) menu.AddItem(deleteSelectedContent, false, RemoveSelected);
+                if(_activeDataIndex != -1) menu.AddItem(deleteSelectedContent, false, RemoveSelected);
                 else menu.AddDisabledItem(deleteSelectedContent);
                 // Delete all
                 var deleteAllContent = new GUIContent("Delete all");
@@ -644,7 +644,10 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             // Context menu
             private void RemoveSelected() {
+                _selectedIndices.Add(_activeDataIndex);
                 RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
+
+                _activeDataIndex = -1;
                 _selectedIndices.Clear();
 
                 RebindAllDrawers();
