@@ -695,7 +695,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 RebindDrawers();
             }
             public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
-                : this(source, new Vector2(-1, height), elementHeight, bind) { }
+                : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
             /* Overrides */
             protected override void ClearUnderlyingArray() {
@@ -733,7 +733,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 RebindAllDrawers();
             }
             public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
-                : this(source, new Vector2(-1, height), elementHeight, bind) { }
+                : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
             /* Overrides */
             protected override void ClearUnderlyingArray() {
