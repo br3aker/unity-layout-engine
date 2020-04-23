@@ -431,27 +431,27 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _activeDrawerIndex;
             private void HandleMouseDrag(Event evt) {
                 var draggableStartPos = _activeDataIndex * _elementHeightWithSpace;
-                    var movementDelta = evt.delta.y;
-                    _activeElementPosY += movementDelta;
+                var movementDelta = evt.delta.y;
+                _activeElementPosY += movementDelta;
 
-                    // going up
-                    if(movementDelta < 0 && _activeDataIndex > 0) {
-                        var reorderBoundary = (_activeDataIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
-                        if(_activeElementPosY <= reorderBoundary && _activeDrawerIndex > 0) {
-                            _activeDataIndex -= 1;
-                            _drawers.SwapElementsInplace(_activeDrawerIndex, --_activeDrawerIndex);
-                        }
+                // going up
+                if(movementDelta < 0 && _activeDataIndex > 0) {
+                    var reorderBoundary = (_activeDataIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
+                    if(_activeElementPosY <= reorderBoundary && _activeDrawerIndex > 0) {
+                        _activeDataIndex -= 1;
+                        _drawers.SwapElementsInplace(_activeDrawerIndex, --_activeDrawerIndex);
                     }
-                    // doing down
-                    else if(_activeDataIndex < Count - 1) {
-                        var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
-                        if(_activeElementPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
-                            _activeDataIndex += 1;
-                            _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
-                        }
+                }
+                // doing down
+                else if(_activeDataIndex < Count - 1) {
+                    var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
+                    if(_activeElementPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
+                        _activeDataIndex += 1;
+                        _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
                     }
+                }
 
-                    CurrentViewRepaint();
+                CurrentViewRepaint();
             }
             protected abstract void MoveElement(int from, int to);
             private void HandleContextClick() {
@@ -658,12 +658,12 @@ namespace SoftKata.ExtendedEditorGUI {
             protected abstract void RemoveSelectedIndices(IEnumerable<int> indices);
 
             /* Scroll to values */
-            public void ScrollTo(int index) {
+            public void GoTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _contentScrollGroup.ScrollPosY = indexScrollPos;
                 RebindDrawers();
             }
-            public void ScrollToAnim(int index) {
+            public void ScrollTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _animator.value = _contentScrollGroup.ScrollPosY;
                 _animator.target = indexScrollPos;
