@@ -240,7 +240,7 @@ namespace SoftKata.ExtendedEditorGUI {
             /* Core method for rendering */
             public void OnGUI() {
                 EditorGUI.LabelField(Layout.GetRect(16), $"_activeIndex: {_activeDataIndex}");
-                EditorGUI.LabelField(Layout.GetRect(16), $"_selectedIndices.Count: {_selectedIndices.Count}");
+                EditorGUI.LabelField(Layout.GetRect(16), $"_selectedIndices[{_selectedIndices.Count}]: {string.Join("|", _selectedIndices)}");
 
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
@@ -418,8 +418,8 @@ namespace SoftKata.ExtendedEditorGUI {
                     if(_activeDataOriginalIndex != _activeDataIndex) {
                         MoveElement(_activeDataOriginalIndex, _activeDataIndex);
                         OnElementsReorder?.Invoke(_activeDataOriginalIndex, _activeDataIndex);
-                        _selectedIndices.Remove(_activeDataOriginalIndex);
-                        _selectedIndices.Add(_activeDataIndex);
+                        // _selectedIndices.Remove(_activeDataOriginalIndex);
+                        // _selectedIndices.Add(_activeDataIndex);
                     }
                 }
             }
@@ -625,14 +625,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 _lastClickTime = currentTime;
             }
             private void GreedySelection(int index) {
-                if(_selectedIndices.Contains(index)) {
-                    _selectedIndices.Remove(index);
-                }
-                else {
+                DeselectEverything();
+                if(index != _activeDataIndex) {
                     OnElementSelected?.Invoke(index, GetDataDrawer(index));
                 }
-                DeselectEverything();
-                _selectedIndices.Add(index);
             }
             private void ShiftSelection(int index) {
                 var start = _activeDataIndex + 1;
@@ -657,14 +653,17 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
                 else {
                     OnElementSelected?.Invoke(index, GetDataDrawer(index));
-                    _selectedIndices.Add(index);
+                    _selectedIndices.Add(_activeDataIndex);
                 }
             }
             private void DeselectEverything() {
+                if(_activeDataIndex == -1) return;
+
                 if(OnElementDeselected != null) {
                     foreach(var index in _selectedIndices) {
                         OnElementDeselected(index, GetDataDrawer(index));
                     }
+                    OnElementDeselected(_activeDataIndex, GetDataDrawer(_activeDataIndex));
                 }
                 _selectedIndices.Clear();
                 _activeDataIndex = -1;
