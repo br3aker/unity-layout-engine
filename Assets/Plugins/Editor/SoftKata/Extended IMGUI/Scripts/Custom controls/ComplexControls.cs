@@ -700,13 +700,15 @@ namespace SoftKata.ExtendedEditorGUI {
             /* Overrides */
             protected override void ClearUnderlyingArray() {
                 _serializedArray.ClearArray();
-                _serializedArray.serializedObject.ApplyModifiedProperties();
+                _serializedObject.ApplyModifiedProperties();
             }
-            protected override void MoveElement(int from, int to) {
-                _serializedArray.MoveArrayElement(from, to);
+            protected override void MoveElement(int srcIndex, int dstIndex) {
+                _serializedArray.MoveArrayElement(srcIndex, dstIndex);
+                _serializedObject.ApplyModifiedProperties();
             }
             protected override void AcceptDragData() {
                 AddDragDataToArray(_serializedArray);
+                _serializedObject.ApplyModifiedProperties();
             }
             protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
                 foreach(var index in indices) {
