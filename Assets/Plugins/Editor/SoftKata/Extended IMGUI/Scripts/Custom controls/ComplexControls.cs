@@ -200,7 +200,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly float _emptyListLabelHeight;
 
 
-            /* Constructors */
+            // ctor
             public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder bind) {
                 _bindDataToDrawer = bind;
 
@@ -233,7 +233,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListViewBase(float height, float elementHeight, DataDrawerBinder bind)
                 : this(new Vector2(-1, height), elementHeight, bind){}
 
-            /* Core method for rendering */
+            // Core
             public void OnGUI() {
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
@@ -251,8 +251,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     RebindDrawers();
                 }
             }
-
-            /* Top-level GUI methods */
             private void DoContent() {
                 var eventType = Event.current.type;
 
@@ -271,11 +269,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 switch(_state) {
                     case State.Default:
                         DoVisibleContent();
-                        HandleEventsAtDefault();
+                        HandleDefaultEvents();
                         break;
                     case State.Reordering:
                         DoReorderingContent();
-                        HandleEventsAtReordering();
+                        HandleReorderingEvents();
                         break;
                     case State.ScrollingToIndex:
                         if(Event.current.type == EventType.Repaint) {
@@ -329,10 +327,10 @@ namespace SoftKata.ExtendedEditorGUI {
                     EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
                 }
 
-                HandleEventsAtDefault();
+                HandleDefaultEvents();
             }
 
-            /* Event handling */
+            // Event handling
             private EventType FilterCurrentEvent(Event evt) {
                 _currentControlId = GUIUtility.GetControlID(ListViewControlIdHint, FocusType.Passive);
                 var type = evt.GetTypeForControl(_currentControlId);
@@ -349,7 +347,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 
                 return type;
             }
-            private void HandleEventsAtDefault() {
+            private void HandleDefaultEvents() {
                 var evt = Event.current;
                 switch (FilterCurrentEvent(evt)) {
                     // Selection, reordering & context click
@@ -368,7 +366,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         break;
                 }
             }
-            private void HandleEventsAtReordering() {
+            private void HandleReorderingEvents() {
                 var evt = Event.current;
                 switch (FilterCurrentEvent(evt)) {
                     // Selection & reordering
@@ -380,11 +378,10 @@ namespace SoftKata.ExtendedEditorGUI {
                         break;
                 }
             }
-            // Mouse clicks & movement
             private void HandleMouseDown(Event evt) {
                 // context click
                 if(evt.button == 1) {
-                    HandleContextClick();
+                    HandleMouseContextClick();
                 }
                 // selection click
                 else {
@@ -416,7 +413,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
                 }
             }
-            
             private void HandleMouseDrag(Event evt) {
                 var draggableStartPos = _activeDataIndex * _elementHeightWithSpace;
                 var movementDelta = evt.delta.y;
@@ -441,8 +437,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 CurrentViewRepaint();
             }
-            protected abstract void MoveElement(int from, int to);
-            private void HandleContextClick() {
+            private void HandleMouseContextClick() {
                 var menu = new GenericMenu();
                 // Delete selected
                 var deleteSelectedContent = new GUIContent("Delete selected");
@@ -455,8 +450,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 menu.ShowAsContext();
             }
-
-            // Drag & Drop
             private void HandleDragUpdated(Event evt) {
                 if(_dragOperationType == DragAndDropVisualMode.None) {
                     _dragOperationType = ValidateDragData();
@@ -478,18 +471,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 _dragOperationType = DragAndDropVisualMode.None;
                 evt.Use();
             }
-            protected abstract void AcceptDragData();
 
-            /* Helpers */
-            private bool PositionToDataIndex(float position, out int index) {
-                var absolutePosition = position + _visibleContentOffset;
-                index = (int)(absolutePosition / _elementHeightWithSpace);
-
-                float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
-                return indexElementBottomBorder > absolutePosition;
-            }
-
-            /* Drawers */
+            // Rendering utility
             private void CalculateVisibleData(out int firstVisibleIndex, out int visibleCount) {
                 _totalElementsHeight = Count * _elementHeightWithSpace - _spaceBetweenElements;
 
@@ -563,7 +546,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 return null;
             }
 
-            /* Mouse clicks */
             // Element selection
             private void MouseSelectIndex(int index) {
                 var currentTime = EditorApplication.timeSinceStartup;
@@ -630,7 +612,13 @@ namespace SoftKata.ExtendedEditorGUI {
                 _selectedIndices.Clear();
                 _activeDataIndex = -1;
             }
-            // Context menu
+
+            // Utility methods
+            public void Clear() {
+                ClearDataArray();
+                _selectedIndices.Clear();
+                _activeDataIndex = -1;
+            }
             private void RemoveSelected() {
                 _selectedIndices.Add(_activeDataIndex);
                 RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
@@ -640,9 +628,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 RebindAllDrawers();
             }
-            protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
+            
+            private bool PositionToDataIndex(float position, out int index) {
+                var absolutePosition = position + _visibleContentOffset;
+                index = (int)(absolutePosition / _elementHeightWithSpace);
 
-            /* Scroll to values */
+                float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
+                return indexElementBottomBorder > absolutePosition;
+            }
+
             public void GoTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _contentScrollGroup.ScrollPosY = indexScrollPos;
@@ -656,13 +650,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 _state = State.ScrollingToIndex;
             }
 
-            /* Basic IList operations */
-            public void Clear() {
-                ClearUnderlyingArray();
-                _selectedIndices.Clear();
-                _activeDataIndex = -1;
-            }
-            protected abstract void ClearUnderlyingArray();
+            // Implementation-dependent methods
+            protected abstract void ClearDataArray();
+            protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
+            protected abstract void MoveElement(int from, int to);
+            protected abstract void AcceptDragData();
         }
         public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             /* Source list */
@@ -685,7 +677,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
             /* Overrides */
-            protected override void ClearUnderlyingArray() {
+            protected override void ClearDataArray() {
                 _serializedArray.ClearArray();
                 _serializedObject.ApplyModifiedProperties();
             }
@@ -723,7 +715,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
             /* Overrides */
-            protected override void ClearUnderlyingArray() {
+            protected override void ClearDataArray() {
                 _sourceList.Clear();
             }
             protected override void MoveElement(int srcIndex, int dstIndex) {
