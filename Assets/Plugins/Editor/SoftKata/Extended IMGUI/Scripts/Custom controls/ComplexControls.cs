@@ -676,7 +676,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedObject = source.serializedObject;
                 _serializedArray = source;
 
-                RebindDrawers();
+                RebindAllDrawers();
             }
             public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
@@ -698,7 +698,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 foreach(var index in indices) {
                     _serializedArray.DeleteArrayElementAtIndex(index);
                 }
-                _serializedArray.serializedObject.ApplyModifiedProperties();
+                _serializedObject.ApplyModifiedProperties();
             }
         }
         public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
