@@ -191,19 +191,13 @@ namespace SoftKata.ExtendedEditorGUI {
             public delegate void DataDrawerBinder(int dataIndex, TData data, IAbsoluteDrawableElement drawer, bool isSelected);
             public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
 
-            // Empty list drawing
-            private const float IconSize = 56;
+            // Empty list default texture & label
             private readonly Texture _emptyListIcon;
+            private const float EmptyListIconSize = 56;
             
             private readonly GUIStyle _labelStyle;
-            private float _emptyListLabelHeight;
-            private GUIContent _emptyListLabel;
-            public GUIContent EmptyListLabel {
-                set {
-                    _emptyListLabel = value;
-                    _emptyListLabelHeight = _labelStyle.GetContentHeight(value);
-                }
-            }
+            private readonly GUIContent _emptyListLabel;
+            private readonly float _emptyListLabelHeight;
 
 
             /* Constructors */
@@ -212,7 +206,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 _labelStyle = ElementsResources.CenteredGreyHeader;
     
-                EmptyListLabel = new GUIContent("This list is empty");
+                _emptyListLabel = new GUIContent("This list is empty");
+                _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
                 _emptyListIcon = ElementsResources.ListView.EmptyIcon;
 
                 _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
@@ -324,9 +319,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 GUI.color = color;
             }
             private void DoEmptyContent() {
-                if(_contentScrollGroup.GetRect(IconSize, out var iconRect)) {
-                    iconRect.x += (iconRect.width / 2) - IconSize / 2;
-                    iconRect.width = IconSize;
+                if(_contentScrollGroup.GetRect(EmptyListIconSize, out var iconRect)) {
+                    iconRect.x += (iconRect.width / 2) - EmptyListIconSize / 2;
+                    iconRect.width = EmptyListIconSize;
 
                     GUI.DrawTexture(iconRect, _emptyListIcon);
                 }
