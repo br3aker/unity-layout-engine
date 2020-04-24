@@ -138,7 +138,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly ScrollGroup _contentScrollGroup;
             private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
 
-            // Internal buffer
+            // Data source indexers
             public abstract int Count {
                 get;
             }
@@ -655,21 +655,23 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Implementation dependent methods
             protected abstract void ClearDataArray();
-            protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
             protected abstract void MoveElement(int from, int to);
             protected abstract void AcceptDragData();
+            protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
         }
         public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
-            /* Source list */
+            // Data source
             public SerializedObject _serializedObject;
             public SerializedProperty _serializedArray;
+
+            // Data source indexers
             public override int Count => _serializedArray.arraySize;
             public override SerializedProperty this[int index] => _serializedArray.GetArrayElementAtIndex(index);
 
-            /* Callbacks */
+            // Public delegates
             public Action<SerializedProperty> AddDragDataToArray;
 
-            /* Constructors */
+            // ctor
             public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
                 _serializedObject = source.serializedObject;
                 _serializedArray = source;
@@ -679,7 +681,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
-            /* Overrides */
+            // Implementation dependent overrides
             protected override void ClearDataArray() {
                 _serializedArray.ClearArray();
                 _serializedObject.ApplyModifiedProperties();
@@ -700,15 +702,17 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
         public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
-            /* Source list */
+            // Data source
             private readonly IList<TData> _sourceList;
+
+            // Data source indexers
             public override int Count => _sourceList.Count;
             public override TData this[int index] => _sourceList[index];
 
-            /* Callbacks */
+            // Public delegates
             public Action<IList<TData>> AddDragDataToArray;
 
-            /* Constructors */
+            // ctor
             public ListView(IList<TData> source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
                 _sourceList = source;
 
@@ -717,7 +721,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
                 : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
 
-            /* Overrides */
+            // Implementation dependent overrides
             protected override void ClearDataArray() {
                 _sourceList.Clear();
             }
