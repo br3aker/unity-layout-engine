@@ -69,7 +69,7 @@ namespace Development {
             _arrayDrawer.OnElementDeselected += (index, data, drawer) => {
                     if(drawer != null) {
                         (drawer as StringLabelElement).Selected = false;
-                        // Debug.Log($"Deselected data index {index}");
+                        Debug.Log($"Deselected data index {index}");
                     }
                 };
             _arrayDrawer.OnElementDoubleClick += (index, data, drawer) => {

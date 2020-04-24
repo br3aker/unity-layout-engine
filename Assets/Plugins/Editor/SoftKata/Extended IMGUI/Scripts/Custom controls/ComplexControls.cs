@@ -235,6 +235,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Core
             public void OnGUI() {
+                EditorGUI.LabelField(Layout.GetRect(16), $"Active index: {_activeDataIndex}");
+                EditorGUI.LabelField(Layout.GetRect(16), $"Selected: {string.Join("|", _selectedIndices)}");
+
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
                     if(Count != 0) {
@@ -387,11 +390,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 else {
                     if(PositionToDataIndex(evt.mousePosition.y, out int clickIndex)) {
                         GUIUtility.hotControl = _currentControlId;
-                        _state = State.Reordering;
                         _activeDrawerPosY = clickIndex * _elementHeightWithSpace;
-                        MouseSelectIndex(clickIndex);
+                        MouseSelectIndex(clickIndex, GetDrawerIndexFromDataIndex(clickIndex));
                         _activeDataOriginalIndex = clickIndex;
-                        _activeDrawerIndex = GetDrawerIndexFromDataIndex(clickIndex);
                     }
                     else if(DeselectOnGapClick) {
                         DeselectEverything();
@@ -408,8 +409,8 @@ namespace SoftKata.ExtendedEditorGUI {
                     if(_activeDataOriginalIndex != _activeDataIndex) {
                         MoveElement(_activeDataOriginalIndex, _activeDataIndex);
                         OnElementsReorder?.Invoke(_activeDataOriginalIndex, _activeDataIndex);
-                        // _selectedIndices.Remove(_activeDataOriginalIndex);
-                        // _selectedIndices.Add(_activeDataIndex);
+                        _selectedIndices.Remove(_activeDataOriginalIndex);
+                        _selectedIndices.Add(_activeDataIndex);
                     }
                 }
             }
@@ -547,32 +548,35 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             // Element selection
-            private void MouseSelectIndex(int index) {
+            private void MouseSelectIndex(int dataIndex, int drawerIndex) {
                 var currentTime = EditorApplication.timeSinceStartup;
-                if(currentTime - _lastClickTime <= DoubleClickTimingWindow && index == _activeDataIndex) {
-                    OnElementDoubleClick?.Invoke(index, this[index], _drawers[GetDrawerIndexFromDataIndex(index)]);
+                if(dataIndex == _activeDataIndex && currentTime - _lastClickTime <= DoubleClickTimingWindow) {
+                    OnElementDoubleClick?.Invoke(dataIndex, this[dataIndex], _drawers[GetDrawerIndexFromDataIndex(dataIndex)]);
                 }
                 else {
                     switch(Event.current.modifiers) {
                         case EventModifiers.None:
-                            GreedySelection(index);
+                            GreedySelection(dataIndex, drawerIndex);
                             break; 
                         case EventModifiers.Shift:
-                            ShiftSelection(index);
+                            ShiftSelection(dataIndex);
                             break; 
                         case EventModifiers.Control:
-                            ControlSelection(index);
+                            ControlSelection(dataIndex, drawerIndex);
                             break; 
                     }
-                    _activeDataIndex = index;
+                    _activeDataIndex = dataIndex;
+                    _activeDrawerIndex = drawerIndex;
                 }
                 _lastClickTime = currentTime;
             }
-            private void GreedySelection(int index) {
+            private void GreedySelection(int index, int drawerIndex) {
                 DeselectEverything();
                 if(index != _activeDataIndex) {
-                    OnElementSelected?.Invoke(index, this[index], GetDataDrawer(index));
+                    OnElementSelected?.Invoke(index, this[index], _drawers[drawerIndex]);
                 }
+                _state = State.Reordering;
+                _selectedIndices.Add(index);
             }
             private void ShiftSelection(int index) {
                 var start = _activeDataIndex + 1;
@@ -590,14 +594,15 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
                 }
             }
-            private void ControlSelection(int index) {
+            private void ControlSelection(int index, int drawerIndex) {
+                var activeDrawer = _drawers[drawerIndex];
                 if(_selectedIndices.Contains(index)) {
-                    OnElementDeselected?.Invoke(index, this[index], GetDataDrawer(index));
+                    OnElementDeselected?.Invoke(index, this[index], activeDrawer);
                     _selectedIndices.Remove(index);
                 }
                 else {
-                    OnElementSelected?.Invoke(index, this[index], GetDataDrawer(index));
-                    _selectedIndices.Add(_activeDataIndex);
+                    OnElementSelected?.Invoke(index, this[index], activeDrawer);
+                    _selectedIndices.Add(index);
                 }
             }
             private void DeselectEverything() {
@@ -607,7 +612,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     foreach(var index in _selectedIndices) {
                         OnElementDeselected(index, this[index], GetDataDrawer(index));
                     }
-                    OnElementDeselected(_activeDataIndex, this[_activeDataIndex], GetDataDrawer(_activeDataIndex));
                 }
                 _selectedIndices.Clear();
                 _activeDataIndex = -1;
@@ -620,7 +624,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 _activeDataIndex = -1;
             }
             private void RemoveSelected() {
-                _selectedIndices.Add(_activeDataIndex);
                 RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
 
                 _activeDataIndex = -1;
@@ -650,7 +653,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _state = State.ScrollingToIndex;
             }
 
-            // Implementation-dependent methods
+            // Implementation dependent methods
             protected abstract void ClearDataArray();
             protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
             protected abstract void MoveElement(int from, int to);
