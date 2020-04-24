@@ -73,7 +73,7 @@ namespace Development {
                     }
                 };
             _arrayDrawer.OnElementDoubleClick += (index, data, drawer) => {
-                    // Debug.Log($"Double click on {index} at {value}");
+                    Debug.Log($"Double click on {index} at {data}");
                 };
             _arrayDrawer.OnElementsReorder += (oldIndex, newIndex) => {
                     Debug.Log($"Swapped {oldIndex} index with {newIndex} index");

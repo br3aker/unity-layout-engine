@@ -571,11 +571,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 _lastClickTime = currentTime;
             }
             private void GreedySelection(int index, int drawerIndex) {
-                DeselectEverything();
-                if(index != _activeDataIndex) {
-                    OnElementSelected?.Invoke(index, this[index], _drawers[drawerIndex]);
-                }
                 _state = State.Reordering;
+                if(index == _activeDataIndex) return;
+
+                DeselectEverything();
+                OnElementSelected?.Invoke(index, this[index], _drawers[drawerIndex]);
                 _selectedIndices.Add(index);
             }
             private void ShiftSelection(int index) {
