@@ -170,7 +170,6 @@ namespace SoftKata.ExtendedEditorGUI {
             private const double DoubleClickTimingWindow = 0.25; // 1/4 second time window
 
             /* Drag & drop */
-            private bool _isDragDataValidated;
             private DragAndDropVisualMode _dragOperationType;
             public Func<DragAndDropVisualMode> ValidateDragData;
 
@@ -467,11 +466,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Drag & Drop
             private void HandleDragUpdated(Event evt) {
-                if(!_isDragDataValidated) {
-                    _isDragDataValidated = true;
+                if(_dragOperationType == DragAndDropVisualMode.None) {
                     _dragOperationType = ValidateDragData();
                 }
-                if(_isDragDataValidated){
+                else {
                     DragAndDrop.visualMode = _dragOperationType;
                 }
                 evt.Use();
@@ -485,7 +483,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             private void HandleDragExited(Event evt) {
                 _state = State.Default;
-                _isDragDataValidated = false;
+                _dragOperationType = DragAndDropVisualMode.None;
                 evt.Use();
             }
             protected abstract void AcceptDragData();
