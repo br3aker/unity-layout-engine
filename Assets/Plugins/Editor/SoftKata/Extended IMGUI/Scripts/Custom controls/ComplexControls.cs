@@ -125,10 +125,20 @@ namespace SoftKata.ExtendedEditorGUI {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
 
-            public delegate void DataDrawerBinder(int dataIndex, TData data, IAbsoluteDrawableElement drawer, bool isSelected);
-            public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
+            private enum State {
+                Default,
+                Reordering,
+                ScrollingToIndex
+            }
 
-            /* Source */
+
+            // Behaviour
+            private int _currentControlId;
+            private State _state;
+            private readonly ScrollGroup _contentScrollGroup;
+            private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
+
+            // Internal buffer
             public abstract int Count {
                 get;
             }
@@ -136,52 +146,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 get;
             }
 
-            /* State for FSM */
-            private enum State {
-                Default,
-                Reordering,
-                ScrollingToIndex
-            }
-            private State _state;
-
-            /* Control id */
-            private int _currentControlId;
-
-            /* Layout scroll group */
-            private readonly ScrollGroup _contentScrollGroup;
-
-            /* Drawers */
+            // Rendering
             private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
+
             private readonly DataDrawerBinder _bindDataToDrawer;
 
-            /* Animated scrolling */
-            private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
-
-            /* Element selection */
-            public bool DeselectOnGapClick = false;
-            private int _activeDataIndex = -1;
-            private readonly HashSet<int> _selectedIndices = new HashSet<int>();
-            // Selection & Deselection callbacks
-            public event DrawerActionCallback OnElementSelected;
-            public event DrawerActionCallback OnElementDeselected;
-            // Double click callback
-            public event DrawerActionCallback OnElementDoubleClick;
-            private double _lastClickTime;
-            private const double DoubleClickTimingWindow = 0.25; // 1/4 second time window
-
-            /* Drag & drop */
-            private DragAndDropVisualMode _dragOperationType;
-            public Func<DragAndDropVisualMode> ValidateDragData;
-
-            /* Reordering */
-            public event Action<int, int> OnElementsReorder;
-            private float _activeElementPosY;
-            private Color _reorderableElementTint = Color.white;
-            public float ReorderableElementAlpha {
-                set => _reorderableElementTint.a = value;
-            }
-
-            /* Rendering & occlusion */
             private readonly float _elementHeight;
             private readonly float _spaceBetweenElements;
             private readonly float _elementHeightWithSpace;
@@ -191,11 +160,41 @@ namespace SoftKata.ExtendedEditorGUI {
             private int _firstVisibleIndex;
             private int _visibleElementsCount;
 
-            /* Empty list drawing data */
-            // Texture
+            public float ReorderingTintAlpha {
+                set => _reorderableElementTint.a = value;
+            }
+            private Color _reorderableElementTint = Color.white;
+
+            // Element selection
+            private int _activeDrawerIndex;
+            private float _activeDrawerPosY;
+            private int _activeDataIndex = -1;
+            private int _activeDataOriginalIndex;
+            private readonly HashSet<int> _selectedIndices = new HashSet<int>();
+
+            private double _lastClickTime;
+            private const double DoubleClickTimingWindow = 0.25; // 1/4 second time window
+
+            public bool DeselectOnGapClick = false;
+
+            // Drag & drop
+            private DragAndDropVisualMode _dragOperationType;
+            public Func<DragAndDropVisualMode> ValidateDragData;
+            
+            // Public events
+            public event DrawerActionCallback OnElementSelected;
+            public event DrawerActionCallback OnElementDeselected;
+            public event DrawerActionCallback OnElementDoubleClick;
+
+            public event Action<int, int> OnElementsReorder;
+
+            public delegate void DataDrawerBinder(int dataIndex, TData data, IAbsoluteDrawableElement drawer, bool isSelected);
+            public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
+
+            // Empty list drawing
             private const float IconSize = 56;
             private readonly Texture _emptyListIcon;
-            // Label
+            
             private readonly GUIStyle _labelStyle;
             private float _emptyListLabelHeight;
             private GUIContent _emptyListLabel;
@@ -319,7 +318,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var color = GUI.color;
                 GUI.color *= _reorderableElementTint;
                 _drawers[reorderableDrawerIndex].OnGUI(
-                    new Rect(new Vector2(initialHeldRect.x, _activeElementPosY - _visibleContentOffset), 
+                    new Rect(new Vector2(initialHeldRect.x, _activeDrawerPosY - _visibleContentOffset), 
                     initialHeldRect.size)
                 );
                 GUI.color = color;
@@ -397,7 +396,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     if(PositionToDataIndex(evt.mousePosition.y, out int clickIndex)) {
                         GUIUtility.hotControl = _currentControlId;
                         _state = State.Reordering;
-                        _activeElementPosY = clickIndex * _elementHeightWithSpace;
+                        _activeDrawerPosY = clickIndex * _elementHeightWithSpace;
                         MouseSelectIndex(clickIndex);
                         _activeDataOriginalIndex = clickIndex;
                         _activeDrawerIndex = GetDrawerIndexFromDataIndex(clickIndex);
@@ -423,17 +422,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
             
-            private int _activeDataOriginalIndex;
-            private int _activeDrawerIndex;
             private void HandleMouseDrag(Event evt) {
                 var draggableStartPos = _activeDataIndex * _elementHeightWithSpace;
                 var movementDelta = evt.delta.y;
-                _activeElementPosY += movementDelta;
+                _activeDrawerPosY += movementDelta;
 
                 // going up
                 if(movementDelta < 0 && _activeDataIndex > 0) {
                     var reorderBoundary = (_activeDataIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
-                    if(_activeElementPosY <= reorderBoundary && _activeDrawerIndex > 0) {
+                    if(_activeDrawerPosY <= reorderBoundary && _activeDrawerIndex > 0) {
                         _activeDataIndex -= 1;
                         _drawers.SwapElementsInplace(_activeDrawerIndex, --_activeDrawerIndex);
                     }
@@ -441,7 +438,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // doing down
                 else if(_activeDataIndex < Count - 1) {
                     var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
-                    if(_activeElementPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
+                    if(_activeDrawerPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
                         _activeDataIndex += 1;
                         _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
                     }

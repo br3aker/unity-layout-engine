@@ -58,7 +58,7 @@ namespace Development {
                 },
 
                 // etc
-                ReorderableElementAlpha = 0.65f
+                ReorderingTintAlpha = 0.65f
             };
             _arrayDrawer.OnElementSelected += (index, data, drawer) => {
                     if(drawer != null) {
