@@ -18,7 +18,7 @@ namespace Development {
 
         private Tabs _tabsDrawer;
 
-        private ListView<int, TypeStringLabelElement> _arrayDrawer;
+        private ListView<int, StringLabelElement> _arrayDrawer;
 
         private ScrollViewTest _scrollViewTest;
         private ScrollViewExpander _scrollViewExpander;
@@ -34,19 +34,18 @@ namespace Development {
             }
 
             // List
-            var listSize = 10;
+            var listSize = 15;
             var numbersList = new List<int>(listSize);
             for(int i = 0; i < listSize; i++) {
                 numbersList.Add(i);
             }
 
-            Action<int, IAbsoluteDrawableElement, bool> bind = (data, drawable, selected) => {
-                var stringLabel = drawable as TypeStringLabelElement;
-                stringLabel.Type = data.GetType().Name;
-                stringLabel.Value = data.ToString();
+            ListView<int, StringLabelElement>.DataDrawerBinder bind = (index, data, drawable, selected) => {
+                var stringLabel = drawable as StringLabelElement;
+                stringLabel.Content = data.ToString();
                 stringLabel.Selected = selected;
             };
-            _arrayDrawer = new ListView<int, TypeStringLabelElement>(numbersList, 350, 40, bind) {
+            _arrayDrawer = new ListView<int, StringLabelElement>(numbersList, 350, 40, bind) {
                 // Drag & drop
                 ValidateDragData = () => {
                     return DragAndDropVisualMode.Link;
@@ -58,27 +57,27 @@ namespace Development {
                     }
                 },
 
-                // Selection
-                OnElementSelected = (index, drawer) => {
-                    if(drawer != null) {
-                        (drawer as TypeStringLabelElement).Selected = true;
-                    }
-                },
-                OnElementDeselected = (index, drawer) => {
-                    if(drawer != null) {
-                        (drawer as TypeStringLabelElement).Selected = false;
-                    }
-                },
-                OnElementDoubleClick = (index, value) => {
-                    Debug.Log($"Double click on {index} at {value}");
-                },
-
-                // Reordering
-                ReorderableElementAlpha = 0.65f,
-                OnElementsReorder = (oldIndex, newIndex) => {
-                    Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
-                }
+                // etc
+                ReorderingTintAlpha = 0.65f
             };
+            _arrayDrawer.OnElementSelected += (index, data, drawer) => {
+                    if(drawer != null) {
+                        (drawer as StringLabelElement).Selected = true;
+                        // Debug.Log($"Selected data index {index}");
+                    }
+                };
+            _arrayDrawer.OnElementDeselected += (index, data, drawer) => {
+                    if(drawer != null) {
+                        (drawer as StringLabelElement).Selected = false;
+                        Debug.Log($"Deselected data index {index}");
+                    }
+                };
+            _arrayDrawer.OnElementDoubleClick += (index, data, drawer) => {
+                    Debug.Log($"Double click on {index} at {data}");
+                };
+            _arrayDrawer.OnElementsReorder += (oldIndex, newIndex) => {
+                    Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
+                };
 
 
             // Tabs
@@ -105,11 +104,11 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            _tabsDrawer.OnGUI();
+            // _tabsDrawer.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
-            // _arrayDrawer.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("ListView test");
+            _arrayDrawer.OnGUI();
+            Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");
@@ -163,8 +162,14 @@ namespace Development {
                     EditorGUI.LabelField(rect, Content);
                 }
             }
-            public void OnGUI(Rect rect) {
-                EditorGUI.DrawRect(rect, Color.grey);
+            public void OnGUI(Rect rect) {                   
+                if(Selected) {
+                    EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f));
+                }
+                else {
+                    EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
+                }
+                
                 EditorGUI.LabelField(rect, Content);
             }
         }

@@ -4,6 +4,8 @@ using UnityEngine.Profiling;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class Layout {
+        internal const float FlexibleWidth = -1;
+
         internal static LayoutGroup _currentGroup;
 
         public static float CurrentContentWidth => _currentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
