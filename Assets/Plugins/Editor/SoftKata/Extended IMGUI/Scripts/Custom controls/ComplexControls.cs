@@ -235,9 +235,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Core
             public void OnGUI() {
-                EditorGUI.LabelField(Layout.GetRect(16), $"Active index: {_activeDataIndex}");
-                EditorGUI.LabelField(Layout.GetRect(16), $"Selected: {string.Join("|", _selectedIndices)}");
-
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
                 if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
                     if(Count != 0) {
