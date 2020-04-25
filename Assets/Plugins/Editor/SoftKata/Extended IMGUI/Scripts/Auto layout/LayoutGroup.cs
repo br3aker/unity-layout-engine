@@ -35,6 +35,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public Rect ContentRect => ContentRectInternal;
 
+        // Background texture rendering
+        private Texture _backgroundTexture;
+        private int _left;
+        private int _right;
+        private int _bottom;
+        private int _top;
+
+
         // Automatic width for entries
         public float AutomaticWidth {get; protected set;}
         protected virtual float GetAutomaticWidth() => AvailableWidth - TotalOffset.horizontal;
@@ -43,6 +51,13 @@ namespace SoftKata.ExtendedEditorGUI {
         // Constructor
         protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
             Style = style;
+
+            _backgroundTexture = style.normal.background;
+            var overflow = style.overflow;
+            _left = overflow.left;
+            _right = overflow.right;
+            _bottom = overflow.bottom;
+            _top = overflow.top;
 
             TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
@@ -105,6 +120,15 @@ namespace SoftKata.ExtendedEditorGUI {
                     ContentRectInternal.position -= ContainerRectInternal.position;
 
                     ContainerRectInternal.position = Vector2.zero;
+                }
+
+                // Background image rendering
+                if(Event.current.type == EventType.Repaint && _backgroundTexture) {
+                    Graphics.DrawTexture(
+                        TotalOffset.Add(ContainerRectInternal),
+                        _backgroundTexture,
+                        _left, _right, _top, _bottom
+                    );
                 }
 
                 // Content offset
