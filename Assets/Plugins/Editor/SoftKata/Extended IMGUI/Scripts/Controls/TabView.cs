@@ -13,11 +13,10 @@ using Debug = UnityEngine.Debug;
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
-        public class Tabs : IDrawableElement {
-            // Logic data
+        public class TabView : IDrawableElement {
             public int CurrentTab { get; set; }
 
-            // GUI content & drawers
+            // Headers & content
             private readonly GUIContent[] _tabHeaders;
             private readonly IDrawableElement[] _contentDrawers;
 
@@ -35,7 +34,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly ScrollGroup _scrollGroup;
             private readonly LayoutGroup _horizontalGroup;
 
-            public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
+            public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
                 // Data
                 CurrentTab = initialTab;
 
@@ -54,10 +53,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (_tabHeaders.Length - 1), 0f), true, true);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (tabHeaders.Length - 1), 0f), true, true);
                 _horizontalGroup = new HorizontalGroup(true);
             }
-            public Tabs(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
+            public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, ElementsResources.TabHeader) { }
 
             public void OnGUI() {
@@ -66,7 +65,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Tabs
                 if (Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
-                    // Tab control
                     currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
 
                     // Underline

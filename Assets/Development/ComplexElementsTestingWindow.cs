@@ -16,7 +16,7 @@ namespace Development {
 
         private bool _alwaysRepaint;
 
-        private Tabs _tabsDrawer;
+        private TabView _tabsDrawer;
 
         private ListView<int, StringLabelElement> _arrayDrawer;
 
@@ -91,7 +91,7 @@ namespace Development {
                 new StringLabelElement("Tab content #2"),
                 _arrayDrawer
             };
-            _tabsDrawer = new Tabs(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
+            _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
 
 
             // Scroll view for general groups testing
