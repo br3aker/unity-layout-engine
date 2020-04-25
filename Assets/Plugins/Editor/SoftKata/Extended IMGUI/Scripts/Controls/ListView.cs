@@ -1,14 +1,10 @@
 using System;
-using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.Assertions;
-
-using Debug = UnityEngine.Debug;
+using UnityEngine.Events;
 
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -29,6 +25,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private State _state;
             private readonly ScrollGroup _contentScrollGroup;
             private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
+            private readonly UnityAction _currentViewRepaint = CurrentViewRepaint;
 
             // Data source indexers
             public abstract int Count {
@@ -40,7 +37,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Rendering
             private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
-
             private readonly DataDrawerBinder _bindDataToDrawer;
 
             private readonly float _elementHeight;
@@ -87,8 +83,8 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly Texture _emptyListIcon;
             private const float EmptyListIconSize = 56;
             
-            private readonly GUIStyle _labelStyle;
-            private readonly GUIContent _emptyListLabel;
+            private readonly GUIStyle _labelStyle = ElementsResources.CenteredGreyHeader;
+            private readonly GUIContent _emptyListLabel = new GUIContent("This list is empty");
             private readonly float _emptyListLabelHeight;
 
 
@@ -96,9 +92,6 @@ namespace SoftKata.ExtendedEditorGUI {
             public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder bind) {
                 _bindDataToDrawer = bind;
 
-                _labelStyle = ElementsResources.CenteredGreyHeader;
-    
-                _emptyListLabel = new GUIContent("This list is empty");
                 _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
                 _emptyListIcon = ElementsResources.ListView.EmptyIcon;
 
@@ -107,8 +100,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _elementHeight = elementHeight;
                 _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;
                 _elementHeightWithSpace = _elementHeight + _spaceBetweenElements;
-                // TODO: this must use "pure" visible container size without TotalOffset.verical which is calculated dynamically
-                _visibleHeight = container.y;// - _contentScrollGroup.TotalOffset.vertical;
+                _visibleHeight = container.y;
 
                 var maxVisibleElements = Mathf.CeilToInt(_visibleHeight / _elementHeightWithSpace);
                 var nextElementStart = maxVisibleElements * _elementHeightWithSpace;
@@ -325,7 +317,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
                 }
 
-                CurrentViewRepaint();
+                _currentViewRepaint();
             }
             private void HandleMouseContextClick() {
                 var menu = new GenericMenu();
