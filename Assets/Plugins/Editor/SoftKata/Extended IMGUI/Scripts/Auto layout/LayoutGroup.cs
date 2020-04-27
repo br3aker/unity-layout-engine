@@ -93,23 +93,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
         
-        // non-Layout event
-        internal virtual bool BeginNonLayout() {
-            if (Parent != null) {
-                var requestedSize = ContentRectInternal.size;
-                if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
-                    // Content & container rects
-                    ContentRectInternal = TotalOffset.Remove(requestedRect);
-                    ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
-                }
-            }
-            else {
-                // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height));
-                ContentRectInternal = ContainerRectInternal;
-            }
-
-            if (IsGroupValid) {
+        // Non-Layout event
+        private void CalculateNonLayoutData() {
                 IsLayoutEvent = false;
 
                 // Clipspace
@@ -133,7 +118,24 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Content offset
                 NextEntryPosition += ContentRectInternal.position;
+        }
+        internal virtual bool BeginNonLayout() {
+            if (Parent != null) {
+                var requestedSize = ContentRectInternal.size;
+                if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                    // Content & container rects
+                    ContentRectInternal = TotalOffset.Remove(requestedRect);
+                    ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
+                }
+            }
+            else {
+                // Content & container rects
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height));
+                ContentRectInternal = ContainerRectInternal;
+            }
 
+            if (IsGroupValid) {
+                CalculateNonLayoutData();
                 return true;
             }
             return false;
@@ -145,7 +147,15 @@ namespace SoftKata.ExtendedEditorGUI {
                 ContentRectInternal.position += _clipWorldPositionOffset;
             }
         }
-    
+
+        // This prepares layout group for rect querying without actual layout stage
+        public void BeginAbsoluteLayout(Rect rect) {
+            // Content & container rects
+            ContainerRectInternal = TotalOffset.Remove(rect);
+            ContentRectInternal = ContainerRectInternal;
+            CalculateNonLayoutData();
+        }
+
         // Registering entry(s)
         protected abstract void RegisterEntry(float width, float height);
         public abstract void RegisterEntriesArray(float elemWidth, float elemHeight, int count);
