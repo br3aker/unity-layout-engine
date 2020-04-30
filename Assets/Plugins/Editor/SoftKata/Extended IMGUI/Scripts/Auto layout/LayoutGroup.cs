@@ -195,11 +195,12 @@ namespace SoftKata.ExtendedEditorGUI {
     // Resources
     public partial class LayoutGroup {
         private static Resources _resources;
-        protected static Resources StyleResources => _resources ?? (_resources = new Resources());
+        public static Resources LayoutResources => _resources ?? (_resources = new Resources());
 
-        protected class Resources {
+        public class Resources {
             private const string GuiSkinFilePath = "/{0}/Layout.guiskin";
 
+            // Generic
             public GUIStyle VerticalGroup;
             public GUIStyle VerticalFadeGroup;
             public GUIStyle Treeview;
@@ -208,6 +209,9 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle HorizontalRestrictedGroup;
 
             public GUIStyle ScrollGroup;
+
+            // Special cases
+            public GUIStyle WindowHeaderGroup;
             
             internal Resources() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
@@ -215,12 +219,16 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
                 
+                // Generic
                 VerticalGroup = skin.GetStyle("Vertical group");
                 VerticalFadeGroup = skin.GetStyle("Vertical fade group");
                 ScrollGroup = skin.GetStyle("Scroll group");
                 Treeview = skin.GetStyle("Treeview");
                 HorizontalGroup = skin.GetStyle("Horizontal group");
                 HorizontalRestrictedGroup = skin.GetStyle("Horizontal restricted group");
+
+                // Special cases
+                WindowHeaderGroup = skin.GetStyle("Window header");
             }
         }
     }
