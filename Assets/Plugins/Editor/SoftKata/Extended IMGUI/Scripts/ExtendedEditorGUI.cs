@@ -6,7 +6,7 @@ using UnityEngine.Events;
 namespace SoftKata.ExtendedEditorGUI {
     // etc
     public static partial class ExtendedEditorGUI {
-        internal const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
+        public const float ShadowPixelHeight = 5;
 
         private static UnityAction _currentViewRepaint;
         public static UnityAction CurrentViewRepaint {
@@ -28,12 +28,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
     // Resources
     public static partial class ExtendedEditorGUI {
+        public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
+        
         private static Resources _resources;
         public static Resources ElementsResources => _resources ?? (_resources = new Resources());
 
         public class Resources {
-            private const string GuiSkinFilePath = "/{0}/Controls.guiskin";
-            private const string TextureFolderPath = "/{0}/Textures/";
+            private const string GuiSkinFilePathFormat = "/{0}/Controls.guiskin";
+            private const string TextureFolderPathFormat = "/{0}/Textures/";
             
             // Primitive elements styles
             public GUIStyle CenteredGreyHeader;
@@ -48,12 +50,16 @@ namespace SoftKata.ExtendedEditorGUI {
             // Complex elements resources
             public ShortcutRecorderRecources ShortcutRecorder;
             public ListViewResources ListView;
+
+            // Utility
+            public readonly Texture Shadow;
             
             internal Resources() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
 
-                var skinPath = ExtendedEditorGUI.PluginPath + string.Format(GuiSkinFilePath, styleTypeString);
-                var textureFolderPath = ExtendedEditorGUI.PluginPath + string.Format(TextureFolderPath, styleTypeString);
+                var skinPath = PluginPath + string.Format(GuiSkinFilePathFormat, styleTypeString);
+                var skinTextureFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
+                var utilityTextureFolderPath = PluginPath + "/Textures/";
 
                 var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
                 
@@ -68,10 +74,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 TabHeader = skin.GetStyle("Tab header");
                 
                 // Complex elements
-                ShortcutRecorder = new ShortcutRecorderRecources(skin, textureFolderPath);
-                ListView = new ListViewResources(skin, textureFolderPath);
+                ShortcutRecorder = new ShortcutRecorderRecources(skin, skinTextureFolderPath);
+                ListView = new ListViewResources(skin, skinTextureFolderPath);
+
+                // Utility
+                Shadow = Utility.LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
             }
-            
+
+
             public struct ShortcutRecorderRecources {
                 public GUIStyle Style;
                 public Texture RecordStateIconSet;
@@ -82,7 +92,6 @@ namespace SoftKata.ExtendedEditorGUI {
                         Utility.LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "recording_icon_set.png");
                 }
             }
-        
             public struct ListViewResources {
                 public Texture EmptyIcon;
 
