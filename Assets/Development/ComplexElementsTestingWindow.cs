@@ -122,6 +122,17 @@ namespace Development {
             // _treeViewGroupTest.OnGUI();
         }
 
+        protected override WindowHeaderBar CreateHeader() {
+            return new WindowHeaderBar(
+                null,
+                new IDrawableElement[] {
+                    new Button(EditorGUIUtility.IconContent("d__Help"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), ElementsResources.WindowHeaderButton, () => Debug.Log("Overflow menu pressed"))
+                }
+            );
+        }
+
         private void DrawServiceInfo() {
             if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, out var labelRect)) {
                 EditorGUI.LabelField(labelRect,

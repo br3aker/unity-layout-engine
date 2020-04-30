@@ -9,7 +9,7 @@ namespace SoftKata.ExtendedEditorGUI {
             SpaceBetweenEntries = style.contentOffset.y;
         }
         public VerticalGroup(bool ignoreConstaints = false) 
-            : this(StyleResources.VerticalGroup, ignoreConstaints) {}
+            : this(LayoutResources.VerticalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             if(ContentRectInternal.width < 0) {
