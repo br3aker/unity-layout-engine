@@ -74,8 +74,6 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void OnGUI() {
-                UnityEngine.Profiling.Profiler.BeginSample("Window header");
-
                 Layout.BeginLayoutGroup(_group);
                 _mainActionItem?.OnGUI();
                 _group.GetRect(0);
@@ -83,8 +81,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     _actionItems[i].OnGUI();
                 }
                 Layout.EndLayoutGroup();
-
-                UnityEngine.Profiling.Profiler.EndSample();
             }
         }
 
