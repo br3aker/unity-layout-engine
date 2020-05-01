@@ -63,7 +63,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public class WindowHeaderBar {
             public const float HeaderHeight = 20;
 
-            private LayoutGroup _group = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, LayoutGroup.LayoutResources.WindowHeaderGroup);
+            private LayoutGroup _group = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Layout.Resources.WindowHeaderGroup);
 
             private Button _mainActionItem;
             private IDrawableElement[] _actionItems;
