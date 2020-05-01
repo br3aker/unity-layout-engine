@@ -74,6 +74,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void OnGUI() {
+                UnityEngine.Profiling.Profiler.BeginSample("Window header");
+
                 Layout.BeginLayoutGroup(_group);
                 _mainActionItem?.OnGUI();
                 _group.GetRect(0);
@@ -81,6 +83,66 @@ namespace SoftKata.ExtendedEditorGUI {
                     _actionItems[i].OnGUI();
                 }
                 Layout.EndLayoutGroup();
+
+                UnityEngine.Profiling.Profiler.EndSample();
+            }
+        }
+
+        public class WindowHeaderSearchBar : IDrawableElement {
+            private GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
+            private GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
+
+            private GUIStyle _buttonStyle = ElementsResources.WindowHeaderButton;
+            private GUIStyle _searchBoxStyle = ElementsResources.WindowHeaderSearchBox;
+
+            private AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
+
+            private float _buttonWidth;
+
+            private const string DefaultSearchBoxText = "Search...";
+            private string _currentSearchString = "";
+
+            public event Action<string> SeachQueryUpdated;
+
+            public WindowHeaderSearchBar() {
+                _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
+            }
+
+            public void OnGUI() {
+                if(Mathf.Approximately(_animator.value, 0)) {
+                    if(GUI.Button(Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight), _searchButtonContent, _buttonStyle)) {
+                        _animator.target = 1;
+                    }
+                }
+                else {
+                    var inputFieldWidth = EditorGUIUtility.currentViewWidth / 2 * _animator.value;
+                    var closeButtonWidth = _buttonWidth * _animator.value;
+
+                    var startPos = Layout.GetRect(_buttonWidth + inputFieldWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight).position;
+
+                    // search box button
+                    var currentRect = new Rect(startPos, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                    if(Event.current.type == EventType.Repaint) {
+                        _buttonStyle.Draw(currentRect, _searchButtonContent, false, false, false, false);
+                    }
+
+                    // actual search box
+                    currentRect.x = currentRect.xMax;
+                    currentRect.width = inputFieldWidth;
+                    EditorGUI.BeginChangeCheck();
+                    string newSearchString = EditorGUI.DelayedTextField(currentRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
+                    if(EditorGUI.EndChangeCheck() && newSearchString != DefaultSearchBoxText) {
+                        _currentSearchString = newSearchString;
+                        SeachQueryUpdated?.Invoke(newSearchString);
+                    }
+
+                    // cancel button
+                    currentRect.x = currentRect.xMax;
+                    currentRect.width = closeButtonWidth;
+                    if(GUI.Button(currentRect, _cancelButtonContent, _buttonStyle)) {
+                        _animator.target = 0;
+                    }
+                }
             }
         }
     }

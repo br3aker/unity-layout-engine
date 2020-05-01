@@ -48,6 +48,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle TabHeader;
 
             public GUIStyle WindowHeaderButton;
+            public GUIStyle WindowHeaderSearchBox;
             
             // Complex elements resources
             public ShortcutRecorderRecources ShortcutRecorder;
@@ -76,6 +77,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 TabHeader = skin.GetStyle("Tab header");
 
                 WindowHeaderButton = skin.GetStyle("Window header button");
+                WindowHeaderSearchBox = skin.GetStyle("Window header search box");
                 
                 // Complex elements
                 ShortcutRecorder = new ShortcutRecorderRecources(skin, skinTextureFolderPath);
