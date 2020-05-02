@@ -31,7 +31,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
         
         private static Resources _resources;
-        public static Resources ElementsResources => _resources ?? (_resources = new Resources());
+        public static Resources ControlsResources => _resources ?? (_resources = new Resources());
 
         public class Resources {
             private const string GuiSkinFilePathFormat = "/{0}/Controls.guiskin";

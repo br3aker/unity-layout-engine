@@ -88,8 +88,8 @@ namespace SoftKata.ExtendedEditorGUI {
             private GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
             private GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
 
-            private GUIStyle _buttonStyle = ElementsResources.WindowHeaderButton;
-            private GUIStyle _searchBoxStyle = ElementsResources.WindowHeaderSearchBox;
+            private GUIStyle _buttonStyle = ControlsResources.WindowHeaderButton;
+            private GUIStyle _searchBoxStyle = ControlsResources.WindowHeaderSearchBox;
 
             private AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
 

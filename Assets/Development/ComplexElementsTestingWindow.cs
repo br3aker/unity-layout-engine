@@ -127,9 +127,9 @@ namespace Development {
                 null,
                 new IDrawableElement[] {
                     new WindowHeaderSearchBar(),
-                    new Button(EditorGUIUtility.IconContent("d__Help"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #1 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #2 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d__Menu"), ElementsResources.WindowHeaderButton, () => Debug.Log("Overflow menu pressed"))
+                    new Button(EditorGUIUtility.IconContent("d__Help"), ControlsResources.WindowHeaderButton, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ControlsResources.WindowHeaderButton, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), ControlsResources.WindowHeaderButton, () => Debug.Log("Overflow menu pressed"))
                 }
             );
         }

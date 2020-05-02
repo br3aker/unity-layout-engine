@@ -57,7 +57,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalGroup = new HorizontalGroup(true);
             }
             public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
-                : this(initialTab, tabHeaders, contentDrawers, underlineColor, ElementsResources.TabHeader) { }
+                : this(initialTab, tabHeaders, contentDrawers, underlineColor, ControlsResources.TabHeader) { }
 
             public void OnGUI() {
                 int currentSelection = CurrentTab;

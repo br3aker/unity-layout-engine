@@ -83,7 +83,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly Texture _emptyListIcon;
             private const float EmptyListIconSize = 56;
             
-            private readonly GUIStyle _labelStyle = ElementsResources.CenteredGreyHeader;
+            private readonly GUIStyle _labelStyle = ControlsResources.CenteredGreyHeader;
             private readonly GUIContent _emptyListLabel = new GUIContent("This list is empty");
             private readonly float _emptyListLabelHeight;
 
@@ -93,7 +93,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _bindDataToDrawer = bind;
 
                 _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
-                _emptyListIcon = ElementsResources.ListView.EmptyIcon;
+                _emptyListIcon = ControlsResources.ListView.EmptyIcon;
 
                 _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
 
