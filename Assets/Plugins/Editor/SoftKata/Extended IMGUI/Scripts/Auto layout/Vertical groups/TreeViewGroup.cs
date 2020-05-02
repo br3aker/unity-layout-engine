@@ -24,7 +24,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             _connectionLineOffset = style.padding.left + _connectionLineWidth;
         }
-        public TreeViewGroup() : this(Layout.Resources.Treeview) {}
+        public TreeViewGroup() : this(ExtendedEditorGUI.Resources.Treeview) {}
     
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {

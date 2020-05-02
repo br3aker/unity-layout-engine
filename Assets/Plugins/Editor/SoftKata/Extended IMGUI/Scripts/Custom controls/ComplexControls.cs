@@ -63,7 +63,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public class WindowHeaderBar {
             public const float HeaderHeight = 20;
 
-            private LayoutGroup _group = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Layout.Resources.WindowHeaderGroup);
+            private LayoutGroup _group = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, ExtendedEditorGUI.Resources.WindowHeaderGroup);
 
             private Button _mainActionItem;
             private IDrawableElement[] _actionItems;
@@ -88,8 +88,8 @@ namespace SoftKata.ExtendedEditorGUI {
             private GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
             private GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
 
-            private GUIStyle _buttonStyle = ControlsResources.WindowHeaderButton;
-            private GUIStyle _searchBoxStyle = ControlsResources.WindowHeaderSearchBox;
+            private GUIStyle _buttonStyle = Resources.WindowHeaderButton;
+            private GUIStyle _searchBoxStyle = Resources.WindowHeaderSearchBox;
 
             private AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
 
