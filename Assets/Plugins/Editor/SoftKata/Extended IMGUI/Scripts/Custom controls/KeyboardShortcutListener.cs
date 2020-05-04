@@ -85,14 +85,14 @@ namespace SoftKata.ExtendedEditorGUI {
 
                     break;
                 case EventType.Repaint:
-                    var resources = ElementsResources.ShortcutRecorder;
+                    var resources = Resources.ShortcutRecorder;
 
                     // Label
                     var label = (isRecording ? _shortcutFieldStateObject.LastRecordingControlValue : value).ToString();
                     resources.Style.Draw(rect, TempContent(label), controlId, isRecording);
 
                     // Postfix
-                    ElementsResources.InputFieldPostfix.Draw(postfixRect, TempContent(null),
+                    Resources.InputFieldPostfix.Draw(postfixRect, TempContent(null),
                         postfixRect.Contains(current.mousePosition), false, false, false);
 
                     var coordsRect = new Rect(isRecording ? 0.5f : 0f, 0f, 0.5f, 1);

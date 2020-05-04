@@ -15,7 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
         }
         public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
-            : this(expanded, LayoutResources.VerticalFadeGroup, ignoreConstaints) {}
+            : this(expanded, ExtendedEditorGUI.Resources.VerticalFadeGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             base.PreLayoutRequest();

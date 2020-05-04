@@ -65,7 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _scrollbarColor = style.onNormal.textColor;
         }
         public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, bool ignoreConstaints = false)
-            : this(containerSize, scrollPos, disableScrollbars, LayoutResources.ScrollGroup, ignoreConstaints) {}
+            : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             // These offsets are applied even if scrollbars are not needed

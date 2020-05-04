@@ -8,8 +8,7 @@ namespace SoftKata.ExtendedEditorGUI {
             SpaceBetweenEntries = style.contentOffset.x;
         }
         public HorizontalGroup(bool ignoreConstaints = false)
-            : this(LayoutResources.HorizontalGroup, ignoreConstaints) {}
-
+            : this(ExtendedEditorGUI.Resources.HorizontalGroup, ignoreConstaints) {}
         protected override void PreLayoutRequest() {
             ContentRectInternal.height += TotalOffset.vertical;
             ContentRectInternal.width += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);

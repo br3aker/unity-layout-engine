@@ -30,13 +30,14 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
         
-        private static Resources _resources;
-        public static Resources ElementsResources => _resources ?? (_resources = new Resources());
+        private static ResourcesHolder _resources;
+        public static ResourcesHolder Resources => _resources ?? (_resources = new ResourcesHolder());
 
-        public class Resources {
-            private const string GuiSkinFilePathFormat = "/{0}/Controls.guiskin";
+        public class ResourcesHolder {
+            private const string ControlsSkinSubPathFormat = "/{0}/Controls.guiskin";
+            private const string LayoutSkinSubPathFormat = "/{0}/Layout.guiskin";
             private const string TextureFolderPathFormat = "/{0}/Textures/";
-            
+
             // Primitive elements styles
             public GUIStyle CenteredGreyHeader;
             public GUIStyle InputFieldPostfix;
@@ -46,45 +47,76 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle Foldout;
 
             public GUIStyle TabHeader;
-
-            public GUIStyle WindowHeaderButton;
             
             // Complex elements resources
-            public ShortcutRecorderRecources ShortcutRecorder;
-            public ListViewResources ListView;
+            public readonly ShortcutRecorderRecources ShortcutRecorder;
+            public readonly ListViewResources ListView;
+            public readonly WindowHeaderResources WindowHeader;
 
             // Utility
             public readonly Texture Shadow;
+
+            // UNDER DEVELOPMENT
+            [Obsolete] public GUIStyle VerticalGroup;
+            [Obsolete] public GUIStyle VerticalFadeGroup;
+            [Obsolete] public GUIStyle Treeview;
+
+            [Obsolete] public GUIStyle HorizontalGroup;
+            [Obsolete] public GUIStyle HorizontalRestrictedGroup;
+
+            [Obsolete] public GUIStyle ScrollGroup;
             
-            internal Resources() {
+            internal ResourcesHolder() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
 
-                var skinPath = PluginPath + string.Format(GuiSkinFilePathFormat, styleTypeString);
+                var controlsSkinPath = PluginPath + string.Format(ControlsSkinSubPathFormat, styleTypeString);
+                var layoutSkinPath = PluginPath + string.Format(LayoutSkinSubPathFormat, styleTypeString);
+
                 var skinTextureFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
                 var utilityTextureFolderPath = PluginPath + "/Textures/";
 
-                var skin = Utility.LoadAssetAtPathAndAssert<GUISkin>(skinPath);
+                var controlsSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
+                var layoutSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(layoutSkinPath);
                 
                 // Primitive elements
-                CenteredGreyHeader = skin.FindStyle("Centered grey header");
-                Foldout = skin.FindStyle("Foldout");
-                InputFieldPostfix = skin.GetStyle("Postfix");
-                ButtonLeft = skin.GetStyle("Button left");
-                ButtonMid = skin.GetStyle("Button mid");
-                ButtonRight = skin.GetStyle("Button right");
+                CenteredGreyHeader = controlsSkin.FindStyle("Centered grey header");
+                Foldout = controlsSkin.FindStyle("Foldout");
+                InputFieldPostfix = controlsSkin.GetStyle("Postfix");
+                ButtonLeft = controlsSkin.GetStyle("Button left");
+                ButtonMid = controlsSkin.GetStyle("Button mid");
+                ButtonRight = controlsSkin.GetStyle("Button right");
 
-                TabHeader = skin.GetStyle("Tab header");
-
-                WindowHeaderButton = skin.GetStyle("Window header button");
+                TabHeader = controlsSkin.GetStyle("Tab header");
                 
                 // Complex elements
-                ShortcutRecorder = new ShortcutRecorderRecources(skin, skinTextureFolderPath);
-                ListView = new ListViewResources(skin, skinTextureFolderPath);
+                ShortcutRecorder = new ShortcutRecorderRecources(controlsSkin, skinTextureFolderPath);
+                ListView = new ListViewResources(controlsSkin, skinTextureFolderPath);
+                WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
 
                 // Utility
                 Shadow = Utility.LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
+
+
+                // UNDER DEVELOPMENT
+                VerticalGroup = layoutSkin.GetStyle("[testing] Vertical group");
+                VerticalFadeGroup = layoutSkin.GetStyle("[testing] Vertical fade group");
+                ScrollGroup = layoutSkin.GetStyle("[testing] Scroll group");
+                Treeview = layoutSkin.GetStyle("[testing] Treeview");
+                HorizontalGroup = layoutSkin.GetStyle("[testing] Horizontal group");
+                HorizontalRestrictedGroup = layoutSkin.GetStyle("[testing] Horizontal flexible group");
             }
 
+            public struct WindowHeaderResources {
+                public readonly GUIStyle GroupStyle;
+                public readonly GUIStyle ButtonStyle;
+                public readonly GUIStyle SearchBoxStyle;
+
+                public WindowHeaderResources(GUISkin controls, GUISkin layout) {
+                    GroupStyle = layout.GetStyle("Window header");
+                    ButtonStyle = controls.GetStyle("Window header button");
+                    SearchBoxStyle = controls.GetStyle("Window header search box");
+                }
+            }
 
             public struct ShortcutRecorderRecources {
                 public GUIStyle Style;

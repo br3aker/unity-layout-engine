@@ -106,14 +106,14 @@ namespace Development {
 
             // _tabsDrawer.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
-            // _arrayDrawer.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("ListView test");
+            _arrayDrawer.OnGUI();
+            Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -126,9 +126,10 @@ namespace Development {
             return new WindowHeaderBar(
                 null,
                 new IDrawableElement[] {
-                    new Button(EditorGUIUtility.IconContent("d__Help"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #1 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ElementsResources.WindowHeaderButton, () => Debug.Log("Button #2 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d__Menu"), ElementsResources.WindowHeaderButton, () => Debug.Log("Overflow menu pressed"))
+                    new WindowHeaderSearchBar(),
+                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
                 }
             );
         }
