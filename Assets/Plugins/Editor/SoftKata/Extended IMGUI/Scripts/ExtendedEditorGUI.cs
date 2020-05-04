@@ -37,7 +37,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private const string ControlsSkinSubPathFormat = "/{0}/Controls.guiskin";
             private const string LayoutSkinSubPathFormat = "/{0}/Layout.guiskin";
             private const string TextureFolderPathFormat = "/{0}/Textures/";
-            
+
             // Primitive elements styles
             public GUIStyle CenteredGreyHeader;
             public GUIStyle InputFieldPostfix;
@@ -47,13 +47,11 @@ namespace SoftKata.ExtendedEditorGUI {
             public GUIStyle Foldout;
 
             public GUIStyle TabHeader;
-
-            public GUIStyle WindowHeaderButton;
-            public GUIStyle WindowHeaderSearchBox;
             
             // Complex elements resources
-            public ShortcutRecorderRecources ShortcutRecorder;
-            public ListViewResources ListView;
+            public readonly ShortcutRecorderRecources ShortcutRecorder;
+            public readonly ListViewResources ListView;
+            public readonly WindowHeaderResources WindowHeader;
 
             // Utility
             public readonly Texture Shadow;
@@ -67,9 +65,6 @@ namespace SoftKata.ExtendedEditorGUI {
             [Obsolete] public GUIStyle HorizontalRestrictedGroup;
 
             [Obsolete] public GUIStyle ScrollGroup;
-
-            // Special cases
-            [Obsolete] public GUIStyle WindowHeaderGroup;
             
             internal ResourcesHolder() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
@@ -92,13 +87,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 ButtonRight = controlsSkin.GetStyle("Button right");
 
                 TabHeader = controlsSkin.GetStyle("Tab header");
-
-                WindowHeaderButton = controlsSkin.GetStyle("Window header button");
-                WindowHeaderSearchBox = controlsSkin.GetStyle("Window header search box");
                 
                 // Complex elements
                 ShortcutRecorder = new ShortcutRecorderRecources(controlsSkin, skinTextureFolderPath);
                 ListView = new ListViewResources(controlsSkin, skinTextureFolderPath);
+                WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
 
                 // Utility
                 Shadow = Utility.LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
@@ -111,11 +104,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 Treeview = layoutSkin.GetStyle("[testing] Treeview");
                 HorizontalGroup = layoutSkin.GetStyle("[testing] Horizontal group");
                 HorizontalRestrictedGroup = layoutSkin.GetStyle("[testing] Horizontal flexible group");
-
-                // Special cases
-                WindowHeaderGroup = layoutSkin.GetStyle("Window header");
             }
 
+            public struct WindowHeaderResources {
+                public readonly GUIStyle GroupStyle;
+                public readonly GUIStyle ButtonStyle;
+                public readonly GUIStyle SearchBoxStyle;
+
+                public WindowHeaderResources(GUISkin controls, GUISkin layout) {
+                    GroupStyle = layout.GetStyle("Window header");
+                    ButtonStyle = controls.GetStyle("Window header button");
+                    SearchBoxStyle = controls.GetStyle("Window header search box");
+                }
+            }
 
             public struct ShortcutRecorderRecources {
                 public GUIStyle Style;
