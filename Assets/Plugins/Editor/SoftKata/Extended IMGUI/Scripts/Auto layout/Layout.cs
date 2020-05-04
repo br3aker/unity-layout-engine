@@ -27,15 +27,36 @@ namespace SoftKata.ExtendedEditorGUI {
                 _currentGroup = group;
                 return true;
             }
-            if(group.IsGroupValid) {
-                if(group.BeginNonLayout()) {
-                    _currentGroup = group;
-                    return true;
-                }
+            if(group.BeginNonLayout()) {
+                _currentGroup = group;
+                return true;
             }
             return false;
         }
         public static void EndLayoutGroup() {
+            var group = _currentGroup;
+            if(Event.current.type == EventType.Layout) {
+                group.EndLayout();
+            }
+            else if(group.IsGroupValid) {
+                group.EndNonLayout();
+            }
+            _currentGroup = group.Parent;
+        }
+        
+        public static bool BeginLayoutGroupRetained(LayoutGroup group) {
+            if(Event.current.type == EventType.Layout) {
+                group.BeginLayout(_currentGroup);
+                _currentGroup = group;
+                return true;
+            }
+            if(group.BeginNonLayout()) {
+                _currentGroup = group;
+                return true;
+            }
+            return false;
+        }
+        public static void EndLayoutGroupRetained() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
                 group.EndLayout();

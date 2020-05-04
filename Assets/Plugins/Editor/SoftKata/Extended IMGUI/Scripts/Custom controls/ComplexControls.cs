@@ -74,13 +74,13 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void OnGUI() {
-                Layout.BeginLayoutGroup(_group);
+                Layout.BeginLayoutGroupRetained(_group);
                 _mainActionItem?.OnGUI();
                 _group.GetRect(0);
                 for(int i = 0; i < _actionItems.Length; i++) {
                     _actionItems[i].OnGUI();
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndLayoutGroupRetained();
             }
         }
 
