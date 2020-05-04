@@ -75,12 +75,12 @@ namespace SoftKata.ExtendedEditorGUI {
             TotalOffset.bottom = _bottomOffset;
 
             /* VERTICAL */
-            ContentRectInternal.height += SpaceBetweenEntries * (EntriesCount - 1);
-            if (_needsVerticalScroll = ContentRectInternal.height > ContainerSize.y) {
-                _containerToActualSizeRatio.y = ContainerSize.y / ContentRectInternal.height;
-                _scrollContentOffset.y = Mathf.Lerp(0, ContainerSize.y - ContentRectInternal.height, _scrollPos.y);
+            EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
+            if (_needsVerticalScroll = EntriesRequestedSize.y > ContainerSize.y) {
+                _containerToActualSizeRatio.y = ContainerSize.y / EntriesRequestedSize.y;
+                _scrollContentOffset.y = Mathf.Lerp(0, ContainerSize.y - EntriesRequestedSize.y, _scrollPos.y);
 
-                ContentRectInternal.height = ContainerSize.y;
+                EntriesRequestedSize.y = ContainerSize.y;
 
                 if(!_disableScrollbars) {
                     TotalOffset.right += _verticalScrollBarOffset + _verticalScrollBarWidth;
@@ -90,12 +90,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* HORIZONTAL */
             ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : Layout.CurrentContentWidth;
-            ContentRectInternal.width = ContentRectInternal.width > 0 ? ContentRectInternal.width : ContainerWidth;
-            if(_needsHorizontalScroll = ContentRectInternal.width > ContainerWidth) {
-                _containerToActualSizeRatio.x = ContainerWidth / ContentRectInternal.width;
-                _scrollContentOffset.x = Mathf.Lerp(0, ContainerWidth - ContentRectInternal.width, _scrollPos.x);
+            EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? EntriesRequestedSize.x : ContainerWidth;
+            if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
+                _containerToActualSizeRatio.x = ContainerWidth / EntriesRequestedSize.x;
+                _scrollContentOffset.x = Mathf.Lerp(0, ContainerWidth - EntriesRequestedSize.x, _scrollPos.x);
 
-                ContentRectInternal.width = ContainerWidth;
+                EntriesRequestedSize.x = ContainerWidth;
 
                 if(!_disableScrollbars) {
                     TotalOffset.bottom += _horizontalScrollBarOffset + _horizontalScrollBarHeight;
@@ -103,8 +103,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             // Applying offsets
-            ContentRectInternal.height += TotalOffset.vertical;
-            ContentRectInternal.width += TotalOffset.horizontal;
+            EntriesRequestedSize.y += TotalOffset.vertical;
+            EntriesRequestedSize.x += TotalOffset.horizontal;
         }
     
         internal override bool BeginNonLayout() {

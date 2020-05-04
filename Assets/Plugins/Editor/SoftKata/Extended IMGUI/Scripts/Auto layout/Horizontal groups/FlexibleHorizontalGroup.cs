@@ -30,11 +30,11 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(width, ExtendedEditorGUI.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            ContentRectInternal.height += TotalOffset.vertical;
+            EntriesRequestedSize.y += TotalOffset.vertical;
 
-            _fixedWidth = ContentRectInternal.width;
+            _fixedWidth = EntriesRequestedSize.x;
             
-            ContentRectInternal.width = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
+            EntriesRequestedSize.x = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
         }
     
         internal override bool BeginNonLayout() {
@@ -50,18 +50,18 @@ namespace SoftKata.ExtendedEditorGUI {
         // Entry registration and querying
         protected override void RegisterEntry(float width, float height) {
             if(width > 0) {
-                ContentRectInternal.width += width;
+                EntriesRequestedSize.x += width;
                 ++_fixedEntriesCount;
             }
-            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, height);
+            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, height);
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0) {
-                ContentRectInternal.width += elemWidth * count;
+                EntriesRequestedSize.x += elemWidth * count;
                 ++_fixedEntriesCount;
             }
             EntriesCount += count;
-            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, elemHeight);
+            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, elemHeight);
         }
     }
 }

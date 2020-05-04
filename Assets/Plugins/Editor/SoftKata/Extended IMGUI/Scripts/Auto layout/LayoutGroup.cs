@@ -71,8 +71,7 @@ namespace SoftKata.ExtendedEditorGUI {
         // Layout event
         protected abstract void PreLayoutRequest();
         internal void BeginLayout(LayoutGroup parent) {
-            ContentRectInternal.width = -1;
-            ContentRectInternal.height = 0;
+            EntriesRequestedSize = new Vector2(-1, 0);
 
             NextEntryPosition = Vector2.zero;
             EntriesCount = 0;
@@ -87,10 +86,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 if(Parent != null) {
                     ++Parent.EntriesCount;
-                    Parent.RegisterEntry(ContentRectInternal.width, ContentRectInternal.height);
+                    Parent.RegisterEntry(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height);
+                    Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 }
             }
         }
@@ -123,8 +122,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
-                var requestedSize = ContentRectInternal.size;
-                if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
+                if(IsGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect)) {
                     // Content & container rects
                     ContentRectInternal = TotalOffset.Remove(requestedRect);
                     ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
@@ -132,7 +130,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height);
+                ContainerRectInternal = Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 ContentRectInternal = TotalOffset.Remove(ContainerRectInternal);
             }
 
