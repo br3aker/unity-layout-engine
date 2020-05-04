@@ -84,16 +84,17 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
+        // TODO: OnGUI method needs some love & refactoring
         public class WindowHeaderSearchBar : IDrawableElement {
-            private GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
-            private GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
+            private readonly GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
+            private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
 
-            private GUIStyle _buttonStyle = Resources.WindowHeader.ButtonStyle;
-            private GUIStyle _searchBoxStyle = Resources.WindowHeader.SearchBoxStyle;
+            private readonly GUIStyle _buttonStyle = Resources.WindowHeader.ButtonStyle;
+            private readonly GUIStyle _searchBoxStyle = Resources.WindowHeader.SearchBoxStyle;
 
-            private AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
+            private readonly AnimFloat _animator = new AnimFloat(1, CurrentViewRepaint);
 
-            private float _buttonWidth;
+            private readonly float _buttonWidth;
 
             private const string DefaultSearchBoxText = "Search...";
             private string _currentSearchString = "";
@@ -101,41 +102,47 @@ namespace SoftKata.ExtendedEditorGUI {
             public event Action<string> SeachQueryUpdated;
 
             public WindowHeaderSearchBar() {
+                _animator.speed = 3.5f;
+
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
             }
 
             public void OnGUI() {
                 if(Mathf.Approximately(_animator.value, 0)) {
-                    if(GUI.Button(Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight), _searchButtonContent, _buttonStyle)) {
+                    var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
+                    if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
                         _animator.target = 1;
+                    }
+                    if(Event.current.type == EventType.Repaint) {
+                        _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
                     }
                 }
                 else {
-                    var inputFieldWidth = EditorGUIUtility.currentViewWidth / 2 * _animator.value;
+                    var searchBoxWidth = _buttonWidth + EditorGUIUtility.currentViewWidth / 2 * _animator.value;
                     var closeButtonWidth = _buttonWidth * _animator.value;
 
-                    var startPos = Layout.GetRect(_buttonWidth + inputFieldWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight).position;
+                    var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
 
-                    // search box button
-                    var currentRect = new Rect(startPos, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
-                    if(Event.current.type == EventType.Repaint) {
-                        _buttonStyle.Draw(currentRect, _searchButtonContent, false, false, false, false);
-                    }
 
                     // actual search box
-                    currentRect.x = currentRect.xMax;
-                    currentRect.width = inputFieldWidth;
                     EditorGUI.BeginChangeCheck();
-                    string newSearchString = EditorGUI.DelayedTextField(currentRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
+                    var searchBoxRect = controlRect;
+                    searchBoxRect.width = searchBoxWidth;
+                    string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
                     if(EditorGUI.EndChangeCheck() && newSearchString != DefaultSearchBoxText) {
                         _currentSearchString = newSearchString;
                         SeachQueryUpdated?.Invoke(newSearchString);
                     }
 
+                    // search box icon
+                    if(Event.current.type == EventType.Repaint) {
+                        var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                        _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
+                    }
+
                     // cancel button
-                    currentRect.x = currentRect.xMax;
-                    currentRect.width = closeButtonWidth;
-                    if(GUI.Button(currentRect, _cancelButtonContent, _buttonStyle)) {
+                    var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
+                    if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
                         _animator.target = 0;
                     }
                 }
