@@ -46,9 +46,11 @@ namespace SoftKata.ExtendedEditorGUI {
         
         public static bool BeginLayoutGroupRetained(LayoutGroup group) {
             if(Event.current.type == EventType.Layout) {
-                var goForLayout = group.BeginLayoutRetained(_currentGroup);
-                _currentGroup = group;
-                return goForLayout;
+                if(group.BeginLayoutRetained(_currentGroup)) {
+                    _currentGroup = group;
+                    return true;
+                }
+                return false;
             }
             if(group.BeginNonLayout()) {
                 _currentGroup = group;
@@ -59,12 +61,13 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void EndLayoutGroupRetained() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
+                _currentGroup = group.Parent;
                 group.EndLayoutRetained();
             }
             else if(group.IsGroupValid) {
+                _currentGroup = group.Parent;
                 group.EndNonLayout();
             }
-            _currentGroup = group.Parent;
         }
         
         // Register array of equal elements in one batch

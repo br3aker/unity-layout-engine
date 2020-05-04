@@ -111,9 +111,9 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -226,24 +226,24 @@ namespace Development {
 
             public void OnGUI() {
                 _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
-                if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
-                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                if(_fadeGroup.Visible && Layout.BeginLayoutGroupRetained(_fadeGroup)) {
+                    if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                             var group = _nestedHorizontalGroups[i];
-                            if(Layout.BeginLayoutGroup(group)) {
+                            if(Layout.BeginLayoutGroupRetained(group)) {
                                 var width = group.AutomaticWidth;
                                 for(int j = 0; j < _horizontalEntriesCount; j++) {
                                     if(group.GetRect(width, 30, out var rect)) {
                                         EditorGUI.DrawRect(rect, Color.black);
                                     }
                                 }
-                                Layout.EndLayoutGroup();
+                                Layout.EndLayoutGroupRetained();
                             }
                         }
-                        Layout.EndLayoutGroup();
+                        Layout.EndLayoutGroupRetained();
                     }
 
-                    Layout.EndLayoutGroup();
+                    Layout.EndLayoutGroupRetained();
                 }
             }
         }
