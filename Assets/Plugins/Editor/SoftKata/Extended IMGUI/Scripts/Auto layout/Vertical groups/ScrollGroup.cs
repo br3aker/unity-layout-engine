@@ -35,6 +35,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private bool _disableScrollbars;
 
+        private Vector2 _scrollContentOffset;
+
         public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             Clip = true;
 
@@ -76,7 +78,7 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRectInternal.height += SpaceBetweenEntries * (EntriesCount - 1);
             if (_needsVerticalScroll = ContentRectInternal.height > ContainerSize.y) {
                 _containerToActualSizeRatio.y = ContainerSize.y / ContentRectInternal.height;
-                NextEntryPosition.y += Mathf.Lerp(0, ContainerSize.y - ContentRectInternal.height, _scrollPos.y);
+                _scrollContentOffset.y = Mathf.Lerp(0, ContainerSize.y - ContentRectInternal.height, _scrollPos.y);
 
                 ContentRectInternal.height = ContainerSize.y;
 
@@ -91,7 +93,7 @@ namespace SoftKata.ExtendedEditorGUI {
             ContentRectInternal.width = ContentRectInternal.width > 0 ? ContentRectInternal.width : ContainerWidth;
             if(_needsHorizontalScroll = ContentRectInternal.width > ContainerWidth) {
                 _containerToActualSizeRatio.x = ContainerWidth / ContentRectInternal.width;
-                NextEntryPosition.x += Mathf.Lerp(0, ContainerWidth - ContentRectInternal.width, _scrollPos.x);
+                _scrollContentOffset.x = Mathf.Lerp(0, ContainerWidth - ContentRectInternal.width, _scrollPos.x);
 
                 ContentRectInternal.width = ContainerWidth;
 
@@ -109,6 +111,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if(base.BeginNonLayout()) {
                 _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
+                NextEntryPosition += _scrollContentOffset;
                 return true;
             }
             return false;

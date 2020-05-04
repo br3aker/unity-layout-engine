@@ -117,7 +117,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 // Content offset
-                NextEntryPosition += ContentRectInternal.position;
+                NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
