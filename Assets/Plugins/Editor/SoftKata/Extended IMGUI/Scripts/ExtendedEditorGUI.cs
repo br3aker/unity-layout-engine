@@ -57,14 +57,14 @@ namespace SoftKata.ExtendedEditorGUI {
             public readonly Texture Shadow;
 
             // UNDER DEVELOPMENT
-            [Obsolete] public GUIStyle VerticalGroup;
-            [Obsolete] public GUIStyle VerticalFadeGroup;
-            [Obsolete] public GUIStyle Treeview;
+            public GUIStyle VerticalGroup;
+            public GUIStyle VerticalFadeGroup;
+            public GUIStyle Treeview;
 
-            [Obsolete] public GUIStyle HorizontalGroup;
-            [Obsolete] public GUIStyle HorizontalRestrictedGroup;
+            public GUIStyle HorizontalGroup;
+            public GUIStyle HorizontalRestrictedGroup;
 
-            [Obsolete] public GUIStyle ScrollGroup;
+            public GUIStyle ScrollGroup;
             
             internal ResourcesHolder() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
