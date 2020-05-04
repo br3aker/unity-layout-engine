@@ -28,6 +28,8 @@ namespace SoftKata.ExtendedEditorGUI {
         protected bool IsLayoutEvent = true;
 
         // entries layout data
+        protected Vector2 EntriesRequestedSize;
+
         protected Vector2 NextEntryPosition;
 
         protected Rect ContainerRectInternal;
@@ -110,7 +112,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Background image rendering
                 if(Event.current.type == EventType.Repaint && _backgroundTexture) {
                     Graphics.DrawTexture(
-                        TotalOffset.Add(ContainerRectInternal),
+                        TotalOffset.Add(ContentRectInternal),
                         _backgroundTexture,
                         _left, _right, _top, _bottom
                     );
@@ -130,8 +132,8 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height));
-                ContentRectInternal = ContainerRectInternal;
+                ContainerRectInternal = Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height);
+                ContentRectInternal = TotalOffset.Remove(ContainerRectInternal);
             }
 
             if (IsGroupValid) {
@@ -189,6 +191,35 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public Rect GetRect(float height) {
             return GetRect(AutomaticWidth, height);
+        }
+    
+        public void MarkLayoutDirty() {
+            _isLayoutDirty = true;
+        }
+        public void MarkHierarchyLayoutDirty() {
+            _isLayoutDirty = true;
+            Parent?.MarkHierarchyLayoutDirty();
+        }
+        
+        private bool _isLayoutDirty = true;
+
+        // Returns [true] if layout must be recalculated
+        // Returns [false] if layout can be skipped
+        internal bool BeginLayoutRetained(LayoutGroup parent) {
+            if(Parent == null && !_isLayoutDirty) {
+                Layout.GetRectFromUnityLayout(ContainerRectInternal.width, ContainerRectInternal.height);
+                return false;
+            }
+            else if(_isLayoutDirty) {
+                BeginLayout(parent);
+                return true;
+            }
+            return false;
+        }
+
+        internal void EndLayoutRetained() {
+            EndLayout();
+            _isLayoutDirty = false;
         }
     }
 }

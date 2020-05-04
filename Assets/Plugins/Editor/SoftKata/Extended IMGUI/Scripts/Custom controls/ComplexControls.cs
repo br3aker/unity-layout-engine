@@ -74,13 +74,14 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void OnGUI() {
-                Layout.BeginLayoutGroupRetained(_group);
-                _mainActionItem?.OnGUI();
-                _group.GetRect(0);
-                for(int i = 0; i < _actionItems.Length; i++) {
-                    _actionItems[i].OnGUI();
+                if(Layout.BeginLayoutGroupRetained(_group)) {
+                    _mainActionItem?.OnGUI();
+                    _group.GetRect(0);
+                    for(int i = 0; i < _actionItems.Length; i++) {
+                        _actionItems[i].OnGUI();
+                    }
+                    Layout.EndLayoutGroupRetained();
                 }
-                Layout.EndLayoutGroupRetained();
             }
         }
 
@@ -92,7 +93,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly GUIStyle _buttonStyle = Resources.WindowHeader.ButtonStyle;
             private readonly GUIStyle _searchBoxStyle = Resources.WindowHeader.SearchBoxStyle;
 
-            private readonly AnimFloat _animator = new AnimFloat(1, CurrentViewRepaint);
+            private readonly AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
 
             private readonly float _buttonWidth;
 

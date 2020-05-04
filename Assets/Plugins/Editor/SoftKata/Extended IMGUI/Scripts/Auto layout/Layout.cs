@@ -46,9 +46,9 @@ namespace SoftKata.ExtendedEditorGUI {
         
         public static bool BeginLayoutGroupRetained(LayoutGroup group) {
             if(Event.current.type == EventType.Layout) {
-                group.BeginLayout(_currentGroup);
+                var goForLayout = group.BeginLayoutRetained(_currentGroup);
                 _currentGroup = group;
-                return true;
+                return goForLayout;
             }
             if(group.BeginNonLayout()) {
                 _currentGroup = group;
@@ -59,7 +59,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void EndLayoutGroupRetained() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
-                group.EndLayout();
+                group.EndLayoutRetained();
             }
             else if(group.IsGroupValid) {
                 group.EndNonLayout();

@@ -14,7 +14,7 @@ namespace Development {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
 
-        private bool _alwaysRepaint;
+        private bool _alwaysRepaint = false;
 
         private TabView _tabsDrawer;
 
@@ -26,12 +26,12 @@ namespace Development {
         private TreeViewGroupTest _treeViewGroupTest;
 
         protected override void Initialize() {
-            if (_alwaysRepaint) {
-                EditorApplication.update += Repaint;
-            }
-            else {
-                EditorApplication.update -= Repaint;
-            }
+            // if (_alwaysRepaint) {
+            //     EditorApplication.update += Repaint;
+            // }
+            // else {
+            //     EditorApplication.update -= Repaint;
+            // }
 
             // List
             var listSize = 15;

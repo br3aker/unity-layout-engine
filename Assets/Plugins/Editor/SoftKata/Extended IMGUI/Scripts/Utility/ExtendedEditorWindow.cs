@@ -32,11 +32,11 @@ namespace SoftKata.ExtendedEditorGUI {
             _headerBar.OnGUI();
 
             // Content 
-            _rootScrollGroup.ContainerSize = position.size;
-            if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
-                IMGUI();
-                Layout.EndLayoutGroup();
-            }
+            // _rootScrollGroup.ContainerSize = position.size;
+            // if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
+            //     IMGUI();
+            //     Layout.EndLayoutGroup();
+            // }
 
             // Drawing header shadow
             // Hacky approach without accessing header itself

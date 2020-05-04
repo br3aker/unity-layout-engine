@@ -30,10 +30,10 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(width, ExtendedEditorGUI.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            // vertical "service" height addition: margin/border/padding
             ContentRectInternal.height += TotalOffset.vertical;
 
             _fixedWidth = ContentRectInternal.width;
+            
             ContentRectInternal.width = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
         }
     
@@ -41,6 +41,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if(base.BeginNonLayout()) {
                 var totalFlexibleWidth = ContentRectInternal.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
                 AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
+                // Debug.Log($"ContentRect: {ContentRectInternal}");
                 return true;
             }
             return false;
