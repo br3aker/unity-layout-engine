@@ -47,7 +47,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Automatic width for entries
         public float AutomaticWidth {get; protected set;}
-        protected virtual float GetAutomaticWidth() => AvailableWidth - TotalOffset.horizontal;
+        protected virtual float CalculateAutomaticContentWidth() {
+            return AvailableWidth - TotalOffset.horizontal;
+        }
         protected float AvailableWidth => Parent?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Constructor
@@ -71,13 +73,14 @@ namespace SoftKata.ExtendedEditorGUI {
         // Layout event
         protected abstract void PreLayoutRequest();
         internal void BeginLayout(LayoutGroup parent) {
-            EntriesRequestedSize = new Vector2(-1, 0);
+            EntriesRequestedSize = Vector2.zero;
 
             EntriesCount = 0;
 
             Parent = parent;
             IsLayoutEvent = true;
-            AutomaticWidth = 0; // all automatic entries should NOT participate to content size
+            
+            AutomaticWidth = CalculateAutomaticContentWidth();
         }
         internal void EndLayout() {
             if (IsGroupValid = EntriesCount > 0) {
@@ -120,11 +123,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
-            AutomaticWidth = GetAutomaticWidth();
-            if(Mathf.Approximately(EntriesRequestedSize.x, 0)) {
-                EntriesRequestedSize.x = AvailableWidth;
-            }
-
             if (Parent != null) {
                 if(IsGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect)) {
                     // Content & container rects

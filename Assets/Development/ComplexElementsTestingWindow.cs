@@ -95,7 +95,7 @@ namespace Development {
 
 
             // Scroll view for general groups testing
-            _scrollViewTest = new ScrollViewTest(1);
+            _scrollViewTest = new ScrollViewTest(2500);
             _scrollViewExpander = new ScrollViewExpander();
             _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
             _treeViewGroupTest = new TreeViewGroupTest();

@@ -29,28 +29,23 @@ namespace SoftKata.ExtendedEditorGUI {
         public void OnGUI() {
             if (Event.current.type == EventType.Used) return;
 
-            if(Event.current.type == EventType.Layout) {
-                Profiler.BeginSample("[LAYOUT] ExtendedEditorWindow");
-            }
-            else {
-                Profiler.BeginSample("[NON-LAYOUT] ExtendedEditorWindow");
-            }
+            Profiler.BeginSample("ExtendedEditorWindow");
 
             // Header bar
             // _headerBar.OnGUI();
 
             // Content 
             _rootScrollGroup.ContainerSize = position.size;
-            // if (Layout.BeginLayoutGroupRetained(_rootScrollGroup)) {
+            if (Layout.BeginLayoutGroupRetained(_rootScrollGroup)) {
                 IMGUI();
-            //     Layout.EndLayoutGroupRetained();
-            // }
+                Layout.EndLayoutGroupRetained();
+            }
 
             // Drawing header shadow
             // Hacky approach without accessing header itself
             // Each window reset GUI matrix so top-left border is (0, 0)
             // Header height = vertical_padding + IDrawable_size = (3 + 3) + 14
-            GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, ShadowPixelHeight), ExtendedEditorGUI.Resources.Shadow);
+            // GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, ShadowPixelHeight), ExtendedEditorGUI.Resources.Shadow);
 
             Profiler.EndSample();
         }

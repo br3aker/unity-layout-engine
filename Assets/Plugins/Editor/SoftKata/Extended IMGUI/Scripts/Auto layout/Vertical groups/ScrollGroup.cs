@@ -69,6 +69,10 @@ namespace SoftKata.ExtendedEditorGUI {
         public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, bool ignoreConstaints = false)
             : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
+        protected override float CalculateAutomaticContentWidth() {
+            return (ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth) - (TotalOffset.left + _rightOffset);
+        }
+
         protected override void PreLayoutRequest() {
             // These offsets are applied even if scrollbars are not needed
             TotalOffset.right = _rightOffset;
