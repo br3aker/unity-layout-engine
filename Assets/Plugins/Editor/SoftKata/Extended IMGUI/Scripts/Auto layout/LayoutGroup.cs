@@ -134,13 +134,12 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
-                ContentRectInternal = TotalOffset.Remove(ContainerRectInternal);
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y));
+                ContentRectInternal = ContainerRectInternal;
             }
 
             if (IsGroupValid) {
                 CalculateNonLayoutData();
-                EditorGUI.DrawRect(new Rect(NextEntryPosition, EntriesRequestedSize - new Vector2(TotalOffset.horizontal, TotalOffset.vertical)), Color.red);
                 return true;
             }
             return false;

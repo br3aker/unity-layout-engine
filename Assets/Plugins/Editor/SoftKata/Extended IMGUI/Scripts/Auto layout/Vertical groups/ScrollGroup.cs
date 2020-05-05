@@ -90,7 +90,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* HORIZONTAL */
             ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth;
-            EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? EntriesRequestedSize.x : ContainerWidth;
+            EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? (EntriesRequestedSize.x + TotalOffset.horizontal) : ContainerWidth;
             if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
                 _containerToActualSizeRatio.x = ContainerWidth / EntriesRequestedSize.x;
                 _scrollContentOffset.x = Mathf.Lerp(0, ContainerWidth - EntriesRequestedSize.x, _scrollPos.x);
@@ -104,7 +104,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Applying offsets
             EntriesRequestedSize.y += TotalOffset.vertical;
-            EntriesRequestedSize.x += TotalOffset.horizontal;
+            // EntriesRequestedSize.x += TotalOffset.horizontal;
         }
     
         internal override bool BeginNonLayout() {
@@ -135,6 +135,8 @@ namespace SoftKata.ExtendedEditorGUI {
                             scrollPos = verticalBar
                                 ? mousePos.y / ContentRectInternal.yMax
                                 : mousePos.x / ContentRectInternal.xMax;
+                            
+                            MarkLayoutDirty();
                         }
                     }
 
@@ -152,6 +154,8 @@ namespace SoftKata.ExtendedEditorGUI {
                         var dragDelta = currentEvent.delta;
                         var movementDelta = verticalBar ? dragDelta.y : dragDelta.x;
                         scrollPos = Mathf.Clamp01(scrollPos + movementDelta / totalMovementLength);
+
+                        MarkLayoutDirty();
                     }
                     break;
                 case EventType.Repaint:
@@ -183,6 +187,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     GUIUtility.keyboardControl = 0;
 
                     _scrollPos.y = Mathf.Clamp01(_scrollPos.y + current.delta.y / scrollMovementLength);
+                    MarkLayoutDirty();
                     return;
                 }
 

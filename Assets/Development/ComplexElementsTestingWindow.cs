@@ -104,6 +104,10 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
+            // for(int i = 0; i < 10000; i++) {
+            //     EditorGUI.DrawRect(Layout.GetRect(16), Color.black);
+            // }
+
             // _tabsDrawer.OnGUI();
 
             // Profiler.BeginSample("ListView test");
@@ -111,9 +115,9 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            // Profiler.BeginSample("Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
+            Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
