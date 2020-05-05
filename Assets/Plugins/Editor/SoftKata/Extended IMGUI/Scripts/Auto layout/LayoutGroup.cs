@@ -212,6 +212,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 return false;
             }
             else if(parent._isLayoutDirty) {
+                _isLayoutDirty = true;
                 BeginLayout(parent);
                 return true;
             }
