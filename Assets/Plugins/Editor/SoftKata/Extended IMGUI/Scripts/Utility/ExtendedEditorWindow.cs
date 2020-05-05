@@ -42,11 +42,6 @@ namespace SoftKata.ExtendedEditorGUI {
             // Content 
             _rootScrollGroup.ContainerSize = position.size;
             if (Layout.BeginLayoutGroupRetained(_rootScrollGroup)) {
-                
-                if(Event.current.type == EventType.Layout) {
-                    Debug.Log("Rebuilding layout...");
-                }
-
                 IMGUI();
                 Layout.EndLayoutGroupRetained();
             }

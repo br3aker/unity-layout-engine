@@ -104,7 +104,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Applying offsets
             EntriesRequestedSize.y += TotalOffset.vertical;
-            // EntriesRequestedSize.x += TotalOffset.horizontal;
         }
     
         internal override bool BeginNonLayout() {

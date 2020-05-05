@@ -197,10 +197,7 @@ namespace SoftKata.ExtendedEditorGUI {
     
         public void MarkLayoutDirty() {
             _isLayoutDirty = true;
-        }
-        public void MarkHierarchyLayoutDirty() {
-            _isLayoutDirty = true;
-            Parent?.MarkHierarchyLayoutDirty();
+            Parent?.MarkLayoutDirty();
         }
         
         private bool _isLayoutDirty = true;
