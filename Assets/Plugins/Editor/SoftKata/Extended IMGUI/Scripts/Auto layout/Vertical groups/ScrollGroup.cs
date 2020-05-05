@@ -89,7 +89,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             /* HORIZONTAL */
-            ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : Layout.CurrentContentWidth;
+            ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth;
             EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? EntriesRequestedSize.x : ContainerWidth;
             if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
                 _containerToActualSizeRatio.x = ContainerWidth / EntriesRequestedSize.x;

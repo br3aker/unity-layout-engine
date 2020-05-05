@@ -41,7 +41,6 @@ namespace SoftKata.ExtendedEditorGUI {
             if(base.BeginNonLayout()) {
                 var totalFlexibleWidth = ContentRectInternal.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
                 AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-                // Debug.Log($"ContentRect: {ContentRectInternal}");
                 return true;
             }
             return false;

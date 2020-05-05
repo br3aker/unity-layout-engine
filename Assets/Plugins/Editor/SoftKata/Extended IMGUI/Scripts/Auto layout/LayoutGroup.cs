@@ -77,7 +77,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             Parent = parent;
             IsLayoutEvent = true;
-            AutomaticWidth = GetAutomaticWidth();
+            AutomaticWidth = 0; // all automatic entries should NOT participate to content size
         }
         internal void EndLayout() {
             if (IsGroupValid = EntriesCount > 0) {
