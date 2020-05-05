@@ -12,7 +12,9 @@ namespace SoftKata.ExtendedEditorGUI {
         public bool Visible => !Mathf.Approximately(_expanded.faded, 0);
 
         public VerticalFadeGroup(bool expanded, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
-            _expanded = new AnimBool(expanded, ExtendedEditorGUI.CurrentViewRepaint);
+            _expanded = new AnimBool(expanded);
+            _expanded.valueChanged.AddListener(MarkLayoutDirty);
+            _expanded.valueChanged.AddListener(ExtendedEditorGUI.CurrentViewRepaint);
         }
         public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
             : this(expanded, ExtendedEditorGUI.Resources.VerticalFadeGroup, ignoreConstaints) {}
