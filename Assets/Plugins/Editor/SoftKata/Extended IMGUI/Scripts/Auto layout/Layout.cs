@@ -61,12 +61,12 @@ namespace SoftKata.ExtendedEditorGUI {
         public static void EndLayoutGroupRetained() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
-                _currentGroup = group.Parent;
                 group.EndLayoutRetained();
+                _currentGroup = group.Parent;
             }
             else if(group.IsGroupValid) {
-                _currentGroup = group.Parent;
                 group.EndNonLayout();
+                _currentGroup = group.Parent;
             }
         }
         

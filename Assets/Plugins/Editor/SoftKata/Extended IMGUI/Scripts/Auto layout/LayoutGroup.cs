@@ -73,7 +73,6 @@ namespace SoftKata.ExtendedEditorGUI {
         internal void BeginLayout(LayoutGroup parent) {
             EntriesRequestedSize = new Vector2(-1, 0);
 
-            NextEntryPosition = Vector2.zero;
             EntriesCount = 0;
 
             Parent = parent;
@@ -136,6 +135,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             if (IsGroupValid) {
                 CalculateNonLayoutData();
+                EditorGUI.DrawRect(new Rect(NextEntryPosition, EntriesRequestedSize - new Vector2(TotalOffset.horizontal, TotalOffset.vertical)), Color.red);
                 return true;
             }
             return false;
@@ -204,14 +204,19 @@ namespace SoftKata.ExtendedEditorGUI {
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
         internal bool BeginLayoutRetained(LayoutGroup parent) {
-            if(Parent == null && !_isLayoutDirty) {
-                Layout.GetRectFromUnityLayout(ContainerRectInternal.width, ContainerRectInternal.height);
+            if(parent == null) {
+                if(_isLayoutDirty) {
+                    BeginLayout(parent);
+                    return true;
+                }
+                Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 return false;
             }
-            else if(_isLayoutDirty) {
+            else if(parent._isLayoutDirty) {
                 BeginLayout(parent);
                 return true;
             }
+
             return false;
         }
 
