@@ -7,6 +7,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public const float FullScreenWidth = -1;
 
         private int _fixedEntriesCount;
+        private int _fixedEntriesCount_CACHED;
 
         private float _containerWidth;
         private float _fixedWidth;
@@ -17,10 +18,8 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         protected override float GetAutomaticWidth() {
-            // This is a hack, _fixedEntriesCount must be reset
-            // But we don't have access to reset mechanism of base class
-            _fixedEntriesCount = 0;
-            return -1;
+            var totalFlexibleWidth = ContentRectInternal.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
+            return Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount_CACHED), 0f);
         }
 
         public FlexibleHorizontalGroup(float width, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
@@ -35,15 +34,9 @@ namespace SoftKata.ExtendedEditorGUI {
             _fixedWidth = EntriesRequestedSize.x;
             
             EntriesRequestedSize.x = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
-        }
-    
-        internal override bool BeginNonLayout() {
-            if(base.BeginNonLayout()) {
-                var totalFlexibleWidth = ContentRectInternal.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
-                AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-                return true;
-            }
-            return false;
+
+            _fixedEntriesCount_CACHED = _fixedEntriesCount;
+            _fixedEntriesCount = 0;
         }
 
         // Entry registration and querying

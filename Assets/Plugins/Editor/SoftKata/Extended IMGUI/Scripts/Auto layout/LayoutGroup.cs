@@ -120,6 +120,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
+            AutomaticWidth = GetAutomaticWidth();
+            if(Mathf.Approximately(EntriesRequestedSize.x, 0)) {
+                EntriesRequestedSize.x = AvailableWidth;
+            }
+
             if (Parent != null) {
                 if(IsGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect)) {
                     // Content & container rects
