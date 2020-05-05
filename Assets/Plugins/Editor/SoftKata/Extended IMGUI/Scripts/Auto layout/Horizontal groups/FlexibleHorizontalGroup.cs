@@ -29,9 +29,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
             _fixedWidth = EntriesRequestedSize.x;
             
-            EntriesRequestedSize.x = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
+            EntriesRequestedSize.x = _containerWidth > 0 ? _containerWidth : AvailableWidth;
 
-            var totalFlexibleWidth = EntriesRequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
+            var totalFlexibleWidth = EntriesRequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
             AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
         }
 
