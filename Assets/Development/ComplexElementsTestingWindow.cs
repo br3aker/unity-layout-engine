@@ -115,15 +115,15 @@ namespace Development {
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
             // _flexibleHorizontalGroupTest.OnGUI();
             
-            // _treeViewGroupTest.OnGUI();
+            _treeViewGroupTest.OnGUI();
         }
 
         protected override WindowHeaderBar CreateHeader() {
@@ -264,13 +264,13 @@ namespace Development {
                 _contentSize.x = EditorGUI.IntField(Layout.GetRect(16), "X size", _contentSize.x);
                 _contentSize.y = EditorGUI.IntField(Layout.GetRect(16), "Y size", _contentSize.y);
 
-                if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
                     if(Layout.GetRect(_contentSize.x, _contentSize.y, out var rect)) {
                         EditorGUI.DrawRect(rect, Color.red);
                         EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
                     }
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndLayoutGroupRetained();
             }
         }
 
@@ -282,7 +282,7 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(_flexibleHorizontalGroup)) {
+                if(Layout.BeginLayoutGroupRetained(_flexibleHorizontalGroup)) {
                     Layout.GetRect(40, 55, out var fixedRect);
                     EditorGUI.DrawRect(fixedRect, Color.black);
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
@@ -293,7 +293,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndLayoutGroupRetained();
             }
         }
     
@@ -307,21 +307,21 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(_treeViewGroup)) {
+                if(Layout.BeginLayoutGroupRetained(_treeViewGroup)) {
                     for(int i = 0; i < 3; i++) {
                         var rect = _treeViewGroup.GetLeafRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
 
-                    if(Layout.BeginLayoutGroup(_treeViewChildGroup)) {
+                    if(Layout.BeginLayoutGroupRetained(_treeViewChildGroup)) {
                         for(int i = 0; i < 3; i++) {
                             var rect = _treeViewChildGroup.GetLeafRect(40);
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
                     }
-                    Layout.EndLayoutGroup();
+                    Layout.EndLayoutGroupRetained();
                     
 
                     for(int i = 0; i < 3; i++) {
@@ -330,7 +330,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndLayoutGroupRetained();
             }
         }
     }

@@ -42,9 +42,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 _tabHeaders = tabHeaders;
                 _contentDrawers = contentDrawers;
 
-                // Animators
-                _animator = new AnimFloat(initialTab, ExtendedEditorGUI.CurrentViewRepaint);
-
                 // Styling
                 _tabHeaderStyle = tabHeaderStyle;
                 _tabHeaderHeight = tabHeaderStyle.GetContentHeight(tabHeaders[0]);
@@ -55,10 +52,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Layout groups
                 _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (tabHeaders.Length - 1), 0f), true, true);
                 _horizontalGroup = new HorizontalGroup(true);
+
+                // Animators
+                _animator = new AnimFloat(initialTab);
+                _animator.valueChanged.AddListener(ExtendedEditorGUI.CurrentViewRepaint);
+                _animator.valueChanged.AddListener(_scrollGroup.MarkLayoutDirty);
             }
             public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, Resources.TabHeader) { }
 
+            // TODO: Retained mode throws exception due to invalid layout dirtying
+            // This can be fixed by wrapping entire code in 'master' vertical layout group without any margins/paddings/borders
+            // Then animator value can mark this group dirty and rebult layout
+            // Furthermore, this group can draw background image
             public void OnGUI() {
                 int currentSelection = CurrentTab;
                 float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
@@ -78,14 +84,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Content
                 if (_animator.isAnimating) {
                     _scrollGroup.ScrollPosX = currentAnimationPosition;
-                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
-                        if(Layout.BeginLayoutGroup(_horizontalGroup)) {
+                    if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
+                        if(Layout.BeginLayoutGroupRetained(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
-                            Layout.EndLayoutGroup();
+                            Layout.EndLayoutGroupRetained();
                         }
-                        Layout.EndLayoutGroup();
+                        Layout.EndLayoutGroupRetained();
                     }
                 }
                 else {

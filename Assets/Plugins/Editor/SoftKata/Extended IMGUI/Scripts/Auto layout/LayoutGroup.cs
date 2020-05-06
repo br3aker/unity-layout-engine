@@ -72,7 +72,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Layout event
         protected abstract void PreLayoutRequest();
-        internal void BeginLayout(LayoutGroup parent) {
+        [Obsolete] internal void BeginLayout(LayoutGroup parent) {
             EntriesRequestedSize = Vector2.zero;
 
             EntriesCount = 0;
@@ -82,7 +82,7 @@ namespace SoftKata.ExtendedEditorGUI {
             
             AutomaticWidth = CalculateAutomaticContentWidth();
         }
-        internal void EndLayout() {
+        [Obsolete] internal void EndLayout() {
             if (EntriesCount > 0) {
                 PreLayoutRequest();
 

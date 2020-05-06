@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -21,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         // Layout group management
-        public static bool BeginLayoutGroup(LayoutGroup group) {
+        [Obsolete] public static bool BeginLayoutGroup(LayoutGroup group) {
             if(Event.current.type == EventType.Layout) {
                 group.BeginLayout(_currentGroup);
                 _currentGroup = group;
@@ -33,7 +35,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }
             return false;
         }
-        public static void EndLayoutGroup() {
+        [Obsolete] public static void EndLayoutGroup() {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
                 group.EndLayout();

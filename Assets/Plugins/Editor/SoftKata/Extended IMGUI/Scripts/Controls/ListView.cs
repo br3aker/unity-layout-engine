@@ -120,14 +120,14 @@ namespace SoftKata.ExtendedEditorGUI {
             // Core
             public void OnGUI() {
                 var preScrollPos = _contentScrollGroup.ScrollPosY;
-                if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
+                if (Layout.BeginLayoutGroupRetained(_contentScrollGroup)) {
                     if(Count != 0) {
                         DoContent();
                     }
                     else {
                         DoEmptyContent();
                     }
-                    Layout.EndLayoutGroup();
+                    Layout.EndLayoutGroupRetained();
                 }
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
