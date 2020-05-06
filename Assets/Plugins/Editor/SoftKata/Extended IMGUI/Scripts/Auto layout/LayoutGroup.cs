@@ -94,6 +94,8 @@ namespace SoftKata.ExtendedEditorGUI {
                     Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 }
             }
+        
+            _isLayoutDirty = false;
         }
         
         // Non-Layout event
@@ -146,8 +148,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 ContainerRectInternal.position = _clipWorldPositionOffset;
                 ContentRectInternal.position += _clipWorldPositionOffset;
             }
-
-            _isLayoutDirty = false;
         }
 
         // This prepares layout group for rect querying without actual layout stage
