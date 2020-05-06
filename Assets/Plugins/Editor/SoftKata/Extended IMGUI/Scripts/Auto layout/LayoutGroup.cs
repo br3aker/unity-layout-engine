@@ -23,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public float SpaceBetweenEntries { get; protected set; }
 
         protected int EntriesCount;
-        public bool IsGroupValid {get; protected set;}
+        [Obsolete] public bool IsGroupValid {get; protected set;}
 
         protected bool IsLayoutEvent = true;
 
@@ -83,7 +83,7 @@ namespace SoftKata.ExtendedEditorGUI {
             AutomaticWidth = CalculateAutomaticContentWidth();
         }
         internal void EndLayout() {
-            if (IsGroupValid = EntriesCount > 0) {
+            if (EntriesCount > 0) {
                 PreLayoutRequest();
 
                 if(Parent != null) {
@@ -124,8 +124,8 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
-                IsGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect);
-                if(!IsGroupValid) return false;
+                var isGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect);
+                if(!isGroupValid) return false;
                 
                 // Content & container rects
                 ContentRectInternal = TotalOffset.Remove(requestedRect);
