@@ -178,7 +178,7 @@ namespace SoftKata.ExtendedEditorGUI {
             return scrollPos;
         }
         private void DoScrollbars() {
-            if (!IsGroupValid || _disableScrollbars) return;
+            if (_disableScrollbars) return;
             var current = Event.current;
             var eventType = current.type;
 

@@ -62,12 +62,11 @@ namespace SoftKata.ExtendedEditorGUI {
             var group = _currentGroup;
             if(Event.current.type == EventType.Layout) {
                 group.EndLayoutRetained();
-                _currentGroup = group.Parent;
             }
-            else if(group.IsGroupValid) {
+            else {
                 group.EndNonLayout();
-                _currentGroup = group.Parent;
             }
+            _currentGroup = group.Parent;
         }
         
         // Register array of equal elements in one batch
