@@ -35,7 +35,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private bool _disableScrollbars;
 
-        private Vector2 _scrollContentOffset;
+        private Vector2 _actualContentSize;
 
         public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             Clip = true;
@@ -80,9 +80,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
             /* VERTICAL */
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
+            _actualContentSize.y = EntriesRequestedSize.y;
             if (_needsVerticalScroll = EntriesRequestedSize.y > ContainerSize.y) {
                 _containerToActualSizeRatio.y = ContainerSize.y / EntriesRequestedSize.y;
-                _scrollContentOffset.y = Mathf.Lerp(0, ContainerSize.y - EntriesRequestedSize.y, _scrollPos.y);
 
                 EntriesRequestedSize.y = ContainerSize.y;
 
@@ -95,9 +95,9 @@ namespace SoftKata.ExtendedEditorGUI {
             /* HORIZONTAL */
             ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth;
             EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? (EntriesRequestedSize.x + TotalOffset.horizontal) : ContainerWidth;
+            _actualContentSize.x = EntriesRequestedSize.x;
             if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
                 _containerToActualSizeRatio.x = ContainerWidth / EntriesRequestedSize.x;
-                _scrollContentOffset.x = Mathf.Lerp(0, ContainerWidth - EntriesRequestedSize.x, _scrollPos.x);
 
                 EntriesRequestedSize.x = ContainerWidth;
 
@@ -112,9 +112,17 @@ namespace SoftKata.ExtendedEditorGUI {
     
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {
+                // requesting ids for scrollbars
                 _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
-                NextEntryPosition += _scrollContentOffset;
+
+                // scroll content offset
+                var contentOffset = 
+                    new Vector2(
+                        Mathf.Lerp(0, ContainerWidth - _actualContentSize.x, _scrollPos.x), 
+                        Mathf.Lerp(0, ContainerSize.y - _actualContentSize.y, _scrollPos.y)
+                    );
+                NextEntryPosition += contentOffset;
                 return true;
             }
             return false;
@@ -138,8 +146,6 @@ namespace SoftKata.ExtendedEditorGUI {
                             scrollPos = verticalBar
                                 ? mousePos.y / ContentRectInternal.yMax
                                 : mousePos.x / ContentRectInternal.xMax;
-                            
-                            MarkLayoutDirty();
                         }
                     }
 
@@ -157,8 +163,6 @@ namespace SoftKata.ExtendedEditorGUI {
                         var dragDelta = currentEvent.delta;
                         var movementDelta = verticalBar ? dragDelta.y : dragDelta.x;
                         scrollPos = Mathf.Clamp01(scrollPos + movementDelta / totalMovementLength);
-
-                        MarkLayoutDirty();
                     }
                     break;
                 case EventType.Repaint:
@@ -190,7 +194,6 @@ namespace SoftKata.ExtendedEditorGUI {
                     GUIUtility.keyboardControl = 0;
 
                     _scrollPos.y = Mathf.Clamp01(_scrollPos.y + current.delta.y / scrollMovementLength);
-                    MarkLayoutDirty();
                     return;
                 }
 
