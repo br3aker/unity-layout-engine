@@ -7,7 +7,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private readonly Color _backgroundColor;
 
-        public Vector2 ContainerSize;
+        private Vector2 _containerSize;
+        public Vector2 ContainerSize {
+            set {
+                if(_containerSize != value) {
+                    _containerSize = value;
+                    MarkLayoutDirty();
+                }
+            }
+        }
         private float ContainerWidth;
 
         private Vector2 _containerToActualSizeRatio;
@@ -70,7 +78,7 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
-            return (ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth) - (TotalOffset.left + _rightOffset);
+            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - (TotalOffset.left + _rightOffset);
         }
 
         protected override void PreLayoutRequest() {
@@ -81,10 +89,10 @@ namespace SoftKata.ExtendedEditorGUI {
             /* VERTICAL */
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
             _actualContentSize.y = EntriesRequestedSize.y;
-            if (_needsVerticalScroll = EntriesRequestedSize.y > ContainerSize.y) {
-                _containerToActualSizeRatio.y = ContainerSize.y / EntriesRequestedSize.y;
+            if (_needsVerticalScroll = EntriesRequestedSize.y > _containerSize.y) {
+                _containerToActualSizeRatio.y = _containerSize.y / EntriesRequestedSize.y;
 
-                EntriesRequestedSize.y = ContainerSize.y;
+                EntriesRequestedSize.y = _containerSize.y;
 
                 if(!_disableScrollbars) {
                     TotalOffset.right += _verticalScrollBarOffset + _verticalScrollBarWidth;
@@ -93,7 +101,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
             /* HORIZONTAL */
-            ContainerWidth = ContainerSize.x > 0 ? ContainerSize.x : AvailableWidth;
+            ContainerWidth = _containerSize.x > 0 ? _containerSize.x : AvailableWidth;
             EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? (EntriesRequestedSize.x + TotalOffset.horizontal) : ContainerWidth;
             _actualContentSize.x = EntriesRequestedSize.x;
             if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
@@ -120,7 +128,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 var contentOffset = 
                     new Vector2(
                         Mathf.Lerp(0, ContainerWidth - _actualContentSize.x, _scrollPos.x), 
-                        Mathf.Lerp(0, ContainerSize.y - _actualContentSize.y, _scrollPos.y)
+                        Mathf.Lerp(0, _containerSize.y - _actualContentSize.y, _scrollPos.y)
                     );
                 NextEntryPosition += contentOffset;
                 return true;
