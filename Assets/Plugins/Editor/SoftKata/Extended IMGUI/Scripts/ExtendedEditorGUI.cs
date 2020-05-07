@@ -8,21 +8,13 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         public const float ShadowPixelHeight = 5;
 
-        private static UnityAction _currentViewRepaint;
-        public static UnityAction CurrentViewRepaint {
-            get {
-                if(_currentViewRepaint != null){
-                    return _currentViewRepaint;
-                }
-                throw new Exception("Accessing CurrentRepaint without initialization via InitEditor(...) or InitEditorWindow(...)");
-            }
-        }
+        public static UnityAction CurrentViewRepaint {get; private set;}
 
-        public static void InitEditor(Editor editor) {
-            _currentViewRepaint = editor.Repaint;
+        public static EditorWindow CurrentWindow {
+            set => CurrentViewRepaint = value.Repaint;
         }
-        public static void InitEditorWindow(EditorWindow editorWindow) {
-            _currentViewRepaint = editorWindow.Repaint;
+        public static Editor CurrentInspector {
+            set => CurrentViewRepaint = value.Repaint;
         }
     }
 

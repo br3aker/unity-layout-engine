@@ -15,7 +15,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
 
         private void OnEnable() {
-            InitEditorWindow(this);
+            CurrentWindow = this;
 
             // Header 
             _headerBar = CreateHeader();
