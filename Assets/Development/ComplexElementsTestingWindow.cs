@@ -123,7 +123,7 @@ namespace Development {
 
             // _flexibleHorizontalGroupTest.OnGUI();
             
-            _treeViewGroupTest.OnGUI();
+            // _treeViewGroupTest.OnGUI();
         }
 
         protected override WindowHeaderBar CreateHeader() {
@@ -320,17 +320,16 @@ namespace Development {
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
+                        Layout.EndLayoutGroupRetained();
                     }
-                    Layout.EndLayoutGroupRetained();
-                    
 
                     for(int i = 0; i < 3; i++) {
                         var rect =  _treeViewGroup.GetLeafRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
+                    Layout.EndLayoutGroupRetained();
                 }
-                Layout.EndLayoutGroupRetained();
             }
         }
     }

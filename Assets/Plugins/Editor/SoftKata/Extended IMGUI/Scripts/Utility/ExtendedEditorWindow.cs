@@ -29,13 +29,14 @@ namespace SoftKata.ExtendedEditorGUI {
         public void OnGUI() {
             if (Event.current.type == EventType.Used) return;
 
-            Profiler.BeginSample("ExtendedEditorWindow");
+            Profiler.BeginSample($"[{Event.current.type}] ExtendedEditorWindow");
 
             // Header bar
             _headerBar.OnGUI();
 
             // Content 
-            _rootScrollGroup.ContainerSize = position.size;
+            _rootScrollGroup.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
+            // _rootScrollGroup.ContainerSize = position.size;
             if (Layout.BeginLayoutGroupRetained(_rootScrollGroup)) {
                 IMGUI();
                 Layout.EndLayoutGroupRetained();
