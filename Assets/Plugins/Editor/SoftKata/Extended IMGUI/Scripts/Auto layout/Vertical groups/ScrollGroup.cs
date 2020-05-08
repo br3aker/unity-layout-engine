@@ -22,15 +22,15 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // horizontal scrollbar settings
         private readonly int _horizontalScrollBarHeight;
-        private readonly int _horizontalScrollBarOffset;
-        private readonly int _bottomOffset;
+        private readonly int _horizontalScrollBarPadding;
+        private readonly int _bottomMargin;
         private bool _needsHorizontalScroll;
         private int _horizontalScrollId;
 
         // vertical scrollbar settings
         private readonly int _verticalScrollBarWidth;
-        private readonly int _verticalScrollBarOffset;
-        private readonly int _rightOffset;
+        private readonly int _verticalScrollBarPadding;
+        private readonly int _rightMargin;
         private bool _needsVerticalScroll;
         private int _verticalScrollId;
         
@@ -61,14 +61,14 @@ namespace SoftKata.ExtendedEditorGUI {
             var margin = style.margin;
             // Vertical
             _verticalScrollBarWidth = border.right;
-            _verticalScrollBarOffset = padding.right;
+            _verticalScrollBarPadding = padding.right;
 
             // Horizontal
             _horizontalScrollBarHeight = border.bottom;
-            _horizontalScrollBarOffset = padding.bottom;
+            _horizontalScrollBarPadding = padding.bottom;
 
-            _rightOffset = margin.right;
-            _bottomOffset = margin.bottom;
+            _rightMargin = margin.right;
+            _bottomMargin = margin.bottom;
 
             // Colors
             _backgroundColor = style.normal.textColor;
@@ -78,13 +78,13 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
-            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - (TotalOffset.left + _rightOffset);
+            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - (TotalOffset.left + _rightMargin);
         }
 
         protected override void PreLayoutRequest() {
             // These offsets are applied even if scrollbars are not needed
-            TotalOffset.right = _rightOffset;
-            TotalOffset.bottom = _bottomOffset;
+            TotalOffset.right = _rightMargin;
+            TotalOffset.bottom = _bottomMargin;
 
             /* VERTICAL */
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
@@ -95,7 +95,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 EntriesRequestedSize.y = _containerSize.y;
 
                 if(!_disableScrollbars) {
-                    TotalOffset.right += _verticalScrollBarOffset + _verticalScrollBarWidth;
+                    TotalOffset.right += _verticalScrollBarPadding + _verticalScrollBarWidth;
                 }
             }
 
@@ -110,7 +110,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 EntriesRequestedSize.x = ContainerWidth;
 
                 if(!_disableScrollbars) {
-                    TotalOffset.bottom += _horizontalScrollBarOffset + _horizontalScrollBarHeight;
+                    TotalOffset.bottom += _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                 }
             }
 
@@ -205,7 +205,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     return;
                 }
 
-                var verticalScrollPos = actualContentRect.xMax + _verticalScrollBarOffset;
+                var verticalScrollPos = actualContentRect.xMax + _verticalScrollBarPadding;
 
                 var verticalScrollbarRect = new Rect(
                     verticalScrollPos,
@@ -237,7 +237,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     actualContentRect.width * MinimalScrollbarSizeMultiplier);
                 var scrollMovementLength = actualContentRect.width - scrollBarWidth;
 
-                var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarOffset;
+                var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
 
                 var horizontalScrollbarRect = new Rect(
                     actualContentRect.x + scrollMovementLength * _scrollPos.x,
