@@ -16,8 +16,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
             }
         }
-        private float ContainerWidth;
-
         private Vector2 _containerToActualSizeRatio;
 
         // horizontal scrollbar settings
@@ -81,55 +79,46 @@ namespace SoftKata.ExtendedEditorGUI {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
         }
 
-        private Vector2 _contentVisibleAreaSize;
+        private Vector2 _visibleAreaSize;
 
         protected override void PreLayoutRequest() {
+            var containerWidth = _containerSize.x > 0 ? _containerSize.x : AvailableWidth;
+
+            var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
+            var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth; 
+
             TotalOffset.right = _rightMargin;
             TotalOffset.bottom = _bottomMargin;
-
-            ContainerWidth = _containerSize.x > 0 ? _containerSize.x : AvailableWidth;
 
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
             _actualContentSize = EntriesRequestedSize;
 
-
-            _contentVisibleAreaSize.x = ContainerWidth - TotalOffset.horizontal;
-            _contentVisibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
-
-            var horizontalScroll = EntriesRequestedSize.x > ContainerWidth;
-            var verticalScroll = EntriesRequestedSize.y > _containerSize.y;
-            
-            var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-            var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth; 
-
+            _visibleAreaSize.x = containerWidth - TotalOffset.horizontal;
+            _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
 
             // 1st pass - checking if we actually need scrollbars
-            if(horizontalScroll) {
-                _contentVisibleAreaSize.y -= horizontalBarExtraHeight;
+            if(EntriesRequestedSize.x > containerWidth) {
+                TotalOffset.bottom += horizontalBarExtraHeight;
+                _visibleAreaSize.y -= horizontalBarExtraHeight;
             }
-
-            if(verticalScroll) {
-                _contentVisibleAreaSize.x -= verticalBarExtraWidth;
+            if(EntriesRequestedSize.y > _containerSize.y) {
+                TotalOffset.right += verticalBarExtraWidth;
+                _visibleAreaSize.x -= verticalBarExtraWidth;
             }
 
             // 2nd pass - calculations based on 1st pass
-            if(_needsHorizontalScroll = EntriesRequestedSize.x > _contentVisibleAreaSize.x) {
-                TotalOffset.bottom += horizontalBarExtraHeight;
+            if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
+                _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
 
-                _containerToActualSizeRatio.x = _contentVisibleAreaSize.x / EntriesRequestedSize.x;
-
-                EntriesRequestedSize.x = _contentVisibleAreaSize.x;
+                EntriesRequestedSize.x = _visibleAreaSize.x;
             }
-
-            if(_needsVerticalScroll = EntriesRequestedSize.y > _contentVisibleAreaSize.y) {
-                TotalOffset.right += verticalBarExtraWidth;
-
-                _containerToActualSizeRatio.y = _contentVisibleAreaSize.y / EntriesRequestedSize.y;
+            if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
+                _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
                 
-                EntriesRequestedSize.y = _contentVisibleAreaSize.y;
+                EntriesRequestedSize.y = _visibleAreaSize.y;
             }
 
-
+            // Applying offsets to actual group rect
             EntriesRequestedSize.x += TotalOffset.horizontal;
             EntriesRequestedSize.y += TotalOffset.vertical;
         }
@@ -143,8 +132,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 // scroll content offset
                 var contentOffset =
                     new Vector2(
-                        Mathf.Lerp(0, _contentVisibleAreaSize.x - _actualContentSize.x, _scrollPos.x),
-                        Mathf.Lerp(0, _contentVisibleAreaSize.y - _actualContentSize.y, _scrollPos.y)
+                        Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, _scrollPos.x),
+                        Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, _scrollPos.y)
                     );
                 NextEntryPosition += contentOffset;
                 return true;

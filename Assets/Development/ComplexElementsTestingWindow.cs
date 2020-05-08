@@ -108,7 +108,7 @@ namespace Development {
                 EditorGUI.DrawRect(Layout.GetRect(16), Color.black);
             }
 
-            Layout.GetRect(2000, 16);
+            EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
             // _tabsDrawer.OnGUI();
 
