@@ -33,7 +33,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private readonly int _rightMargin;
         private bool _needsVerticalScroll;
         private int _verticalScrollId;
-        
+
         private readonly Color _scrollbarColor;
 
         private Vector2 _scrollPos;
@@ -78,46 +78,62 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
-            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - (TotalOffset.left + _rightMargin);
+            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
         }
 
+        private Vector2 _contentVisibleAreaSize;
+
         protected override void PreLayoutRequest() {
-            // These offsets are applied even if scrollbars are not needed
             TotalOffset.right = _rightMargin;
             TotalOffset.bottom = _bottomMargin;
 
-            /* VERTICAL */
-            EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
-            _actualContentSize.y = EntriesRequestedSize.y;
-            if (_needsVerticalScroll = EntriesRequestedSize.y > _containerSize.y) {
-                _containerToActualSizeRatio.y = _containerSize.y / EntriesRequestedSize.y;
-
-                EntriesRequestedSize.y = _containerSize.y;
-
-                if(!_disableScrollbars) {
-                    TotalOffset.right += _verticalScrollBarPadding + _verticalScrollBarWidth;
-                }
-            }
-
-
-            /* HORIZONTAL */
             ContainerWidth = _containerSize.x > 0 ? _containerSize.x : AvailableWidth;
-            EntriesRequestedSize.x = EntriesRequestedSize.x > 0 ? (EntriesRequestedSize.x + TotalOffset.horizontal) : ContainerWidth;
-            _actualContentSize.x = EntriesRequestedSize.x;
-            if(_needsHorizontalScroll = EntriesRequestedSize.x > ContainerWidth) {
-                _containerToActualSizeRatio.x = ContainerWidth / EntriesRequestedSize.x;
 
-                EntriesRequestedSize.x = ContainerWidth;
+            EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
+            _actualContentSize = EntriesRequestedSize;
 
-                if(!_disableScrollbars) {
-                    TotalOffset.bottom += _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-                }
+
+            _contentVisibleAreaSize.x = ContainerWidth - TotalOffset.horizontal;
+            _contentVisibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
+
+            var horizontalScroll = EntriesRequestedSize.x > ContainerWidth;
+            var verticalScroll = EntriesRequestedSize.y > _containerSize.y;
+            
+            var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
+            var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth; 
+
+
+            // 1st pass - checking if we actually need scrollbars
+            if(horizontalScroll) {
+                _contentVisibleAreaSize.y -= horizontalBarExtraHeight;
             }
 
-            // Applying offsets
+            if(verticalScroll) {
+                _contentVisibleAreaSize.x -= verticalBarExtraWidth;
+            }
+
+            // 2nd pass - calculations based on 1st pass
+            if(_needsHorizontalScroll = EntriesRequestedSize.x > _contentVisibleAreaSize.x) {
+                TotalOffset.bottom += horizontalBarExtraHeight;
+
+                _containerToActualSizeRatio.x = _contentVisibleAreaSize.x / EntriesRequestedSize.x;
+
+                EntriesRequestedSize.x = _contentVisibleAreaSize.x;
+            }
+
+            if(_needsVerticalScroll = EntriesRequestedSize.y > _contentVisibleAreaSize.y) {
+                TotalOffset.right += verticalBarExtraWidth;
+
+                _containerToActualSizeRatio.y = _contentVisibleAreaSize.y / EntriesRequestedSize.y;
+                
+                EntriesRequestedSize.y = _contentVisibleAreaSize.y;
+            }
+
+
+            EntriesRequestedSize.x += TotalOffset.horizontal;
             EntriesRequestedSize.y += TotalOffset.vertical;
         }
-    
+
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {
                 // requesting ids for scrollbars
@@ -125,21 +141,21 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 
                 // scroll content offset
-                var contentOffset = 
+                var contentOffset =
                     new Vector2(
-                        Mathf.Lerp(0, ContainerWidth - _actualContentSize.x, _scrollPos.x), 
-                        Mathf.Lerp(0, _containerSize.y - _actualContentSize.y, _scrollPos.y)
+                        Mathf.Lerp(0, _contentVisibleAreaSize.x - _actualContentSize.x, _scrollPos.x),
+                        Mathf.Lerp(0, _contentVisibleAreaSize.y - _actualContentSize.y, _scrollPos.y)
                     );
                 NextEntryPosition += contentOffset;
                 return true;
             }
             return false;
-        } 
+        }
         internal override void EndNonLayout() {
             base.EndNonLayout();
             DoScrollbars();
         }
-        
+
         private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
             Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength) {
             switch (currentEvent.type) {
