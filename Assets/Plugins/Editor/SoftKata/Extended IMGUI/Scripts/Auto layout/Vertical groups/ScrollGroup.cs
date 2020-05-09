@@ -82,26 +82,28 @@ namespace SoftKata.ExtendedEditorGUI {
         private Vector2 _visibleAreaSize;
 
         protected override void PreLayoutRequest() {
-            var containerWidth = _containerSize.x > 0 ? _containerSize.x : AvailableWidth;
-
-            var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-            var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth; 
-
+            // Resetting total offset to if scrollbars are not used
             TotalOffset.right = _rightMargin;
             TotalOffset.bottom = _bottomMargin;
 
+            // Adding extra content size
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
+
+            // caching content size
             _actualContentSize = EntriesRequestedSize;
 
-            _visibleAreaSize.x = containerWidth - TotalOffset.horizontal;
+            // Calculating container visible area size
+            _visibleAreaSize.x = (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
             _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
 
             // 1st pass - checking if we actually need scrollbars
-            if(EntriesRequestedSize.x > containerWidth) {
+            if(EntriesRequestedSize.x > _visibleAreaSize.x) {
+                var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                 TotalOffset.bottom += horizontalBarExtraHeight;
                 _visibleAreaSize.y -= horizontalBarExtraHeight;
             }
-            if(EntriesRequestedSize.y > _containerSize.y) {
+            if(EntriesRequestedSize.y > _visibleAreaSize.y) {
+                var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
                 TotalOffset.right += verticalBarExtraWidth;
                 _visibleAreaSize.x -= verticalBarExtraWidth;
             }
@@ -145,6 +147,8 @@ namespace SoftKata.ExtendedEditorGUI {
             DoScrollbars();
         }
 
+
+        // TODO: This needs some love
         private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
             Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength) {
             switch (currentEvent.type) {
