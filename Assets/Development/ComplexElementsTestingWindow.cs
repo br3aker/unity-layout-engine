@@ -105,7 +105,9 @@ namespace Development {
             DrawServiceInfo();
 
             for(int i = 0; i < 20; i++) {
-                EditorGUI.DrawRect(Layout.GetRect(16), Color.black);
+                var rect = Layout.GetRect(16);
+                EditorGUI.DrawRect(rect, Color.black);
+                EditorGUI.LabelField(rect, rect.width.ToString());
             }
 
             EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);

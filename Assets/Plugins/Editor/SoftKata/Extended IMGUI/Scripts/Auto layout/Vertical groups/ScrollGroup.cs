@@ -51,12 +51,15 @@ namespace SoftKata.ExtendedEditorGUI {
             // Scroll settings
             _scrollPos = scrollPos;
 
+            var margin = style.margin;
+            _rightMargin = margin.right;
+            _bottomMargin = margin.bottom;
 
             if(_disableScrollbars = disableScrollbars) return;
 
             var padding = style.padding;
             var border = style.border;
-            var margin = style.margin;
+            
             // Vertical
             _verticalScrollBarWidth = border.right;
             _verticalScrollBarPadding = padding.right;
@@ -64,9 +67,6 @@ namespace SoftKata.ExtendedEditorGUI {
             // Horizontal
             _horizontalScrollBarHeight = border.bottom;
             _horizontalScrollBarPadding = padding.bottom;
-
-            _rightMargin = margin.right;
-            _bottomMargin = margin.bottom;
 
             // Colors
             _backgroundColor = style.normal.textColor;
@@ -97,12 +97,12 @@ namespace SoftKata.ExtendedEditorGUI {
             _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
 
             // 1st pass - checking if we actually need scrollbars
-            if(EntriesRequestedSize.x > _visibleAreaSize.x) {
+            if(!_disableScrollbars && EntriesRequestedSize.x > _visibleAreaSize.x) {
                 var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                 TotalOffset.bottom += horizontalBarExtraHeight;
                 _visibleAreaSize.y -= horizontalBarExtraHeight;
             }
-            if(EntriesRequestedSize.y > _visibleAreaSize.y) {
+            if(!_disableScrollbars && EntriesRequestedSize.y > _visibleAreaSize.y) {
                 var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
                 TotalOffset.right += verticalBarExtraWidth;
                 _visibleAreaSize.x -= verticalBarExtraWidth;
