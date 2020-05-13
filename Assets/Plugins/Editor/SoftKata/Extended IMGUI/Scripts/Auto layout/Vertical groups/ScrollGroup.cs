@@ -80,7 +80,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         private Vector2 _visibleAreaSize;
-        private bool _specialFlag = false;
+        private bool _isFirstLayoutBuild = true;
 
         protected override void PreLayoutRequest() {
             // Resetting total offset to if scrollbars are not used
@@ -97,28 +97,30 @@ namespace SoftKata.ExtendedEditorGUI {
             _visibleAreaSize.x = (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
             _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
 
-            // 1st pass - checking if we actually need scrollbars
-            if(!_disableScrollbars && EntriesRequestedSize.x > _visibleAreaSize.x) {
-                var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-                TotalOffset.bottom += horizontalBarExtraHeight;
-                _visibleAreaSize.y -= horizontalBarExtraHeight;
-            }
-            if(!_disableScrollbars && EntriesRequestedSize.y > _visibleAreaSize.y) {
-                var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
-                TotalOffset.right += verticalBarExtraWidth;
-                _visibleAreaSize.x -= verticalBarExtraWidth;
-            }
+            if(!_disableScrollbars) {
+                // 1st pass - checking if we actually need scrollbars
+                if(EntriesRequestedSize.x > _visibleAreaSize.x) {
+                    var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
+                    TotalOffset.bottom += horizontalBarExtraHeight;
+                    _visibleAreaSize.y -= horizontalBarExtraHeight;
+                }
+                if(EntriesRequestedSize.y > _visibleAreaSize.y) {
+                    var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
+                    TotalOffset.right += verticalBarExtraWidth;
+                    _visibleAreaSize.x -= verticalBarExtraWidth;
+                }
 
-            // 2nd pass - calculations based on 1st pass
-            if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
-                _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
+                // 2nd pass - calculations based on 1st pass
+                if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
+                    _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
 
-                EntriesRequestedSize.x = _visibleAreaSize.x;
-            }
-            if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
-                _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
-                
-                EntriesRequestedSize.y = _visibleAreaSize.y;
+                    EntriesRequestedSize.x = _visibleAreaSize.x;
+                }
+                if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
+                    _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
+                    
+                    EntriesRequestedSize.y = _visibleAreaSize.y;
+                }
             }
 
             // Applying offsets to actual group rect
@@ -145,12 +147,21 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         internal override void EndNonLayout() {
             base.EndNonLayout();
-            DoScrollbars();
 
-            if(!_needsVerticalScroll && !_specialFlag) {
+            var currentEvent = Event.current;
+            var currentEventType = currentEvent.type;
+
+            if(_needsHorizontalScroll) {
+                DoHorizontalScroll(currentEvent, currentEventType);
+            }
+
+            if(_needsVerticalScroll) {
+                DoVerticalScroll(currentEvent, currentEventType);
+            }
+            else if(_isFirstLayoutBuild) {
+                _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
-                ExtendedEditorGUI.CurrentViewRepaint();
-                _specialFlag = true;
+                ExtendedEditorGUI.CurrentViewRepaint();;
             }
         }
 
@@ -201,84 +212,80 @@ namespace SoftKata.ExtendedEditorGUI {
 
             return scrollPos;
         }
-        private void DoScrollbars() {
-            if (_disableScrollbars) return;
-            var current = Event.current;
-            var eventType = current.type;
-
+    
+        private void DoVerticalScroll(Event currentEvent, EventType eventType) {
             var actualContentRect = ContentRectInternal;
 
-            if (_needsVerticalScroll) {
-                var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
-                    actualContentRect.height * MinimalScrollbarSizeMultiplier);
-                var scrollMovementLength = actualContentRect.height - scrollbarHeight;
+            var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
+                actualContentRect.height * MinimalScrollbarSizeMultiplier);
+            var scrollMovementLength = actualContentRect.height - scrollbarHeight;
 
-                if (eventType == EventType.ScrollWheel && actualContentRect.Contains(current.mousePosition)) {
-                    current.Use();
-                    GUIUtility.keyboardControl = 0;
+            if (eventType == EventType.ScrollWheel && actualContentRect.Contains(currentEvent.mousePosition)) {
+                currentEvent.Use();
+                GUIUtility.keyboardControl = 0;
 
-                    _scrollPos.y = Mathf.Clamp01(_scrollPos.y + current.delta.y / scrollMovementLength);
-                    return;
-                }
-
-                var verticalScrollPos = actualContentRect.xMax + _verticalScrollBarPadding;
-
-                var verticalScrollbarRect = new Rect(
-                    verticalScrollPos,
-                    actualContentRect.y + scrollMovementLength * _scrollPos.y,
-                    _verticalScrollBarWidth,
-                    scrollbarHeight
-                );
-
-                var verticalScrollbarBackgroundRect = new Rect(
-                    verticalScrollPos,
-                    actualContentRect.y,
-                    _verticalScrollBarWidth,
-                    actualContentRect.height
-                );
-
-                _scrollPos.y =
-                    DoGenericScrollbar(
-                        current,
-                        _scrollPos.y,
-                        verticalScrollbarRect, verticalScrollbarBackgroundRect,
-                        _verticalScrollId,
-                        true,
-                        scrollMovementLength
-                    );
+                _scrollPos.y = Mathf.Clamp01(_scrollPos.y + currentEvent.delta.y / scrollMovementLength);
+                return;
             }
 
-            if (_needsHorizontalScroll) {
-                var scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
-                    actualContentRect.width * MinimalScrollbarSizeMultiplier);
-                var scrollMovementLength = actualContentRect.width - scrollBarWidth;
+            var verticalScrollPos = actualContentRect.xMax + _verticalScrollBarPadding;
 
-                var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
+            var verticalScrollbarRect = new Rect(
+                verticalScrollPos,
+                actualContentRect.y + scrollMovementLength * _scrollPos.y,
+                _verticalScrollBarWidth,
+                scrollbarHeight
+            );
 
-                var horizontalScrollbarRect = new Rect(
-                    actualContentRect.x + scrollMovementLength * _scrollPos.x,
-                    horizontalScrollPos,
-                    scrollBarWidth,
-                    _horizontalScrollBarHeight
+            var verticalScrollbarBackgroundRect = new Rect(
+                verticalScrollPos,
+                actualContentRect.y,
+                _verticalScrollBarWidth,
+                actualContentRect.height
+            );
+
+            _scrollPos.y =
+                DoGenericScrollbar(
+                    currentEvent,
+                    _scrollPos.y,
+                    verticalScrollbarRect, verticalScrollbarBackgroundRect,
+                    _verticalScrollId,
+                    true,
+                    scrollMovementLength
                 );
-                var horizontalScrollbarBackgroundRect = new Rect(
-                    actualContentRect.x,
-                    horizontalScrollPos,
-                    actualContentRect.width,
-                    _horizontalScrollBarHeight
-                );
+        }
+        private void DoHorizontalScroll(Event currentEvent, EventType eventType) {
+            var actualContentRect = ContentRectInternal;
 
-                _scrollPos.x =
-                    DoGenericScrollbar(
-                        current,
-                        _scrollPos.x,
-                        horizontalScrollbarRect,
-                        horizontalScrollbarBackgroundRect,
-                        _horizontalScrollId,
-                        false,
-                        scrollMovementLength
-                    );
-            }
+            var scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
+                actualContentRect.width * MinimalScrollbarSizeMultiplier);
+            var scrollMovementLength = actualContentRect.width - scrollBarWidth;
+
+            var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
+
+            var horizontalScrollbarRect = new Rect(
+                actualContentRect.x + scrollMovementLength * _scrollPos.x,
+                horizontalScrollPos,
+                scrollBarWidth,
+                _horizontalScrollBarHeight
+            );
+            var horizontalScrollbarBackgroundRect = new Rect(
+                actualContentRect.x,
+                horizontalScrollPos,
+                actualContentRect.width,
+                _horizontalScrollBarHeight
+            );
+
+            _scrollPos.x =
+                DoGenericScrollbar(
+                    currentEvent,
+                    _scrollPos.x,
+                    horizontalScrollbarRect,
+                    horizontalScrollbarBackgroundRect,
+                    _horizontalScrollId,
+                    false,
+                    scrollMovementLength
+                );
         }
     }
 }
