@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
+    // TODO: mouse wheel only works inside content area, when on scrollbar rect - no effect
     public class ScrollGroup : VerticalGroup {
         private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
@@ -152,7 +153,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var currentEventType = currentEvent.type;
 
             if(_needsHorizontalScroll) {
-                DoHorizontalScroll(currentEvent, currentEventType);
+                DoHorizontalScroll(currentEvent);
             }
 
             if(_needsVerticalScroll) {
@@ -166,65 +167,60 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
 
-        // TODO: This needs some love
-        private float DoGenericScrollbar(Event currentEvent, float scrollPos, Rect scrollbarRect,
-            Rect backgroundRect, int controlId, bool verticalBar, float totalMovementLength) {
-            switch (currentEvent.type) {
+        private float DoScroll(Event evt, float pos, Rect thumbRect, Rect scrollAreaRect, 
+            int controlId, float totalMovementLength, float relativeMousePos, float dragDelta) {
+            switch (evt.type) {
                 case EventType.MouseDown:
-                    var mousePos = currentEvent.mousePosition;
-                    if (backgroundRect.Contains(mousePos)) {
-                        currentEvent.Use();
+                    var mousePos = evt.mousePosition;
+                    if (scrollAreaRect.Contains(mousePos)) {
+                        evt.Use();
                         GUIUtility.keyboardControl = 0;
                         GUIUtility.hotControl = controlId;
 
-                        if (!scrollbarRect.Contains(mousePos)){
-                            scrollPos = verticalBar
-                                ? mousePos.y / ContentRectInternal.yMax
-                                : mousePos.x / ContentRectInternal.xMax;
+                        if (!thumbRect.Contains(mousePos)){
+                            pos = relativeMousePos;
                         }
                     }
 
                     break;
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlId) {
-                        currentEvent.Use();
+                        evt.Use();
                         GUIUtility.hotControl = 0;
                     }
 
                     break;
                 case EventType.MouseDrag:
                     if (GUIUtility.hotControl == controlId) {
-                        currentEvent.Use();
-                        var dragDelta = currentEvent.delta;
-                        var movementDelta = verticalBar ? dragDelta.y : dragDelta.x;
-                        scrollPos = Mathf.Clamp01(scrollPos + movementDelta / totalMovementLength);
+                        evt.Use();
+                        pos = Mathf.Clamp01(pos + dragDelta / totalMovementLength);
                     }
                     break;
                 case EventType.Repaint:
                     // Background
-                    if (_backgroundColor.a > 0f) EditorGUI.DrawRect(backgroundRect, _backgroundColor);
+                    if (_backgroundColor.a > 0f) EditorGUI.DrawRect(scrollAreaRect, _backgroundColor);
 
                     // Actual scrollbar
-                    EditorGUI.DrawRect(scrollbarRect, _scrollbarColor);
+                    EditorGUI.DrawRect(thumbRect, _scrollbarColor);
 
                     break;
             }
 
-            return scrollPos;
+            return pos;
         }
     
-        private void DoVerticalScroll(Event currentEvent, EventType eventType) {
+        private void DoVerticalScroll(Event evt, EventType evtType) {
             var actualContentRect = ContentRectInternal;
 
             var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
                 actualContentRect.height * MinimalScrollbarSizeMultiplier);
             var scrollMovementLength = actualContentRect.height - scrollbarHeight;
 
-            if (eventType == EventType.ScrollWheel && actualContentRect.Contains(currentEvent.mousePosition)) {
-                currentEvent.Use();
+            if (evtType == EventType.ScrollWheel && actualContentRect.Contains(evt.mousePosition)) {
+                evt.Use();
                 GUIUtility.keyboardControl = 0;
 
-                _scrollPos.y = Mathf.Clamp01(_scrollPos.y + currentEvent.delta.y / scrollMovementLength);
+                _scrollPos.y = Mathf.Clamp01(_scrollPos.y + evt.delta.y / scrollMovementLength);
                 return;
             }
 
@@ -245,16 +241,17 @@ namespace SoftKata.ExtendedEditorGUI {
             );
 
             _scrollPos.y =
-                DoGenericScrollbar(
-                    currentEvent,
+                DoScroll(
+                    evt,
                     _scrollPos.y,
                     verticalScrollbarRect, verticalScrollbarBackgroundRect,
                     _verticalScrollId,
-                    true,
-                    scrollMovementLength
+                    scrollMovementLength,
+                    evt.mousePosition.y / ContentRectInternal.yMax,
+                    evt.delta.y
                 );
         }
-        private void DoHorizontalScroll(Event currentEvent, EventType eventType) {
+        private void DoHorizontalScroll(Event evt) {
             var actualContentRect = ContentRectInternal;
 
             var scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
@@ -277,14 +274,15 @@ namespace SoftKata.ExtendedEditorGUI {
             );
 
             _scrollPos.x =
-                DoGenericScrollbar(
-                    currentEvent,
+                DoScroll(
+                    evt,
                     _scrollPos.x,
                     horizontalScrollbarRect,
                     horizontalScrollbarBackgroundRect,
                     _horizontalScrollId,
-                    false,
-                    scrollMovementLength
+                    scrollMovementLength,
+                    evt.mousePosition.x / ContentRectInternal.xMax,
+                    evt.delta.x
                 );
         }
     }
