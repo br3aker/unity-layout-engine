@@ -161,7 +161,7 @@ namespace SoftKata.ExtendedEditorGUI {
             else if(_isFirstLayoutBuild) {
                 _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
-                ExtendedEditorGUI.CurrentViewRepaint();;
+                ExtendedEditorGUI.CurrentViewRepaint();
             }
         }
 
