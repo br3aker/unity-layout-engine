@@ -80,6 +80,7 @@ namespace SoftKata.ExtendedEditorGUI {
         }
 
         private Vector2 _visibleAreaSize;
+        private bool _specialFlag = false;
 
         protected override void PreLayoutRequest() {
             // Resetting total offset to if scrollbars are not used
@@ -145,6 +146,12 @@ namespace SoftKata.ExtendedEditorGUI {
         internal override void EndNonLayout() {
             base.EndNonLayout();
             DoScrollbars();
+
+            if(!_needsVerticalScroll && !_specialFlag) {
+                MarkLayoutDirty();
+                ExtendedEditorGUI.CurrentViewRepaint();
+                _specialFlag = true;
+            }
         }
 
 
