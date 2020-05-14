@@ -2,7 +2,6 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.ExtendedEditorGUI {
-    // TODO: mouse wheel only works inside content area, when on scrollbar rect - no effect
     public class ScrollGroup : VerticalGroup {
         private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
@@ -216,7 +215,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 actualContentRect.height * MinimalScrollbarSizeMultiplier);
             var scrollMovementLength = actualContentRect.height - scrollbarHeight;
 
-            if (evtType == EventType.ScrollWheel && actualContentRect.Contains(evt.mousePosition)) {
+            if (evtType == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
                 evt.Use();
                 GUIUtility.keyboardControl = 0;
 
