@@ -95,7 +95,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
                 _emptyListIcon = Resources.ListView.EmptyIcon;
 
-                _contentScrollGroup = new ScrollGroup(container, Vector2.zero, false);
+                _contentScrollGroup = new ScrollGroup(container, false);
 
                 _elementHeight = elementHeight;
                 _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;
@@ -119,7 +119,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Core
             public void OnGUI() {
-                var preScrollPos = _contentScrollGroup.ScrollPosY;
+                var preScrollPos = _contentScrollGroup.VerticalScroll;
                 if (Layout.BeginLayoutGroupRetained(_contentScrollGroup)) {
                     if(Count != 0) {
                         DoContent();
@@ -131,7 +131,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 }
 
                 // if scroll pos changed => recalculate visible elements & rebind drawers if needed
-                if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.ScrollPosY) && Event.current.type != EventType.Layout) {
+                if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.VerticalScroll) && Event.current.type != EventType.Layout) {
                     RebindDrawers();
                 }
             }
@@ -162,7 +162,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     case State.ScrollingToIndex:
                         if(Event.current.type == EventType.Repaint) {
                             DoVisibleContent();
-                            _contentScrollGroup.ScrollPosY = _animator.value;
+                            _contentScrollGroup.VerticalScroll = _animator.value;
                         }
 
                         if(!_animator.isAnimating) {
@@ -364,7 +364,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     visibleCount = Count;
                 }
                 else {
-                    _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.ScrollPosY;
+                    _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.VerticalScroll;
 
                     if(!PositionToDataIndex(0, out firstVisibleIndex)) {
                         firstVisibleIndex += 1;
@@ -523,12 +523,12 @@ namespace SoftKata.ExtendedEditorGUI {
 
             public void GoTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
-                _contentScrollGroup.ScrollPosY = indexScrollPos;
+                _contentScrollGroup.VerticalScroll = indexScrollPos;
                 RebindDrawers();
             }
             public void ScrollTo(int index) {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
-                _animator.value = _contentScrollGroup.ScrollPosY;
+                _animator.value = _contentScrollGroup.VerticalScroll;
                 _animator.target = indexScrollPos;
 
                 _state = State.ScrollingToIndex;
@@ -540,6 +540,7 @@ namespace SoftKata.ExtendedEditorGUI {
             protected abstract void AcceptDragData();
             protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
         }
+        
         public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             // Data source
             public SerializedObject _serializedObject;
@@ -582,6 +583,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _serializedObject.ApplyModifiedProperties();
             }
         }
+        
         public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
             // Data source
             private readonly IList<TData> _sourceList;

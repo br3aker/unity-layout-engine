@@ -34,23 +34,19 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private readonly Color _scrollbarColor;
 
-        private Vector2 _scrollPos;
-        public Vector2 ScrollPos {get => _scrollPos; set => _scrollPos = value;}
-        public float ScrollPosX {get => _scrollPos.x; set => _scrollPos.x = value;}
-        public float ScrollPosY {get => _scrollPos.y; set => _scrollPos.y = value;}
+        public float HorizontalScroll { get; set; }
+        public float VerticalScroll { get; set; }
 
         private bool _disableScrollbars;
 
         private Vector2 _actualContentSize;
 
-        public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
+        public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             Clip = true;
 
             ContainerSize = containerSize;
 
             // Scroll settings
-            _scrollPos = scrollPos;
-
             var margin = style.margin;
             _rightMargin = margin.right;
             _bottomMargin = margin.bottom;
@@ -72,8 +68,8 @@ namespace SoftKata.ExtendedEditorGUI {
             _backgroundColor = style.normal.textColor;
             _scrollbarColor = style.onNormal.textColor;
         }
-        public ScrollGroup(Vector2 containerSize, Vector2 scrollPos, bool disableScrollbars = false, bool ignoreConstaints = false)
-            : this(containerSize, scrollPos, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
+        public ScrollGroup(Vector2 containerSize, bool disableScrollbars = false, bool ignoreConstaints = false)
+            : this(containerSize, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
@@ -137,8 +133,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 // scroll content offset
                 var contentOffset =
                     new Vector2(
-                        Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, _scrollPos.x),
-                        Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, _scrollPos.y)
+                        Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, HorizontalScroll),
+                        Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, VerticalScroll)
                     );
                 NextEntryPosition += contentOffset;
                 return true;
@@ -219,7 +215,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 evt.Use();
                 GUIUtility.keyboardControl = 0;
 
-                _scrollPos.y = Mathf.Clamp01(_scrollPos.y + evt.delta.y / scrollMovementLength);
+                VerticalScroll = Mathf.Clamp01(VerticalScroll + evt.delta.y / scrollMovementLength);
                 return;
             }
 
@@ -227,7 +223,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
             var verticalScrollbarRect = new Rect(
                 verticalScrollPos,
-                actualContentRect.y + scrollMovementLength * _scrollPos.y,
+                actualContentRect.y + scrollMovementLength * VerticalScroll,
                 _verticalScrollBarWidth,
                 scrollbarHeight
             );
@@ -239,10 +235,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 actualContentRect.height
             );
 
-            _scrollPos.y =
+            VerticalScroll =
                 DoScroll(
                     evt,
-                    _scrollPos.y,
+                    VerticalScroll,
                     verticalScrollbarRect, verticalScrollbarBackgroundRect,
                     _verticalScrollId,
                     scrollMovementLength,
@@ -260,7 +256,7 @@ namespace SoftKata.ExtendedEditorGUI {
             var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
 
             var horizontalScrollbarRect = new Rect(
-                actualContentRect.x + scrollMovementLength * _scrollPos.x,
+                actualContentRect.x + scrollMovementLength * HorizontalScroll,
                 horizontalScrollPos,
                 scrollBarWidth,
                 _horizontalScrollBarHeight
@@ -272,10 +268,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalScrollBarHeight
             );
 
-            _scrollPos.x =
+            HorizontalScroll =
                 DoScroll(
                     evt,
-                    _scrollPos.x,
+                    HorizontalScroll,
                     horizontalScrollbarRect,
                     horizontalScrollbarBackgroundRect,
                     _horizontalScrollId,

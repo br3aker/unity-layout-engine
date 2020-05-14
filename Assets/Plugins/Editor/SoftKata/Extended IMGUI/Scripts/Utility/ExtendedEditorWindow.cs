@@ -21,7 +21,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _headerBar = CreateHeader();
 
             // Content
-            _rootScrollGroup = new ScrollGroup(Vector2.zero, Vector2.zero, false);
+            _rootScrollGroup = new ScrollGroup(Vector2.zero, false);
 
             Initialize();
         }
