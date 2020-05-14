@@ -23,7 +23,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public float SpaceBetweenEntries { get; protected set; }
 
         protected int EntriesCount;
-        [Obsolete] public bool IsGroupValid {get; protected set;}
 
         protected bool IsLayoutEvent = true;
 
@@ -36,6 +35,8 @@ namespace SoftKata.ExtendedEditorGUI {
         protected Rect ContentRectInternal;
 
         public Rect ContentRect => ContentRectInternal;
+
+        private bool _isLayoutDirty = true;
 
         // Background texture rendering
         private Texture _backgroundTexture;
@@ -72,7 +73,27 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Layout event
         protected abstract void PreLayoutRequest();
-        internal void BeginLayout(LayoutGroup parent) {
+
+        // Returns [true] if layout must be recalculated
+        // Returns [false] if layout can be skipped
+        internal bool BeginLayout(LayoutGroup parent) {
+            if(parent == null) {
+                if(_isLayoutDirty) {
+                    BeginLayoutInternal(parent);
+                    return true;
+                }
+                Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
+                return false;
+            }
+            else if(parent._isLayoutDirty) {
+                _isLayoutDirty = true;
+                BeginLayoutInternal(parent);
+                return true;
+            }
+
+            return false;
+        }
+        internal void BeginLayoutInternal(LayoutGroup parent) {
             EntriesRequestedSize = Vector2.zero;
 
             EntriesCount = 0;
@@ -97,7 +118,7 @@ namespace SoftKata.ExtendedEditorGUI {
         
             _isLayoutDirty = false;
         }
-        
+
         // Non-Layout event
         private void CalculateNonLayoutData() {
                 IsLayoutEvent = false;
@@ -196,33 +217,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public void MarkLayoutDirty() {
             _isLayoutDirty = true;
             Parent?.MarkLayoutDirty();
-        }
-        
-        private bool _isLayoutDirty = true;
-
-        // Returns [true] if layout must be recalculated
-        // Returns [false] if layout can be skipped
-        internal bool BeginLayoutRetained(LayoutGroup parent) {
-            if(parent == null) {
-                if(_isLayoutDirty) {
-                    BeginLayout(parent);
-                    return true;
-                }
-                Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
-                return false;
-            }
-            else if(parent._isLayoutDirty) {
-                _isLayoutDirty = true;
-                BeginLayout(parent);
-                return true;
-            }
-
-            return false;
-        }
-
-        internal void EndLayoutRetained() {
-            EndLayout();
-            _isLayoutDirty = false;
         }
     }
 }

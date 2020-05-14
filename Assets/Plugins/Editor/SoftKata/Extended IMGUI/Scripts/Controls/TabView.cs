@@ -86,14 +86,14 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Content
                 if (_animator.isAnimating) {
                     _scrollGroup.HorizontalScroll = currentAnimationPosition;
-                    if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
-                        if(Layout.BeginLayoutGroupRetained(_horizontalGroup)) {
+                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                        if(Layout.BeginLayoutGroup(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
-                            Layout.EndLayoutGroupRetained();
+                            Layout.EndLayoutGroup();
                         }
-                        Layout.EndLayoutGroupRetained();
+                        Layout.EndLayoutGroup();
                     }
                 }
                 else {

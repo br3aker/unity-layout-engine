@@ -234,24 +234,24 @@ namespace Development {
 
             public void OnGUI() {
                 _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
-                if(_fadeGroup.Visible && Layout.BeginLayoutGroupRetained(_fadeGroup)) {
-                    if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
+                if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
+                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                             var group = _nestedHorizontalGroups[i];
-                            if(Layout.BeginLayoutGroupRetained(group)) {
+                            if(Layout.BeginLayoutGroup(group)) {
                                 var width = group.AutomaticWidth;
                                 for(int j = 0; j < _horizontalEntriesCount; j++) {
                                     if(group.GetRect(width, 30, out var rect)) {
                                         EditorGUI.DrawRect(rect, Color.black);
                                     }
                                 }
-                                Layout.EndLayoutGroupRetained();
+                                Layout.EndLayoutGroup();
                             }
                         }
-                        Layout.EndLayoutGroupRetained();
+                        Layout.EndLayoutGroup();
                     }
 
-                    Layout.EndLayoutGroupRetained();
+                    Layout.EndLayoutGroup();
                 }
             }
         }
@@ -268,13 +268,13 @@ namespace Development {
                 _contentSize.x = EditorGUI.IntField(Layout.GetRect(16), "X size", _contentSize.x);
                 _contentSize.y = EditorGUI.IntField(Layout.GetRect(16), "Y size", _contentSize.y);
 
-                if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
+                if(Layout.BeginLayoutGroup(_scrollGroup)) {
                     if(Layout.GetRect(_contentSize.x, _contentSize.y, out var rect)) {
                         EditorGUI.DrawRect(rect, Color.red);
                         EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
                     }
                 }
-                Layout.EndLayoutGroupRetained();
+                Layout.EndLayoutGroup();
             }
         }
 
@@ -286,7 +286,7 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroupRetained(_flexibleHorizontalGroup)) {
+                if(Layout.BeginLayoutGroup(_flexibleHorizontalGroup)) {
                     Layout.GetRect(40, 55, out var fixedRect);
                     EditorGUI.DrawRect(fixedRect, Color.black);
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
@@ -297,7 +297,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
                 }
-                Layout.EndLayoutGroupRetained();
+                Layout.EndLayoutGroup();
             }
         }
     
@@ -311,20 +311,20 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroupRetained(_treeViewGroup)) {
+                if(Layout.BeginLayoutGroup(_treeViewGroup)) {
                     for(int i = 0; i < 3; i++) {
                         var rect = _treeViewGroup.GetLeafRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
 
-                    if(Layout.BeginLayoutGroupRetained(_treeViewChildGroup)) {
+                    if(Layout.BeginLayoutGroup(_treeViewChildGroup)) {
                         for(int i = 0; i < 3; i++) {
                             var rect = _treeViewChildGroup.GetLeafRect(40);
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
-                        Layout.EndLayoutGroupRetained();
+                        Layout.EndLayoutGroup();
                     }
 
                     for(int i = 0; i < 3; i++) {
@@ -332,7 +332,7 @@ namespace Development {
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
-                    Layout.EndLayoutGroupRetained();
+                    Layout.EndLayoutGroup();
                 }
             }
         }
