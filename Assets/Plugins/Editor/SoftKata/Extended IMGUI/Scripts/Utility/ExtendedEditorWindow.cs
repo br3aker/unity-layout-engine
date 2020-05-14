@@ -21,7 +21,7 @@ namespace SoftKata.ExtendedEditorGUI {
             _headerBar = CreateHeader();
 
             // Content
-            _rootScrollGroup = new ScrollGroup(Vector2.zero, Vector2.zero, false);
+            _rootScrollGroup = new ScrollGroup(Vector2.zero, false);
 
             Initialize();
         }
@@ -33,6 +33,10 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Header bar
             _headerBar.OnGUI();
+
+            var testRect = Layout.GetRect(16);
+            EditorGUI.DrawRect(testRect, Color.black);
+            EditorGUI.LabelField(testRect, testRect.size.ToString());
 
             // Content 
             _rootScrollGroup.ContainerSize = new Vector2(position.size.x, position.size.y - 100);

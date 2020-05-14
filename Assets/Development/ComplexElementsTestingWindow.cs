@@ -104,9 +104,13 @@ namespace Development {
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            // for(int i = 0; i < 10000; i++) {
-            //     EditorGUI.DrawRect(Layout.GetRect(16), Color.black);
+            // for(int i = 0; i < 20; i++) {
+            //     var rect = Layout.GetRect(16);
+            //     EditorGUI.DrawRect(rect, Color.black);
+            //     EditorGUI.LabelField(rect, rect.width.ToString());
             // }
+
+            // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
             // _tabsDrawer.OnGUI();
 
@@ -220,7 +224,7 @@ namespace Development {
 
             public ScrollViewTest(int nestedGroupCount) {
                 _fadeGroup = new VerticalFadeGroup(true);
-                _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 640), false);
 
                 _nestedHorizontalGroups = new LayoutGroup[nestedGroupCount];
                 for(int i = 0; i < nestedGroupCount; i++) {
@@ -257,7 +261,7 @@ namespace Development {
             private Vector2Int _contentSize = new Vector2Int(200, 400);
 
             public ScrollViewExpander() {
-                _scrollGroup = new ScrollGroup(new Vector2(-1, 400), Vector2.zero);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 400));
             }
 
             public void OnGUI() {

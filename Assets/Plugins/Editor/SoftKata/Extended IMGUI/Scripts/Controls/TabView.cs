@@ -50,7 +50,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 _underlineHeight = tabHeaderStyle.margin.bottom;
 
                 // Layout groups
-                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), new Vector2(initialTab / (tabHeaders.Length - 1), 0f), true, true);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, true) {
+                    HorizontalScroll = initialTab / (tabHeaders.Length - 1)
+                };
                 _horizontalGroup = new HorizontalGroup(true);
 
                 // Animators
@@ -83,7 +85,7 @@ namespace SoftKata.ExtendedEditorGUI {
 
                 // Content
                 if (_animator.isAnimating) {
-                    _scrollGroup.ScrollPosX = currentAnimationPosition;
+                    _scrollGroup.HorizontalScroll = currentAnimationPosition;
                     if(Layout.BeginLayoutGroupRetained(_scrollGroup)) {
                         if(Layout.BeginLayoutGroupRetained(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
