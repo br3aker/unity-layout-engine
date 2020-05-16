@@ -217,8 +217,6 @@ namespace SoftKata.ExtendedEditorGUI {
         public void MarkLayoutDirty() {
             _isLayoutDirty = true;
             Parent?.MarkLayoutDirty();
-
-            Debug.Log("MarkLayoutDirty");
         }
     }
 }

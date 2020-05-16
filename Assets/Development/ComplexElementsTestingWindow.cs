@@ -33,6 +33,12 @@ namespace Development {
                 EditorApplication.update -= Repaint;
             }
 
+            // Scroll view for general groups testing
+            _scrollViewTest = new ScrollViewTest(2500);
+            _scrollViewExpander = new ScrollViewExpander();
+            _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
+            _treeViewGroupTest = new TreeViewGroupTest();
+
             // List
             var listSize = 15;
             var numbersList = new List<int>(listSize);
@@ -82,28 +88,20 @@ namespace Development {
 
             // Tabs
             var tabHeaders = new[] {
-                new GUIContent("Tab 1"),
-                new GUIContent("Tab 2"),
-                new GUIContent("Tab 3")
+                new GUIContent("Label"),
+                new GUIContent("List"),
+                new GUIContent("Scroll")
             };
             var tabsContents = new IDrawableElement[] {
                 new StringLabelElement("Tab content #1"),
-                new StringLabelElement("Tab content #2"),
-                new StringLabelElement("Tab content #3")
-                // _arrayDrawer
+                _arrayDrawer,
+                _scrollViewTest
             };
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
-
-
-            // Scroll view for general groups testing
-            _scrollViewTest = new ScrollViewTest(2500);
-            _scrollViewExpander = new ScrollViewExpander();
-            _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
-            _treeViewGroupTest = new TreeViewGroupTest();
         }
 
         protected override void IMGUI() {
-            // DrawServiceInfo();
+            DrawServiceInfo();
 
             // for(int i = 0; i < 20; i++) {
             //     var rect = Layout.GetRect(16);
@@ -234,7 +232,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
