@@ -93,8 +93,8 @@ namespace SoftKata.ExtendedEditorGUI {
             _visibleAreaSize.x = (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
             _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
 
+            // 1st pass - checking if we actually need scrollbars
             if(!_disableScrollbars) {
-                // 1st pass - checking if we actually need scrollbars
                 if(EntriesRequestedSize.x > _visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                     TotalOffset.bottom += horizontalBarExtraHeight;
@@ -105,18 +105,18 @@ namespace SoftKata.ExtendedEditorGUI {
                     TotalOffset.right += verticalBarExtraWidth;
                     _visibleAreaSize.x -= verticalBarExtraWidth;
                 }
+            }
 
-                // 2nd pass - calculations based on 1st pass
-                if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
-                    _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
+            // 2nd pass - calculations based on 1st pass
+            if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
+                _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
 
-                    EntriesRequestedSize.x = _visibleAreaSize.x;
-                }
-                if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
-                    _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
-                    
-                    EntriesRequestedSize.y = _visibleAreaSize.y;
-                }
+                EntriesRequestedSize.x = _visibleAreaSize.x;
+            }
+            if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
+                _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
+                
+                EntriesRequestedSize.y = _visibleAreaSize.y;
             }
 
             // Applying offsets to actual group rect

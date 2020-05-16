@@ -89,7 +89,8 @@ namespace Development {
             var tabsContents = new IDrawableElement[] {
                 new StringLabelElement("Tab content #1"),
                 new StringLabelElement("Tab content #2"),
-                _arrayDrawer
+                new StringLabelElement("Tab content #3")
+                // _arrayDrawer
             };
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
 
@@ -102,7 +103,7 @@ namespace Development {
         }
 
         protected override void IMGUI() {
-            DrawServiceInfo();
+            // DrawServiceInfo();
 
             // for(int i = 0; i < 20; i++) {
             //     var rect = Layout.GetRect(16);
@@ -112,16 +113,16 @@ namespace Development {
 
             // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
-            // _tabsDrawer.OnGUI();
+            _tabsDrawer.OnGUI();
 
             // Profiler.BeginSample("ListView test");
             // _arrayDrawer.OnGUI();
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -179,7 +180,7 @@ namespace Development {
                         EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
                     }
                     
-                    EditorGUI.LabelField(rect, Content);
+                    EditorGUI.LabelField(rect, $"{Content} | {rect.width}");
                 }
             }
             public void OnGUI(Rect rect) {                   
