@@ -23,17 +23,20 @@ namespace SoftKata.ExtendedEditorGUI {
         public float SpaceBetweenEntries { get; protected set; }
 
         protected int EntriesCount;
-        public bool IsGroupValid {get; protected set;}
 
         protected bool IsLayoutEvent = true;
 
         // entries layout data
+        protected Vector2 EntriesRequestedSize;
+
         protected Vector2 NextEntryPosition;
 
         protected Rect ContainerRectInternal;
         protected Rect ContentRectInternal;
 
         public Rect ContentRect => ContentRectInternal;
+
+        private bool _isLayoutDirty = true;
 
         // Background texture rendering
         private Texture _backgroundTexture;
@@ -45,7 +48,9 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Automatic width for entries
         public float AutomaticWidth {get; protected set;}
-        protected virtual float GetAutomaticWidth() => AvailableWidth - TotalOffset.horizontal;
+        protected virtual float CalculateAutomaticContentWidth() {
+            return AvailableWidth - TotalOffset.horizontal;
+        }
         protected float AvailableWidth => Parent?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
 
         // Constructor
@@ -68,31 +73,52 @@ namespace SoftKata.ExtendedEditorGUI {
 
         // Layout event
         protected abstract void PreLayoutRequest();
-        internal void BeginLayout(LayoutGroup parent) {
-            ContentRectInternal.width = -1;
-            ContentRectInternal.height = 0;
 
-            NextEntryPosition = Vector2.zero;
+        // Returns [true] if layout must be recalculated
+        // Returns [false] if layout can be skipped
+        internal bool BeginLayout(LayoutGroup parent) {
+            if(parent == null) {
+                if(_isLayoutDirty) {
+                    BeginLayoutInternal(parent);
+                    return true;
+                }
+                Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
+                return false;
+            }
+            else if(parent._isLayoutDirty) {
+                _isLayoutDirty = true;
+                BeginLayoutInternal(parent);
+                return true;
+            }
+
+            return false;
+        }
+        internal void BeginLayoutInternal(LayoutGroup parent) {
+            EntriesRequestedSize = Vector2.zero;
+
             EntriesCount = 0;
 
             Parent = parent;
             IsLayoutEvent = true;
-            AutomaticWidth = GetAutomaticWidth();
+            
+            AutomaticWidth = CalculateAutomaticContentWidth();
         }
         internal void EndLayout() {
-            if (IsGroupValid = EntriesCount > 0) {
+            if (EntriesCount > 0) {
                 PreLayoutRequest();
 
                 if(Parent != null) {
                     ++Parent.EntriesCount;
-                    Parent.RegisterEntry(ContentRectInternal.width, ContentRectInternal.height);
+                    Parent.RegisterEntry(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height);
+                    Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
                 }
             }
-        }
         
+            _isLayoutDirty = false;
+        }
+
         // Non-Layout event
         private void CalculateNonLayoutData() {
                 IsLayoutEvent = false;
@@ -110,7 +136,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 // Background image rendering
                 if(Event.current.type == EventType.Repaint && _backgroundTexture) {
                     Graphics.DrawTexture(
-                        TotalOffset.Add(ContainerRectInternal),
+                        TotalOffset.Add(ContentRectInternal),
                         _backgroundTexture,
                         _left, _right, _top, _bottom
                     );
@@ -121,24 +147,21 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
-                var requestedSize = ContentRectInternal.size;
-                if(IsGroupValid = Parent.QueryEntry(requestedSize.x, requestedSize.y, out Rect requestedRect)) {
-                    // Content & container rects
-                    ContentRectInternal = TotalOffset.Remove(requestedRect);
-                    ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
-                }
+                var isGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect);
+                if(!isGroupValid) return false;
+                
+                // Content & container rects
+                ContentRectInternal = TotalOffset.Remove(requestedRect);
+                ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(ContentRectInternal.width, ContentRectInternal.height));
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y));
                 ContentRectInternal = ContainerRectInternal;
             }
 
-            if (IsGroupValid) {
-                CalculateNonLayoutData();
-                return true;
-            }
-            return false;
+            CalculateNonLayoutData();
+            return true;
         } 
         internal virtual void EndNonLayout() {
             if(Clip) {
@@ -189,6 +212,11 @@ namespace SoftKata.ExtendedEditorGUI {
         }
         public Rect GetRect(float height) {
             return GetRect(AutomaticWidth, height);
+        }
+    
+        public void MarkLayoutDirty() {
+            _isLayoutDirty = true;
+            Parent?.MarkLayoutDirty();
         }
     }
 }

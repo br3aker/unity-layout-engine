@@ -16,12 +16,7 @@ namespace SoftKata.ExtendedEditorGUI {
             set => _containerWidth = value;
         }
 
-        protected override float GetAutomaticWidth() {
-            // This is a hack, _fixedEntriesCount must be reset
-            // But we don't have access to reset mechanism of base class
-            _fixedEntriesCount = 0;
-            return -1;
-        }
+        protected override float CalculateAutomaticContentWidth() => 0;
 
         public FlexibleHorizontalGroup(float width, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _containerWidth = width;
@@ -30,37 +25,31 @@ namespace SoftKata.ExtendedEditorGUI {
             : this(width, ExtendedEditorGUI.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            // vertical "service" height addition: margin/border/padding
-            ContentRectInternal.height += TotalOffset.vertical;
+            EntriesRequestedSize.y += TotalOffset.vertical;
 
-            _fixedWidth = ContentRectInternal.width;
-            ContentRectInternal.width = _containerWidth > 0 ? (_containerWidth + TotalOffset.horizontal) : AvailableWidth;
-        }
-    
-        internal override bool BeginNonLayout() {
-            if(base.BeginNonLayout()) {
-                var totalFlexibleWidth = ContentRectInternal.width - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1);
-                AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
-                return true;
-            }
-            return false;
+            _fixedWidth = EntriesRequestedSize.x;
+            
+            EntriesRequestedSize.x = _containerWidth > 0 ? _containerWidth : AvailableWidth;
+
+            var totalFlexibleWidth = EntriesRequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
+            AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
         }
 
         // Entry registration and querying
         protected override void RegisterEntry(float width, float height) {
             if(width > 0) {
-                ContentRectInternal.width += width;
+                EntriesRequestedSize.x += width;
                 ++_fixedEntriesCount;
             }
-            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, height);
+            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, height);
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0) {
-                ContentRectInternal.width += elemWidth * count;
+                EntriesRequestedSize.x += elemWidth * count;
                 ++_fixedEntriesCount;
             }
             EntriesCount += count;
-            ContentRectInternal.height = Mathf.Max(ContentRectInternal.height, elemHeight);
+            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, elemHeight);
         }
     }
 }

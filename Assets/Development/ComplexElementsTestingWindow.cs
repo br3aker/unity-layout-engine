@@ -14,7 +14,7 @@ namespace Development {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
 
-        private bool _alwaysRepaint;
+        private bool _alwaysRepaint = false;
 
         private TabView _tabsDrawer;
 
@@ -32,6 +32,12 @@ namespace Development {
             else {
                 EditorApplication.update -= Repaint;
             }
+
+            // Scroll view for general groups testing
+            _scrollViewTest = new ScrollViewTest(2500);
+            _scrollViewExpander = new ScrollViewExpander();
+            _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
+            _treeViewGroupTest = new TreeViewGroupTest();
 
             // List
             var listSize = 15;
@@ -82,38 +88,39 @@ namespace Development {
 
             // Tabs
             var tabHeaders = new[] {
-                new GUIContent("Tab 1"),
-                new GUIContent("Tab 2"),
-                new GUIContent("Tab 3")
+                new GUIContent("Label"),
+                new GUIContent("List"),
+                new GUIContent("Scroll")
             };
             var tabsContents = new IDrawableElement[] {
                 new StringLabelElement("Tab content #1"),
-                new StringLabelElement("Tab content #2"),
-                _arrayDrawer
+                _arrayDrawer,
+                _scrollViewTest
             };
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
-
-
-            // Scroll view for general groups testing
-            _scrollViewTest = new ScrollViewTest(2500);
-            _scrollViewExpander = new ScrollViewExpander();
-            _flexibleHorizontalGroupTest = new FlexibleHorizontalGroupTest();
-            _treeViewGroupTest = new TreeViewGroupTest();
         }
 
         protected override void IMGUI() {
             DrawServiceInfo();
 
-            // _tabsDrawer.OnGUI();
+            // for(int i = 0; i < 20; i++) {
+            //     var rect = Layout.GetRect(16);
+            //     EditorGUI.DrawRect(rect, Color.black);
+            //     EditorGUI.LabelField(rect, rect.width.ToString());
+            // }
+
+            // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
+
+            _tabsDrawer.OnGUI();
 
             // Profiler.BeginSample("ListView test");
             // _arrayDrawer.OnGUI();
             // Profiler.EndSample();
 
             
-            Profiler.BeginSample("Scroll group");
-            _scrollViewTest.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("Scroll group");
+            // _scrollViewTest.OnGUI();
+            // Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -171,7 +178,7 @@ namespace Development {
                         EditorGUI.DrawRect(rect, new Color(0.35f, 0.35f, 0.35f));
                     }
                     
-                    EditorGUI.LabelField(rect, Content);
+                    EditorGUI.LabelField(rect, $"{Content} | {rect.width}");
                 }
             }
             public void OnGUI(Rect rect) {                   
@@ -216,7 +223,7 @@ namespace Development {
 
             public ScrollViewTest(int nestedGroupCount) {
                 _fadeGroup = new VerticalFadeGroup(true);
-                _scrollGroup = new ScrollGroup(new Vector2(-1, 640), Vector2.zero, false);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 640), false);
 
                 _nestedHorizontalGroups = new LayoutGroup[nestedGroupCount];
                 for(int i = 0; i < nestedGroupCount; i++) {
@@ -225,7 +232,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
@@ -253,7 +260,7 @@ namespace Development {
             private Vector2Int _contentSize = new Vector2Int(200, 400);
 
             public ScrollViewExpander() {
-                _scrollGroup = new ScrollGroup(new Vector2(-1, 400), Vector2.zero);
+                _scrollGroup = new ScrollGroup(new Vector2(-1, 400));
             }
 
             public void OnGUI() {
@@ -316,17 +323,16 @@ namespace Development {
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
+                        Layout.EndLayoutGroup();
                     }
-                    Layout.EndLayoutGroup();
-                    
 
                     for(int i = 0; i < 3; i++) {
                         var rect =  _treeViewGroup.GetLeafRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
+                    Layout.EndLayoutGroup();
                 }
-                Layout.EndLayoutGroup();
             }
         }
     }

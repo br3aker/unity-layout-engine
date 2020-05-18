@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -20,12 +22,14 @@ namespace SoftKata.ExtendedEditorGUI {
             return GetRectFromUnityLayout(EditorGUIUtility.currentViewWidth - 2, height);
         }
 
-        // Layout group management
+        // Layout group management       
         public static bool BeginLayoutGroup(LayoutGroup group) {
             if(Event.current.type == EventType.Layout) {
-                group.BeginLayout(_currentGroup);
-                _currentGroup = group;
-                return true;
+                if(group.BeginLayout(_currentGroup)) {
+                    _currentGroup = group;
+                    return true;
+                }
+                return false;
             }
             if(group.BeginNonLayout()) {
                 _currentGroup = group;
@@ -38,30 +42,7 @@ namespace SoftKata.ExtendedEditorGUI {
             if(Event.current.type == EventType.Layout) {
                 group.EndLayout();
             }
-            else if(group.IsGroupValid) {
-                group.EndNonLayout();
-            }
-            _currentGroup = group.Parent;
-        }
-        
-        public static bool BeginLayoutGroupRetained(LayoutGroup group) {
-            if(Event.current.type == EventType.Layout) {
-                group.BeginLayout(_currentGroup);
-                _currentGroup = group;
-                return true;
-            }
-            if(group.BeginNonLayout()) {
-                _currentGroup = group;
-                return true;
-            }
-            return false;
-        }
-        public static void EndLayoutGroupRetained() {
-            var group = _currentGroup;
-            if(Event.current.type == EventType.Layout) {
-                group.EndLayout();
-            }
-            else if(group.IsGroupValid) {
+            else {
                 group.EndNonLayout();
             }
             _currentGroup = group.Parent;
