@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
+
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 namespace SoftKata.ExtendedEditorGUI {
@@ -13,6 +14,7 @@ namespace SoftKata.ExtendedEditorGUI {
         // Content
         private ScrollGroup _rootScrollGroup;
 
+        private Animations.FloatTween _testTween;
 
         private void OnEnable() {
             CurrentWindow = this;
@@ -33,10 +35,6 @@ namespace SoftKata.ExtendedEditorGUI {
 
             // Header bar
             _headerBar.OnGUI();
-
-            var testRect = Layout.GetRect(16);
-            EditorGUI.DrawRect(testRect, Color.black);
-            EditorGUI.LabelField(testRect, testRect.size.ToString());
 
             // Content 
             _rootScrollGroup.ContainerSize = new Vector2(position.size.x, position.size.y - 100);

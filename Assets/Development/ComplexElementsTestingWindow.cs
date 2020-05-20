@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SoftKata.ExtendedEditorGUI;
+using SoftKata.ExtendedEditorGUI.Animations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -14,6 +15,7 @@ namespace Development {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
 
+        // [NonSerialized]
         private bool _alwaysRepaint = false;
 
         private TabView _tabsDrawer;
@@ -24,6 +26,8 @@ namespace Development {
         private ScrollViewExpander _scrollViewExpander;
         private FlexibleHorizontalGroupTest _flexibleHorizontalGroupTest;
         private TreeViewGroupTest _treeViewGroupTest;
+
+        private AnimationValuesTest _animationValuesTest;
 
         protected override void Initialize() {
             if (_alwaysRepaint) {
@@ -98,6 +102,8 @@ namespace Development {
                 _scrollViewTest
             };
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
+
+            _animationValuesTest = new AnimationValuesTest();
         }
 
         protected override void IMGUI() {
@@ -111,7 +117,9 @@ namespace Development {
 
             // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
-            _tabsDrawer.OnGUI();
+            // _tabsDrawer.OnGUI();
+
+            _animationValuesTest.OnGUI();
 
             // Profiler.BeginSample("ListView test");
             // _arrayDrawer.OnGUI();
@@ -331,6 +339,51 @@ namespace Development {
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
+                    Layout.EndLayoutGroup();
+                }
+            }
+        }
+
+        public class AnimationValuesTest : IDrawableElement {
+            private ScrollGroup updateSubsContainer;
+            private ScrollGroup tweensContainer;
+
+            private float _animTarget;
+
+            private FloatTween _floatTween;
+
+            public AnimationValuesTest() {
+                updateSubsContainer = new ScrollGroup(new Vector2(-1, 400), false);
+                tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
+
+                _floatTween = new FloatTween(0);
+                _floatTween.OnBegin.AddListener(() => Debug.Log("Tween start"));
+                _floatTween.OnFinish.AddListener(() => Debug.Log("Tween end"));
+                _floatTween.OnUpdate.AddListener(CurrentViewRepaint);
+            }
+
+            public void OnGUI() {
+                if(Layout.BeginLayoutGroup(updateSubsContainer)) {
+                    var subs = EditorApplication.update.GetInvocationList();
+                    EditorGUI.LabelField(Layout.GetRect(16), $"Sub count: {subs.Length}");
+                    for(int i = 0; i < subs.Length; i++) {
+                        var subMethod = subs[i].Method;
+                        EditorGUI.LabelField(Layout.GetRect(16), $"{subMethod.DeclaringType}::{subMethod.Name}( )");
+                    }
+
+                    updateSubsContainer.MarkLayoutDirty();
+                    Layout.EndLayoutGroup();
+                }
+
+                _animTarget = EditorGUI.FloatField(Layout.GetRect(16), "Target", _animTarget);
+
+                if(GUI.Button(Layout.GetRect(16), "Launch")) {
+                    _floatTween.Target = _animTarget;
+                }
+                
+                if(Layout.BeginLayoutGroup(tweensContainer)) {
+                    _floatTween.DrawDebugInfo();
+
                     Layout.EndLayoutGroup();
                 }
             }
