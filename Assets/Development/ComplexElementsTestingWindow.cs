@@ -357,9 +357,9 @@ namespace Development {
                 tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
 
                 _floatTween = new FloatTween(0);
-                _floatTween.OnBegin.AddListener(() => Debug.Log("Tween start"));
-                _floatTween.OnFinish.AddListener(() => Debug.Log("Tween end"));
-                _floatTween.OnUpdate.AddListener(CurrentViewRepaint);
+                _floatTween.OnBegin += () => Debug.Log("Tween start");
+                _floatTween.OnFinish += () => Debug.Log("Tween end");
+                _floatTween.OnUpdate += CurrentViewRepaint;
             }
 
             public void OnGUI() {

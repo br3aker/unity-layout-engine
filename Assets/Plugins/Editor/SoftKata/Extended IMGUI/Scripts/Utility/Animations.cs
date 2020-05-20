@@ -27,9 +27,9 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
         protected double LerpPosition { get; private set; }
 
-        public UnityEvent OnUpdate = new UnityEvent();
-        public UnityEvent OnBegin = new UnityEvent();
-        public UnityEvent OnFinish = new UnityEvent();
+        public event UnityAction OnUpdate;
+        public event UnityAction OnBegin;
+        public event UnityAction OnFinish;
 
         protected BaseTweenValue(T value) {
             _start = value;
