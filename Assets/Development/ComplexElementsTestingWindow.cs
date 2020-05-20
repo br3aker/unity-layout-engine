@@ -356,7 +356,7 @@ namespace Development {
                 updateSubsContainer = new ScrollGroup(new Vector2(-1, 400), false);
                 tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
 
-                _floatTween = new FloatTween(0);
+                _floatTween = new FloatTween();
                 _floatTween.OnBegin += () => Debug.Log("Tween start");
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
                 _floatTween.OnUpdate += CurrentViewRepaint;

@@ -53,9 +53,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             }
         }
 
-        private void StartAnimation() {
-            OnBegin?.Invoke();
-            
+        private void StartAnimation() {        
             if(!_isAnimating) {
                 EditorApplication.update += Update;
             }
@@ -63,6 +61,8 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
             LerpPosition = 0;
             _lastTime = EditorApplication.timeSinceStartup;
+
+            OnBegin?.Invoke();
         }
 
         // void ISerializationCallbackReceiver.OnAfterDeserialize() {
@@ -86,7 +86,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
     public class FloatTween : BaseTweenValue<float> {
         public override float Value => Mathf.Lerp(_start, _target, (float)LerpPosition);
 
-        public FloatTween(float value) : base(value) {}
+        public FloatTween(float value = 0) : base(value) {}
     }
 }
 
