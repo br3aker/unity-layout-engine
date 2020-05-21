@@ -351,6 +351,7 @@ namespace Development {
             private float _animTarget;
 
             private FloatTween _floatTween;
+            private BoolTween _boolTween;
 
             public AnimationValuesTest() {
                 updateSubsContainer = new ScrollGroup(new Vector2(-1, 400), false);
@@ -359,7 +360,9 @@ namespace Development {
                 _floatTween = new FloatTween();
                 _floatTween.OnBegin += () => Debug.Log("Tween start");
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
-                _floatTween.OnUpdate += CurrentViewRepaint;
+                // _floatTween.OnUpdate += CurrentViewRepaint;
+
+                _boolTween = new BoolTween();
             }
 
             public void OnGUI() {
@@ -374,15 +377,13 @@ namespace Development {
                     updateSubsContainer.MarkLayoutDirty();
                     Layout.EndLayoutGroup();
                 }
-
-                _animTarget = EditorGUI.FloatField(Layout.GetRect(16), "Target", _animTarget);
-
-                if(GUI.Button(Layout.GetRect(16), "Launch")) {
-                    _floatTween.Target = _animTarget;
-                }
                 
                 if(Layout.BeginLayoutGroup(tweensContainer)) {
-                    _floatTween.DrawDebugInfo();
+                    _floatTween.DebugGUI();
+
+                    EditorGUI.LabelField(Layout.GetRect(16), "---------------------------------------");
+
+                    _boolTween.DebugGUI();
 
                     Layout.EndLayoutGroup();
                 }

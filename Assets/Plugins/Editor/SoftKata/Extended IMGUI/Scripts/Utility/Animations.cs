@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace SoftKata.ExtendedEditorGUI.Animations {
     public abstract class BaseTweenValue<T> {// : ISerializationCallbackReceiver {
-        protected T _start;
+        protected T _origin;
         protected T _target;
 
         private double _lastTime;
@@ -32,7 +32,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         public event UnityAction OnFinish;
 
         protected BaseTweenValue(T value) {
-            _start = value;
+            _origin = value;
         }
 
         private void Update() {
@@ -49,7 +49,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
                 
                 EditorApplication.update -= Update;
                 _isAnimating = false;
-                _start = _target;
+                _origin = _target;
             }
         }
 
@@ -73,20 +73,48 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         //     Debug.Log("BaseTweenValue.OnBeforeSerialize");
         // }
 
-        public void DrawDebugInfo() {
-            EditorGUI.LabelField(Layout.GetRect(16), $"Speed: {Speed}");
+        public virtual void DebugGUI() {
+            Speed = EditorGUI.FloatField(Layout.GetRect(16), "Speed", Speed);
             EditorGUI.LabelField(Layout.GetRect(16), $"isAnimating: {_isAnimating}");
             EditorGUI.LabelField(Layout.GetRect(16), $"LerpPosition: {LerpPosition}");
-            EditorGUI.LabelField(Layout.GetRect(16), $"_start: {_start}");
+            EditorGUI.LabelField(Layout.GetRect(16), $"_start: {_origin}");
             EditorGUI.LabelField(Layout.GetRect(16), $"_target: {_target}");
             EditorGUI.LabelField(Layout.GetRect(16), $"Value: {Value}");
         }
     }
 
     public class FloatTween : BaseTweenValue<float> {
-        public override float Value => Mathf.Lerp(_start, _target, (float)LerpPosition);
+        public override float Value => Mathf.Lerp(_origin, _target, (float)LerpPosition);
 
         public FloatTween(float value = 0) : base(value) {}
+
+        public override void DebugGUI() {
+            var newTarget = EditorGUI.DelayedFloatField(Layout.GetRect(16), "New target", _target);
+            base.DebugGUI();
+
+            if(newTarget != _target) {
+                Target = newTarget;
+            }
+        }
+    }
+
+    public class BoolTween : BaseTweenValue<bool> {
+        public override bool Value {
+            get {
+                return Mathf.Lerp(_origin ? 1f : 0f, _target ? 1f : 0f, (float)LerpPosition) > 0;
+            }
+        }
+
+        public BoolTween(bool value = false) : base(value) {}
+
+        public override void DebugGUI() {
+            var newTarget = EditorGUI.Toggle(Layout.GetRect(16), "New target", _target);
+            base.DebugGUI();
+
+            if(newTarget != _target) {
+                Target = newTarget;
+            }
+        }
     }
 }
 
