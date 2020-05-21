@@ -22,8 +22,19 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
                 }
             }
         }
-
-        public abstract T Value {get;}
+        public T Value {
+            get => GetValue();
+            set {
+                if(IsAnimating) {
+                    EditorApplication.update -= Update;
+                    IsAnimating = false;
+                }
+                _origin = value;
+                _target = value;
+                LerpPosition = 1;
+            }
+        }
+        
 
         protected double LerpPosition { get; private set; } = 1;
 
@@ -47,9 +58,11 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             if(LerpPosition >= 1f) {
                 OnFinish?.Invoke();
                 
+                _origin = _target;
+                LerpPosition = 1f;
+
                 EditorApplication.update -= Update;
                 IsAnimating = false;
-                _origin = _target;
             }
         }
 
@@ -65,8 +78,9 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             OnBegin?.Invoke();
         }
 
-        public static implicit operator T(BaseTweenValue<T> tween) => tween.Value;
+        protected abstract T GetValue();
 
+        public static implicit operator T(BaseTweenValue<T> tween) => tween.Value;
 
         // void ISerializationCallbackReceiver.OnAfterDeserialize() {
         //     Debug.Log("BaseTweenValue.OnAfterDeserialize");
@@ -87,9 +101,10 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
     }
 
     public class FloatTween : BaseTweenValue<float> {
-        public override float Value => Mathf.Lerp(_origin, _target, (float)LerpPosition);
-
         public FloatTween(float value = 0) : base(value) {}
+
+        protected override float GetValue() => Mathf.Lerp(_origin, _target, (float)LerpPosition);
+
 
         public override void DebugGUI() {
             var newTarget = EditorGUI.DelayedFloatField(Layout.GetRect(16), "New target", _target);
@@ -102,16 +117,15 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
     }
 
     public class BoolTween : BaseTweenValue<bool> {
-        public override bool Value {
-            get {
-                var start = _origin ? 0f : 1f;
-                var end = 1f - start;
+        public BoolTween(bool value = false) : base(value) {}
 
-                return Mathf.Lerp(start, end, (float)LerpPosition) > 0;
-            }
+        protected override bool GetValue() {
+            var start = _origin ? 0f : 1f;
+            var end = 1f - start;
+
+            return Mathf.Lerp(start, end, (float)LerpPosition) > 0;
         }
 
-        public BoolTween(bool value = false) : base(value) {}
 
         public override void DebugGUI() {
             var newTarget = EditorGUI.Toggle(Layout.GetRect(16), "New target", _target);
