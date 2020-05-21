@@ -31,12 +31,14 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
                 }
                 _origin = value;
                 _target = value;
-                LerpPosition = 1;
+                _progress = 1;
             }
         }
         
-
-        protected double LerpPosition { get; private set; } = 1;
+        private double _progress = 1;
+        protected double LerpPosition {
+            get => _progress * _progress * (3f - 2f * _progress);
+        }
 
         public event UnityAction OnUpdate;
         public event UnityAction OnBegin;
@@ -51,15 +53,15 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             double delta = current - _lastTime;
             _lastTime = current;
 
-            LerpPosition += delta * Speed;
+            _progress += delta * Speed;
             
             OnUpdate?.Invoke();
 
-            if(LerpPosition >= 1f) {
+            if(_progress >= 1f) {
                 OnFinish?.Invoke();
                 
                 _origin = _target;
-                LerpPosition = 1f;
+                _progress = 1f;
 
                 EditorApplication.update -= Update;
                 IsAnimating = false;
@@ -72,7 +74,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
                 IsAnimating = true;
             }
 
-            LerpPosition = 0;
+            _progress = 0;
             _lastTime = EditorApplication.timeSinceStartup;
 
             OnBegin?.Invoke();

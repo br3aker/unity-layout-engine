@@ -8,6 +8,8 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+using SoftKata.ExtendedEditorGUI.Animations;
+
 using Debug = UnityEngine.Debug;
 
 
@@ -21,7 +23,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly IDrawableElement[] _contentDrawers;
 
             // Animators
-            private readonly AnimFloat _animator;
+            private readonly TweenFloat _animator;
 
             // Styling
             private readonly GUIStyle _tabHeaderStyle;
@@ -58,8 +60,11 @@ namespace SoftKata.ExtendedEditorGUI {
                 _horizontalGroup = new HorizontalGroup(true);
 
                 // Animators
-                _animator = new AnimFloat(initialTab);
-                _animator.valueChanged.AddListener(ExtendedEditorGUI.CurrentViewRepaint);
+                _animator = new TweenFloat(initialTab) {
+                    Speed = 3.25f
+                };
+                _animator.OnUpdate += ExtendedEditorGUI.CurrentViewRepaint;
+                _animator.OnFinish += _root.MarkLayoutDirty;
             }
             public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
                 : this(initialTab, tabHeaders, contentDrawers, underlineColor, Resources.TabHeader) { }
@@ -67,7 +72,7 @@ namespace SoftKata.ExtendedEditorGUI {
             public void OnGUI() {
                 if(Layout.BeginLayoutGroup(_root)) {
                     int currentSelection = CurrentTab;
-                    float currentAnimationPosition = _animator.value / (_tabHeaders.Length - 1);
+                    float currentAnimationPosition = _animator.Value / (_tabHeaders.Length - 1);
 
                     // Tabs
                     if (Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
@@ -82,7 +87,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     }
 
                     // Content
-                    if (_animator.isAnimating) {
+                    if (_animator.IsAnimating) {
                         _scrollGroup.HorizontalScroll = currentAnimationPosition;
                         if(Layout.BeginLayoutGroup(_scrollGroup)) {
                             if(Layout.BeginLayoutGroup(_horizontalGroup)) {
@@ -101,7 +106,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     // Change check
                     if (currentSelection != CurrentTab) {
                         CurrentTab = currentSelection;
-                        _animator.target = currentSelection;
+                        _animator.Target = currentSelection;
                         _root.MarkLayoutDirty();
                     }
 
