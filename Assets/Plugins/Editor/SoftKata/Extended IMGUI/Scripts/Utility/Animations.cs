@@ -64,6 +64,9 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             OnBegin?.Invoke();
         }
 
+        public static implicit operator T(BaseTweenValue<T> tween) => tween.Value;
+
+
         // void ISerializationCallbackReceiver.OnAfterDeserialize() {
         //     Debug.Log("BaseTweenValue.OnAfterDeserialize");
         // }
