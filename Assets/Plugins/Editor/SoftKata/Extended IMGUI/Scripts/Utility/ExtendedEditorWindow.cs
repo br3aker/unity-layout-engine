@@ -14,8 +14,6 @@ namespace SoftKata.ExtendedEditorGUI {
         // Content
         private ScrollGroup _rootScrollGroup;
 
-        private Animations.FloatTween _testTween;
-
         private void OnEnable() {
             CurrentWindow = this;
 

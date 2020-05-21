@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace SoftKata.ExtendedEditorGUI.Animations {
-    public abstract class BaseTweenValue<T> {// : ISerializationCallbackReceiver {
+    public abstract class TweenValueBase<T> {// : ISerializationCallbackReceiver {
         protected T _origin;
         protected T _target;
 
@@ -42,7 +42,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         public event UnityAction OnBegin;
         public event UnityAction OnFinish;
 
-        protected BaseTweenValue(T value) {
+        protected TweenValueBase(T value) {
             _origin = value;
         }
 
@@ -80,7 +80,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
         protected abstract T GetValue();
 
-        public static implicit operator T(BaseTweenValue<T> tween) => tween.Value;
+        public static implicit operator T(TweenValueBase<T> tween) => tween.Value;
 
         // void ISerializationCallbackReceiver.OnAfterDeserialize() {
         //     Debug.Log("BaseTweenValue.OnAfterDeserialize");
@@ -100,8 +100,8 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         }
     }
 
-    public class FloatTween : BaseTweenValue<float> {
-        public FloatTween(float value = 0) : base(value) {}
+    public class TweenFloat : TweenValueBase<float> {
+        public TweenFloat(float value = 0) : base(value) {}
 
         protected override float GetValue() => Mathf.Lerp(_origin, _target, (float)LerpPosition);
 
@@ -116,8 +116,8 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         }
     }
 
-    public class BoolTween : BaseTweenValue<bool> {
-        public BoolTween(bool value = false) : base(value) {}
+    public class TweenBool : TweenValueBase<bool> {
+        public TweenBool(bool value = false) : base(value) {}
 
         protected override bool GetValue() {
             var start = _origin ? 0f : 1f;
