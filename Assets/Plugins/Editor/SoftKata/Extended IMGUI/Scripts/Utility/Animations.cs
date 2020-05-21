@@ -16,6 +16,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         public T Target {
             set {
                 if(!_target.Equals(value)) {
+                    _origin = Value;
                     _target = value;
                     StartAnimation();
                 }
