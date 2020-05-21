@@ -24,7 +24,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
         public abstract T Value {get;}
 
-        protected double LerpPosition { get; private set; }
+        protected double LerpPosition { get; private set; } = 1;
 
         public event UnityAction OnUpdate;
         public event UnityAction OnBegin;
@@ -100,7 +100,10 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
     public class BoolTween : BaseTweenValue<bool> {
         public override bool Value {
             get {
-                return Mathf.Lerp(_origin ? 1f : 0f, _target ? 1f : 0f, (float)LerpPosition) > 0;
+                var start = _origin ? 0f : 1f;
+                var end = 1f - start;
+
+                return Mathf.Lerp(start, end, (float)LerpPosition) > 0;
             }
         }
 
