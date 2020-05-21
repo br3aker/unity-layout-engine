@@ -11,8 +11,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         private double _lastTime;
         
         public float Speed {get; set;} = 1;
-
-        private bool _isAnimating;
+        public bool IsAnimating { get; private set; }
 
         public T Target {
             set {
@@ -48,16 +47,16 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
                 OnFinish?.Invoke();
                 
                 EditorApplication.update -= Update;
-                _isAnimating = false;
+                IsAnimating = false;
                 _origin = _target;
             }
         }
 
         private void StartAnimation() {        
-            if(!_isAnimating) {
+            if(!IsAnimating) {
                 EditorApplication.update += Update;
+                IsAnimating = true;
             }
-            _isAnimating = true;
 
             LerpPosition = 0;
             _lastTime = EditorApplication.timeSinceStartup;
@@ -75,7 +74,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
         public virtual void DebugGUI() {
             Speed = EditorGUI.FloatField(Layout.GetRect(16), "Speed", Speed);
-            EditorGUI.LabelField(Layout.GetRect(16), $"isAnimating: {_isAnimating}");
+            EditorGUI.LabelField(Layout.GetRect(16), $"isAnimating: {IsAnimating}");
             EditorGUI.LabelField(Layout.GetRect(16), $"LerpPosition: {LerpPosition}");
             EditorGUI.LabelField(Layout.GetRect(16), $"_start: {_origin}");
             EditorGUI.LabelField(Layout.GetRect(16), $"_target: {_target}");
