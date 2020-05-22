@@ -7,7 +7,7 @@ using UnityEngine.Profiling;
 using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 
 namespace SoftKata.ExtendedEditorGUI {
-    public abstract class ExtendedEditorWindow : EditorWindow {
+    public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
         public const float HeaderBarPixelHeight = 20;
 
         // Header bar
@@ -16,8 +16,12 @@ namespace SoftKata.ExtendedEditorGUI {
         // Content
         private ScrollGroup _rootScrollGroup;
 
+        // Repaint routine
+        private int _repaintSubscribersCount;
+
         private void OnEnable() {
-            CurrentWindow = this;
+            // CurrentWindow = this;
+            Obsolete_CurrentWindow = this;
 
             // Content
             _rootScrollGroup = new ScrollGroup(Vector2.zero, false);
@@ -49,7 +53,26 @@ namespace SoftKata.ExtendedEditorGUI {
             Profiler.EndSample();
         }
 
+        // Repaint routine
+        public void RegisterRepaintRequest() {
+            if(_repaintSubscribersCount++ == 0) {
+                EditorApplication.update += Repaint;
+            }
+        }
+        public void UnregisterRepaintRequest() {
+            if(--_repaintSubscribersCount == 0) {
+                EditorApplication.update -= Repaint;
+            }
+        }
+
         protected abstract void Initialize();
         protected abstract void IMGUI();
+    }
+
+    public interface IRepaintable {
+        void Repaint();
+
+        void RegisterRepaintRequest();
+        void UnregisterRepaintRequest();
     }
 }
