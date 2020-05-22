@@ -128,7 +128,7 @@ namespace Development {
 
             // _tabsDrawer.OnGUI();
 
-            // _animationValuesTest.OnGUI();
+            _animationValuesTest.OnGUI();
 
             // Profiler.BeginSample("ListView test");
             // _arrayDrawer.OnGUI();
@@ -350,6 +350,8 @@ namespace Development {
             private TweenFloat _floatTween;
             private TweenBool _boolTween;
 
+            private TweenFloat[] _tweeners;
+
             public AnimationValuesTest() {
                 updateSubsContainer = new ScrollGroup(new Vector2(-1, 400), false);
                 tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
@@ -359,6 +361,14 @@ namespace Development {
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
 
                 _boolTween = new TweenBool();
+
+                int count = 2500;
+                _tweeners = new TweenFloat[count];
+                for(int i = 0; i < count; i++) {
+                    _tweeners[i] = new TweenFloat();
+                    _tweeners[i].OnBegin += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
+                    _tweeners[i].OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
+                }
             }
 
             public void OnGUI() {
@@ -372,6 +382,12 @@ namespace Development {
 
                     updateSubsContainer.MarkLayoutDirty();
                     Layout.EndLayoutGroup();
+                }
+
+                if(GUI.Button(Layout.GetRect(16), "Launch")) {
+                    for(int i = 0; i < _tweeners.Length; i++) {
+                        _tweeners[i].Target = UnityEngine.Random.value;
+                    }
                 }
                 
                 if(Layout.BeginLayoutGroup(tweensContainer)) {

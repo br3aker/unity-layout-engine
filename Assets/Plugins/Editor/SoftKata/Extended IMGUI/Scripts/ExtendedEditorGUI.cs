@@ -10,7 +10,17 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public static UnityAction CurrentViewRepaint {get; private set;}
 
-        public static EditorWindow CurrentWindow {
+        private static IRepaintable _currentView;
+        public static IRepaintable CurrentView {
+            get => _currentView;
+            internal set {
+                _currentView = value;
+                CurrentViewRepaint = value.Repaint;
+            }
+        }
+
+        [Obsolete]
+        public static EditorWindow Obsolete_CurrentWindow {
             set => CurrentViewRepaint = value.Repaint;
         }
         public static Editor CurrentInspector {
