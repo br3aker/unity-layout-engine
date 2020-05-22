@@ -141,7 +141,7 @@ namespace Development {
             return new WindowHeaderBar(
                 null,
                 new IDrawableElement[] {
-                    new WindowHeaderSearchBar(),
+                    new WindowHeaderSearchBar((str) => Debug.Log(str)),
                     new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
                     new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
                     new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))

@@ -95,7 +95,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 Unfolded
             }
 
-            private const string DefaultSearchBoxText = "Search...";
+            private const string DefaultSearchString = "Search...";
 
             private readonly GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
             private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
@@ -107,13 +107,13 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private readonly float _buttonWidth;
 
-            private string _currentSearchString = "";
+            private string _currentSearchString = DefaultSearchString;
 
             private State _state;
 
-            public event Action<string> SeachQueryUpdated;
+            public event Action<string> SeachQueryChanged;
 
-            public WindowHeaderSearchBar() {
+            public WindowHeaderSearchBar(Action<string> searchQueryChangedCallback) {
                 _animator = new TweenFloat() {
                     Speed = 6.5f
                 };
@@ -123,6 +123,8 @@ namespace SoftKata.ExtendedEditorGUI {
                 };
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
+
+                SeachQueryChanged += searchQueryChangedCallback;
             }
 
             public void OnGUI() {
@@ -163,7 +165,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 searchBoxRect.width = searchBoxWidth;
                 _searchBoxStyle.Draw(
                     searchBoxRect,
-                    _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString,
+                    _currentSearchString.Length == 0 ? DefaultSearchString : _currentSearchString,
                     false, false, false, false
                 );
 
@@ -179,13 +181,19 @@ namespace SoftKata.ExtendedEditorGUI {
                 var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
 
                 // actual search box
-                EditorGUI.BeginChangeCheck();
                 var searchBoxRect = controlRect;
                 searchBoxRect.width = searchBoxWidth;
-                string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
-                if(EditorGUI.EndChangeCheck() && newSearchString != DefaultSearchBoxText) {
-                    _currentSearchString = newSearchString;
-                    SeachQueryUpdated?.Invoke(newSearchString);
+
+                EditorGUI.BeginChangeCheck();
+                // string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
+                string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString, _searchBoxStyle);
+                if(EditorGUI.EndChangeCheck()) {
+                    if(newSearchString.Length != 0) {
+                        _currentSearchString = newSearchString;
+                        SeachQueryChanged?.Invoke(newSearchString);
+                        return;
+                    }
+                    _currentSearchString = DefaultSearchString;
                 }
 
                 // search box icon
