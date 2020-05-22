@@ -1,3 +1,5 @@
+using System;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -9,16 +11,13 @@ namespace SoftKata.ExtendedEditorGUI {
         public const float HeaderBarPixelHeight = 20;
 
         // Header bar
-        private WindowHeaderBar _headerBar;
+        protected WindowHeaderBar _headerBar;
 
         // Content
         private ScrollGroup _rootScrollGroup;
 
         private void OnEnable() {
             CurrentWindow = this;
-
-            // Header 
-            _headerBar = CreateHeader();
 
             // Content
             _rootScrollGroup = new ScrollGroup(Vector2.zero, false);
@@ -32,7 +31,7 @@ namespace SoftKata.ExtendedEditorGUI {
             Profiler.BeginSample($"[{Event.current.type}] ExtendedEditorWindow");
 
             // Header bar
-            _headerBar.OnGUI();
+            _headerBar?.OnGUI();
 
             // Content 
             _rootScrollGroup.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
@@ -52,7 +51,5 @@ namespace SoftKata.ExtendedEditorGUI {
 
         protected abstract void Initialize();
         protected abstract void IMGUI();
-
-        protected abstract WindowHeaderBar CreateHeader();
     }
 }

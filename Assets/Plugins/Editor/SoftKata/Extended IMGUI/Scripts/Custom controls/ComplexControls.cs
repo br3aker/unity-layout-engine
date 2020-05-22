@@ -65,23 +65,18 @@ namespace SoftKata.ExtendedEditorGUI {
         public class WindowHeaderBar {
             public const float HeaderHeight = 20;
 
-            private FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.GroupStyle);
+            internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.GroupStyle);
 
-            private Button _mainActionItem;
-            private IDrawableElement[] _actionItems;
-
-            public WindowHeaderBar(Button mainAction, params IDrawableElement[] actions) {
-                _mainActionItem = mainAction;
-                _actionItems = actions;
-            }
+            public Button MainActionItem {get; set;}
+            public IDrawableElement[] ActionItems {set; get;}
 
             public void OnGUI() {
                 _root.Width = Layout.CurrentContentWidth;
                 if(Layout.BeginLayoutGroup(_root)) {
-                    _mainActionItem?.OnGUI();
+                    MainActionItem?.OnGUI();
                     _root.GetRect(0);
-                    for(int i = 0; i < _actionItems.Length; i++) {
-                        _actionItems[i].OnGUI();
+                    for(int i = 0; i < ActionItems.Length; i++) {
+                        ActionItems[i].OnGUI();
                     }
                     Layout.EndLayoutGroup();
                 }
@@ -113,10 +108,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
             public event Action<string> SeachQueryChanged;
 
-            public WindowHeaderSearchBar(Action<string> searchQueryChangedCallback) {
+            public WindowHeaderSearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
                 _animator = new TweenFloat() {
                     Speed = 6.5f
                 };
+                _animator.OnUpdate += headerBar._root.MarkLayoutDirty;
                 _animator.OnBegin += () => _state = State.Animating;
                 _animator.OnFinish += () => {
                     _state = Mathf.Approximately(_animator.Value, 1) ? State.Unfolded : State.Folded;
@@ -148,9 +144,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
                 if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
                     _animator.Target = 1;
-
-                    var parentGroup = Layout._currentGroup;
-                    _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
                 }
                 if(Event.current.type == EventType.Repaint) {
                     _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
@@ -206,9 +199,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
                 if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
                     _animator.Target = 0;
-
-                    var parentGroup = Layout._currentGroup;
-                    _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
                 }
             }
         }

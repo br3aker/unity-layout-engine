@@ -30,6 +30,15 @@ namespace Development {
         private AnimationValuesTest _animationValuesTest;
 
         protected override void Initialize() {
+            _headerBar = new WindowHeaderBar();
+            _headerBar.ActionItems =
+                new IDrawableElement[] {
+                    new WindowHeaderSearchBar(_headerBar, (str) => Debug.Log(str)),
+                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
+                };
+
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
             }
@@ -135,18 +144,6 @@ namespace Development {
             // _flexibleHorizontalGroupTest.OnGUI();
             
             // _treeViewGroupTest.OnGUI();
-        }
-
-        protected override WindowHeaderBar CreateHeader() {
-            return new WindowHeaderBar(
-                null,
-                new IDrawableElement[] {
-                    new WindowHeaderSearchBar((str) => Debug.Log(str)),
-                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
-                }
-            );
         }
 
         private void DrawServiceInfo() {
