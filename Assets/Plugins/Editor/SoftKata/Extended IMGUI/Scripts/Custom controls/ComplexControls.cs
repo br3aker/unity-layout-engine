@@ -8,6 +8,8 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+using SoftKata.ExtendedEditorGUI.Animations;
+
 using Debug = UnityEngine.Debug;
 
 
@@ -63,7 +65,7 @@ namespace SoftKata.ExtendedEditorGUI {
         public class WindowHeaderBar {
             public const float HeaderHeight = 20;
 
-            private LayoutGroup _group = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.GroupStyle);
+            private FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.GroupStyle);
 
             private Button _mainActionItem;
             private IDrawableElement[] _actionItems;
@@ -74,9 +76,10 @@ namespace SoftKata.ExtendedEditorGUI {
             }
 
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(_group)) {
+                _root.Width = Layout.CurrentContentWidth;
+                if(Layout.BeginLayoutGroup(_root)) {
                     _mainActionItem?.OnGUI();
-                    _group.GetRect(0);
+                    _root.GetRect(0);
                     for(int i = 0; i < _actionItems.Length; i++) {
                         _actionItems[i].OnGUI();
                     }
@@ -93,7 +96,7 @@ namespace SoftKata.ExtendedEditorGUI {
             private readonly GUIStyle _buttonStyle = Resources.WindowHeader.ButtonStyle;
             private readonly GUIStyle _searchBoxStyle = Resources.WindowHeader.SearchBoxStyle;
 
-            private readonly AnimFloat _animator = new AnimFloat(0, CurrentViewRepaint);
+            private readonly TweenFloat _animator;
 
             private readonly float _buttonWidth;
 
@@ -103,24 +106,29 @@ namespace SoftKata.ExtendedEditorGUI {
             public event Action<string> SeachQueryUpdated;
 
             public WindowHeaderSearchBar() {
-                _animator.speed = 3.5f;
+                _animator = new TweenFloat() {
+                    Speed = 3.5f
+                };
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
             }
 
             public void OnGUI() {
-                if(Mathf.Approximately(_animator.value, 0)) {
+                if(Mathf.Approximately(_animator.Value, 0)) {
                     var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
                     if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
-                        _animator.target = 1;
+                        _animator.Target = 1;
+
+                        var parentGroup = Layout._currentGroup;
+                        _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
                     }
                     if(Event.current.type == EventType.Repaint) {
                         _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
                     }
                 }
                 else {
-                    var searchBoxWidth = _buttonWidth + EditorGUIUtility.currentViewWidth / 2 * _animator.value;
-                    var closeButtonWidth = _buttonWidth * _animator.value;
+                    var searchBoxWidth = _buttonWidth + (EditorGUIUtility.currentViewWidth - 2) / 2 * _animator.Value;
+                    var closeButtonWidth = _buttonWidth * _animator.Value;
 
                     var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
 
@@ -144,7 +152,10 @@ namespace SoftKata.ExtendedEditorGUI {
                     // cancel button
                     var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
                     if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
-                        _animator.target = 0;
+                        _animator.Target = 0;
+
+                        var parentGroup = Layout._currentGroup;
+                        _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
                     }
                 }
             }

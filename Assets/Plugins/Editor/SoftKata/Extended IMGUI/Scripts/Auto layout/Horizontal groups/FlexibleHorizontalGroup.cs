@@ -13,10 +13,18 @@ namespace SoftKata.ExtendedEditorGUI {
 
         public float Width {
             get => _containerWidth;
-            set => _containerWidth = value;
+            set {
+                if(_containerWidth != value) {
+                    MarkLayoutDirty();
+                    _containerWidth = value;
+                }
+            }
         }
 
-        protected override float CalculateAutomaticContentWidth() => 0;
+        protected override float CalculateAutomaticContentWidth() {
+            _fixedEntriesCount = 0;
+            return 0;
+        }
 
         public FlexibleHorizontalGroup(float width, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             _containerWidth = width;
@@ -33,6 +41,8 @@ namespace SoftKata.ExtendedEditorGUI {
 
             var totalFlexibleWidth = EntriesRequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
             AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
+
+            // Debug.Log(_fixedWidth);
         }
 
         // Entry registration and querying
