@@ -88,8 +88,15 @@ namespace SoftKata.ExtendedEditorGUI {
             }
         }
 
-        // TODO: OnGUI method needs some love & refactoring
         public class WindowHeaderSearchBar : IDrawableElement {
+            private enum State {
+                Folded,
+                Animating,
+                Unfolded
+            }
+
+            private const string DefaultSearchBoxText = "Search...";
+
             private readonly GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
             private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
 
@@ -100,63 +107,100 @@ namespace SoftKata.ExtendedEditorGUI {
 
             private readonly float _buttonWidth;
 
-            private const string DefaultSearchBoxText = "Search...";
             private string _currentSearchString = "";
+
+            private State _state;
 
             public event Action<string> SeachQueryUpdated;
 
             public WindowHeaderSearchBar() {
                 _animator = new TweenFloat() {
-                    Speed = 3.5f
+                    Speed = 6.5f
+                };
+                _animator.OnBegin += () => _state = State.Animating;
+                _animator.OnFinish += () => {
+                    _state = Mathf.Approximately(_animator.Value, 1) ? State.Unfolded : State.Folded;
                 };
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
             }
 
             public void OnGUI() {
-                if(Mathf.Approximately(_animator.Value, 0)) {
-                    var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
-                    if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
-                        _animator.Target = 1;
-
-                        var parentGroup = Layout._currentGroup;
-                        _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
-                    }
-                    if(Event.current.type == EventType.Repaint) {
-                        _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
-                    }
+                switch(_state) {
+                    case State.Folded:
+                        DoFolded();
+                        break;
+                    case State.Animating:
+                        var animProgress = _animator.Value;
+                        var searchBoxWidth = _buttonWidth + (EditorGUIUtility.currentViewWidth / 2 - 1) * _animator.Value;
+                        DoAnimations(searchBoxWidth, _buttonWidth * animProgress);
+                        break;
+                    case State.Unfolded:
+                        DoUnfolded(_buttonWidth + EditorGUIUtility.currentViewWidth / 2 - 1, _buttonWidth);
+                        break;
                 }
-                else {
-                    var searchBoxWidth = _buttonWidth + (EditorGUIUtility.currentViewWidth - 2) / 2 * _animator.Value;
-                    var closeButtonWidth = _buttonWidth * _animator.Value;
+                return;
+            }
+        
+            private void DoFolded() {
+                var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
+                if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
+                    _animator.Target = 1;
 
-                    var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
+                    var parentGroup = Layout._currentGroup;
+                    _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
+                }
+                if(Event.current.type == EventType.Repaint) {
+                    _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
+                }
+            }
+            private void DoAnimations(float searchBoxWidth, float closeButtonWidth) {
+                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
+                if(Event.current.type != EventType.Repaint) return;                
 
+                // search box
+                var searchBoxRect = controlRect;
+                searchBoxRect.width = searchBoxWidth;
+                _searchBoxStyle.Draw(
+                    searchBoxRect,
+                    _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString,
+                    false, false, false, false
+                );
 
-                    // actual search box
-                    EditorGUI.BeginChangeCheck();
-                    var searchBoxRect = controlRect;
-                    searchBoxRect.width = searchBoxWidth;
-                    string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
-                    if(EditorGUI.EndChangeCheck() && newSearchString != DefaultSearchBoxText) {
-                        _currentSearchString = newSearchString;
-                        SeachQueryUpdated?.Invoke(newSearchString);
-                    }
+                // search box icon
+                var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
 
-                    // search box icon
-                    if(Event.current.type == EventType.Repaint) {
-                        var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
-                        _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
-                    }
+                // cancel button
+                var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
+                _buttonStyle.Draw(cancelButtonRect, _cancelButtonContent, false, false, false, false);
+            }
+            private void DoUnfolded(float searchBoxWidth, float closeButtonWidth) {
+                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
 
-                    // cancel button
-                    var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
-                    if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
-                        _animator.Target = 0;
+                // actual search box
+                EditorGUI.BeginChangeCheck();
+                var searchBoxRect = controlRect;
+                searchBoxRect.width = searchBoxWidth;
+                string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
+                if(EditorGUI.EndChangeCheck() && newSearchString != DefaultSearchBoxText) {
+                    _currentSearchString = newSearchString;
+                    SeachQueryUpdated?.Invoke(newSearchString);
+                }
 
-                        var parentGroup = Layout._currentGroup;
-                        _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
-                    }
+                // search box icon
+                if(Event.current.type == EventType.Repaint) {
+                    var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                    _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
+                }
+
+                // cancel button
+                var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
+                if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
+                    _animator.Target = 0;
+
+                    var parentGroup = Layout._currentGroup;
+                    _animator.OnUpdate += () => parentGroup.MarkLayoutDirty();
                 }
             }
         }

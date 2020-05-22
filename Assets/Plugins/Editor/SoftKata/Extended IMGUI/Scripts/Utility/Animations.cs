@@ -36,7 +36,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         }
         
         private double _progress = 1;
-        protected double LerpPosition {
+        public double LerpPosition {
             get => _progress * _progress * (3f - 2f * _progress);
         }
 
@@ -58,13 +58,13 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             OnUpdate?.Invoke();
 
             if(_progress >= 1f) {
-                OnFinish?.Invoke();
-                
                 _origin = _target;
                 _progress = 1f;
 
                 EditorApplication.update -= Update;
                 IsAnimating = false;
+
+                OnFinish?.Invoke();
             }
         }
 

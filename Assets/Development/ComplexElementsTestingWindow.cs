@@ -360,7 +360,6 @@ namespace Development {
                 _floatTween = new TweenFloat();
                 _floatTween.OnBegin += () => Debug.Log("Tween start");
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
-                // _floatTween.OnUpdate += CurrentViewRepaint;
 
                 _boolTween = new TweenBool();
             }
