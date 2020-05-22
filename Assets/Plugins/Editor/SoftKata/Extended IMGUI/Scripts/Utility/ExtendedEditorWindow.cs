@@ -22,6 +22,7 @@ namespace SoftKata.ExtendedEditorGUI {
         private void OnEnable() {
             // CurrentWindow = this;
             Obsolete_CurrentWindow = this;
+            CurrentView = this;
 
             // Content
             _rootScrollGroup = new ScrollGroup(Vector2.zero, false);
