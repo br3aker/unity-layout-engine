@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class HorizontalGroup : LayoutGroup {
         public HorizontalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.x;
         }
         public HorizontalGroup(bool ignoreConstaints = false)
-            : this(ExtendedEditorGUI.Resources.HorizontalGroup, ignoreConstaints) {}
+            : this(ExtendedEditor.Resources.HorizontalGroup, ignoreConstaints) {}
         protected override void PreLayoutRequest() {
             EntriesRequestedSize.y += TotalOffset.vertical;
             EntriesRequestedSize.x += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);

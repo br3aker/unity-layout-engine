@@ -3,13 +3,13 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class VerticalGroup : LayoutGroup {
         public VerticalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.y;
         }
         public VerticalGroup(bool ignoreConstaints = false) 
-            : this(ExtendedEditorGUI.Resources.VerticalGroup, ignoreConstaints) {}
+            : this(ExtendedEditor.Resources.VerticalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             if(EntriesRequestedSize.x < 0) {

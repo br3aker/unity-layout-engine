@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using SoftKata.EditorGUI;
-using SoftKata.EditorGUI.Animations;
+using SoftKata.Editor;
+using SoftKata.Editor.Animations;
+using SoftKata.Editor.Controls;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
-using static SoftKata.EditorGUI.ExtendedEditorGUI;
+using static SoftKata.Editor.ExtendedEditor;
 
 namespace Development {
     public class ComplexElementsTestingWindow : ExtendedEditorWindow {
@@ -34,9 +33,9 @@ namespace Development {
             _headerBar.ActionItems =
                 new IDrawableElement[] {
                     new WindowHeaderSearchBar(_headerBar, (str) => Debug.Log(str)),
-                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditorGUI.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
+                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
                 };
 
             if (_alwaysRepaint) {
@@ -147,11 +146,11 @@ namespace Development {
         }
 
         private void DrawServiceInfo() {
-            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, out var labelRect)) {
+            if (Layout.GetRect(ExtendedEditor.LabelHeight, out var labelRect)) {
                 EditorGUI.LabelField(labelRect,
                     $"Always repaint: [{_alwaysRepaint}] | [{Mathf.Sin((float) EditorApplication.timeSinceStartup)}]");
             }
-            if (Layout.GetRect(ExtendedEditorGUI.LabelHeight, out var updateButtonRect)) {
+            if (Layout.GetRect(ExtendedEditor.LabelHeight, out var updateButtonRect)) {
                 if (GUI.Button(updateButtonRect, _alwaysRepaint ? "Always update" : "Update on action")) {
                     _alwaysRepaint = !_alwaysRepaint;
                     if (_alwaysRepaint) {
@@ -366,8 +365,8 @@ namespace Development {
                 _tweeners = new TweenFloat[count];
                 for(int i = 0; i < count; i++) {
                     _tweeners[i] = new TweenFloat();
-                    _tweeners[i].OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
-                    _tweeners[i].OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
+                    _tweeners[i].OnStart += ExtendedEditor.CurrentView.RegisterRepaintRequest;
+                    _tweeners[i].OnFinish += ExtendedEditor.CurrentView.UnregisterRepaintRequest;
                 }
             }
 

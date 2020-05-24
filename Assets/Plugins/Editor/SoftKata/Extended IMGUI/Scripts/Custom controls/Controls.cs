@@ -4,8 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace SoftKata.EditorGUI {
-    public static partial class ExtendedEditorGUI {
+namespace SoftKata.Editor {
+    public static partial class ExtendedEditor {
         private const int NoActiveControlId = int.MinValue;
 
         public const float LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant

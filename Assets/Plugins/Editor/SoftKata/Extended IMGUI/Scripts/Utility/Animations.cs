@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.EditorGUI.Animations {
+namespace SoftKata.Editor.Animations {
     public abstract class TweenValueBase<T> {// : ISerializationCallbackReceiver {
         protected T _origin;
         protected T _target;

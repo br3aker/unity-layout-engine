@@ -8,82 +8,81 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using SoftKata.EditorGUI.Animations;
+using SoftKata.Editor.Animations;
 
 using Debug = UnityEngine.Debug;
 
 
-namespace SoftKata.EditorGUI {
-    public static partial class ExtendedEditorGUI {
-        public interface IDrawableElement {
-            void OnGUI();
-        }
-        public interface IAbsoluteDrawableElement {
-            void OnGUI(Rect position);
+namespace SoftKata.Editor.Controls {
+    public interface IDrawableElement {
+        void OnGUI();
+    }
+    public interface IAbsoluteDrawableElement {
+        void OnGUI(Rect position);
+    }
+
+    public class DelegateElement : IDrawableElement {
+        private Action _drawer;
+
+        public DelegateElement(Action drawer) {
+            _drawer = drawer;
         }
 
-        public class DelegateElement : IDrawableElement {
-            private Action _drawer;
+        public void OnGUI() {
+            _drawer();
+        }
+    }
 
-            public DelegateElement(Action drawer) {
-                _drawer = drawer;
+    public class Button : IDrawableElement {
+        private GUIContent _content;
+        private GUIStyle _style;
+
+        private Action _action;
+
+        private float _height;
+        private float _width;
+
+        public Button(GUIContent content, GUIStyle style, Action action) {
+            _content = content;
+            _style = style;
+
+            _action = action;
+
+            var size = style.CalcSize(content);
+            _height = size.y;
+            _width = size.x;
+        } 
+        public Button(Texture icon, GUIStyle style, Action action) : this(new GUIContent(icon), style, action) {}
+
+        public void OnGUI() {
+            if(Layout.GetRect(_width, _height, out var rect) && GUI.Button(rect, _content, _style)) {
+                _action();
             }
-
-            public void OnGUI() {
-                _drawer();
-            }
         }
+    }
 
-        public class Button : IDrawableElement {
-            private GUIContent _content;
-            private GUIStyle _style;
+    public class WindowHeaderBar {
+        public const float HeaderHeight = 20;
 
-            private Action _action;
+        internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, ExtendedEditor.Resources.WindowHeader.GroupStyle);
 
-            private float _height;
-            private float _width;
+        public Button MainActionItem {get; set;}
+        public IDrawableElement[] ActionItems {set; get;}
 
-            public Button(GUIContent content, GUIStyle style, Action action) {
-                _content = content;
-                _style = style;
-
-                _action = action;
-
-                var size = style.CalcSize(content);
-                _height = size.y;
-                _width = size.x;
-            } 
-            public Button(Texture icon, GUIStyle style, Action action) : this(new GUIContent(icon), style, action) {}
-
-            public void OnGUI() {
-                if(Layout.GetRect(_width, _height, out var rect) && GUI.Button(rect, _content, _style)) {
-                    _action();
+        public void OnGUI() {
+            _root.Width = Layout.CurrentContentWidth;
+            if(Layout.BeginLayoutGroup(_root)) {
+                MainActionItem?.OnGUI();
+                _root.GetRect(0);
+                for(int i = 0; i < ActionItems.Length; i++) {
+                    ActionItems[i].OnGUI();
                 }
+                Layout.EndLayoutGroup();
             }
         }
+    }
 
-        public class WindowHeaderBar {
-            public const float HeaderHeight = 20;
-
-            internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.GroupStyle);
-
-            public Button MainActionItem {get; set;}
-            public IDrawableElement[] ActionItems {set; get;}
-
-            public void OnGUI() {
-                _root.Width = Layout.CurrentContentWidth;
-                if(Layout.BeginLayoutGroup(_root)) {
-                    MainActionItem?.OnGUI();
-                    _root.GetRect(0);
-                    for(int i = 0; i < ActionItems.Length; i++) {
-                        ActionItems[i].OnGUI();
-                    }
-                    Layout.EndLayoutGroup();
-                }
-            }
-        }
-
-        public class WindowHeaderSearchBar : IDrawableElement {
+    public class WindowHeaderSearchBar : IDrawableElement {
             private enum State {
                 Folded,
                 Animating,
@@ -95,8 +94,8 @@ namespace SoftKata.EditorGUI {
             private readonly GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
             private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
 
-            private readonly GUIStyle _buttonStyle = Resources.WindowHeader.ButtonStyle;
-            private readonly GUIStyle _searchBoxStyle = Resources.WindowHeader.SearchBoxStyle;
+            private readonly GUIStyle _buttonStyle;
+            private readonly GUIStyle _searchBoxStyle;
 
             private readonly TweenFloat _animator;
 
@@ -109,6 +108,10 @@ namespace SoftKata.EditorGUI {
             public event Action<string> SeachQueryChanged;
 
             public WindowHeaderSearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
+                var resources = ExtendedEditor.Resources.WindowHeader;
+                _buttonStyle = resources.ButtonStyle;
+                _searchBoxStyle = resources.SearchBoxStyle;
+
                 _animator = new TweenFloat() {
                     Speed = 6.5f
                 };
@@ -202,5 +205,4 @@ namespace SoftKata.EditorGUI {
                 }
             }
         }
-    }
 }

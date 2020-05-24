@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     // Main logic
     public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();

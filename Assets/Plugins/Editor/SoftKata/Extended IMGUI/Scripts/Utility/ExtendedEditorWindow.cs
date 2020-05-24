@@ -4,9 +4,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-using static SoftKata.EditorGUI.ExtendedEditorGUI;
+using SoftKata.Editor.Controls;
 
-namespace SoftKata.EditorGUI {
+using static SoftKata.Editor.ExtendedEditor;
+
+namespace SoftKata.Editor {
     public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
         public const float HeaderBarPixelHeight = 20;
         public const float ShadowPixelHeight = 5;
@@ -48,7 +50,7 @@ namespace SoftKata.EditorGUI {
             // Hacky approach without accessing header itself
             // Each window reset GUI matrix so top-left border is (0, 0)
             // Header height = vertical_padding + IDrawable_size = (3 + 3) + 14
-            GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, ShadowPixelHeight), ExtendedEditorGUI.Resources.Shadow);
+            GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, ShadowPixelHeight), ExtendedEditor.Resources.Shadow);
 
             Profiler.EndSample();
         }

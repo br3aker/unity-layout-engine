@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class TreeViewGroup : VerticalGroup {
         private readonly Color _connectionLineColor;
         private readonly float _connectionLineWidth;
@@ -24,7 +24,7 @@ namespace SoftKata.EditorGUI {
 
             _connectionLineOffset = style.padding.left + _connectionLineWidth;
         }
-        public TreeViewGroup() : this(ExtendedEditorGUI.Resources.Treeview) {}
+        public TreeViewGroup() : this(ExtendedEditor.Resources.Treeview) {}
     
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {

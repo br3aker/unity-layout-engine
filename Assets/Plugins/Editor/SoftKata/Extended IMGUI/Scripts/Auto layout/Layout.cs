@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public static partial class Layout {
         internal const float FlexibleWidth = -1;
 

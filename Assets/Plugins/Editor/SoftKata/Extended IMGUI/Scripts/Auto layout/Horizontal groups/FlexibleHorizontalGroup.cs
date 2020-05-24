@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class FlexibleHorizontalGroup : HorizontalGroup {
         public const float FullScreenWidth = -1;
 
@@ -30,7 +30,7 @@ namespace SoftKata.EditorGUI {
             _containerWidth = width;
         }
         public FlexibleHorizontalGroup(float width = FullScreenWidth, bool ignoreConstaints = false)
-            : this(width, ExtendedEditorGUI.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
+            : this(width, ExtendedEditor.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             EntriesRequestedSize.y += TotalOffset.vertical;

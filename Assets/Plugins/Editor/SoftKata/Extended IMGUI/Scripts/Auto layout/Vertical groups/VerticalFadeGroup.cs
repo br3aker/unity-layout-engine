@@ -1,9 +1,9 @@
 using UnityEngine;
 
-using SoftKata.EditorGUI.Animations;
+using SoftKata.Editor.Animations;
 
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class VerticalFadeGroup : VerticalGroup {
         private readonly TweenBool _expanded;
         public bool Expanded {
@@ -17,11 +17,11 @@ namespace SoftKata.EditorGUI {
                 Speed = 4
             };
             _expanded.OnUpdate += MarkLayoutDirty;
-            _expanded.OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
-            _expanded.OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
+            _expanded.OnStart += ExtendedEditor.CurrentView.RegisterRepaintRequest;
+            _expanded.OnFinish += ExtendedEditor.CurrentView.UnregisterRepaintRequest;
         }
         public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
-            : this(expanded, ExtendedEditorGUI.Resources.VerticalFadeGroup, ignoreConstaints) {}
+            : this(expanded, ExtendedEditor.Resources.VerticalFadeGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             base.PreLayoutRequest();

@@ -3,14 +3,14 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     // etc
-    public static partial class ExtendedEditorGUI {
+    public static partial class ExtendedEditor {
         public static IRepaintable CurrentView {get; internal set;}
     }
 
     // Resources
-    public static partial class ExtendedEditorGUI {
+    public static partial class ExtendedEditor {
         public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
         
         private static ResourcesHolder _resources;

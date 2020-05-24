@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.EditorGUI {
+namespace SoftKata.Editor {
     public class ScrollGroup : VerticalGroup {
         private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
@@ -45,7 +45,7 @@ namespace SoftKata.EditorGUI {
         private UnityAction RepaintView;
 
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
-            RepaintView = ExtendedEditorGUI.CurrentView.Repaint;
+            RepaintView = ExtendedEditor.CurrentView.Repaint;
 
             Clip = true;
 
@@ -74,7 +74,7 @@ namespace SoftKata.EditorGUI {
             _scrollbarColor = style.onNormal.textColor;
         }
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars = false, bool ignoreConstaints = false)
-            : this(containerSize, disableScrollbars, ExtendedEditorGUI.Resources.ScrollGroup, ignoreConstaints) {}
+            : this(containerSize, disableScrollbars, ExtendedEditor.Resources.ScrollGroup, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
