@@ -357,7 +357,7 @@ namespace Development {
                 tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
 
                 _floatTween = new TweenFloat();
-                _floatTween.OnBegin += () => Debug.Log("Tween start");
+                _floatTween.OnStart += () => Debug.Log("Tween start");
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
 
                 _boolTween = new TweenBool();
@@ -366,7 +366,7 @@ namespace Development {
                 _tweeners = new TweenFloat[count];
                 for(int i = 0; i < count; i++) {
                     _tweeners[i] = new TweenFloat();
-                    _tweeners[i].OnBegin += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
+                    _tweeners[i].OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
                     _tweeners[i].OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
                 }
             }

@@ -5,7 +5,7 @@ using SoftKata.ExtendedEditorGUI.Animations;
 
 namespace SoftKata.ExtendedEditorGUI {
     public class VerticalFadeGroup : VerticalGroup {
-        private TweenBool _expanded;
+        private readonly TweenBool _expanded;
 
         public bool Expanded {
             get => _expanded.Target;
@@ -28,6 +28,8 @@ namespace SoftKata.ExtendedEditorGUI {
         protected override void PreLayoutRequest() {
             base.PreLayoutRequest();
 
+            // Clip logic can be set in _expanded.OnStart and _expanded.OnFinish events
+            // But it's an extra overhead and we have layout build virtual method anyway
             Clip = _expanded.IsAnimating;
             EntriesRequestedSize.y *= _expanded.Fade;
         }

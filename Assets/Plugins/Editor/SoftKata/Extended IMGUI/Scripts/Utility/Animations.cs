@@ -42,7 +42,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         }
 
         public event UnityAction OnUpdate;
-        public event UnityAction OnBegin;
+        public event UnityAction OnStart;
         public event UnityAction OnFinish;
 
         protected TweenValueBase(T value) {
@@ -79,7 +79,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             _progress = 0;
             _lastTime = EditorApplication.timeSinceStartup;
 
-            OnBegin?.Invoke();
+            OnStart?.Invoke();
         }
 
         protected abstract T GetValue();
