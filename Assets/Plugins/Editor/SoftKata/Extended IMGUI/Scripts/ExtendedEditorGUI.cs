@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     // etc
     public static partial class ExtendedEditorGUI {
         public static IRepaintable CurrentView {get; internal set;}

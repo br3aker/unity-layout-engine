@@ -8,12 +8,12 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using SoftKata.ExtendedEditorGUI.Animations;
+using SoftKata.EditorGUI.Animations;
 
 using Debug = UnityEngine.Debug;
 
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     public static partial class ExtendedEditorGUI {
         public class TabView : IDrawableElement {
             public int CurrentTab { get; set; }
@@ -85,7 +85,7 @@ namespace SoftKata.ExtendedEditorGUI {
                         var maximumOriginOffset = singleTabWidth * (_tabHeaders.Length - 1);
                         var underlinePosX = toolbarRect.x + maximumOriginOffset * currentAnimationPosition;
                         var underlineRect = new Rect(underlinePosX, toolbarRect.yMax - _underlineHeight, singleTabWidth, _underlineHeight);
-                        EditorGUI.DrawRect(underlineRect, _underlineColor);
+                        UnityEditor.EditorGUI.DrawRect(underlineRect, _underlineColor);
                     }
 
                     // Content

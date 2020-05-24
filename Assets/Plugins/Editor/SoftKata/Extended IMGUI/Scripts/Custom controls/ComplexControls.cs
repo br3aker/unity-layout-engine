@@ -8,12 +8,12 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using SoftKata.ExtendedEditorGUI.Animations;
+using SoftKata.EditorGUI.Animations;
 
 using Debug = UnityEngine.Debug;
 
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     public static partial class ExtendedEditorGUI {
         public interface IDrawableElement {
             void OnGUI();
@@ -177,10 +177,10 @@ namespace SoftKata.ExtendedEditorGUI {
                 var searchBoxRect = controlRect;
                 searchBoxRect.width = searchBoxWidth;
 
-                EditorGUI.BeginChangeCheck();
+                UnityEditor.EditorGUI.BeginChangeCheck();
                 // string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
-                string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString, _searchBoxStyle);
-                if(EditorGUI.EndChangeCheck()) {
+                string newSearchString = UnityEditor.EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString, _searchBoxStyle);
+                if(UnityEditor.EditorGUI.EndChangeCheck()) {
                     if(newSearchString.Length != 0) {
                         _currentSearchString = newSearchString;
                         SeachQueryChanged?.Invoke(newSearchString);

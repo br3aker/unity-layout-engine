@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     public class FlexibleHorizontalGroup : HorizontalGroup {
         public const float FullScreenWidth = -1;
 

@@ -6,10 +6,10 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Events;
 
-using SoftKata.ExtendedEditorGUI.Animations;
+using SoftKata.EditorGUI.Animations;
 
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     public static partial class ExtendedEditorGUI {
         public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
             // Hash for control id generation
@@ -190,7 +190,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     GUI.DrawTexture(iconRect, _emptyListIcon);
                 }
                 if(_contentScrollGroup.GetRect(_emptyListLabelHeight, out var labelRect)) {
-                    EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
+                    UnityEditor.EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
                 }
 
                 HandleDefaultEvents();

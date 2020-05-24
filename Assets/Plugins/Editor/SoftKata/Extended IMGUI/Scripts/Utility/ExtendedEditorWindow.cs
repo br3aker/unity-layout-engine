@@ -4,9 +4,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
+using static SoftKata.EditorGUI.ExtendedEditorGUI;
 
-namespace SoftKata.ExtendedEditorGUI {
+namespace SoftKata.EditorGUI {
     public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
         public const float HeaderBarPixelHeight = 20;
         public const float ShadowPixelHeight = 5;
