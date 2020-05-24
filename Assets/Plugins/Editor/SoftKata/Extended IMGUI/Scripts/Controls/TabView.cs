@@ -63,7 +63,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 _animator = new TweenFloat(initialTab) {
                     Speed = 3.25f
                 };
-                _animator.OnUpdate += ExtendedEditorGUI.CurrentViewRepaint;
+
+                _animator.OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
+                _animator.OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
                 _animator.OnFinish += _root.MarkLayoutDirty;
             }
             public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
