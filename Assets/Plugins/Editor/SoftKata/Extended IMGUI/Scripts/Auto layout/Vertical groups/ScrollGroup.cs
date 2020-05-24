@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public class ScrollGroup : VerticalGroup {
         private const float MinimalScrollbarSizeMultiplier = 0.07f;
 
@@ -198,10 +198,10 @@ namespace SoftKata.Editor {
                     break;
                 case EventType.Repaint:
                     // Background
-                    if (_backgroundColor.a > 0f) UnityEditor.EditorGUI.DrawRect(scrollAreaRect, _backgroundColor);
+                    if (_backgroundColor.a > 0f) global::UnityEditor.EditorGUI.DrawRect(scrollAreaRect, _backgroundColor);
 
                     // Actual scrollbar
-                    UnityEditor.EditorGUI.DrawRect(thumbRect, _scrollbarColor);
+                    global::UnityEditor.EditorGUI.DrawRect(thumbRect, _scrollbarColor);
 
                     break;
             }

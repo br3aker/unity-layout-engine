@@ -1,9 +1,9 @@
 using UnityEngine;
 
-using SoftKata.Editor.Animations;
+using SoftKata.UnityEditor.Animations;
 
 
-namespace SoftKata.Editor.Controls {
+namespace SoftKata.UnityEditor.Controls {
     public class TabView : IDrawableElement {
         public int CurrentTab { get; set; }
 
@@ -74,7 +74,7 @@ namespace SoftKata.Editor.Controls {
                     var maximumOriginOffset = singleTabWidth * (_tabHeaders.Length - 1);
                     var underlinePosX = toolbarRect.x + maximumOriginOffset * currentAnimationPosition;
                     var underlineRect = new Rect(underlinePosX, toolbarRect.yMax - _underlineHeight, singleTabWidth, _underlineHeight);
-                    UnityEditor.EditorGUI.DrawRect(underlineRect, _underlineColor);
+                    global::UnityEditor.EditorGUI.DrawRect(underlineRect, _underlineColor);
                 }
 
                 // Content

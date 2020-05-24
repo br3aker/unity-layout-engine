@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-namespace SoftKata.Editor.Controls {
+namespace SoftKata.UnityEditor.Controls {
     public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
         // Hash for control id generation
         private int ListViewControlIdHint = "ListView".GetHashCode();
@@ -187,7 +187,7 @@ namespace SoftKata.Editor.Controls {
                 GUI.DrawTexture(iconRect, _emptyListIcon);
             }
             if(_contentScrollGroup.GetRect(_emptyListLabelHeight, out var labelRect)) {
-                UnityEditor.EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
+                global::UnityEditor.EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
             }
 
             HandleDefaultEvents();

@@ -7,7 +7,7 @@ using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public static class Utility {
         public static T LoadAssetAtPathAndAssert<T>(string assetPath) where T : UnityEngine.Object {
             var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);

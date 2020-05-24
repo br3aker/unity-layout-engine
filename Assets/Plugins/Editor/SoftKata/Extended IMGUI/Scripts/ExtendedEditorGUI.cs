@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     // etc
     public static partial class ExtendedEditor {
         public static IRepaintable CurrentView {get; internal set;}

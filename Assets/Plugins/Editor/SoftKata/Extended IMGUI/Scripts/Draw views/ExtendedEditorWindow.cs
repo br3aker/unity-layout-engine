@@ -2,11 +2,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-using SoftKata.Editor.Controls;
+using SoftKata.UnityEditor.Controls;
 
-using static SoftKata.Editor.ExtendedEditor;
-
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
         public const float HeaderBarPixelHeight = 20;
         public const float ShadowPixelHeight = 5;
@@ -21,7 +19,7 @@ namespace SoftKata.Editor {
         private int _repaintSubscribersCount;
 
         private void OnEnable() {
-            CurrentView = this;
+            ExtendedEditor.CurrentView = this;
 
             // Content
             _rootScrollGroup = new ScrollGroup(Vector2.zero, false);

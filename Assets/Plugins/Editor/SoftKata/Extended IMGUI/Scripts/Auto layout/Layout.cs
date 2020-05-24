@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public static partial class Layout {
         internal const float FlexibleWidth = -1;
 
@@ -97,7 +97,7 @@ namespace SoftKata.Editor {
                 width,
                 contentRect.height + padding.vertical
             );
-            UnityEditor.EditorGUI.DrawRect(separatorRect, color);
+            global::UnityEditor.EditorGUI.DrawRect(separatorRect, color);
         }
     }
 }

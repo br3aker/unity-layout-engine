@@ -8,10 +8,10 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using SoftKata.Editor.Animations;
+using SoftKata.UnityEditor.Animations;
 
 
-namespace SoftKata.Editor.Controls {
+namespace SoftKata.UnityEditor.Controls {
     public class WindowHeaderBar {
         public const float HeaderHeight = 20;
 

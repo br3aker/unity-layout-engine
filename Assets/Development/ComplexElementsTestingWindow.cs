@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using SoftKata.Editor;
-using SoftKata.Editor.Animations;
-using SoftKata.Editor.Controls;
+using SoftKata.UnityEditor;
+using SoftKata.UnityEditor.Animations;
+using SoftKata.UnityEditor.Controls;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
-using static SoftKata.Editor.ExtendedEditor;
 
 namespace Development {
     public class ComplexElementsTestingWindow : ExtendedEditorWindow {

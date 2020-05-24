@@ -1,4 +1,4 @@
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public interface IRepaintable {
         void Repaint();
 

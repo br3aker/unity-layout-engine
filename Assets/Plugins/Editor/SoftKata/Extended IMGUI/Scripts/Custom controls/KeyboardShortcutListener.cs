@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public partial class ExtendedEditor {
         private static readonly int s_KeyboardShortcutListenerHint =
             nameof(s_KeyboardShortcutListenerHint).GetHashCode();

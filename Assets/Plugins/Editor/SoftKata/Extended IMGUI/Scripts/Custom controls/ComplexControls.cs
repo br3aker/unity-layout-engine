@@ -8,12 +8,12 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-using SoftKata.Editor.Animations;
+using SoftKata.UnityEditor.Animations;
 
 using Debug = UnityEngine.Debug;
 
 
-namespace SoftKata.Editor.Controls {
+namespace SoftKata.UnityEditor.Controls {
     public interface IDrawableElement {
         void OnGUI();
     }

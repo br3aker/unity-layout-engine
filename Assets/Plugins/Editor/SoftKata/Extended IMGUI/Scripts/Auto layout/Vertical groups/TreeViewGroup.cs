@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public class TreeViewGroup : VerticalGroup {
         private readonly Color _connectionLineColor;
         private readonly float _connectionLineWidth;
@@ -46,7 +46,7 @@ namespace SoftKata.Editor {
                 _lastConnectionPointY - ContentRectInternal.y
             );
 
-            UnityEditor.EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
+            global::UnityEditor.EditorGUI.DrawRect(verticalLineRect, _connectionLineColor);
         }
 
         private void DrawConnectionLine(Vector2 position, float height) {
@@ -59,7 +59,7 @@ namespace SoftKata.Editor {
                 position.x - _connectionsPositionEnd,
                 _connectionLineWidth
             );
-            UnityEditor.EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
+            global::UnityEditor.EditorGUI.DrawRect(horizontalLine, _connectionLineColor);
         }
 
         public bool GetLeafRect(float width, float height, out Rect rect) {

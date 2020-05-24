@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SoftKata.Editor.Animations {
+namespace SoftKata.UnityEditor.Animations {
     public abstract class TweenValueBase<T> {// : ISerializationCallbackReceiver {
         protected T _origin;
         protected T _target;
@@ -95,12 +95,12 @@ namespace SoftKata.Editor.Animations {
         // }
 
         public virtual void DebugGUI() {
-            Speed = UnityEditor.EditorGUI.FloatField(Layout.GetRect(16), "Speed", Speed);
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"isAnimating: {IsAnimating}");
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"LerpPosition: {LerpPosition}");
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"_start: {_origin}");
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"_target: {_target}");
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"Value: {Value}");
+            Speed = global::UnityEditor.EditorGUI.FloatField(Layout.GetRect(16), "Speed", Speed);
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"isAnimating: {IsAnimating}");
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"LerpPosition: {LerpPosition}");
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"_start: {_origin}");
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"_target: {_target}");
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"Value: {Value}");
         }
     }
 
@@ -111,7 +111,7 @@ namespace SoftKata.Editor.Animations {
 
 
         public override void DebugGUI() {
-            var newTarget = UnityEditor.EditorGUI.DelayedFloatField(Layout.GetRect(16), "New target", _target);
+            var newTarget = global::UnityEditor.EditorGUI.DelayedFloatField(Layout.GetRect(16), "New target", _target);
             base.DebugGUI();
 
             if(newTarget != _target) {
@@ -136,8 +136,8 @@ namespace SoftKata.Editor.Animations {
 
 
         public override void DebugGUI() {
-            var newTarget = UnityEditor.EditorGUI.Toggle(Layout.GetRect(16), "New target", _target);
-            UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"Fade: {Fade}");
+            var newTarget = global::UnityEditor.EditorGUI.Toggle(Layout.GetRect(16), "New target", _target);
+            global::UnityEditor.EditorGUI.LabelField(Layout.GetRect(16), $"Fade: {Fade}");
             base.DebugGUI();
 
             if(newTarget != _target) {

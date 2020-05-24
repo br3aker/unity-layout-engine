@@ -1,9 +1,9 @@
 using UnityEngine;
 
-using SoftKata.Editor.Animations;
+using SoftKata.UnityEditor.Animations;
 
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public class VerticalFadeGroup : VerticalGroup {
         private readonly TweenBool _expanded;
         public bool Expanded {

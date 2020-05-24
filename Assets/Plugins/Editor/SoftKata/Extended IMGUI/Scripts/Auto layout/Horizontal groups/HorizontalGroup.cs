@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public class HorizontalGroup : LayoutGroup {
         public HorizontalGroup(GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             SpaceBetweenEntries = style.contentOffset.x;

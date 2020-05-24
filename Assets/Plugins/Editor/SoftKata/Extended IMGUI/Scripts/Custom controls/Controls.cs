@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace SoftKata.Editor {
+namespace SoftKata.UnityEditor {
     public static partial class ExtendedEditor {
         private const int NoActiveControlId = int.MinValue;
 
@@ -78,10 +78,10 @@ namespace SoftKata.Editor {
         }
 
         private static T GenericInputFieldWithPostfix<T>(Rect rect, T value, string postfix) {
-            UnityEditor.EditorGUI.BeginChangeCheck();
-            var expression = UnityEditor.EditorGUI.DelayedTextField(rect, value.ToString());
+            global::UnityEditor.EditorGUI.BeginChangeCheck();
+            var expression = global::UnityEditor.EditorGUI.DelayedTextField(rect, value.ToString());
 
-            if (UnityEditor.EditorGUI.EndChangeCheck())
+            if (global::UnityEditor.EditorGUI.EndChangeCheck())
                 if (ExpressionEvaluator.Evaluate(expression, out T newVal))
                     return newVal;
 
