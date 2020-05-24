@@ -8,7 +8,8 @@ namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         public const float ShadowPixelHeight = 5;
 
-        public static UnityAction CurrentViewRepaint {get; private set;}
+        [Obsolete]
+        public static UnityAction CurrentViewRepaint {get; set;}
 
         private static IRepaintable _currentView;
         public static IRepaintable CurrentView {

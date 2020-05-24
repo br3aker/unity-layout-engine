@@ -1,12 +1,11 @@
-using System;
 using UnityEngine;
-using UnityEditor.AnimatedValues;
+
 using SoftKata.ExtendedEditorGUI.Animations;
+
 
 namespace SoftKata.ExtendedEditorGUI {
     public class VerticalFadeGroup : VerticalGroup {
         private readonly TweenBool _expanded;
-
         public bool Expanded {
             get => _expanded.Target;
             set => _expanded.Target = value;
@@ -17,10 +16,9 @@ namespace SoftKata.ExtendedEditorGUI {
             _expanded = new TweenBool(expanded) {
                 Speed = 4
             };
-            _expanded.OnUpdate += () => {
-                MarkLayoutDirty();
-                ExtendedEditorGUI.CurrentViewRepaint();
-            };
+            _expanded.OnUpdate += MarkLayoutDirty;
+            _expanded.OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
+            _expanded.OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
         }
         public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
             : this(expanded, ExtendedEditorGUI.Resources.VerticalFadeGroup, ignoreConstaints) {}
@@ -29,7 +27,7 @@ namespace SoftKata.ExtendedEditorGUI {
             base.PreLayoutRequest();
 
             // Clip logic can be set in _expanded.OnStart and _expanded.OnFinish events
-            // But it's an extra overhead and we have layout build virtual method anyway
+            // But it's an extra overhead and we have layout build event virtual method anyway
             Clip = _expanded.IsAnimating;
             EntriesRequestedSize.y *= _expanded.Fade;
         }
