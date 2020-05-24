@@ -47,6 +47,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
 
         protected TweenValueBase(T value) {
             _origin = value;
+            _target = value;
         }
 
         private void Update() {

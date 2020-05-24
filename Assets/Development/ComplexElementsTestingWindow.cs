@@ -128,16 +128,16 @@ namespace Development {
 
             // _tabsDrawer.OnGUI();
 
-            _animationValuesTest.OnGUI();
+            // _animationValuesTest.OnGUI();
 
             // Profiler.BeginSample("ListView test");
             // _arrayDrawer.OnGUI();
             // Profiler.EndSample();
 
             
-            // Profiler.BeginSample("Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("Scroll group");
+            _scrollViewTest.OnGUI();
+            Profiler.EndSample();
 
             // _scrollViewExpander.OnGUI();
 
@@ -237,7 +237,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
