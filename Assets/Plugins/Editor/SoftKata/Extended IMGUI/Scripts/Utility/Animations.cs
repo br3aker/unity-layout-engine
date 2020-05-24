@@ -14,6 +14,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
         public bool IsAnimating { get; private set; }
 
         public T Target {
+            get => _target;
             set {
                 if(!_target.Equals(value)) {
                     _origin = Value;
@@ -35,17 +36,18 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             }
         }
         
-        private double _progress = 1;
+        private double _progress;
         public double LerpPosition {
             get => _progress * _progress * (3f - 2f * _progress);
         }
 
         public event UnityAction OnUpdate;
-        public event UnityAction OnBegin;
+        public event UnityAction OnStart;
         public event UnityAction OnFinish;
 
         protected TweenValueBase(T value) {
             _origin = value;
+            _target = value;
         }
 
         private void Update() {
@@ -57,9 +59,9 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             
             OnUpdate?.Invoke();
 
-            if(_progress >= 1f) {
+            if(_progress >= 1) {
                 _origin = _target;
-                _progress = 1f;
+                _progress = 0;
 
                 EditorApplication.update -= Update;
                 IsAnimating = false;
@@ -77,7 +79,7 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
             _progress = 0;
             _lastTime = EditorApplication.timeSinceStartup;
 
-            OnBegin?.Invoke();
+            OnStart?.Invoke();
         }
 
         protected abstract T GetValue();
@@ -121,16 +123,21 @@ namespace SoftKata.ExtendedEditorGUI.Animations {
     public class TweenBool : TweenValueBase<bool> {
         public TweenBool(bool value = false) : base(value) {}
 
-        protected override bool GetValue() {
-            var start = _origin ? 0f : 1f;
-            var end = 1f - start;
+        protected override bool GetValue() => Fade > 0;
 
-            return Mathf.Lerp(start, end, (float)LerpPosition) > 0;
+        public float Fade {
+            get {
+                var start = _origin ? 1 : 0;
+                var end = 1 - start;
+
+                return Mathf.Lerp(start, end, (float)LerpPosition);
+            }
         }
 
 
         public override void DebugGUI() {
             var newTarget = EditorGUI.Toggle(Layout.GetRect(16), "New target", _target);
+            EditorGUI.LabelField(Layout.GetRect(16), $"Fade: {Fade}");
             base.DebugGUI();
 
             if(newTarget != _target) {

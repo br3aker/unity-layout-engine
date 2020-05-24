@@ -6,26 +6,21 @@ using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Events;
 
+using SoftKata.ExtendedEditorGUI.Animations;
+
 
 namespace SoftKata.ExtendedEditorGUI {
     public static partial class ExtendedEditorGUI {
         public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
             // Hash for control id generation
             private int ListViewControlIdHint = "ListView".GetHashCode();
-
-            private enum State {
-                Default,
-                Reordering,
-                ScrollingToIndex
-            }
-
+            
 
             // Behaviour
             private int _currentControlId;
-            private State _state;
+            private bool _isReordering;
             private readonly ScrollGroup _contentScrollGroup;
-            private readonly AnimFloat _animator = new AnimFloat(0f, CurrentViewRepaint);
-            private readonly UnityAction _currentViewRepaint = CurrentViewRepaint;
+            private readonly UnityAction _currentViewRepaint = ExtendedEditorGUI.CurrentView.Repaint;
 
             // Data source indexers
             public abstract int Count {
@@ -150,26 +145,13 @@ namespace SoftKata.ExtendedEditorGUI {
                     _contentScrollGroup.GetRect(totalSkipHeight);
                 }
 
-                switch(_state) {
-                    case State.Default:
-                        DoVisibleContent();
-                        HandleDefaultEvents();
-                        break;
-                    case State.Reordering:
-                        DoReorderingContent();
-                        HandleReorderingEvents();
-                        break;
-                    case State.ScrollingToIndex:
-                        if(Event.current.type == EventType.Repaint) {
-                            DoVisibleContent();
-                            _contentScrollGroup.VerticalScroll = _animator.value;
-                        }
-
-                        if(!_animator.isAnimating) {
-                            _state = State.Default;
-                        }
-
-                        break;
+                if(_isReordering) {
+                    DoReorderingContent();
+                    HandleReorderingEvents();
+                }
+                else {
+                    DoVisibleContent();
+                    HandleDefaultEvents();
                 }
             }
             private void DoVisibleContent() {
@@ -283,7 +265,7 @@ namespace SoftKata.ExtendedEditorGUI {
             }           
             private void HandleMouseUp(Event evt) {
                 if(GUIUtility.hotControl == _currentControlId) {
-                    _state = State.Default;
+                    _isReordering = false;
                     GUIUtility.hotControl = 0;
                     evt.Use();
 
@@ -345,11 +327,9 @@ namespace SoftKata.ExtendedEditorGUI {
                 AcceptDragData();
                 RebindDrawers();
 
-                _state = State.Default;
                 evt.Use();
             }
             private void HandleDragExited(Event evt) {
-                _state = State.Default;
                 _dragOperationType = DragAndDropVisualMode.None;
                 evt.Use();
             }
@@ -452,7 +432,7 @@ namespace SoftKata.ExtendedEditorGUI {
                 _lastClickTime = currentTime;
             }
             private void GreedySelection(int index, int drawerIndex) {
-                _state = State.Reordering;
+                _isReordering = true;
                 if(index == _activeDataIndex) return;
 
                 DeselectEverything();
@@ -525,13 +505,6 @@ namespace SoftKata.ExtendedEditorGUI {
                 var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
                 _contentScrollGroup.VerticalScroll = indexScrollPos;
                 RebindDrawers();
-            }
-            public void ScrollTo(int index) {
-                var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
-                _animator.value = _contentScrollGroup.VerticalScroll;
-                _animator.target = indexScrollPos;
-
-                _state = State.ScrollingToIndex;
             }
 
             // Implementation dependent methods

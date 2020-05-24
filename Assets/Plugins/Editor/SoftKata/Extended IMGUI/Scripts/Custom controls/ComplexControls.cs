@@ -113,7 +113,7 @@ namespace SoftKata.ExtendedEditorGUI {
                     Speed = 6.5f
                 };
                 _animator.OnUpdate += headerBar._root.MarkLayoutDirty;
-                _animator.OnBegin += () => _state = State.Animating;
+                _animator.OnStart += () => _state = State.Animating;
                 _animator.OnFinish += () => {
                     _state = Mathf.Approximately(_animator.Value, 1) ? State.Unfolded : State.Folded;
                 };

@@ -128,11 +128,11 @@ namespace Development {
 
             // _tabsDrawer.OnGUI();
 
-            _animationValuesTest.OnGUI();
+            // _animationValuesTest.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
-            // _arrayDrawer.OnGUI();
-            // Profiler.EndSample();
+            Profiler.BeginSample("ListView test");
+            _arrayDrawer.OnGUI();
+            Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");
@@ -237,7 +237,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
@@ -357,7 +357,7 @@ namespace Development {
                 tweensContainer = new ScrollGroup(new Vector2(-1, 400), false);
 
                 _floatTween = new TweenFloat();
-                _floatTween.OnBegin += () => Debug.Log("Tween start");
+                _floatTween.OnStart += () => Debug.Log("Tween start");
                 _floatTween.OnFinish += () => Debug.Log("Tween end");
 
                 _boolTween = new TweenBool();
@@ -366,7 +366,7 @@ namespace Development {
                 _tweeners = new TweenFloat[count];
                 for(int i = 0; i < count; i++) {
                     _tweeners[i] = new TweenFloat();
-                    _tweeners[i].OnBegin += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
+                    _tweeners[i].OnStart += ExtendedEditorGUI.CurrentView.RegisterRepaintRequest;
                     _tweeners[i].OnFinish += ExtendedEditorGUI.CurrentView.UnregisterRepaintRequest;
                 }
             }

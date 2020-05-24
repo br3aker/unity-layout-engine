@@ -9,6 +9,7 @@ using static SoftKata.ExtendedEditorGUI.ExtendedEditorGUI;
 namespace SoftKata.ExtendedEditorGUI {
     public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
         public const float HeaderBarPixelHeight = 20;
+        public const float ShadowPixelHeight = 5;
 
         // Header bar
         protected WindowHeaderBar _headerBar;
@@ -20,8 +21,6 @@ namespace SoftKata.ExtendedEditorGUI {
         private int _repaintSubscribersCount;
 
         private void OnEnable() {
-            // CurrentWindow = this;
-            Obsolete_CurrentWindow = this;
             CurrentView = this;
 
             // Content

@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SoftKata.ExtendedEditorGUI {
     public class ScrollGroup : VerticalGroup {
@@ -41,7 +42,11 @@ namespace SoftKata.ExtendedEditorGUI {
 
         private Vector2 _actualContentSize;
 
+        private UnityAction RepaintView;
+
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
+            RepaintView = ExtendedEditorGUI.CurrentView.Repaint;
+
             Clip = true;
 
             ContainerSize = containerSize;
@@ -157,7 +162,7 @@ namespace SoftKata.ExtendedEditorGUI {
             else if(_isFirstLayoutBuild) {
                 _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
-                ExtendedEditorGUI.CurrentViewRepaint();
+                RepaintView();
             }
         }
 

@@ -6,26 +6,7 @@ using UnityEngine.Events;
 namespace SoftKata.ExtendedEditorGUI {
     // etc
     public static partial class ExtendedEditorGUI {
-        public const float ShadowPixelHeight = 5;
-
-        public static UnityAction CurrentViewRepaint {get; private set;}
-
-        private static IRepaintable _currentView;
-        public static IRepaintable CurrentView {
-            get => _currentView;
-            internal set {
-                _currentView = value;
-                CurrentViewRepaint = value.Repaint;
-            }
-        }
-
-        [Obsolete]
-        public static EditorWindow Obsolete_CurrentWindow {
-            set => CurrentViewRepaint = value.Repaint;
-        }
-        public static Editor CurrentInspector {
-            set => CurrentViewRepaint = value.Repaint;
-        }
+        public static IRepaintable CurrentView {get; internal set;}
     }
 
     // Resources
