@@ -32,7 +32,7 @@ namespace Development {
             _headerBar = new WindowHeaderBar();
             _headerBar.ActionItems =
                 new IDrawableElement[] {
-                    new WindowHeaderSearchBar(_headerBar, (str) => Debug.Log(str)),
+                    new WindowHeaderBar.SearchBar(_headerBar, (str) => Debug.Log(str)),
                     new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
                     new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
                     new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))

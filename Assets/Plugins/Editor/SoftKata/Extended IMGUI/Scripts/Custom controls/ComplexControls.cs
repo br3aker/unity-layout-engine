@@ -80,13 +80,12 @@ namespace SoftKata.Editor.Controls {
                 Layout.EndLayoutGroup();
             }
         }
-    }
-
-    public class WindowHeaderSearchBar : IDrawableElement {
+    
+        public class SearchBar : IDrawableElement {
             private enum State {
                 Folded,
                 Animating,
-                Unfolded
+                Expanded
             }
 
             private const string DefaultSearchString = "Search...";
@@ -97,7 +96,7 @@ namespace SoftKata.Editor.Controls {
             private readonly GUIStyle _buttonStyle;
             private readonly GUIStyle _searchBoxStyle;
 
-            private readonly TweenFloat _animator;
+            private readonly TweenBool _expanded;
 
             private readonly float _buttonWidth;
 
@@ -107,18 +106,22 @@ namespace SoftKata.Editor.Controls {
 
             public event Action<string> SeachQueryChanged;
 
-            public WindowHeaderSearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
+            public SearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
                 var resources = ExtendedEditor.Resources.WindowHeader;
                 _buttonStyle = resources.ButtonStyle;
                 _searchBoxStyle = resources.SearchBoxStyle;
 
-                _animator = new TweenFloat() {
+                _expanded = new TweenBool() {
                     Speed = 6.5f
                 };
-                _animator.OnUpdate += headerBar._root.MarkLayoutDirty;
-                _animator.OnStart += () => _state = State.Animating;
-                _animator.OnFinish += () => {
-                    _state = Mathf.Approximately(_animator.Value, 1) ? State.Unfolded : State.Folded;
+                _expanded.OnUpdate += headerBar._root.MarkLayoutDirty;
+                _expanded.OnStart += () => {
+                    _state = State.Animating;
+                    ExtendedEditor.CurrentView.RegisterRepaintRequest();
+                };
+                _expanded.OnFinish += () => {
+                    _state = _expanded ? State.Expanded : State.Folded;
+                    ExtendedEditor.CurrentView.UnregisterRepaintRequest();
                 };
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
@@ -132,11 +135,11 @@ namespace SoftKata.Editor.Controls {
                         DoFolded();
                         break;
                     case State.Animating:
-                        var animProgress = _animator.Value;
-                        var searchBoxWidth = _buttonWidth + (EditorGUIUtility.currentViewWidth / 2 - 1) * _animator.Value;
+                        var animProgress = _expanded.Fade;
+                        var searchBoxWidth = _buttonWidth + (EditorGUIUtility.currentViewWidth / 2 - 1) * animProgress;
                         DoAnimations(searchBoxWidth, _buttonWidth * animProgress);
                         break;
-                    case State.Unfolded:
+                    case State.Expanded:
                         DoUnfolded(_buttonWidth + EditorGUIUtility.currentViewWidth / 2 - 1, _buttonWidth);
                         break;
                 }
@@ -146,7 +149,7 @@ namespace SoftKata.Editor.Controls {
             private void DoFolded() {
                 var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
                 if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
-                    _animator.Target = 1;
+                    _expanded.Target = true;
                 }
                 if(Event.current.type == EventType.Repaint) {
                     _buttonStyle.Draw(buttonRect, _searchButtonContent, false, false, false, false);
@@ -180,10 +183,8 @@ namespace SoftKata.Editor.Controls {
                 var searchBoxRect = controlRect;
                 searchBoxRect.width = searchBoxWidth;
 
-                UnityEditor.EditorGUI.BeginChangeCheck();
-                // string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString.Length == 0 ? DefaultSearchBoxText : _currentSearchString, _searchBoxStyle);
-                string newSearchString = UnityEditor.EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString, _searchBoxStyle);
-                if(UnityEditor.EditorGUI.EndChangeCheck()) {
+                string newSearchString = EditorGUI.DelayedTextField(searchBoxRect, _currentSearchString, _searchBoxStyle);
+                if(_currentSearchString != newSearchString) {
                     if(newSearchString.Length != 0) {
                         _currentSearchString = newSearchString;
                         SeachQueryChanged?.Invoke(newSearchString);
@@ -201,8 +202,9 @@ namespace SoftKata.Editor.Controls {
                 // cancel button
                 var cancelButtonRect = new Rect(searchBoxRect.xMax, controlRect.y, closeButtonWidth, controlRect.height);
                 if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
-                    _animator.Target = 0;
+                    _expanded.Target = false;
                 }
             }
         }
+    }
 }
