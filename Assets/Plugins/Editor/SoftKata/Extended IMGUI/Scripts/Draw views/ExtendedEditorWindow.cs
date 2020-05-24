@@ -1,5 +1,3 @@
-using System;
-
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -69,12 +67,5 @@ namespace SoftKata.Editor {
 
         protected abstract void Initialize();
         protected abstract void IMGUI();
-    }
-
-    public interface IRepaintable {
-        void Repaint();
-
-        void RegisterRepaintRequest();
-        void UnregisterRepaintRequest();
     }
 }
