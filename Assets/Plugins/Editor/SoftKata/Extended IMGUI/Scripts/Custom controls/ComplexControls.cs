@@ -21,18 +21,6 @@ namespace SoftKata.Editor.Controls {
         void OnGUI(Rect position);
     }
 
-    public class DelegateElement : IDrawableElement {
-        private Action _drawer;
-
-        public DelegateElement(Action drawer) {
-            _drawer = drawer;
-        }
-
-        public void OnGUI() {
-            _drawer();
-        }
-    }
-
     public class Button : IDrawableElement {
         private GUIContent _content;
         private GUIStyle _style;
@@ -52,7 +40,6 @@ namespace SoftKata.Editor.Controls {
             _height = size.y;
             _width = size.x;
         } 
-        public Button(Texture icon, GUIStyle style, Action action) : this(new GUIContent(icon), style, action) {}
 
         public void OnGUI() {
             if(Layout.GetRect(_width, _height, out var rect) && GUI.Button(rect, _content, _style)) {
