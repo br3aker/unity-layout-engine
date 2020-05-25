@@ -1,12 +1,6 @@
 using System;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 using SoftKata.UnityEditor.Animations;
 
@@ -57,7 +51,11 @@ namespace SoftKata.UnityEditor.Controls {
 
             public event Action<string> SeachQueryChanged;
 
+            private IRepaintable _parentView;
+
             public SearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
+                _parentView = ExtendedEditor.CurrentView;
+
                 var resources = ExtendedEditor.Resources.WindowHeader;
                 _buttonStyle = resources.ButtonStyle;
                 _searchBoxStyle = resources.SearchBoxStyle;
@@ -68,11 +66,11 @@ namespace SoftKata.UnityEditor.Controls {
                 _expanded.OnUpdate += headerBar._root.MarkLayoutDirty;
                 _expanded.OnStart += () => {
                     _state = State.Animating;
-                    ExtendedEditor.CurrentView.RegisterRepaintRequest();
+                    _parentView.RegisterRepaintRequest();
                 };
                 _expanded.OnFinish += () => {
                     _state = _expanded ? State.Expanded : State.Folded;
-                    ExtendedEditor.CurrentView.UnregisterRepaintRequest();
+                    _parentView.UnregisterRepaintRequest();
                 };
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
