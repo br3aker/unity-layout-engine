@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -16,7 +17,8 @@ namespace SoftKata.UnityEditor {
         private ScrollGroup _rootScrollGroup;
 
         // Repaint routine
-        private int _repaintSubscribersCount;
+        [NonSerialized]
+        private int _repaintSubscribersCount = 0;
 
         private void OnEnable() {
             ExtendedEditor.CurrentView = this;
@@ -38,6 +40,7 @@ namespace SoftKata.UnityEditor {
             // Content 
             _rootScrollGroup.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
             if (Layout.BeginLayoutGroup(_rootScrollGroup)) {
+                DrawDebugInfo();
                 IMGUI();
                 Layout.EndLayoutGroup();
             }
@@ -65,5 +68,10 @@ namespace SoftKata.UnityEditor {
 
         protected abstract void Initialize();
         protected abstract void IMGUI();
+
+        // Debug
+        private void DrawDebugInfo() {
+            EditorGUI.LabelField(_rootScrollGroup.GetRect(16), $"Repaint request count: {_repaintSubscribersCount}");
+        }
     }
 }
