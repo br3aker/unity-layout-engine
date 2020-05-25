@@ -9,6 +9,14 @@ namespace SoftKata.UnityEditor {
     public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
 
+        // This is super ugly but it's the only way to render
+        // 9-sliced texture with supported clipping
+        private static GUIStyle _nineSliceRendererStyle;
+        private static GUIStyle NineSliceRendererStyle {
+            get {
+                return _nineSliceRendererStyle ?? (_nineSliceRendererStyle = new GUIStyle {border = new RectOffset(4, 4, 4, 4)});
+            }
+        }
 
         internal LayoutGroup Parent { get; private set; }
 
@@ -39,11 +47,8 @@ namespace SoftKata.UnityEditor {
         private bool _isLayoutDirty = true;
 
         // Background texture rendering
-        private Texture _backgroundTexture;
-        private int _left;
-        private int _right;
-        private int _bottom;
-        private int _top;
+        private Texture2D _backgroundTexture;
+        private GUIStyle _backgroundRenderer;
 
 
         // Automatic width for entries
@@ -58,11 +63,7 @@ namespace SoftKata.UnityEditor {
             Style = style;
 
             _backgroundTexture = style.normal.background;
-            var overflow = style.overflow;
-            _left = overflow.left;
-            _right = overflow.right;
-            _bottom = overflow.bottom;
-            _top = overflow.top;
+            _backgroundRenderer = NineSliceRendererStyle;
 
             TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
@@ -123,6 +124,15 @@ namespace SoftKata.UnityEditor {
         private void CalculateNonLayoutData() {
                 IsLayoutEvent = false;
 
+                // Background image rendering
+                if(Event.current.type == EventType.Repaint && _backgroundTexture) {
+                    _backgroundRenderer.normal.background = _backgroundTexture;
+                    _backgroundRenderer.Draw(
+                        TotalOffset.Add(ContentRectInternal),
+                        false, false, false, false
+                    );
+                }
+
                 // Clipspace
                 if(Clip) {
                     GUI.BeginClip(ContainerRectInternal);
@@ -131,15 +141,6 @@ namespace SoftKata.UnityEditor {
                     ContentRectInternal.position -= ContainerRectInternal.position;
 
                     ContainerRectInternal.position = Vector2.zero;
-                }
-
-                // Background image rendering
-                if(Event.current.type == EventType.Repaint && _backgroundTexture) {
-                    Graphics.DrawTexture(
-                        TotalOffset.Add(ContentRectInternal),
-                        _backgroundTexture,
-                        _left, _right, _top, _bottom
-                    );
                 }
 
                 // Content offset

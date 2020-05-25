@@ -124,13 +124,13 @@ namespace Development {
 
             // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
-            // _tabsDrawer.OnGUI();
+            _tabsDrawer.OnGUI();
 
             // _animationValuesTest.OnGUI();
 
-            Profiler.BeginSample("ListView test");
-            _arrayDrawer.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample("ListView test");
+            // _arrayDrawer.OnGUI();
+            // Profiler.EndSample();
 
             
             // Profiler.BeginSample("Scroll group");
@@ -235,7 +235,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
+                // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
                 if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
                     if(Layout.BeginLayoutGroup(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
