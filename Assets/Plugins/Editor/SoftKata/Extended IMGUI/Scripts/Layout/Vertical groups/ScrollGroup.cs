@@ -153,10 +153,6 @@ namespace SoftKata.UnityEditor {
             EntriesRequestedSize.y += TotalOffset.vertical;
         }
 
-        private void CalculateScrollBarsSize() {
-
-        }
-
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {
                 // requesting ids for scrollbars
