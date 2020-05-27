@@ -4,9 +4,11 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor {
     public class ScrollGroup : VerticalGroup {
-        private const float MinimalScrollbarSizeMultiplier = 0.07f;
+        private const float _minimalScrollBarSize = 35;
 
+        // TODO: change this to GUIStyle usage
         private readonly Color _backgroundColor;
+        private readonly Color _scrollbarColor;
 
         private Vector2 _containerSize;
         public Vector2 ContainerSize {
@@ -19,20 +21,20 @@ namespace SoftKata.UnityEditor {
         }
 
         // horizontal scrollbar settings
-        private readonly int _horizontalScrollBarHeight;
+        private float _horizontalScrollBarWidth;
+        private float _horizontalScrollBarHeight;
         private readonly int _horizontalScrollBarPadding;
         private readonly int _bottomMargin;
         private bool _needsHorizontalScroll;
         private int _horizontalScrollId;
 
         // vertical scrollbar settings
-        private readonly int _verticalScrollBarWidth;
+        private float _verticalScrollBarHeight;
+        private float _verticalScrollBarWidth;
         private readonly int _verticalScrollBarPadding;
         private readonly int _rightMargin;
         private bool _needsVerticalScroll;
         private int _verticalScrollId;
-
-        private readonly Color _scrollbarColor;
 
         private float _verticalScroll;
         public float VerticalScroll { 
@@ -61,10 +63,8 @@ namespace SoftKata.UnityEditor {
         private Vector2 _invisibleAreaSize;
         private Vector2 _scrollContentOffset;
 
-        private UnityAction RepaintView;
+        private readonly UnityAction RepaintView;
 
-        private float _verticalScrollbarHeight;
-        private float _horizontalScrollbarWidth;
 
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             RepaintView = ExtendedEditor.CurrentView.Repaint;
@@ -122,12 +122,12 @@ namespace SoftKata.UnityEditor {
             if(!_disableScrollbars) {
                 if(EntriesRequestedSize.x > visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-                    TotalOffset.bottom += horizontalBarExtraHeight;
+                    TotalOffset.bottom += Mathf.RoundToInt(horizontalBarExtraHeight);
                     visibleAreaSize.y -= horizontalBarExtraHeight;
                 }
                 if(EntriesRequestedSize.y > visibleAreaSize.y) {
                     var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
-                    TotalOffset.right += verticalBarExtraWidth;
+                    TotalOffset.right += Mathf.RoundToInt(verticalBarExtraWidth);
                     visibleAreaSize.x -= verticalBarExtraWidth;
                 }
             }
@@ -135,15 +135,15 @@ namespace SoftKata.UnityEditor {
             // 2nd pass - calculations based on 1st pass
             if(_needsHorizontalScroll = EntriesRequestedSize.x > visibleAreaSize.x) {
                 var containerToContentRatio = visibleAreaSize.x / EntriesRequestedSize.x;
-
-                _horizontalScrollbarWidth = visibleAreaSize.x * Mathf.Max(containerToContentRatio, MinimalScrollbarSizeMultiplier);
+                _horizontalScrollBarWidth = 
+                    Mathf.Max(visibleAreaSize.x * containerToContentRatio, _minimalScrollBarSize);
 
                 EntriesRequestedSize.x = visibleAreaSize.x;
             }
             if(_needsVerticalScroll = EntriesRequestedSize.y > visibleAreaSize.y) {
                 var containerToContentRatio = visibleAreaSize.y / EntriesRequestedSize.y;
-
-                _verticalScrollbarHeight = visibleAreaSize.y * Mathf.Max(containerToContentRatio, MinimalScrollbarSizeMultiplier);
+                _verticalScrollBarHeight = 
+                    Mathf.Max(visibleAreaSize.y * containerToContentRatio, _minimalScrollBarSize);
                 
                 EntriesRequestedSize.y = visibleAreaSize.y;
             }
@@ -151,6 +151,10 @@ namespace SoftKata.UnityEditor {
             // Applying offsets to actual group rect
             EntriesRequestedSize.x += TotalOffset.horizontal;
             EntriesRequestedSize.y += TotalOffset.vertical;
+        }
+
+        private void CalculateScrollBarsSize() {
+
         }
 
         internal override bool BeginNonLayout() {
@@ -231,7 +235,7 @@ namespace SoftKata.UnityEditor {
         private void DoVerticalScroll(Event evt, EventType evtType) {
             var actualContentRect = ContentRectInternal;
 
-            var scrollMovementLength = actualContentRect.height - _verticalScrollbarHeight;
+            var scrollMovementLength = actualContentRect.height - _verticalScrollBarHeight;
 
             if (evtType == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
                 evt.Use();
@@ -247,7 +251,7 @@ namespace SoftKata.UnityEditor {
                 verticalScrollPos,
                 actualContentRect.y + scrollMovementLength * VerticalScroll,
                 _verticalScrollBarWidth,
-                _verticalScrollbarHeight
+                _verticalScrollBarHeight
             );
 
             var verticalScrollbarBackgroundRect = new Rect(
@@ -271,14 +275,14 @@ namespace SoftKata.UnityEditor {
         private void DoHorizontalScroll(Event evt) {
             var actualContentRect = ContentRectInternal;
 
-            var scrollMovementLength = actualContentRect.width - _horizontalScrollbarWidth;
+            var scrollMovementLength = actualContentRect.width - _horizontalScrollBarWidth;
 
             var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
 
             var horizontalScrollbarRect = new Rect(
                 actualContentRect.x + scrollMovementLength * HorizontalScroll,
                 horizontalScrollPos,
-                _horizontalScrollbarWidth,
+                _horizontalScrollBarWidth,
                 _horizontalScrollBarHeight
             );
             var horizontalScrollbarBackgroundRect = new Rect(
