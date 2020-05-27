@@ -17,7 +17,6 @@ namespace SoftKata.UnityEditor {
                 }
             }
         }
-        private Vector2 _containerToActualSizeRatio;
 
         // horizontal scrollbar settings
         private readonly int _horizontalScrollBarHeight;
@@ -63,6 +62,9 @@ namespace SoftKata.UnityEditor {
         private Vector2 _scrollContentOffset;
 
         private UnityAction RepaintView;
+
+        private float _verticalScrollbarHeight;
+        private float _horizontalScrollbarWidth;
 
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             RepaintView = ExtendedEditor.CurrentView.Repaint;
@@ -132,12 +134,16 @@ namespace SoftKata.UnityEditor {
 
             // 2nd pass - calculations based on 1st pass
             if(_needsHorizontalScroll = EntriesRequestedSize.x > visibleAreaSize.x) {
-                _containerToActualSizeRatio.x = visibleAreaSize.x / EntriesRequestedSize.x;
+                var containerToContentRatio = visibleAreaSize.x / EntriesRequestedSize.x;
+
+                _horizontalScrollbarWidth = visibleAreaSize.x * Mathf.Max(containerToContentRatio, MinimalScrollbarSizeMultiplier);
 
                 EntriesRequestedSize.x = visibleAreaSize.x;
             }
             if(_needsVerticalScroll = EntriesRequestedSize.y > visibleAreaSize.y) {
-                _containerToActualSizeRatio.y = visibleAreaSize.y / EntriesRequestedSize.y;
+                var containerToContentRatio = visibleAreaSize.y / EntriesRequestedSize.y;
+
+                _verticalScrollbarHeight = visibleAreaSize.y * Mathf.Max(containerToContentRatio, MinimalScrollbarSizeMultiplier);
                 
                 EntriesRequestedSize.y = visibleAreaSize.y;
             }
@@ -225,9 +231,7 @@ namespace SoftKata.UnityEditor {
         private void DoVerticalScroll(Event evt, EventType evtType) {
             var actualContentRect = ContentRectInternal;
 
-            var scrollbarHeight = Mathf.Max(actualContentRect.height * _containerToActualSizeRatio.y,
-                actualContentRect.height * MinimalScrollbarSizeMultiplier);
-            var scrollMovementLength = actualContentRect.height - scrollbarHeight;
+            var scrollMovementLength = actualContentRect.height - _verticalScrollbarHeight;
 
             if (evtType == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
                 evt.Use();
@@ -243,7 +247,7 @@ namespace SoftKata.UnityEditor {
                 verticalScrollPos,
                 actualContentRect.y + scrollMovementLength * VerticalScroll,
                 _verticalScrollBarWidth,
-                scrollbarHeight
+                _verticalScrollbarHeight
             );
 
             var verticalScrollbarBackgroundRect = new Rect(
@@ -267,16 +271,14 @@ namespace SoftKata.UnityEditor {
         private void DoHorizontalScroll(Event evt) {
             var actualContentRect = ContentRectInternal;
 
-            var scrollBarWidth = Mathf.Max(actualContentRect.width * _containerToActualSizeRatio.x,
-                actualContentRect.width * MinimalScrollbarSizeMultiplier);
-            var scrollMovementLength = actualContentRect.width - scrollBarWidth;
+            var scrollMovementLength = actualContentRect.width - _horizontalScrollbarWidth;
 
             var horizontalScrollPos = actualContentRect.yMax + _horizontalScrollBarPadding;
 
             var horizontalScrollbarRect = new Rect(
                 actualContentRect.x + scrollMovementLength * HorizontalScroll,
                 horizontalScrollPos,
-                scrollBarWidth,
+                _horizontalScrollbarWidth,
                 _horizontalScrollBarHeight
             );
             var horizontalScrollbarBackgroundRect = new Rect(
