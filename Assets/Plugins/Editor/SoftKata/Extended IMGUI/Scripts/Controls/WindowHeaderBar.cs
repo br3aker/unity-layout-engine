@@ -64,14 +64,8 @@ namespace SoftKata.UnityEditor.Controls {
                     Speed = 6.5f
                 };
                 _expanded.OnUpdate += headerBar._root.MarkLayoutDirty;
-                _expanded.OnStart += () => {
-                    _state = State.Animating;
-                    _parentView.RegisterRepaintRequest();
-                };
-                _expanded.OnFinish += () => {
-                    _state = _expanded ? State.Expanded : State.Folded;
-                    _parentView.UnregisterRepaintRequest();
-                };
+                _expanded.OnStart += OnTransitionStart;
+                _expanded.OnFinish += OnTransitionFinish;
 
                 _buttonWidth = _buttonStyle.CalcSize(_cancelButtonContent).x;
 
@@ -153,6 +147,16 @@ namespace SoftKata.UnityEditor.Controls {
                 if(GUI.Button(cancelButtonRect, _cancelButtonContent, _buttonStyle)) {
                     _expanded.Target = false;
                 }
+            }
+        
+            // Tween callbacks
+            private void OnTransitionStart() {
+                _state = State.Animating;
+                _parentView.RegisterRepaintRequest();
+            }
+            private void OnTransitionFinish() {
+                _state = _expanded ? State.Expanded : State.Folded;
+                _parentView.UnregisterRepaintRequest();
             }
         }
     }
