@@ -35,8 +35,27 @@ namespace SoftKata.UnityEditor {
 
         private readonly Color _scrollbarColor;
 
-        public float HorizontalScroll { get; set; }
-        public float VerticalScroll { get; set; }
+        private float _verticalScroll;
+        public float VerticalScroll { 
+            get => _verticalScroll;
+            set {
+                _verticalScroll = value;
+                _scrollContentOffset.y = 
+                    Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, value);
+            } 
+        }
+
+        private float _horizontalScroll;
+        public float HorizontalScroll { 
+            get => _horizontalScroll;
+            set {
+                _horizontalScroll = value;
+                _scrollContentOffset.x = 
+                    Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, value);
+            }
+        }
+
+        private Vector2 _scrollContentOffset;
 
         private bool _disableScrollbars;
 
@@ -136,12 +155,7 @@ namespace SoftKata.UnityEditor {
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 
                 // scroll content offset
-                var contentOffset =
-                    new Vector2(
-                        Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, HorizontalScroll),
-                        Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, VerticalScroll)
-                    );
-                NextEntryPosition += contentOffset;
+                NextEntryPosition += _scrollContentOffset;
                 return true;
             }
             return false;
