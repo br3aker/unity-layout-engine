@@ -22,9 +22,9 @@ namespace SoftKata.UnityEditor.Controls {
         private float _underlineHeight;
 
         // Layout groups
-        private readonly LayoutGroup _root;
+        private readonly LayoutGroup _root = new VerticalGroup();
+        private readonly LayoutGroup _horizontalGroup = new HorizontalGroup(true);
         private readonly ScrollGroup _scrollGroup;
-        private readonly LayoutGroup _horizontalGroup;
 
         public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
             // Data
@@ -42,11 +42,9 @@ namespace SoftKata.UnityEditor.Controls {
             _underlineHeight = tabHeaderStyle.margin.bottom;
 
             // Layout groups
-            _root = new VerticalGroup();
             _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), true) {
                 HorizontalScroll = initialTab / (tabHeaders.Length - 1)
             };
-            _horizontalGroup = new HorizontalGroup(true);
 
             // Animators
             _animator = new TweenFloat(initialTab) {
