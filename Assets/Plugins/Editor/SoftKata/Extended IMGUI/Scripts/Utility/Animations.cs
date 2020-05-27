@@ -17,6 +17,8 @@ namespace SoftKata.UnityEditor.Animations {
             get => _target;
             set {
                 if(!_target.Equals(value)) {
+                    if(IsAnimating) OnFinish?.Invoke();
+
                     _origin = Value;
                     _target = value;
                     StartAnimation();
