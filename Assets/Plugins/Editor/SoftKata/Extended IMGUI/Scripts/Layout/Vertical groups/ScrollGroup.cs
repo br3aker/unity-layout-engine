@@ -41,7 +41,7 @@ namespace SoftKata.UnityEditor {
             set {
                 _verticalScroll = value;
                 _scrollContentOffset.y = 
-                    Mathf.Lerp(0, _visibleAreaSize.y - _actualContentSize.y, value);
+                    Mathf.Lerp(0, _invisibleAreaSize.y, value);
             } 
         }
 
@@ -51,15 +51,16 @@ namespace SoftKata.UnityEditor {
             set {
                 _horizontalScroll = value;
                 _scrollContentOffset.x = 
-                    Mathf.Lerp(0, _visibleAreaSize.x - _actualContentSize.x, value);
+                    Mathf.Lerp(0, _invisibleAreaSize.x, value);
             }
         }
 
-        private Vector2 _scrollContentOffset;
-
         private bool _disableScrollbars;
 
-        private Vector2 _actualContentSize;
+        private bool _isFirstLayoutBuild = true;
+
+        private Vector2 _invisibleAreaSize;
+        private Vector2 _scrollContentOffset;
 
         private UnityAction RepaintView;
 
@@ -99,9 +100,6 @@ namespace SoftKata.UnityEditor {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
         }
 
-        private Vector2 _visibleAreaSize;
-        private bool _isFirstLayoutBuild = true;
-
         protected override void PreLayoutRequest() {
             // Resetting total offset to if scrollbars are not used
             TotalOffset.right = _rightMargin;
@@ -110,37 +108,38 @@ namespace SoftKata.UnityEditor {
             // Adding extra content size
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
 
-            // caching content size
-            _actualContentSize = EntriesRequestedSize;
-
             // Calculating container visible area size
-            _visibleAreaSize.x = (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
-            _visibleAreaSize.y = _containerSize.y - TotalOffset.vertical;
+            var visibleAreaSize = new Vector2(
+                (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal,
+                _containerSize.y - TotalOffset.vertical
+            );
+
+            _invisibleAreaSize = visibleAreaSize - EntriesRequestedSize;
 
             // 1st pass - checking if we actually need scrollbars
             if(!_disableScrollbars) {
-                if(EntriesRequestedSize.x > _visibleAreaSize.x) {
+                if(EntriesRequestedSize.x > visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                     TotalOffset.bottom += horizontalBarExtraHeight;
-                    _visibleAreaSize.y -= horizontalBarExtraHeight;
+                    visibleAreaSize.y -= horizontalBarExtraHeight;
                 }
-                if(EntriesRequestedSize.y > _visibleAreaSize.y) {
+                if(EntriesRequestedSize.y > visibleAreaSize.y) {
                     var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
                     TotalOffset.right += verticalBarExtraWidth;
-                    _visibleAreaSize.x -= verticalBarExtraWidth;
+                    visibleAreaSize.x -= verticalBarExtraWidth;
                 }
             }
 
             // 2nd pass - calculations based on 1st pass
-            if(_needsHorizontalScroll = EntriesRequestedSize.x > _visibleAreaSize.x) {
-                _containerToActualSizeRatio.x = _visibleAreaSize.x / EntriesRequestedSize.x;
+            if(_needsHorizontalScroll = EntriesRequestedSize.x > visibleAreaSize.x) {
+                _containerToActualSizeRatio.x = visibleAreaSize.x / EntriesRequestedSize.x;
 
-                EntriesRequestedSize.x = _visibleAreaSize.x;
+                EntriesRequestedSize.x = visibleAreaSize.x;
             }
-            if(_needsVerticalScroll = EntriesRequestedSize.y > _visibleAreaSize.y) {
-                _containerToActualSizeRatio.y = _visibleAreaSize.y / EntriesRequestedSize.y;
+            if(_needsVerticalScroll = EntriesRequestedSize.y > visibleAreaSize.y) {
+                _containerToActualSizeRatio.y = visibleAreaSize.y / EntriesRequestedSize.y;
                 
-                EntriesRequestedSize.y = _visibleAreaSize.y;
+                EntriesRequestedSize.y = visibleAreaSize.y;
             }
 
             // Applying offsets to actual group rect
