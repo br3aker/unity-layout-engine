@@ -42,7 +42,7 @@ namespace SoftKata.UnityEditor.Controls {
             _underlineHeight = tabHeaderStyle.margin.bottom;
 
             // Layout groups
-            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), true) {
+            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), ExtendedEditor.Resources.ScrollGroupThumb, true) {
                 HorizontalScroll = initialTab / (tabHeaders.Length - 1)
             };
 

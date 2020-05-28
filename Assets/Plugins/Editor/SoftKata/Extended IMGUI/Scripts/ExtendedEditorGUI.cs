@@ -46,6 +46,7 @@ namespace SoftKata.UnityEditor {
             public GUIStyle HorizontalRestrictedGroup;
 
             public GUIStyle ScrollGroup;
+            public GUIStyle ScrollGroupThumb;
             
             internal ResourcesHolder() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
@@ -82,6 +83,7 @@ namespace SoftKata.UnityEditor {
                 VerticalGroup = layoutSkin.GetStyle("[testing] Vertical group");
                 VerticalFadeGroup = layoutSkin.GetStyle("[testing] Vertical fade group");
                 ScrollGroup = layoutSkin.GetStyle("[testing] Scroll group");
+                ScrollGroupThumb = layoutSkin.GetStyle("[testing] Scroll group thumb");
                 Treeview = layoutSkin.GetStyle("[testing] Treeview");
                 HorizontalGroup = layoutSkin.GetStyle("[testing] Horizontal group");
                 HorizontalRestrictedGroup = layoutSkin.GetStyle("[testing] Horizontal flexible group");

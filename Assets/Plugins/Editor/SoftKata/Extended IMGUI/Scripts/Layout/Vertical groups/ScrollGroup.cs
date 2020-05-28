@@ -6,9 +6,8 @@ namespace SoftKata.UnityEditor {
     public class ScrollGroup : VerticalGroup {
         private const float _minimalScrollBarSize = 35;
 
-        // TODO: change this to GUIStyle usage
-        private readonly Color _backgroundColor;
-        private readonly Color _scrollbarColor;
+
+        private readonly GUIStyle _thumbStyle;
 
         private Vector2 _containerSize;
         public Vector2 ContainerSize {
@@ -66,7 +65,7 @@ namespace SoftKata.UnityEditor {
         private readonly UnityAction RepaintView;
 
 
-        public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
+        public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, GUIStyle thumbStyle, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
             RepaintView = ExtendedEditor.CurrentView.Repaint;
 
             Clip = true;
@@ -91,12 +90,11 @@ namespace SoftKata.UnityEditor {
             _horizontalScrollBarHeight = border.bottom;
             _horizontalScrollBarPadding = padding.bottom;
 
-            // Colors
-            _backgroundColor = style.normal.textColor;
-            _scrollbarColor = style.onNormal.textColor;
+            // Thumb renderer style
+            _thumbStyle = thumbStyle;
         }
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars = false, bool ignoreConstaints = false)
-            : this(containerSize, disableScrollbars, ExtendedEditor.Resources.ScrollGroup, ignoreConstaints) {}
+            : this(containerSize, disableScrollbars, ExtendedEditor.Resources.ScrollGroup, ExtendedEditor.Resources.ScrollGroupThumb, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
@@ -186,12 +184,12 @@ namespace SoftKata.UnityEditor {
         }
 
 
-        private float DoScroll(Event evt, float pos, Rect thumbRect, Rect scrollAreaRect, 
+        private float DoScroll(Event evt, float pos, Rect thumbRect, Rect fullRect, 
             int controlId, float totalMovementLength, float relativeMousePos, float dragDelta) {
             switch (evt.type) {
                 case EventType.MouseDown:
                     var mousePos = evt.mousePosition;
-                    if (scrollAreaRect.Contains(mousePos)) {
+                    if (fullRect.Contains(mousePos)) {
                         evt.Use();
                         GUIUtility.keyboardControl = 0;
                         GUIUtility.hotControl = controlId;
@@ -217,10 +215,10 @@ namespace SoftKata.UnityEditor {
                     break;
                 case EventType.Repaint:
                     // Background
-                    if (_backgroundColor.a > 0f) global::UnityEditor.EditorGUI.DrawRect(scrollAreaRect, _backgroundColor);
+                    _thumbStyle.Draw(fullRect, false, false, false, false);
 
                     // Actual scrollbar
-                    global::UnityEditor.EditorGUI.DrawRect(thumbRect, _scrollbarColor);
+                    _thumbStyle.Draw(thumbRect, false, false, true, false);
 
                     break;
             }
