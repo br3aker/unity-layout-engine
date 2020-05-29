@@ -9,15 +9,6 @@ namespace SoftKata.UnityEditor {
     public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
 
-        // This is super ugly but it's the only way to render
-        // 9-sliced texture with supported clipping
-        private static GUIStyle _nineSliceRendererStyle;
-        private static GUIStyle NineSliceRendererStyle {
-            get {
-                return _nineSliceRendererStyle ?? (_nineSliceRendererStyle = new GUIStyle {border = new RectOffset(4, 4, 4, 4)});
-            }
-        }
-
         internal LayoutGroup Parent { get; private set; }
 
         public readonly GUIStyle Style;
@@ -63,12 +54,9 @@ namespace SoftKata.UnityEditor {
             Style = style;
 
             _backgroundTexture = style.normal.background;
-            _backgroundRenderer = NineSliceRendererStyle;
 
             TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
-            TotalOffset.Accumulate(style.margin);
-            TotalOffset.Accumulate(style.border);
             TotalOffset.Accumulate(style.padding);
         }
 
@@ -126,8 +114,7 @@ namespace SoftKata.UnityEditor {
 
                 // Background image rendering
                 if(Event.current.type == EventType.Repaint && _backgroundTexture) {
-                    _backgroundRenderer.normal.background = _backgroundTexture;
-                    _backgroundRenderer.Draw(
+                    Style.Draw(
                         TotalOffset.Add(ContentRectInternal),
                         false, false, false, false
                     );
