@@ -9,14 +9,21 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor.Controls {
     public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
+        // TODO Inline hash value
         // Hash for control id generation
-        private int ListViewControlIdHint = "ListView".GetHashCode();
-        
+        private readonly int ListViewControlIdHint = "ListView".GetHashCode();
+
+        // Constants
+        private const float EmptyListIconSize = 56;
+        private const string EmptyListLabel = "Empty list";
+
+
+        // Layout
+        public readonly ScrollGroup Root;
 
         // Behaviour
         private int _currentControlId;
         private bool _isReordering;
-        private readonly ScrollGroup _contentScrollGroup;
         private readonly UnityAction _currentViewRepaint = ExtendedEditor.CurrentView.Repaint;
 
         // Data source indexers
@@ -73,24 +80,22 @@ namespace SoftKata.UnityEditor.Controls {
 
         // Empty list default texture & label
         private readonly Texture _emptyListIcon;
-        private const float EmptyListIconSize = 56;
-        
         private readonly GUIStyle _labelStyle = ExtendedEditor.Resources.CenteredGreyHeader;
-        private readonly GUIContent _emptyListLabel = new GUIContent("This list is empty");
+        private readonly GUIContent _emptyListLabel = new GUIContent(EmptyListLabel);
         private readonly float _emptyListLabelHeight;
 
 
         // ctor
-        public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder bind) {
-            _bindDataToDrawer = bind;
+        public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder dataBinder) {
+            _bindDataToDrawer = dataBinder;
 
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
             _emptyListIcon = ExtendedEditor.Resources.ListView.EmptyIcon;
 
-            _contentScrollGroup = new ScrollGroup(container, false);
+            Root = new ScrollGroup(container, false);
 
             _elementHeight = elementHeight;
-            _spaceBetweenElements = _contentScrollGroup.SpaceBetweenEntries;
+            _spaceBetweenElements = Root.SpaceBetweenEntries;
             _elementHeightWithSpace = _elementHeight + _spaceBetweenElements;
             _visibleHeight = container.y;
 
@@ -111,8 +116,8 @@ namespace SoftKata.UnityEditor.Controls {
 
         // Core
         public void OnGUI() {
-            var preScrollPos = _contentScrollGroup.VerticalScroll;
-            if (Layout.BeginLayoutGroup(_contentScrollGroup)) {
+            var preScrollPos = Root.VerticalScroll;
+            if (Layout.BeginLayoutGroup(Root)) {
                 if(Count != 0) {
                     DoContent();
                 }
@@ -123,7 +128,7 @@ namespace SoftKata.UnityEditor.Controls {
             }
 
             // if scroll pos changed => recalculate visible elements & rebind drawers if needed
-            if(!Mathf.Approximately(preScrollPos, _contentScrollGroup.VerticalScroll) && Event.current.type != EventType.Layout) {
+            if(!Mathf.Approximately(preScrollPos, Root.VerticalScroll) && Event.current.type != EventType.Layout) {
                 RebindDrawers();
             }
         }
@@ -132,14 +137,14 @@ namespace SoftKata.UnityEditor.Controls {
 
             // register full array of elements
             if (eventType == EventType.Layout) {
-                _contentScrollGroup.RegisterEntriesArray(_elementHeight, Count);
+                Root.RegisterEntriesArray(_elementHeight, Count);
                 return;
             }
 
             // skip invisible elements
             if(_firstVisibleIndex > 0) {
                 var totalSkipHeight = _firstVisibleIndex * _elementHeightWithSpace - _spaceBetweenElements;
-                _contentScrollGroup.GetRect(totalSkipHeight);
+                Root.GetRect(totalSkipHeight);
             }
 
             if(_isReordering) {
@@ -153,22 +158,22 @@ namespace SoftKata.UnityEditor.Controls {
         }
         private void DoVisibleContent() {
             for (int i = 0; i < _visibleElementsCount; i++) {
-                _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight));
+                _drawers[i].OnGUI(Root.GetRect(_elementHeight));
             }
         }
         private void DoReorderingContent() {
             var reorderableDrawerIndex = _activeDrawerIndex;
             // drawing before held element
             for (int i = 0; i < reorderableDrawerIndex; i++) {
-                _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight));
+                _drawers[i].OnGUI(Root.GetRect(_elementHeight));
             }
 
             // Requesting held element space
-            var initialHeldRect = _contentScrollGroup.GetRect(_elementHeight);
+            var initialHeldRect = Root.GetRect(_elementHeight);
 
             // drawing after held element
             for (int i = reorderableDrawerIndex + 1; i < _visibleElementsCount; i++) {
-                _drawers[i].OnGUI(_contentScrollGroup.GetRect(_elementHeight));
+                _drawers[i].OnGUI(Root.GetRect(_elementHeight));
             }
 
             var color = GUI.color;
@@ -180,13 +185,13 @@ namespace SoftKata.UnityEditor.Controls {
             GUI.color = color;
         }
         private void DoEmptyContent() {
-            if(_contentScrollGroup.GetRect(EmptyListIconSize, out var iconRect)) {
+            if(Root.GetRect(EmptyListIconSize, out var iconRect)) {
                 iconRect.x += (iconRect.width / 2) - EmptyListIconSize / 2;
                 iconRect.width = EmptyListIconSize;
 
                 GUI.DrawTexture(iconRect, _emptyListIcon);
             }
-            if(_contentScrollGroup.GetRect(_emptyListLabelHeight, out var labelRect)) {
+            if(Root.GetRect(_emptyListLabelHeight, out var labelRect)) {
                 global::UnityEditor.EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
             }
 
@@ -341,7 +346,7 @@ namespace SoftKata.UnityEditor.Controls {
                 visibleCount = Count;
             }
             else {
-                _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * _contentScrollGroup.VerticalScroll;
+                _visibleContentOffset = (_totalElementsHeight - _visibleHeight) * Root.VerticalScroll;
 
                 if(!PositionToDataIndex(0, out firstVisibleIndex)) {
                     firstVisibleIndex += 1;
@@ -500,7 +505,7 @@ namespace SoftKata.UnityEditor.Controls {
 
         public void GoTo(int index) {
             var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
-            _contentScrollGroup.VerticalScroll = indexScrollPos;
+            Root.VerticalScroll = indexScrollPos;
             RebindDrawers();
         }
 
