@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 namespace Development {
-    public class ComplexElementsTestingWindow : ExtendedEditorWindow {
+    public class ComplexElementsTestingWindow : ScrollEditorWindow {
         [MenuItem("Window/Complex elements")]
         static void Init() {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
