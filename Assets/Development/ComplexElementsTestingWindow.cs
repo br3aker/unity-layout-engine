@@ -7,14 +7,15 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 namespace Development {
-    public class ComplexElementsTestingWindow : ExtendedEditorWindow {
+    public class ComplexElementsTestingWindow : HeaderWindow {
         [MenuItem("Window/Complex elements")]
         static void Init() {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
 
-        // [NonSerialized]
         private bool _alwaysRepaint = false;
+
+        private ScrollGroup _contentRoot;
 
         private TabView _tabsDrawer;
 
@@ -27,11 +28,12 @@ namespace Development {
 
         private AnimationValuesTest _animationValuesTest;
 
-        protected override void Initialize() {
-            _headerBar = new WindowHeaderBar();
-            _headerBar.ActionItems =
+        protected override void Initialize(WindowHeaderBar headerBar) {
+            _contentRoot = new ScrollGroup(Vector2.zero);
+
+            headerBar.ActionItems =
                 new IDrawableElement[] {
-                    new WindowHeaderBar.SearchBar(_headerBar, (str) => Debug.Log(str)),
+                    new WindowHeaderBar.SearchBar(headerBar, (str) => Debug.Log(str)),
                     new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
                     new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
                     new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
@@ -111,34 +113,35 @@ namespace Development {
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
 
             _animationValuesTest = new AnimationValuesTest();
-
-            _testGroup = new VerticalGroup();
         }
 
-        LayoutGroup _testGroup;
+        protected override void DrawContent() {
+            _contentRoot.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
+            if (Layout.BeginLayoutGroup(_contentRoot)) {
+                DrawServiceInfo();
 
-        protected override void IMGUI() {
-            DrawServiceInfo();
+                // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
-            // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
+                // _tabsDrawer.OnGUI();
 
-            // _tabsDrawer.OnGUI();
+                // _animationValuesTest.OnGUI();
 
-            // _animationValuesTest.OnGUI();
+                Profiler.BeginSample($"[{Event.current.type}] ListView test");
+                _arrayDrawer.OnGUI();
+                Profiler.EndSample();
 
-            Profiler.BeginSample($"[{Event.current.type}] ListView test");
-            _arrayDrawer.OnGUI();
-            Profiler.EndSample();
+                // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
+                // _scrollViewTest.OnGUI();
+                // Profiler.EndSample();
 
-            // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
-            // _scrollViewTest.OnGUI();
-            // Profiler.EndSample();
+                // _scrollViewExpander.OnGUI();
 
-            // _scrollViewExpander.OnGUI();
-
-            // _flexibleHorizontalGroupTest.OnGUI();
+                // _flexibleHorizontalGroupTest.OnGUI();
+                
+                // _treeViewGroupTest.OnGUI();
             
-            // _treeViewGroupTest.OnGUI();
+                Layout.EndLayoutGroup();
+            }
         }
 
         private void DrawServiceInfo() {
