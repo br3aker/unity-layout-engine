@@ -38,8 +38,7 @@ namespace SoftKata.UnityEditor {
         private bool _isLayoutDirty = true;
 
         // Background texture rendering
-        private Texture2D _backgroundTexture;
-        private GUIStyle _backgroundRenderer;
+        private bool _hasBackground;
 
 
         // Automatic width for entries
@@ -53,7 +52,7 @@ namespace SoftKata.UnityEditor {
         protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
             Style = style;
 
-            _backgroundTexture = style.normal.background;
+            _hasBackground = style.normal.background != null;
 
             TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
@@ -110,28 +109,28 @@ namespace SoftKata.UnityEditor {
 
         // Non-Layout event
         private void CalculateNonLayoutData() {
-                IsLayoutEvent = false;
+            IsLayoutEvent = false;
 
-                // Background image rendering
-                if(Event.current.type == EventType.Repaint && _backgroundTexture) {
-                    Style.Draw(
-                        TotalOffset.Add(ContentRectInternal),
-                        false, false, false, false
-                    );
-                }
+            // Background image rendering
+            if(Event.current.type == EventType.Repaint && _hasBackground) {
+                Style.Draw(
+                    TotalOffset.Add(ContentRectInternal),
+                    false, false, false, false
+                );
+            }
 
-                // Clipspace
-                if(Clip) {
-                    GUI.BeginClip(ContainerRectInternal);
-                    // Clipspace changes world space to local space
-                    _clipWorldPositionOffset = ContainerRectInternal.position;
-                    ContentRectInternal.position -= ContainerRectInternal.position;
+            // Clipspace
+            if(Clip) {
+                GUI.BeginClip(ContainerRectInternal);
+                // Clipspace changes world space to local space
+                _clipWorldPositionOffset = ContainerRectInternal.position;
+                ContentRectInternal.position -= ContainerRectInternal.position;
 
-                    ContainerRectInternal.position = Vector2.zero;
-                }
+                ContainerRectInternal.position = Vector2.zero;
+            }
 
-                // Content offset
-                NextEntryPosition = ContentRectInternal.position;
+            // Content offset
+            NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {

@@ -126,12 +126,11 @@ namespace Development {
 
             // _animationValuesTest.OnGUI();
 
-            // Profiler.BeginSample("ListView test");
+            // Profiler.BeginSample($"[{Event.current.type}] ListView test");
             // _arrayDrawer.OnGUI();
             // Profiler.EndSample();
 
-            
-            Profiler.BeginSample("Scroll group");
+            Profiler.BeginSample($"[{Event.current.type}] Scroll group");
             _scrollViewTest.OnGUI();
             Profiler.EndSample();
 
