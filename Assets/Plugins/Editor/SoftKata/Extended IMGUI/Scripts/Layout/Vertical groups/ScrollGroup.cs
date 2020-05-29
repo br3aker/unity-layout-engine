@@ -23,7 +23,7 @@ namespace SoftKata.UnityEditor {
         private float _horizontalScrollBarWidth;
         private float _horizontalScrollBarHeight;
         private readonly int _horizontalScrollBarPadding;
-        private readonly int _bottomMargin;
+        private readonly int _bottomPadding;
         private bool _needsHorizontalScroll;
         private int _horizontalScrollId;
 
@@ -31,7 +31,7 @@ namespace SoftKata.UnityEditor {
         private float _verticalScrollBarHeight;
         private float _verticalScrollBarWidth;
         private readonly int _verticalScrollBarPadding;
-        private readonly int _rightMargin;
+        private readonly int _rightPadding;
         private bool _needsVerticalScroll;
         private int _verticalScrollId;
 
@@ -73,22 +73,22 @@ namespace SoftKata.UnityEditor {
             ContainerSize = containerSize;
 
             // Scroll settings
-            var margin = style.margin;
-            _rightMargin = margin.right;
-            _bottomMargin = margin.bottom;
+            var containerPadding = style.padding;
+            _rightPadding = containerPadding.right;
+            _bottomPadding = containerPadding.bottom;
 
             if(_disableScrollbars = disableScrollbars) return;
 
-            var padding = style.padding;
-            var border = style.border;
+            var scrollbarOffset = thumbStyle.padding;
+            var scrollbarSize = thumbStyle.margin;
             
             // Vertical
-            _verticalScrollBarWidth = border.right;
-            _verticalScrollBarPadding = padding.right;
+            _verticalScrollBarWidth = scrollbarSize.right;
+            _verticalScrollBarPadding = scrollbarOffset.right;
 
             // Horizontal
-            _horizontalScrollBarHeight = border.bottom;
-            _horizontalScrollBarPadding = padding.bottom;
+            _horizontalScrollBarHeight = scrollbarSize.bottom;
+            _horizontalScrollBarPadding = scrollbarOffset.bottom;
 
             // Thumb renderer style
             _thumbStyle = thumbStyle;
@@ -102,8 +102,8 @@ namespace SoftKata.UnityEditor {
 
         protected override void PreLayoutRequest() {
             // Resetting total offset to if scrollbars are not used
-            TotalOffset.right = _rightMargin;
-            TotalOffset.bottom = _bottomMargin;
+            TotalOffset.right = _rightPadding;
+            TotalOffset.bottom = _bottomPadding;
 
             // Adding extra content size
             EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);

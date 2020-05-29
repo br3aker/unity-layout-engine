@@ -111,16 +111,14 @@ namespace Development {
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
 
             _animationValuesTest = new AnimationValuesTest();
+
+            _testGroup = new VerticalGroup();
         }
+
+        LayoutGroup _testGroup;
 
         protected override void IMGUI() {
             DrawServiceInfo();
-
-            // for(int i = 0; i < 20; i++) {
-            //     var rect = Layout.GetRect(16);
-            //     EditorGUI.DrawRect(rect, Color.black);
-            //     EditorGUI.LabelField(rect, rect.width.ToString());
-            // }
 
             // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
@@ -128,12 +126,11 @@ namespace Development {
 
             // _animationValuesTest.OnGUI();
 
-            Profiler.BeginSample("ListView test");
-            _arrayDrawer.OnGUI();
-            Profiler.EndSample();
+            // Profiler.BeginSample($"[{Event.current.type}] ListView test");
+            // _arrayDrawer.OnGUI();
+            // Profiler.EndSample();
 
-            
-            // Profiler.BeginSample("Scroll group");
+            // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
             // _scrollViewTest.OnGUI();
             // Profiler.EndSample();
 
@@ -141,7 +138,7 @@ namespace Development {
 
             // _flexibleHorizontalGroupTest.OnGUI();
             
-            // _treeViewGroupTest.OnGUI();
+            _treeViewGroupTest.OnGUI();
         }
 
         private void DrawServiceInfo() {

@@ -9,15 +9,6 @@ namespace SoftKata.UnityEditor {
     public abstract partial class LayoutGroup {
         protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
 
-        // This is super ugly but it's the only way to render
-        // 9-sliced texture with supported clipping
-        private static GUIStyle _nineSliceRendererStyle;
-        private static GUIStyle NineSliceRendererStyle {
-            get {
-                return _nineSliceRendererStyle ?? (_nineSliceRendererStyle = new GUIStyle {border = new RectOffset(4, 4, 4, 4)});
-            }
-        }
-
         internal LayoutGroup Parent { get; private set; }
 
         public readonly GUIStyle Style;
@@ -47,8 +38,7 @@ namespace SoftKata.UnityEditor {
         private bool _isLayoutDirty = true;
 
         // Background texture rendering
-        private Texture2D _backgroundTexture;
-        private GUIStyle _backgroundRenderer;
+        private bool _hasBackground;
 
 
         // Automatic width for entries
@@ -62,13 +52,10 @@ namespace SoftKata.UnityEditor {
         protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
             Style = style;
 
-            _backgroundTexture = style.normal.background;
-            _backgroundRenderer = NineSliceRendererStyle;
+            _hasBackground = style.normal.background != null;
 
             TotalOffset = new RectOffset();
             if(ignoreConstaints) return;
-            TotalOffset.Accumulate(style.margin);
-            TotalOffset.Accumulate(style.border);
             TotalOffset.Accumulate(style.padding);
         }
 
@@ -122,29 +109,28 @@ namespace SoftKata.UnityEditor {
 
         // Non-Layout event
         private void CalculateNonLayoutData() {
-                IsLayoutEvent = false;
+            IsLayoutEvent = false;
 
-                // Background image rendering
-                if(Event.current.type == EventType.Repaint && _backgroundTexture) {
-                    _backgroundRenderer.normal.background = _backgroundTexture;
-                    _backgroundRenderer.Draw(
-                        TotalOffset.Add(ContentRectInternal),
-                        false, false, false, false
-                    );
-                }
+            // Background image rendering
+            if(Event.current.type == EventType.Repaint && _hasBackground) {
+                Style.Draw(
+                    TotalOffset.Add(ContentRectInternal),
+                    false, false, false, false
+                );
+            }
 
-                // Clipspace
-                if(Clip) {
-                    GUI.BeginClip(ContainerRectInternal);
-                    // Clipspace changes world space to local space
-                    _clipWorldPositionOffset = ContainerRectInternal.position;
-                    ContentRectInternal.position -= ContainerRectInternal.position;
+            // Clipspace
+            if(Clip) {
+                GUI.BeginClip(ContainerRectInternal);
+                // Clipspace changes world space to local space
+                _clipWorldPositionOffset = ContainerRectInternal.position;
+                ContentRectInternal.position -= ContainerRectInternal.position;
 
-                    ContainerRectInternal.position = Vector2.zero;
-                }
+                ContainerRectInternal.position = Vector2.zero;
+            }
 
-                // Content offset
-                NextEntryPosition = ContentRectInternal.position;
+            // Content offset
+            NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
