@@ -93,7 +93,7 @@ namespace Development {
                     Debug.Log($"Double click on {index} at {data}");
                 };
             _arrayDrawer.OnElementsReorder += (oldIndex, newIndex) => {
-                    Debug.Log($"Swapped {oldIndex} index with {newIndex} index");
+                    Debug.Log($"Moved {oldIndex} index to {newIndex} index");
                 };
 
 

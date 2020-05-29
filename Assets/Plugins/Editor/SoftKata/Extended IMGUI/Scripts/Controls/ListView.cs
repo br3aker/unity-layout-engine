@@ -295,7 +295,7 @@ namespace SoftKata.UnityEditor.Controls {
             // doing down
             else if(_activeDataIndex < Count - 1) {
                 var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
-                if(_activeDrawerPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count) {
+                if(_activeDrawerPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count - 1) {
                     _activeDataIndex += 1;
                     _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
                 }
