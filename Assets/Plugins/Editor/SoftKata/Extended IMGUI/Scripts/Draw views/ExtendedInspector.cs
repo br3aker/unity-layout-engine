@@ -1,7 +1,5 @@
 using System;
 using UnityEditor;
-using UnityEngine;
-
 
 namespace SoftKata.UnityEditor {
     public abstract class ExtendedInspector : Editor, IRepaintable {

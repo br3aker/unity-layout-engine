@@ -7,20 +7,15 @@ using UnityEngine;
 using UnityEngine.Profiling;
 
 namespace Development {
-    public class ComplexElementsTestingWindow : ExtendedWindow {
+    public class ComplexElementsTestingWindow : HeaderWindow {
         [MenuItem("Window/Complex elements")]
         static void Init() {
             GetWindow<ComplexElementsTestingWindow>(false, "Complex elements");
         }
 
-        // [NonSerialized]
         private bool _alwaysRepaint = false;
 
-        private WindowHeaderBar _headerBar;
-        private Texture _dropdownShadow;
-
         private ScrollGroup _contentRoot;
-
 
         private TabView _tabsDrawer;
 
@@ -33,18 +28,16 @@ namespace Development {
 
         private AnimationValuesTest _animationValuesTest;
 
-        protected override void Initialize() {
+        protected override void Initialize(WindowHeaderBar headerBar) {
             _contentRoot = new ScrollGroup(Vector2.zero);
 
-            _headerBar = new WindowHeaderBar();
-            _headerBar.ActionItems =
+            headerBar.ActionItems =
                 new IDrawableElement[] {
-                    new WindowHeaderBar.SearchBar(_headerBar, (str) => Debug.Log(str)),
+                    new WindowHeaderBar.SearchBar(headerBar, (str) => Debug.Log(str)),
                     new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
                     new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
                     new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
                 };
-            _dropdownShadow = ExtendedEditor.Resources.Shadow;
 
             if (_alwaysRepaint) {
                 EditorApplication.update += Repaint;
@@ -122,9 +115,7 @@ namespace Development {
             _animationValuesTest = new AnimationValuesTest();
         }
 
-        protected void OnGUI() {
-            _headerBar.OnGUI();
-
+        protected override void DrawContent() {
             _contentRoot.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
             if (Layout.BeginLayoutGroup(_contentRoot)) {
                 DrawServiceInfo();
@@ -151,12 +142,6 @@ namespace Development {
             
                 Layout.EndLayoutGroup();
             }
-
-            var shadowRect = new Rect(
-                0, WindowHeaderBar.HeaderHeight, 
-                EditorGUIUtility.currentViewWidth - 2, WindowHeaderBar.WindowHeaderShadowHeight
-            );
-            GUI.DrawTexture(shadowRect, _dropdownShadow);
         }
 
         private void DrawServiceInfo() {
