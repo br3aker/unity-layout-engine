@@ -8,6 +8,8 @@ using SoftKata.UnityEditor.Animations;
 namespace SoftKata.UnityEditor.Controls {
     public class WindowHeaderBar {
         public const float HeaderHeight = 20;
+        public const float HeaderContentHeight = HeaderHeight - 4;
+        public const float WindowHeaderShadowHeight = 5;
 
         internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, ExtendedEditor.Resources.WindowHeader.GroupStyle);
 
@@ -22,6 +24,7 @@ namespace SoftKata.UnityEditor.Controls {
                 for(int i = 0; i < ActionItems.Length; i++) {
                     ActionItems[i].OnGUI();
                 }
+
                 Layout.EndLayoutGroup();
             }
         }
@@ -90,7 +93,7 @@ namespace SoftKata.UnityEditor.Controls {
             }
         
             private void DoFolded() {
-                var buttonRect = Layout.GetRect(_buttonWidth, WindowHeaderBar.HeaderHeight);
+                var buttonRect = Layout.GetRect(_buttonWidth, HeaderContentHeight);
                 if(GUI.Button(buttonRect, _searchButtonContent, _searchBoxStyle)) {
                     _expanded.Target = true;
                 }
@@ -99,7 +102,7 @@ namespace SoftKata.UnityEditor.Controls {
                 }
             }
             private void DoAnimations(float searchBoxWidth, float closeButtonWidth) {
-                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
+                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, HeaderContentHeight);
                 if(Event.current.type != EventType.Repaint) return;                
 
                 // search box
@@ -112,7 +115,7 @@ namespace SoftKata.UnityEditor.Controls {
                 );
 
                 // search box icon
-                var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, HeaderContentHeight));
                 _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
 
                 // cancel button
@@ -120,7 +123,7 @@ namespace SoftKata.UnityEditor.Controls {
                 _buttonStyle.Draw(cancelButtonRect, _cancelButtonContent, false, false, false, false);
             }
             private void DoUnfolded(float searchBoxWidth, float closeButtonWidth) {
-                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, WindowHeaderBar.HeaderHeight);
+                var controlRect = Layout.GetRect(searchBoxWidth + closeButtonWidth, HeaderContentHeight);
 
                 // actual search box
                 var searchBoxRect = controlRect;
@@ -138,7 +141,7 @@ namespace SoftKata.UnityEditor.Controls {
 
                 // search box icon
                 if(Event.current.type == EventType.Repaint) {
-                    var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, WindowHeaderBar.HeaderHeight));
+                    var searchIconRect = new Rect(controlRect.position, new Vector2(_buttonWidth, HeaderContentHeight));
                     _buttonStyle.Draw(searchIconRect, _searchButtonContent, false, false, false, false);
                 }
 

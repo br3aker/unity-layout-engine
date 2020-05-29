@@ -7,9 +7,6 @@ using SoftKata.UnityEditor.Controls;
 
 namespace SoftKata.UnityEditor {
     public abstract class ExtendedEditorWindow : EditorWindow, IRepaintable {
-        public const float HeaderBarPixelHeight = 20;
-        public const float ShadowPixelHeight = 5;
-
         // Header bar
         protected WindowHeaderBar _headerBar;
 
@@ -49,7 +46,7 @@ namespace SoftKata.UnityEditor {
             // Hacky approach without accessing header itself
             // Each window reset GUI matrix so top-left border is (0, 0)
             // Header height = vertical_padding + IDrawable_size = (3 + 3) + 14
-            GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, ShadowPixelHeight), ExtendedEditor.Resources.Shadow);
+            GUI.DrawTexture(new Rect(0, WindowHeaderBar.HeaderHeight, EditorGUIUtility.currentViewWidth - 2, WindowHeaderBar.WindowHeaderShadowHeight), ExtendedEditor.Resources.Shadow);
 
             Profiler.EndSample();
         }
