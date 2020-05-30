@@ -28,6 +28,8 @@ namespace Development {
 
         private AnimationValuesTest _animationValuesTest;
 
+        private SimpleControlsTest _simpleControlsTest;
+
         protected override void Initialize(WindowHeaderBar headerBar) {
             _contentRoot = new ScrollGroup(Vector2.zero);
 
@@ -113,6 +115,8 @@ namespace Development {
             _tabsDrawer = new TabView(0, tabHeaders, tabsContents, new Color(0.06f, 0.51f, 0.75f));
 
             _animationValuesTest = new AnimationValuesTest();
+
+            _simpleControlsTest = new SimpleControlsTest();
         }
 
         protected override void DrawContent() {
@@ -397,6 +401,12 @@ namespace Development {
 
                     Layout.EndLayoutGroup();
                 }
+            }
+        }
+    
+        public class SimpleControlsTest : IDrawableElement {
+            public void OnGUI() {
+
             }
         }
     }
