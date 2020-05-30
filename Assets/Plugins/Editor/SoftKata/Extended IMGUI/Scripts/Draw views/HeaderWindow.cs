@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEditor;
 using SoftKata.UnityEditor.Controls;
@@ -8,7 +7,7 @@ namespace SoftKata.UnityEditor {
         private WindowHeaderBar _headerBar;
         private Texture _dropdownShadow;
 
-        protected override void Initialize() {
+        protected sealed override void Initialize() {
             _dropdownShadow = ExtendedEditor.Resources.Shadow;
 
             Initialize(_headerBar = new WindowHeaderBar());
