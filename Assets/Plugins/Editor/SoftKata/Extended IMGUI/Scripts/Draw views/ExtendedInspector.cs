@@ -22,5 +22,7 @@ namespace SoftKata.UnityEditor {
                 EditorApplication.update -= Repaint;
             }
         }
+    
+        public override bool UseDefaultMargins() => false;
     }
 }
