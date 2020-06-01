@@ -7,7 +7,8 @@ using UnityEngine.Profiling;
 namespace SoftKata.UnityEditor {
     // Main logic
     public abstract partial class LayoutGroup {
-        protected static readonly int LayoutGroupControlIdHint = nameof(LayoutGroup).GetHashCode();
+        // Generated with "LayoutGroup" string with .net GetHashCode method
+        protected const int LayoutGroupControlIdHint = -1416898402;
 
         internal LayoutGroup Parent { get; private set; }
 

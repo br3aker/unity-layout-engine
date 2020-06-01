@@ -9,9 +9,8 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor.Controls {
     public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
-        // TODO Inline hash value
-        // Hash for control id generation
-        private readonly int ListViewControlIdHint = "ListView".GetHashCode();
+        // Generated with "ListViewControl" string with .net GetHashCode method
+        private const int ListViewControlIdHint = 124860903;
 
         // Constants
         private const float EmptyListIconSize = 56;
