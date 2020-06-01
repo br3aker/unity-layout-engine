@@ -7,8 +7,10 @@ namespace SoftKata.UnityEditor {
         private const float _minimalScrollBarSize = 35;
 
 
+        // Drawing settings are done via GUIStyles
         private readonly GUIStyle _thumbStyle;
 
+        // Container size
         private Vector2 _containerSize;
         public Vector2 ContainerSize {
             set {
@@ -19,23 +21,33 @@ namespace SoftKata.UnityEditor {
             }
         }
 
+        private readonly bool _scrollbarsDisabled;
+
+        // Default offset
+        private readonly int _bottomPadding;
+        private readonly int _rightPadding;
+
         // horizontal scrollbar settings
         private float _horizontalScrollBarWidth;
         private float _horizontalScrollBarHeight;
         private readonly int _horizontalScrollBarPadding;
-        private readonly int _bottomPadding;
-        private bool _needsHorizontalScroll;
-        private int _horizontalScrollId;
-
+        
         // vertical scrollbar settings
         private float _verticalScrollBarHeight;
         private float _verticalScrollBarWidth;
         private readonly int _verticalScrollBarPadding;
-        private readonly int _rightPadding;
-        private bool _needsVerticalScroll;
-        private int _verticalScrollId;
 
+        // Control ids
+        private int _verticalScrollId;
+        private int _horizontalScrollId;
+
+        // Flag for need of doing scroll controls
+        private bool _needsHorizontalScroll;
+        private bool _needsVerticalScroll;
+
+        // Scroll positions [0,1]
         private float _verticalScrollPos;
+        private float _horizontalScrollPos;
         public float VerticalScroll { 
             get => _verticalScrollPos;
             set {
@@ -44,8 +56,6 @@ namespace SoftKata.UnityEditor {
                     Mathf.Lerp(0, _invisibleAreaSize.y, value);
             } 
         }
-
-        private float _horizontalScrollPos;
         public float HorizontalScroll { 
             get => _horizontalScrollPos;
             set {
@@ -55,8 +65,7 @@ namespace SoftKata.UnityEditor {
             }
         }
 
-        private bool _disableScrollbars;
-
+        // Ugly flag for layout rebuilding
         private bool _isFirstLayoutBuild = true;
 
         private Vector2 _invisibleAreaSize;
@@ -77,7 +86,7 @@ namespace SoftKata.UnityEditor {
             _rightPadding = containerPadding.right;
             _bottomPadding = containerPadding.bottom;
 
-            if(_disableScrollbars = disableScrollbars) return;
+            if(_scrollbarsDisabled = disableScrollbars) return;
 
             var scrollbarOffset = thumbStyle.padding;
             var scrollbarSize = thumbStyle.margin;
@@ -117,7 +126,7 @@ namespace SoftKata.UnityEditor {
             _invisibleAreaSize = visibleAreaSize - EntriesRequestedSize;
 
             // 1st pass - checking if we actually need scrollbars
-            if(!_disableScrollbars) {
+            if(!_scrollbarsDisabled) {
                 if(EntriesRequestedSize.x > visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                     TotalOffset.bottom += Mathf.RoundToInt(horizontalBarExtraHeight);
