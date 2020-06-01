@@ -184,14 +184,8 @@ namespace SoftKata.UnityEditor {
             }
 
             var currentEvent = Event.current;
-            var currentEventType = currentEvent.type;
-
-            if(_needsHorizontalScroll) {
-                DoHorizontalScroll(currentEvent);
-            }
-            if(_needsVerticalScroll) {
-                DoVerticalScroll(currentEvent, currentEventType);
-            }
+            if(_needsHorizontalScroll)  DoHorizontalScroll(currentEvent);
+            if(_needsVerticalScroll)    DoVerticalScroll(currentEvent);
         }
 
 
@@ -237,12 +231,12 @@ namespace SoftKata.UnityEditor {
             return pos;
         }
     
-        private void DoVerticalScroll(Event evt, EventType evtType) {
+        private void DoVerticalScroll(Event evt) {
             var actualContentRect = ContentRectInternal;
 
             var scrollMovementLength = actualContentRect.height - _verticalScrollBarHeight;
 
-            if (evtType == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
+            if (evt.type == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
                 evt.Use();
                 GUIUtility.keyboardControl = 0;
 
