@@ -36,9 +36,6 @@ namespace SoftKata.UnityEditor {
 
         private bool _isLayoutDirty = true;
 
-        // Background texture rendering
-       
-
 
         // Automatic width for entries
         public float AutomaticWidth {get; protected set;}
