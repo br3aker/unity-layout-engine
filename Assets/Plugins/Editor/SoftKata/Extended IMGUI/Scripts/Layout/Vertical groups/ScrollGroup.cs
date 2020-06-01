@@ -163,7 +163,6 @@ namespace SoftKata.UnityEditor {
 
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {
-                // requesting ids for scrollbars
                 _verticalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
                 _horizontalScrollId = GUIUtility.GetControlID(LayoutGroupControlIdHint, FocusType.Passive);
 
