@@ -35,21 +35,21 @@ namespace SoftKata.UnityEditor {
         private bool _needsVerticalScroll;
         private int _verticalScrollId;
 
-        private float _verticalScroll;
+        private float _verticalScrollPos;
         public float VerticalScroll { 
-            get => _verticalScroll;
+            get => _verticalScrollPos;
             set {
-                _verticalScroll = value;
+                _verticalScrollPos = value;
                 _scrollContentOffset.y = 
                     Mathf.Lerp(0, _invisibleAreaSize.y, value);
             } 
         }
 
-        private float _horizontalScroll;
+        private float _horizontalScrollPos;
         public float HorizontalScroll { 
-            get => _horizontalScroll;
+            get => _horizontalScrollPos;
             set {
-                _horizontalScroll = value;
+                _horizontalScrollPos = value;
                 _scrollContentOffset.x = 
                     Mathf.Lerp(0, _invisibleAreaSize.x, value);
             }
@@ -166,6 +166,13 @@ namespace SoftKata.UnityEditor {
         internal override void EndNonLayout() {
             base.EndNonLayout();
 
+            if(_isFirstLayoutBuild) {
+                _isFirstLayoutBuild = false;
+                MarkLayoutDirty();
+                RepaintView();
+                return;
+            }
+
             var currentEvent = Event.current;
             var currentEventType = currentEvent.type;
 
@@ -174,12 +181,6 @@ namespace SoftKata.UnityEditor {
             }
             if(_needsVerticalScroll) {
                 DoVerticalScroll(currentEvent, currentEventType);
-            }
-
-            if(_isFirstLayoutBuild) {
-                _isFirstLayoutBuild = false;
-                MarkLayoutDirty();
-                RepaintView();
             }
         }
 
