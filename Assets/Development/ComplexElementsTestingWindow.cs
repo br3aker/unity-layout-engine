@@ -28,7 +28,7 @@ namespace Development {
 
         private AnimationValuesTest _animationValuesTest;
 
-        private SimpleControlsTest _simpleControlsTest;
+        private InputFieldControlTest _inputFieldControlTest;
 
         protected override void Initialize(WindowHeaderBar headerBar) {
             _contentRoot = new ScrollGroup(Vector2.zero);
@@ -116,7 +116,7 @@ namespace Development {
 
             _animationValuesTest = new AnimationValuesTest();
 
-            _simpleControlsTest = new SimpleControlsTest();
+            _inputFieldControlTest = new InputFieldControlTest(1000);
         }
 
         protected override void DrawContent() {
@@ -144,7 +144,7 @@ namespace Development {
                 
                 // _treeViewGroupTest.OnGUI();
 
-                _simpleControlsTest.OnGUI();
+                _inputFieldControlTest.OnGUI();
             
                 Layout.EndLayoutGroup();
             }
@@ -406,41 +406,36 @@ namespace Development {
             }
         }
     
-        public class SimpleControlsTest : IDrawableElement {
-            private GUIContent[] _toggleContents;
-            private int _toggleValue;
+        public class InputFieldControlTest : IDrawableElement {
+            private LayoutGroup _rootCustom;
+            private LayoutGroup _rootNative;
 
-            private int _intValue;
-            private float _floatValue;
+            private int[] _data;
 
-            public enum Test {
-                None = 0,
-                One = 1 << 0,
-                Two = 1 << 1,
-                Three = 1 << 2,
-                // OneAndThree = One & Three,
-                All = ~0
-            }
+            public InputFieldControlTest(int count) {
+                _data = new int[count];
 
-            Test test;
-
-            public SimpleControlsTest() {
-                _toggleContents = new GUIContent[6] {
-                    new GUIContent("off"),
-                    new GUIContent("on"),
-                    new GUIContent("off"),
-                    new GUIContent("on"),
-                    new GUIContent("off"),
-                    new GUIContent("on")
-                };
+                _rootCustom = new ScrollGroup(new Vector2(-1, 200));
+                _rootNative = new ScrollGroup(new Vector2(-1, 200));
             }
 
             public void OnGUI() {
-                _intValue = ExtendedEditor.IntDelayedField(Layout.GetRect(18), _intValue, "int");
-                _floatValue = ExtendedEditor.FloatDelayedField(Layout.GetRect(18), _floatValue, "float");
-                _toggleValue = ExtendedEditor.ToggleArray(Layout.GetRect(18), _toggleValue, _toggleContents);
+                var isRepaintEvent = Event.current.type == EventType.Repaint;
 
-                test = (Test)EditorGUI.EnumFlagsField(Layout.GetRect(18), "Test", test);
+                Profiler.BeginSample($"[{Event.current.type}] InputFieldControlTest(Native) for {_data.Length} elements");
+                {
+                    // if(Layout.BeginLayoutGroup(_rootNative)) {
+                        for(int i = 0; i < _data.Length; i++) {
+                            if(Layout.GetRect(18, out var rect)) {
+                                _data[i] = EditorGUI.DelayedIntField(rect, _data[i]);
+                                // if(isRepaintEvent) ExtendedEditor.DrawPostfixUnsafe(rect, "post");
+                            }
+                        }
+
+                    //     Layout.EndLayoutGroup();
+                    // }
+                }
+                Profiler.EndSample();
             }
         }
     }
