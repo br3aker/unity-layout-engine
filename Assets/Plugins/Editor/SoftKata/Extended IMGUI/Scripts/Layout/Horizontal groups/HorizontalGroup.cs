@@ -10,20 +10,20 @@ namespace SoftKata.UnityEditor {
         public HorizontalGroup(bool ignoreConstaints = false)
             : this(ExtendedEditor.Resources.HorizontalGroup, ignoreConstaints) {}
         protected override void PreLayoutRequest() {
-            EntriesRequestedSize.y += TotalOffset.vertical;
-            EntriesRequestedSize.x += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
+            RequestedSize.y += TotalOffset.vertical;
+            RequestedSize.x += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {
-            EntriesRequestedSize.x += width;
-            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, height);
+            RequestedSize.x += width;
+            RequestedSize.y = Mathf.Max(RequestedSize.y, height);
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0f) {
-                EntriesRequestedSize.x += elemWidth * count;
+                RequestedSize.x += elemWidth * count;
             }
             EntriesCount += count; ;
-            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, elemHeight);
+            RequestedSize.y = Mathf.Max(RequestedSize.y, elemHeight);
         }
         
         protected override bool QueryAndOcclude(Vector2 entrySize) {

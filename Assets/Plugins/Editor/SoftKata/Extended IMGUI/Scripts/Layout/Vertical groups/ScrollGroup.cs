@@ -115,7 +115,7 @@ namespace SoftKata.UnityEditor {
             TotalOffset.bottom = _bottomPadding;
 
             // Adding extra content size
-            EntriesRequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
+            RequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
 
             // Calculating container visible area size
             var visibleAreaSize = new Vector2(
@@ -123,16 +123,16 @@ namespace SoftKata.UnityEditor {
                 _containerSize.y - TotalOffset.vertical
             );
 
-            _invisibleAreaSize = visibleAreaSize - EntriesRequestedSize;
+            _invisibleAreaSize = visibleAreaSize - RequestedSize;
 
             // 1st pass - checking if we actually need scrollbars
             if(!_scrollbarsDisabled) {
-                if(EntriesRequestedSize.x > visibleAreaSize.x) {
+                if(RequestedSize.x > visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
                     TotalOffset.bottom += Mathf.RoundToInt(horizontalBarExtraHeight);
                     visibleAreaSize.y -= horizontalBarExtraHeight;
                 }
-                if(EntriesRequestedSize.y > visibleAreaSize.y) {
+                if(RequestedSize.y > visibleAreaSize.y) {
                     var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
                     TotalOffset.right += Mathf.RoundToInt(verticalBarExtraWidth);
                     visibleAreaSize.x -= verticalBarExtraWidth;
@@ -140,24 +140,24 @@ namespace SoftKata.UnityEditor {
             }
 
             // 2nd pass - calculations based on 1st pass
-            if(_needsHorizontalScroll = EntriesRequestedSize.x > visibleAreaSize.x) {
-                var containerToContentRatio = visibleAreaSize.x / EntriesRequestedSize.x;
+            if(_needsHorizontalScroll = RequestedSize.x > visibleAreaSize.x) {
+                var containerToContentRatio = visibleAreaSize.x / RequestedSize.x;
                 _horizontalScrollBarWidth = 
                     Mathf.Max(visibleAreaSize.x * containerToContentRatio, _minimalScrollBarSize);
 
-                EntriesRequestedSize.x = visibleAreaSize.x;
+                RequestedSize.x = visibleAreaSize.x;
             }
-            if(_needsVerticalScroll = EntriesRequestedSize.y > visibleAreaSize.y) {
-                var containerToContentRatio = visibleAreaSize.y / EntriesRequestedSize.y;
+            if(_needsVerticalScroll = RequestedSize.y > visibleAreaSize.y) {
+                var containerToContentRatio = visibleAreaSize.y / RequestedSize.y;
                 _verticalScrollBarHeight = 
                     Mathf.Max(visibleAreaSize.y * containerToContentRatio, _minimalScrollBarSize);
                 
-                EntriesRequestedSize.y = visibleAreaSize.y;
+                RequestedSize.y = visibleAreaSize.y;
             }
 
             // Applying offsets to actual group rect
-            EntriesRequestedSize.x += TotalOffset.horizontal;
-            EntriesRequestedSize.y += TotalOffset.vertical;
+            RequestedSize.x += TotalOffset.horizontal;
+            RequestedSize.y += TotalOffset.vertical;
         }
 
         internal override bool BeginNonLayout() {

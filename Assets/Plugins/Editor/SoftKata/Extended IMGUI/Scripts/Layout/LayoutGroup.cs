@@ -1,17 +1,16 @@
-using System;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
-using UnityEngine.Profiling;
 
 namespace SoftKata.UnityEditor {
-    public abstract partial class LayoutGroup {
+    public abstract class LayoutGroup {
         // Generated with "LayoutGroup" string with .net GetHashCode method
         protected const int LayoutGroupControlIdHint = -1416898402;
 
         internal LayoutGroup Parent { get; private set; }
 
+        // Background rendering
         public readonly GUIStyle Style;
+        private bool _hasBackground;
 
         // offset settings - Padding/Border/Margin
         public RectOffset TotalOffset {get;}
@@ -26,7 +25,7 @@ namespace SoftKata.UnityEditor {
         protected bool IsLayoutEvent = true;
 
         // entries layout data
-        protected Vector2 EntriesRequestedSize;
+        protected Vector2 RequestedSize;
 
         protected Vector2 NextEntryPosition;
 
@@ -38,7 +37,7 @@ namespace SoftKata.UnityEditor {
         private bool _isLayoutDirty = true;
 
         // Background texture rendering
-        private bool _hasBackground;
+       
 
 
         // Automatic width for entries
@@ -70,7 +69,7 @@ namespace SoftKata.UnityEditor {
                     BeginLayoutInternal(parent);
                     return true;
                 }
-                Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
+                Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
                 return false;
             }
             else if(parent._isLayoutDirty) {
@@ -82,7 +81,7 @@ namespace SoftKata.UnityEditor {
             return false;
         }
         internal void BeginLayoutInternal(LayoutGroup parent) {
-            EntriesRequestedSize = Vector2.zero;
+            RequestedSize = Vector2.zero;
 
             EntriesCount = 0;
 
@@ -97,10 +96,10 @@ namespace SoftKata.UnityEditor {
 
                 if(Parent != null) {
                     ++Parent.EntriesCount;
-                    Parent.RegisterEntry(EntriesRequestedSize.x, EntriesRequestedSize.y);
+                    Parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y);
+                    Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
                 }
             }
         
@@ -134,7 +133,7 @@ namespace SoftKata.UnityEditor {
         }
         internal virtual bool BeginNonLayout() {
             if (Parent != null) {
-                var isGroupValid = Parent.QueryEntry(EntriesRequestedSize.x, EntriesRequestedSize.y, out Rect requestedRect);
+                var isGroupValid = Parent.QueryEntry(RequestedSize.x, RequestedSize.y, out Rect requestedRect);
                 if(!isGroupValid) return false;
                 
                 // Content & container rects
@@ -143,7 +142,7 @@ namespace SoftKata.UnityEditor {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(EntriesRequestedSize.x, EntriesRequestedSize.y));
+                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y));
                 ContentRectInternal = ContainerRectInternal;
             }
 
