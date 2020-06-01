@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 namespace SoftKata.UnityEditor {
-    // Main logic
     public abstract partial class LayoutGroup {
         // Generated with "LayoutGroup" string with .net GetHashCode method
         protected const int LayoutGroupControlIdHint = -1416898402;
