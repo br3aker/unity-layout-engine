@@ -130,9 +130,9 @@ namespace Development {
 
                 // _animationValuesTest.OnGUI();
 
-                Profiler.BeginSample($"[{Event.current.type}] ListView test");
-                _arrayDrawer.OnGUI();
-                Profiler.EndSample();
+                // Profiler.BeginSample($"[{Event.current.type}] ListView test");
+                // _arrayDrawer.OnGUI();
+                // Profiler.EndSample();
 
                 // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
                 // _scrollViewTest.OnGUI();
@@ -143,6 +143,8 @@ namespace Development {
                 // _flexibleHorizontalGroupTest.OnGUI();
                 
                 // _treeViewGroupTest.OnGUI();
+
+                _simpleControlsTest.OnGUI();
             
                 Layout.EndLayoutGroup();
             }
@@ -405,8 +407,40 @@ namespace Development {
         }
     
         public class SimpleControlsTest : IDrawableElement {
-            public void OnGUI() {
+            private GUIContent[] _toggleContents;
+            private int _toggleValue;
 
+            private int _intValue;
+            private float _floatValue;
+
+            public enum Test {
+                None = 0,
+                One = 1 << 0,
+                Two = 1 << 1,
+                Three = 1 << 2,
+                // OneAndThree = One & Three,
+                All = ~0
+            }
+
+            Test test;
+
+            public SimpleControlsTest() {
+                _toggleContents = new GUIContent[6] {
+                    new GUIContent("off"),
+                    new GUIContent("on"),
+                    new GUIContent("off"),
+                    new GUIContent("on"),
+                    new GUIContent("off"),
+                    new GUIContent("on")
+                };
+            }
+
+            public void OnGUI() {
+                _intValue = ExtendedEditor.IntDelayedField(Layout.GetRect(18), _intValue, "int");
+                _floatValue = ExtendedEditor.FloatDelayedField(Layout.GetRect(18), _floatValue, "float");
+                _toggleValue = ExtendedEditor.ToggleArray(Layout.GetRect(18), _toggleValue, _toggleContents);
+
+                test = (Test)EditorGUI.EnumFlagsField(Layout.GetRect(18), "Test", test);
             }
         }
     }

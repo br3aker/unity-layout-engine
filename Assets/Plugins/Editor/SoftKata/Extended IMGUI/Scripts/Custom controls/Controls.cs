@@ -37,46 +37,6 @@ namespace SoftKata.UnityEditor {
             return _tempContent;
         }
 
-
-        public static int ToggleArray(Rect rect, int value, GUIContent[] contents) {
-            var resources = Resources;
-            var leftStyle = resources.ButtonLeft;
-            var midStyle = resources.ButtonMid;
-            var rightStyle = resources.ButtonRight;
-
-            var actualContentLength = contents.Length / 2;
-
-            var fixedWidthFromStyle = midStyle.fixedWidth;
-            var cellWidth = fixedWidthFromStyle > 0
-                ? fixedWidthFromStyle
-                : (rect.width - 1 * actualContentLength) / actualContentLength;
-
-            var iconHorizontalOffset = cellWidth + 1;
-
-            var toggleRect = new Rect(rect.x, rect.y, cellWidth, ToggleArrayHeight);
-
-            for (var i = 0; i < actualContentLength; i++) {
-                var checker = 1 << i;
-                var on = (value & checker) == checker;
-
-                var content = contents[on ? i : i + actualContentLength];
-
-                var style = i == 0 ? leftStyle : i == actualContentLength - 1 ? rightStyle : midStyle;
-                if (GUI.Toggle(toggleRect, on, content, style))
-                    value |= checker;
-                else
-                    value &= ~checker;
-
-                toggleRect.x += iconHorizontalOffset;
-            }
-
-            return value;
-        }
-
-        public static void ToggleArray(Rect rect, SerializedProperty value, GUIContent[] contents) {
-            value.intValue = ToggleArray(rect, value.intValue, contents);
-        }
-
         private static T GenericInputFieldWithPostfix<T>(Rect rect, T value, string postfix) {
             global::UnityEditor.EditorGUI.BeginChangeCheck();
             var expression = global::UnityEditor.EditorGUI.DelayedTextField(rect, value.ToString());

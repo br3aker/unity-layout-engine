@@ -30,7 +30,6 @@ namespace SoftKata.UnityEditor {
             public GUIStyle TabHeader;
             
             // Complex elements resources
-            public readonly ShortcutRecorderRecources ShortcutRecorder;
             public readonly ListViewResources ListView;
             public readonly WindowHeaderResources WindowHeader;
 
@@ -71,7 +70,6 @@ namespace SoftKata.UnityEditor {
                 TabHeader = controlsSkin.GetStyle("Tab header");
                 
                 // Complex elements
-                ShortcutRecorder = new ShortcutRecorderRecources(controlsSkin, skinTextureFolderPath);
                 ListView = new ListViewResources(controlsSkin, skinTextureFolderPath);
                 WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
 
@@ -101,16 +99,6 @@ namespace SoftKata.UnityEditor {
                 }
             }
 
-            public struct ShortcutRecorderRecources {
-                public GUIStyle Style;
-                public Texture RecordStateIconSet;
-
-                public ShortcutRecorderRecources(GUISkin skin, string textureFolderPath) {
-                    Style = skin.GetStyle("Keyboard shortcut main");
-                    RecordStateIconSet =
-                        Utility.LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "recording_icon_set.png");
-                }
-            }
             public struct ListViewResources {
                 public Texture EmptyIcon;
 
