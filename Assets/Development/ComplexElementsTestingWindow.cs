@@ -407,7 +407,6 @@ namespace Development {
         }
     
         public class InputFieldControlTest : IDrawableElement {
-            private LayoutGroup _rootCustom;
             private LayoutGroup _rootNative;
 
             private int[] _data;
@@ -415,7 +414,6 @@ namespace Development {
             public InputFieldControlTest(int count) {
                 _data = new int[count];
 
-                _rootCustom = new ScrollGroup(new Vector2(-1, 200));
                 _rootNative = new ScrollGroup(new Vector2(-1, 200));
             }
 
@@ -424,7 +422,7 @@ namespace Development {
 
                 Profiler.BeginSample($"[{Event.current.type}] InputFieldControlTest(Native) for {_data.Length} elements");
                 {
-                    // if(Layout.BeginLayoutGroup(_rootNative)) {
+                    if(Layout.BeginLayoutGroup(_rootNative)) {
                         for(int i = 0; i < _data.Length; i++) {
                             if(Layout.GetRect(18, out var rect)) {
                                 _data[i] = EditorGUI.DelayedIntField(rect, _data[i]);
@@ -432,8 +430,8 @@ namespace Development {
                             }
                         }
 
-                    //     Layout.EndLayoutGroup();
-                    // }
+                        Layout.EndLayoutGroup();
+                    }
                 }
                 Profiler.EndSample();
             }

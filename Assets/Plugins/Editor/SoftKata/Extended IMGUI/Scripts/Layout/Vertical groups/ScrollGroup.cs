@@ -172,11 +172,11 @@ namespace SoftKata.UnityEditor {
             if(_needsHorizontalScroll) {
                 DoHorizontalScroll(currentEvent);
             }
-
             if(_needsVerticalScroll) {
                 DoVerticalScroll(currentEvent, currentEventType);
             }
-            else if(_isFirstLayoutBuild) {
+
+            if(_isFirstLayoutBuild) {
                 _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
                 RepaintView();
