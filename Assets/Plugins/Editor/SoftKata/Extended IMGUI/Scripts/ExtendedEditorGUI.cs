@@ -22,9 +22,6 @@ namespace SoftKata.UnityEditor {
             // Primitive elements styles
             public GUIStyle CenteredGreyHeader;
             public GUIStyle InputFieldPostfix;
-            public GUIStyle ButtonLeft;
-            public GUIStyle ButtonMid;
-            public GUIStyle ButtonRight;
             public GUIStyle Foldout;
 
             public GUIStyle TabHeader;
@@ -63,9 +60,6 @@ namespace SoftKata.UnityEditor {
                 CenteredGreyHeader = controlsSkin.FindStyle("Centered grey header");
                 Foldout = controlsSkin.FindStyle("Foldout");
                 InputFieldPostfix = controlsSkin.GetStyle("Postfix");
-                ButtonLeft = controlsSkin.GetStyle("Button left");
-                ButtonMid = controlsSkin.GetStyle("Button mid");
-                ButtonRight = controlsSkin.GetStyle("Button right");
 
                 TabHeader = controlsSkin.GetStyle("Tab header");
                 
