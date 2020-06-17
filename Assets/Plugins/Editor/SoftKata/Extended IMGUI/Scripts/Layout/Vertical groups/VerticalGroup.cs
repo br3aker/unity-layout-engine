@@ -12,23 +12,23 @@ namespace SoftKata.UnityEditor {
             : this(ExtendedEditor.Resources.VerticalGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            if(EntriesRequestedSize.x < 0) {
-                EntriesRequestedSize.x = AutomaticWidth;
+            if(RequestedSize.x < 0) {
+                RequestedSize.x = AutomaticWidth;
             }
             else {
-                EntriesRequestedSize.x += TotalOffset.horizontal;
+                RequestedSize.x += TotalOffset.horizontal;
             }
-            EntriesRequestedSize.y += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
+            RequestedSize.y += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {
-            EntriesRequestedSize.x = Mathf.Max(EntriesRequestedSize.x, width);
-            EntriesRequestedSize.y += height;
+            RequestedSize.x = Mathf.Max(RequestedSize.x, width);
+            RequestedSize.y += height;
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             EntriesCount += count;
-            EntriesRequestedSize.x = Mathf.Max(EntriesRequestedSize.x, elemWidth);
-            EntriesRequestedSize.y += elemHeight * count;
+            RequestedSize.x = Mathf.Max(RequestedSize.x, elemWidth);
+            RequestedSize.y += elemHeight * count;
         }
 
         protected override bool QueryAndOcclude(Vector2 entrySize) {

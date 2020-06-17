@@ -33,13 +33,13 @@ namespace SoftKata.UnityEditor {
             : this(width, ExtendedEditor.Resources.HorizontalRestrictedGroup, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            EntriesRequestedSize.y += TotalOffset.vertical;
+            RequestedSize.y += TotalOffset.vertical;
 
-            _fixedWidth = EntriesRequestedSize.x;
+            _fixedWidth = RequestedSize.x;
             
-            EntriesRequestedSize.x = _containerWidth > 0 ? _containerWidth : AvailableWidth;
+            RequestedSize.x = _containerWidth > 0 ? _containerWidth : AvailableWidth;
 
-            var totalFlexibleWidth = EntriesRequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
+            var totalFlexibleWidth = RequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
             AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
 
             // Debug.Log(_fixedWidth);
@@ -48,18 +48,18 @@ namespace SoftKata.UnityEditor {
         // Entry registration and querying
         protected override void RegisterEntry(float width, float height) {
             if(width > 0) {
-                EntriesRequestedSize.x += width;
+                RequestedSize.x += width;
                 ++_fixedEntriesCount;
             }
-            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, height);
+            RequestedSize.y = Mathf.Max(RequestedSize.y, height);
         }
         public override void RegisterEntriesArray(float elemWidth, float elemHeight, int count) {
             if (elemWidth > 0) {
-                EntriesRequestedSize.x += elemWidth * count;
+                RequestedSize.x += elemWidth * count;
                 ++_fixedEntriesCount;
             }
             EntriesCount += count;
-            EntriesRequestedSize.y = Mathf.Max(EntriesRequestedSize.y, elemHeight);
+            RequestedSize.y = Mathf.Max(RequestedSize.y, elemHeight);
         }
     }
 }
