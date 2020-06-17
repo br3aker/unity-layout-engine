@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor {
-    // TODO: code review done
     public class ScrollGroup : VerticalGroup {
         private const float _minimalScrollBarSize = 35;
 
