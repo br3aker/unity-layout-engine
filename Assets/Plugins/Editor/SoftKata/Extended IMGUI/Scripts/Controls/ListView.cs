@@ -89,7 +89,7 @@ namespace SoftKata.UnityEditor.Controls {
             _bindDataToDrawer = dataBinder;
 
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
-            _emptyListIcon = ExtendedEditor.Resources.ListView.EmptyIcon;
+            _emptyListIcon = ExtendedEditor.Resources.ListEmptyIcon;
 
             Root = new ScrollGroup(container, false);
 

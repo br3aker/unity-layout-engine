@@ -28,11 +28,11 @@ namespace SoftKata.UnityEditor {
             public GUIStyle TabHeader;
             
             // Complex elements resources
-            public readonly ListViewResources ListView;
             public readonly WindowHeaderResources WindowHeader;
 
             // Utility
-            public readonly Texture Shadow;
+            public readonly Texture ElevationShadow;
+            public readonly Texture ListEmptyIcon;
 
             // Styles with default margin/border/padding
             public GUIStyle DefaultVerticalStyle;
@@ -64,11 +64,10 @@ namespace SoftKata.UnityEditor {
                 TabHeader = controlsSkin.GetStyle("Tab header");
                 
                 // Complex elements
-                ListView = new ListViewResources(controlsSkin, skinTextureFolderPath);
                 WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
 
                 // Utility
-                Shadow = LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
+                ElevationShadow = LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
 
                 // Empty style with default values
                 DefaultVerticalStyle = layoutSkin.GetStyle("Vertical");
@@ -89,15 +88,6 @@ namespace SoftKata.UnityEditor {
                     GroupStyle = layout.GetStyle("Window header");
                     ButtonStyle = controls.GetStyle("Window header button");
                     SearchBoxStyle = controls.GetStyle("Window header search box");
-                }
-            }
-
-            public struct ListViewResources {
-                public Texture EmptyIcon;
-
-                public ListViewResources(GUISkin skin, string textureFolderPath) {
-                    EmptyIcon = 
-                        LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "empty_list_icon.png");
                 }
             }
         }
