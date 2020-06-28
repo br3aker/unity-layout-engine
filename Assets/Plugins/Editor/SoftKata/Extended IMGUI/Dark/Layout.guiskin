@@ -1618,7 +1618,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 0
     m_StretchHeight: 0
-  - m_Name: '[testing] Treeview'
+  - m_Name: Treeview
     m_Normal:
       m_Background: {fileID: 2800000, guid: 7095be3dba565d649b0bce41c041eed4, type: 3}
       m_ScaledBackgrounds: []

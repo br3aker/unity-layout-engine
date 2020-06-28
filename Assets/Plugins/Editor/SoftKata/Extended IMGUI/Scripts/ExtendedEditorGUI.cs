@@ -34,16 +34,15 @@ namespace SoftKata.UnityEditor {
             // Utility
             public readonly Texture Shadow;
 
-            // UNDER DEVELOPMENT
-            public GUIStyle VerticalGroup;
-            public GUIStyle VerticalFadeGroup;
-            public GUIStyle Treeview;
+            // Styles with default margin/border/padding
+            public GUIStyle DefaultVerticalStyle;
+            public GUIStyle DefaultHorizontalStyle;
 
-            public GUIStyle HorizontalGroup;
-            public GUIStyle HorizontalRestrictedGroup;
-
+            // Default styles for groups which require non-zero values in GUIStyle
             public GUIStyle ScrollGroup;
             public GUIStyle ScrollGroupThumb;
+
+            public GUIStyle Treeview;
             
             internal ResourcesHolder() {
                 var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
@@ -71,15 +70,14 @@ namespace SoftKata.UnityEditor {
                 // Utility
                 Shadow = LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
 
+                // Empty style with default values
+                DefaultVerticalStyle = layoutSkin.GetStyle("Vertical");
+                DefaultHorizontalStyle = layoutSkin.GetStyle("Horizontal");
 
-                // UNDER DEVELOPMENT
-                VerticalGroup = layoutSkin.GetStyle("[testing] Vertical group");
-                VerticalFadeGroup = layoutSkin.GetStyle("[testing] Vertical fade group");
-                ScrollGroup = layoutSkin.GetStyle("[testing] Scroll group");
-                ScrollGroupThumb = layoutSkin.GetStyle("[testing] Scroll group thumb");
-                Treeview = layoutSkin.GetStyle("[testing] Treeview");
-                HorizontalGroup = layoutSkin.GetStyle("[testing] Horizontal group");
-                HorizontalRestrictedGroup = layoutSkin.GetStyle("[testing] Horizontal flexible group");
+                // Default styles for groups which require non-zero values in GUIStyle
+                ScrollGroup = layoutSkin.GetStyle("Scroll group");
+                ScrollGroupThumb = layoutSkin.GetStyle("Scroll group thumb");
+                Treeview = layoutSkin.GetStyle("Treeview");
             }
 
             public struct WindowHeaderResources {

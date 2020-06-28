@@ -142,7 +142,7 @@ namespace Development {
 
                 // _flexibleHorizontalGroupTest.OnGUI();
                 
-                // _treeViewGroupTest.OnGUI();
+                _treeViewGroupTest.OnGUI();
 
                 // _inputFieldControlTest.OnGUI();
             
