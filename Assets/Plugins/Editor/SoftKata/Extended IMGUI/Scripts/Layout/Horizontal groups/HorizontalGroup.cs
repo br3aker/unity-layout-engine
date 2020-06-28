@@ -8,7 +8,7 @@ namespace SoftKata.UnityEditor {
             SpaceBetweenEntries = style.contentOffset.x;
         }
         public HorizontalGroup(bool ignoreConstaints = false)
-            : this(ExtendedEditor.Resources.DefaultHorizontalStyle, ignoreConstaints) {}
+            : this(Resources.DefaultHorizontalStyle, ignoreConstaints) {}
         protected override void PreLayoutRequest() {
             RequestedSize.y += TotalOffset.vertical;
             RequestedSize.x += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);

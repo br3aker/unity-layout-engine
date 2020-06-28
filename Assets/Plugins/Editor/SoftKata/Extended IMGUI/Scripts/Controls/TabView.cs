@@ -42,7 +42,7 @@ namespace SoftKata.UnityEditor.Controls {
             _underlineHeight = tabHeaderStyle.margin.bottom;
 
             // Layout groups
-            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), ExtendedEditor.Resources.ScrollGroupThumb, true) {
+            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
                 HorizontalScroll = initialTab / (tabHeaders.Length - 1)
             };
 
@@ -56,7 +56,7 @@ namespace SoftKata.UnityEditor.Controls {
             _animator.OnFinish += _root.MarkLayoutDirty;
         }
         public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
-            : this(initialTab, tabHeaders, contentDrawers, underlineColor, ExtendedEditor.Resources.TabHeader) { }
+            : this(initialTab, tabHeaders, contentDrawers, underlineColor, Resources.TabHeader) { }
 
         public void OnGUI() {
             if(Layout.BeginLayoutGroup(_root)) {

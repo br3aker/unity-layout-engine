@@ -21,7 +21,7 @@ namespace SoftKata.UnityEditor {
             _expanded.OnFinish += ExtendedEditor.CurrentView.UnregisterRepaintRequest;
         }
         public VerticalFadeGroup(bool expanded = false, bool ignoreConstaints = false) 
-            : this(expanded, ExtendedEditor.Resources.DefaultVerticalStyle, ignoreConstaints) {}
+            : this(expanded, Resources.DefaultVerticalStyle, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             base.PreLayoutRequest();
