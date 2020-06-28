@@ -24,18 +24,10 @@ namespace SoftKata.UnityEditor {
 
         // Layout group management       
         public static bool BeginLayoutGroup(LayoutGroup group) {
-            if(Event.current.type == EventType.Layout) {
-                if(group.BeginLayout(_currentGroup)) {
-                    _currentGroup = group;
-                    return true;
-                }
-                return false;
-            }
-            if(group.BeginNonLayout()) {
-                _currentGroup = group;
-                return true;
-            }
-            return false;
+            return 
+                Event.current.type == EventType.Layout 
+                ? group.BeginLayout()
+                : group.BeginNonLayout();
         }
         public static void EndLayoutGroup() {
             var group = _currentGroup;

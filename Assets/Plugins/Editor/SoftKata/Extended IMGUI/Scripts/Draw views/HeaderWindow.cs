@@ -3,7 +3,7 @@ using UnityEditor;
 using SoftKata.UnityEditor.Controls;
 
 namespace SoftKata.UnityEditor {
-    public abstract class HeaderWindow : ExtendedWindow, IRepaintable {
+    public abstract class HeaderWindow : ExtendedWindow {
         private WindowHeaderBar _headerBar;
         private Texture _dropdownShadow;
 

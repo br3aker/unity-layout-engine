@@ -60,10 +60,12 @@ namespace SoftKata.UnityEditor {
 
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
-        internal bool BeginLayout(LayoutGroup parent) {
+        internal bool BeginLayout() {
+            var parent = Layout._currentGroup;
             if(parent == null) {
                 if(_isLayoutDirty) {
                     BeginLayoutInternal(parent);
+                    Layout._currentGroup = this;
                     return true;
                 }
                 Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
@@ -72,6 +74,7 @@ namespace SoftKata.UnityEditor {
             else if(parent._isLayoutDirty) {
                 _isLayoutDirty = true;
                 BeginLayoutInternal(parent);
+                Layout._currentGroup = this;
                 return true;
             }
 
@@ -144,6 +147,7 @@ namespace SoftKata.UnityEditor {
             }
 
             CalculateNonLayoutData();
+            Layout._currentGroup = this;
             return true;
         } 
         internal virtual void EndNonLayout() {
