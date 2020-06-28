@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace SoftKata.UnityEditor {
-    public static class Extentions {
+    public static class Extensions {
         public static Rect Intersection(this Rect a, Rect b) {
             var x = Mathf.Max(a.x, b.x);
             var num2 = Mathf.Min(a.x + a.width, b.x + b.width);
