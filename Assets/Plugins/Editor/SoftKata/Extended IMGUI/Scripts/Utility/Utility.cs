@@ -19,24 +19,6 @@ namespace SoftKata.UnityEditor {
             return Mathf.CeilToInt(style.CalcSize(content).y);
         }
 
-        public static void SwapElementsInplace<T>(this IList<T> list, int firstIndex, int secondIndex) {
-            T tmp = list[firstIndex];
-            list[firstIndex] = list[secondIndex];
-            list[secondIndex] = tmp;
-        }
-
-        public static void MoveElement<T>(this IList<T> list, int srcIndex, int dstIndex) {
-            T item = list[srcIndex];
-            list.RemoveAt(srcIndex);
-            list.Insert(dstIndex, item);
-        }
-
-        public static void Swap<T>(ref T a, ref T b) {
-            T tmp = a;
-            a = b;
-            b = tmp;
-        }
-
         public static void Accumulate(this RectOffset rectOffset, RectOffset source) {
             rectOffset.left += source.left;
             rectOffset.right += source.right;

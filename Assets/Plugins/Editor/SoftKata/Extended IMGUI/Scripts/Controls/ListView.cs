@@ -288,7 +288,7 @@ namespace SoftKata.UnityEditor.Controls {
                 var reorderBoundary = (_activeDataIndex - 1) * _elementHeightWithSpace + _elementHeight / 2;
                 if(_activeDrawerPosY <= reorderBoundary && _activeDrawerIndex > 0) {
                     _activeDataIndex -= 1;
-                    _drawers.SwapElementsInplace(_activeDrawerIndex, --_activeDrawerIndex);
+                    SwapDrawers(_activeDrawerIndex, --_activeDrawerIndex);
                 }
             }
             // doing down
@@ -296,7 +296,7 @@ namespace SoftKata.UnityEditor.Controls {
                 var reorderBoundary = (_activeDataIndex + 1) * _elementHeightWithSpace - _elementHeight / 2;
                 if(_activeDrawerPosY >= reorderBoundary && _activeDrawerIndex < _drawers.Count - 1) {
                     _activeDataIndex += 1;
-                    _drawers.SwapElementsInplace(_activeDrawerIndex, ++_activeDrawerIndex);
+                    SwapDrawers(_activeDrawerIndex, ++_activeDrawerIndex);
                 }
             }
 
@@ -445,7 +445,11 @@ namespace SoftKata.UnityEditor.Controls {
             var end = index;
             if(start > end) {
                 start -= 2;
-                Utility.Swap(ref start, ref end);
+                
+                // inlined Swap method
+                var tmp = start;
+                start = end;
+                end = tmp;
             }
             for(int i = start; i <= end; i++) {
                 _selectedIndices.Add(i);
@@ -480,11 +484,6 @@ namespace SoftKata.UnityEditor.Controls {
         }
 
         // Utility methods
-        public void Clear() {
-            ClearDataArray();
-            _selectedIndices.Clear();
-            _activeDataIndex = -1;
-        }
         private void RemoveSelected() {
             RemoveSelectedIndices(_selectedIndices.OrderByDescending(i => i));
 
@@ -493,7 +492,6 @@ namespace SoftKata.UnityEditor.Controls {
 
             RebindAllDrawers();
         }
-        
         private bool PositionToDataIndex(float position, out int index) {
             var absolutePosition = position + _visibleContentOffset;
             index = (int)(absolutePosition / _elementHeightWithSpace);
@@ -501,11 +499,10 @@ namespace SoftKata.UnityEditor.Controls {
             float indexElementBottomBorder = index * _elementHeightWithSpace + _elementHeight;
             return indexElementBottomBorder > absolutePosition;
         }
-
-        public void GoTo(int index) {
-            var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
-            Root.VerticalScroll = indexScrollPos;
-            RebindDrawers();
+        private void SwapDrawers(int firstIndex, int secondIndex) {
+            var tmp = _drawers[firstIndex];
+            _drawers[firstIndex] = _drawers[secondIndex];
+            _drawers[secondIndex] = tmp;
         }
 
         // Implementation dependent methods
@@ -513,6 +510,18 @@ namespace SoftKata.UnityEditor.Controls {
         protected abstract void MoveElement(int from, int to);
         protected abstract void AcceptDragData();
         protected abstract void RemoveSelectedIndices(IOrderedEnumerable<int> indices);
+
+        // Public interface
+        public void Clear() {
+            ClearDataArray();
+            _selectedIndices.Clear();
+            _activeDataIndex = -1;
+        }
+        public void GoTo(int index) {
+            var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
+            Root.VerticalScroll = indexScrollPos;
+            RebindDrawers();
+        }
     }
     
     public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
@@ -583,7 +592,9 @@ namespace SoftKata.UnityEditor.Controls {
             _sourceList.Clear();
         }
         protected override void MoveElement(int srcIndex, int dstIndex) {
-            _sourceList.MoveElement(srcIndex, dstIndex);
+            TData item = _sourceList[srcIndex];
+            _sourceList.RemoveAt(srcIndex);
+            _sourceList.Insert(dstIndex, item);
         }
         protected override void AcceptDragData() {
             AddDragDataToArray(_sourceList);
