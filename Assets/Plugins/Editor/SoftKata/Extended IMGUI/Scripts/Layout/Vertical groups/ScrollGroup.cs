@@ -180,6 +180,7 @@ namespace SoftKata.UnityEditor {
                 return;
             }
 
+            if(_scrollbarsDisabled) return;
             var currentEvent = Event.current;
             if(_needsHorizontalScroll)  DoHorizontalScroll(currentEvent);
             if(_needsVerticalScroll)    DoVerticalScroll(currentEvent);
