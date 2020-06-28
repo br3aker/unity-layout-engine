@@ -16,5 +16,16 @@ namespace SoftKata.UnityEditor {
             var num4 = Mathf.Min(a.y + a.height, b.y + b.height);
             return new Rect(x, y, num2 - x, num4 - y);
         }
+    
+        public static int GetContentHeight(this GUIStyle style, GUIContent content) {
+            return Mathf.CeilToInt(style.CalcSize(content).y);
+        }
+
+        public static void Accumulate(this RectOffset rectOffset, RectOffset source) {
+            rectOffset.left += source.left;
+            rectOffset.right += source.right;
+            rectOffset.top += source.top;
+            rectOffset.bottom += source.bottom;
+        }
     }
 }

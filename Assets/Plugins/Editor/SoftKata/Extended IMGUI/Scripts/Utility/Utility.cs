@@ -14,16 +14,5 @@ namespace SoftKata.UnityEditor {
             Assert.IsNotNull(asset, $"Couldn't load asset [{typeof(T).Name}] at path \"{assetPath}\"");
             return asset;
         }
-
-        public static int GetContentHeight(this GUIStyle style, GUIContent content) {
-            return Mathf.CeilToInt(style.CalcSize(content).y);
-        }
-
-        public static void Accumulate(this RectOffset rectOffset, RectOffset source) {
-            rectOffset.left += source.left;
-            rectOffset.right += source.right;
-            rectOffset.top += source.top;
-            rectOffset.bottom += source.bottom;
-        }
     }
 }
