@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace SoftKata.UnityEditor {
     // etc
@@ -53,8 +54,8 @@ namespace SoftKata.UnityEditor {
                 var skinTextureFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
                 var utilityTextureFolderPath = PluginPath + "/Textures/";
 
-                var controlsSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
-                var layoutSkin = Utility.LoadAssetAtPathAndAssert<GUISkin>(layoutSkinPath);
+                var controlsSkin = LoadAssetAtPathAndAssert<GUISkin>(controlsSkinPath);
+                var layoutSkin = LoadAssetAtPathAndAssert<GUISkin>(layoutSkinPath);
                 
                 // Primitive elements
                 CenteredGreyHeader = controlsSkin.FindStyle("Centered grey header");
@@ -68,7 +69,7 @@ namespace SoftKata.UnityEditor {
                 WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
 
                 // Utility
-                Shadow = Utility.LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
+                Shadow = LoadAssetAtPathAndAssert<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
 
 
                 // UNDER DEVELOPMENT
@@ -98,9 +99,15 @@ namespace SoftKata.UnityEditor {
 
                 public ListViewResources(GUISkin skin, string textureFolderPath) {
                     EmptyIcon = 
-                        Utility.LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "empty_list_icon.png");
+                        LoadAssetAtPathAndAssert<Texture>(textureFolderPath + "empty_list_icon.png");
                 }
             }
+        }
+
+        public static T LoadAssetAtPathAndAssert<T>(string assetPath) where T : UnityEngine.Object {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
+            Assert.IsNotNull(asset, $"Couldn't load asset [{typeof(T).Name}] at path \"{assetPath}\"");
+            return asset;
         }
     }
 }
