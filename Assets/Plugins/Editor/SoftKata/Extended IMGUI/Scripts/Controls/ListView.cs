@@ -441,6 +441,13 @@ namespace SoftKata.UnityEditor.Controls {
             _selectedIndices.Add(index);
         }
         private void ShiftSelection(int index) {
+            // Math behind this indices
+            // First, we assume that [start] is lesser than [end] => [start..end]
+            // We don't need to add _activeDataIndex index to selected indices set
+            // so we do +1
+            // If our assumption about start/end relationship is false
+            // then we do -1 to compensate +1 we added previously
+            // and also we do -1 because we don't need to add _activeDataIndex
             var start = _activeDataIndex + 1;
             var end = index;
             if(start > end) {
@@ -450,10 +457,9 @@ namespace SoftKata.UnityEditor.Controls {
             for(int i = start; i <= end; i++) {
                 _selectedIndices.Add(i);
             }
-            if(OnElementSelected != null) {
-                for(int i = start; i <= end; i++) {
-                    OnElementSelected.Invoke(i, this[i], GetDataDrawer(i));
-                }
+            if(OnElementSelected == null) return;
+            for(int i = start; i <= end; i++) {
+                OnElementSelected.Invoke(i, this[i], GetDataDrawer(i));
             }
         }
         private void ControlSelection(int index, int drawerIndex) {

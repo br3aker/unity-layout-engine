@@ -130,9 +130,9 @@ namespace Development {
 
                 // _animationValuesTest.OnGUI();
 
-                // Profiler.BeginSample($"[{Event.current.type}] ListView test");
-                // _arrayDrawer.OnGUI();
-                // Profiler.EndSample();
+                Profiler.BeginSample($"[{Event.current.type}] ListView test");
+                _arrayDrawer.OnGUI();
+                Profiler.EndSample();
 
                 // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
                 // _scrollViewTest.OnGUI();
@@ -144,7 +144,7 @@ namespace Development {
                 
                 // _treeViewGroupTest.OnGUI();
 
-                _inputFieldControlTest.OnGUI();
+                // _inputFieldControlTest.OnGUI();
             
                 Layout.EndLayoutGroup();
             }
