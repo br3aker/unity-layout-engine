@@ -426,7 +426,7 @@ namespace Development {
                         for(int i = 0; i < _data.Length; i++) {
                             if(Layout.GetRect(18, out var rect)) {
                                 _data[i] = EditorGUI.DelayedIntField(rect, _data[i]);
-                                // if(isRepaintEvent) ExtendedEditor.DrawPostfixUnsafe(rect, "post");
+                                if(isRepaintEvent) ExtendedEditor.DrawPostfixUnsafe(rect, "post");
                             }
                         }
 
