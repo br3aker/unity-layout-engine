@@ -11,7 +11,7 @@ namespace SoftKata.UnityEditor.Controls {
         public const float HeaderContentHeight = HeaderHeight - 4;
         public const float WindowHeaderShadowHeight = 5;
 
-        internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, ExtendedEditor.Resources.WindowHeader.GroupStyle);
+        internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.Group);
 
         public Button MainActionItem {get; set;}
         public IDrawableElement[] ActionItems {set; get;}
@@ -59,7 +59,7 @@ namespace SoftKata.UnityEditor.Controls {
             public SearchBar(WindowHeaderBar headerBar, Action<string> searchQueryChangedCallback) {
                 _parentView = ExtendedEditor.CurrentView;
 
-                var resources = ExtendedEditor.Resources.WindowHeader;
+                var resources = Resources.WindowHeader;
                 _buttonStyle = resources.ButtonStyle;
                 _searchBoxStyle = resources.SearchBoxStyle;
 

@@ -78,8 +78,8 @@ namespace SoftKata.UnityEditor.Controls {
         public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
 
         // Empty list default texture & label
-        private readonly Texture _emptyListIcon;
-        private readonly GUIStyle _labelStyle = ExtendedEditor.Resources.CenteredGreyHeader;
+        private readonly Texture _emptyListIcon = Resources.ListEmptyIcon;
+        private readonly GUIStyle _labelStyle = Resources.CenteredGreyHeader;
         private readonly GUIContent _emptyListLabel = new GUIContent(EmptyListLabel);
         private readonly float _emptyListLabelHeight;
 
@@ -89,7 +89,6 @@ namespace SoftKata.UnityEditor.Controls {
             _bindDataToDrawer = dataBinder;
 
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
-            _emptyListIcon = ExtendedEditor.Resources.ListEmptyIcon;
 
             Root = new ScrollGroup(container, false);
 

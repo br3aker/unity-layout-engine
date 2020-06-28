@@ -30,7 +30,7 @@ namespace SoftKata.UnityEditor {
             _containerWidth = width;
         }
         public FlexibleHorizontalGroup(float width = FullScreenWidth, bool ignoreConstaints = false)
-            : this(width, ExtendedEditor.Resources.DefaultHorizontalStyle, ignoreConstaints) {}
+            : this(width, Resources.DefaultHorizontalStyle, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
             RequestedSize.y += TotalOffset.vertical;

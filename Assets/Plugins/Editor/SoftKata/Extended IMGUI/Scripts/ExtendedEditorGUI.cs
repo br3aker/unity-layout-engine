@@ -13,7 +13,7 @@ namespace SoftKata.UnityEditor {
         public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
         
         private static ResourcesHolder _resources;
-        public static ResourcesHolder Resources => _resources ?? (_resources = new ResourcesHolder());
+        public static ResourcesHolder DEPRECATED_Resources => _resources ?? (_resources = new ResourcesHolder());
 
         public class ResourcesHolder {
             private const string ControlsSkinSubPathFormat = "/{0}/Controls.guiskin";
@@ -166,12 +166,12 @@ namespace SoftKata.UnityEditor {
         }
 
         public struct WindowHeaderResources {
-            public readonly GUIStyle GroupStyle;
+            public readonly GUIStyle Group;
             public readonly GUIStyle ButtonStyle;
             public readonly GUIStyle SearchBoxStyle;
 
             public WindowHeaderResources(GUISkin controls, GUISkin layout) {
-                GroupStyle = layout.GetStyle("Window header");
+                Group = layout.GetStyle("Window header");
                 ButtonStyle = controls.GetStyle("Window header button");
                 SearchBoxStyle = controls.GetStyle("Window header search box");
             }

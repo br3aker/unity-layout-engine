@@ -27,7 +27,7 @@ namespace SoftKata.UnityEditor {
 
             _connectionLineOffset = style.padding.left + _connectionLineWidth;
         }
-        public TreeViewGroup() : this(ExtendedEditor.Resources.Treeview) {}
+        public TreeViewGroup() : this(Resources.Treeview) {}
     
         internal override bool BeginNonLayout() {
             if(base.BeginNonLayout()) {

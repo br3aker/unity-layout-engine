@@ -102,7 +102,7 @@ namespace SoftKata.UnityEditor {
             _thumbStyle = thumbStyle;
         }
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars = false, bool ignoreConstaints = false)
-            : this(containerSize, disableScrollbars, ExtendedEditor.Resources.ScrollGroup, ExtendedEditor.Resources.ScrollGroupThumb, ignoreConstaints) {}
+            : this(containerSize, disableScrollbars, Resources.ScrollGroup, Resources.ScrollGroupThumb, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
             return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;

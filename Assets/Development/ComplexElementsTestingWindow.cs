@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+using Resources = SoftKata.UnityEditor.Resources;
+
 namespace Development {
     public class ComplexElementsTestingWindow : HeaderWindow {
         [MenuItem("Window/Complex elements")]
@@ -36,9 +38,9 @@ namespace Development {
             headerBar.ActionItems =
                 new IDrawableElement[] {
                     new WindowHeaderBar.SearchBar(headerBar, (str) => Debug.Log(str)),
-                    new Button(EditorGUIUtility.IconContent("d__Help"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
-                    new Button(EditorGUIUtility.IconContent("d__Menu"), ExtendedEditor.Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
+                    new Button(EditorGUIUtility.IconContent("d__Help"), Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #1 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d_Preset.Context"), Resources.WindowHeader.ButtonStyle, () => Debug.Log("Button #2 pressed")),
+                    new Button(EditorGUIUtility.IconContent("d__Menu"), Resources.WindowHeader.ButtonStyle, () => Debug.Log("Overflow menu pressed"))
                 };
 
             if (_alwaysRepaint) {
