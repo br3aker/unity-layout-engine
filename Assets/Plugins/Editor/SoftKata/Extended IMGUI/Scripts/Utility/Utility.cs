@@ -19,14 +19,6 @@ namespace SoftKata.UnityEditor {
             return Mathf.CeilToInt(style.CalcSize(content).y);
         }
 
-        public static Rect RectIntersection(Rect a, Rect b) {
-            var x = Mathf.Max(a.x, b.x);
-            var num2 = Mathf.Min(a.x + a.width, b.x + b.width);
-            var y = Mathf.Max(a.y, b.y);
-            var num4 = Mathf.Min(a.y + a.height, b.y + b.height);
-            return new Rect(x, y, num2 - x, num4 - y);
-        }
-
         public static void SwapElementsInplace<T>(this IList<T> list, int firstIndex, int secondIndex) {
             T tmp = list[firstIndex];
             list[firstIndex] = list[secondIndex];

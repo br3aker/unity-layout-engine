@@ -138,7 +138,7 @@ namespace SoftKata.UnityEditor {
                 
                 // Content & container rects
                 ContentRectInternal = TotalOffset.Remove(requestedRect);
-                ContainerRectInternal = Utility.RectIntersection(ContentRectInternal, Parent.ContainerRectInternal);
+                ContainerRectInternal = ContentRectInternal.Intersection(Parent.ContainerRectInternal);
             }
             else {
                 // Content & container rects
