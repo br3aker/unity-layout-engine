@@ -1,8 +1,5 @@
-﻿using System;
-
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace SoftKata.UnityEditor {
     /*!
