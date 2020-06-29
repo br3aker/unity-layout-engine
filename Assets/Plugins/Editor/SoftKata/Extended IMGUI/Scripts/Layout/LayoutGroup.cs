@@ -3,9 +3,6 @@ using UnityEngine;
 
 namespace SoftKata.UnityEditor {
 
-    /*!
-        
-    */
     public abstract class LayoutGroup {
         // Generated with "LayoutGroup" string with .net GetHashCode method
         protected const int LayoutGroupControlIdHint = -1416898402;
@@ -19,7 +16,7 @@ namespace SoftKata.UnityEditor {
 
         // Layout settings
         protected RectOffset ContentOffset;
-        protected float SpaceBetweenEntries;
+        public float SpaceBetweenEntries {get; protected set;}
 
         // Clip
         public bool Clip {get; set;}
