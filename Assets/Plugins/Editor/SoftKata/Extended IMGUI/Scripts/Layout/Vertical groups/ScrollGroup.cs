@@ -105,21 +105,21 @@ namespace SoftKata.UnityEditor {
             : this(containerSize, disableScrollbars, Resources.ScrollGroup, Resources.ScrollGroupThumb, ignoreConstaints) {}
 
         protected override float CalculateAutomaticContentWidth() {
-            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal;
+            return (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - ContentOffset.horizontal;
         }
 
         protected override void PreLayoutRequest() {
             // Resetting total offset to if scrollbars are not used
-            TotalOffset.right = _rightPadding;
-            TotalOffset.bottom = _bottomPadding;
+            ContentOffset.right = _rightPadding;
+            ContentOffset.bottom = _bottomPadding;
 
             // Adding extra content size
             RequestedSize.y += SpaceBetweenEntries * (EntriesCount - 1);
 
             // Calculating container visible area size
             var visibleAreaSize = new Vector2(
-                (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - TotalOffset.horizontal,
-                _containerSize.y - TotalOffset.vertical
+                (_containerSize.x > 0 ? _containerSize.x : AvailableWidth) - ContentOffset.horizontal,
+                _containerSize.y - ContentOffset.vertical
             );
 
             _invisibleAreaSize = visibleAreaSize - RequestedSize;
@@ -128,12 +128,12 @@ namespace SoftKata.UnityEditor {
             if(!_scrollbarsDisabled) {
                 if(RequestedSize.x > visibleAreaSize.x) {
                     var horizontalBarExtraHeight = _horizontalScrollBarPadding + _horizontalScrollBarHeight;
-                    TotalOffset.bottom += Mathf.RoundToInt(horizontalBarExtraHeight);
+                    ContentOffset.bottom += Mathf.RoundToInt(horizontalBarExtraHeight);
                     visibleAreaSize.y -= horizontalBarExtraHeight;
                 }
                 if(RequestedSize.y > visibleAreaSize.y) {
                     var verticalBarExtraWidth = _verticalScrollBarPadding + _verticalScrollBarWidth;
-                    TotalOffset.right += Mathf.RoundToInt(verticalBarExtraWidth);
+                    ContentOffset.right += Mathf.RoundToInt(verticalBarExtraWidth);
                     visibleAreaSize.x -= verticalBarExtraWidth;
                 }
             }
@@ -155,8 +155,8 @@ namespace SoftKata.UnityEditor {
             }
 
             // Applying offsets to actual group rect
-            RequestedSize.x += TotalOffset.horizontal;
-            RequestedSize.y += TotalOffset.vertical;
+            RequestedSize.x += ContentOffset.horizontal;
+            RequestedSize.y += ContentOffset.vertical;
         }
 
         internal override bool BeginNonLayout() {
@@ -234,7 +234,7 @@ namespace SoftKata.UnityEditor {
 
             var scrollMovementLength = actualContentRect.height - _verticalScrollBarHeight;
 
-            if (evt.type == EventType.ScrollWheel && TotalOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
+            if (evt.type == EventType.ScrollWheel && ContentOffset.Add(actualContentRect).Contains(evt.mousePosition)) {
                 evt.Use();
                 GUIUtility.keyboardControl = 0;
 

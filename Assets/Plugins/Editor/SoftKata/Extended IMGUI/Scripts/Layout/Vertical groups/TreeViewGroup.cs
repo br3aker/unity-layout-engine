@@ -18,7 +18,7 @@ namespace SoftKata.UnityEditor {
 
         public TreeViewGroup(GUIStyle style) : base(style, false) {
             var margin = style.margin;
-            TotalOffset.left += margin.left;
+            ContentOffset.left += margin.left;
 
             _connectionLineWidth = margin.top;
             _connectorContentOffset = margin.right;

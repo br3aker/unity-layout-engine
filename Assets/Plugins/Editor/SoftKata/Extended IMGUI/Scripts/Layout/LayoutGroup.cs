@@ -2,47 +2,54 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoftKata.UnityEditor {
+
+    /*!
+        
+    */
     public abstract class LayoutGroup {
         // Generated with "LayoutGroup" string with .net GetHashCode method
         protected const int LayoutGroupControlIdHint = -1416898402;
 
+        // Parent
         internal LayoutGroup Parent { get; private set; }
 
-        // Background rendering
-        public readonly GUIStyle Style;
-        private bool _hasBackground;
+        // Background texture
+        public GUIStyle Style {get;}
+        private readonly bool _hasBackground;
 
-        // offset settings - Padding/Border/Margin
-        public RectOffset TotalOffset {get;}
+        // Layout settings
+        protected RectOffset ContentOffset;
+        protected float SpaceBetweenEntries;
 
+        // Clip
         public bool Clip {get; set;}
         private Vector2 _clipWorldPositionOffset;
 
-        public float SpaceBetweenEntries { get; protected set; }
-
-        protected int EntriesCount;
-
-        protected bool IsLayoutEvent = true;
-
         // entries layout data
+        protected int EntriesCount;
         protected Vector2 RequestedSize;
-
         protected Vector2 NextEntryPosition;
 
+        // Actual occluded rect
         protected Rect ContainerRectInternal;
+        // Requested rect
         protected Rect ContentRectInternal;
 
-        public Rect ContentRect => ContentRectInternal;
-
+        // Layout build flags
+        protected bool IsLayoutEvent = true;
         private bool _isLayoutDirty = true;
 
 
         // Automatic width for entries
-        public float AutomaticWidth {get; protected set;}
         protected virtual float CalculateAutomaticContentWidth() {
-            return AvailableWidth - TotalOffset.horizontal;
+            return AvailableWidth - ContentOffset.horizontal;
         }
         protected float AvailableWidth => Parent?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
+
+        
+        public Rect ContentRect => ContentRectInternal;
+        
+        public float AutomaticWidth {get; protected set;}
 
         // Constructor
         protected LayoutGroup(GUIStyle style, bool ignoreConstaints) {
@@ -50,9 +57,9 @@ namespace SoftKata.UnityEditor {
 
             _hasBackground = style.normal.background != null;
 
-            TotalOffset = new RectOffset();
+            ContentOffset = new RectOffset();
             if(ignoreConstaints) return;
-            TotalOffset.Accumulate(style.padding);
+            ContentOffset.Accumulate(style.padding);
         }
 
         // Layout event
@@ -113,7 +120,7 @@ namespace SoftKata.UnityEditor {
             // Background image rendering
             if(Event.current.type == EventType.Repaint && _hasBackground) {
                 Style.Draw(
-                    TotalOffset.Add(ContentRectInternal),
+                    ContentOffset.Add(ContentRectInternal),
                     false, false, false, false
                 );
             }
@@ -137,12 +144,12 @@ namespace SoftKata.UnityEditor {
                 if(!isGroupValid) return false;
                 
                 // Content & container rects
-                ContentRectInternal = TotalOffset.Remove(requestedRect);
+                ContentRectInternal = ContentOffset.Remove(requestedRect);
                 ContainerRectInternal = ContentRectInternal.Intersection(Parent.ContainerRectInternal);
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = TotalOffset.Remove(Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y));
+                ContainerRectInternal = ContentOffset.Remove(Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y));
                 ContentRectInternal = ContainerRectInternal;
             }
 
@@ -161,7 +168,7 @@ namespace SoftKata.UnityEditor {
         // This prepares layout group for rect querying without actual layout stage
         public void BeginAbsoluteLayout(Rect rect) {
             // Content & container rects
-            ContainerRectInternal = TotalOffset.Remove(rect);
+            ContainerRectInternal = ContentOffset.Remove(rect);
             ContentRectInternal = ContainerRectInternal;
             CalculateNonLayoutData();
         }

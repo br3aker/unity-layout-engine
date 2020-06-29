@@ -10,8 +10,8 @@ namespace SoftKata.UnityEditor {
         public HorizontalGroup(bool ignoreConstaints = false)
             : this(Resources.DefaultHorizontalStyle, ignoreConstaints) {}
         protected override void PreLayoutRequest() {
-            RequestedSize.y += TotalOffset.vertical;
-            RequestedSize.x += TotalOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
+            RequestedSize.y += ContentOffset.vertical;
+            RequestedSize.x += ContentOffset.horizontal + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {

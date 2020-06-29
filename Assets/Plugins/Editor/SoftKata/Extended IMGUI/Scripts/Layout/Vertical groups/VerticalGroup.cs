@@ -16,9 +16,9 @@ namespace SoftKata.UnityEditor {
                 RequestedSize.x = AutomaticWidth;
             }
             else {
-                RequestedSize.x += TotalOffset.horizontal;
+                RequestedSize.x += ContentOffset.horizontal;
             }
-            RequestedSize.y += TotalOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
+            RequestedSize.y += ContentOffset.vertical + SpaceBetweenEntries * (EntriesCount - 1);
         }
 
         protected override void RegisterEntry(float width, float height) {

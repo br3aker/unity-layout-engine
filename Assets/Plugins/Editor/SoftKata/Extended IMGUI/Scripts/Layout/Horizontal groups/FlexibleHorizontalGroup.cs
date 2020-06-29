@@ -33,13 +33,13 @@ namespace SoftKata.UnityEditor {
             : this(width, Resources.DefaultHorizontalStyle, ignoreConstaints) {}
 
         protected override void PreLayoutRequest() {
-            RequestedSize.y += TotalOffset.vertical;
+            RequestedSize.y += ContentOffset.vertical;
 
             _fixedWidth = RequestedSize.x;
             
             RequestedSize.x = _containerWidth > 0 ? _containerWidth : AvailableWidth;
 
-            var totalFlexibleWidth = RequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - TotalOffset.horizontal;
+            var totalFlexibleWidth = RequestedSize.x - _fixedWidth - SpaceBetweenEntries * (EntriesCount - 1) - ContentOffset.horizontal;
             AutomaticWidth = Mathf.Max(totalFlexibleWidth / (EntriesCount - _fixedEntriesCount), 0f);
 
             // Debug.Log(_fixedWidth);
