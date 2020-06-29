@@ -89,7 +89,7 @@ namespace SoftKata.UnityEditor {
                 width,
                 contentRect.height + padding.vertical
             );
-            global::UnityEditor.EditorGUI.DrawRect(separatorRect, color);
+            EditorGUI.DrawRect(separatorRect, color);
         }
     }
 }
