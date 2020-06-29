@@ -77,6 +77,7 @@ namespace Development {
                     var references = DragAndDrop.objectReferences;
                     for (int i = 0; i < references.Length; i++) {
                         list.Add(references[i].GetInstanceID());
+                        Debug.Log($"Drag & Drop: {references[i].GetInstanceID()}");
                     }
                 },
 
@@ -128,13 +129,13 @@ namespace Development {
 
                 // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
 
-                _tabsDrawer.OnGUI();
+                // _tabsDrawer.OnGUI();
 
                 // _animationValuesTest.OnGUI();
 
-                // Profiler.BeginSample($"[{Event.current.type}] ListView test");
-                // _arrayDrawer.OnGUI();
-                // Profiler.EndSample();
+                Profiler.BeginSample($"[{Event.current.type}] ListView test");
+                _arrayDrawer.OnGUI();
+                Profiler.EndSample();
 
                 // Profiler.BeginSample($"[{Event.current.type}] Scroll group");
                 // _scrollViewTest.OnGUI();

@@ -197,32 +197,18 @@ namespace SoftKata.UnityEditor.Controls {
         }
 
         // Event handling
-        private EventType FilterCurrentEvent(Event evt) {
-            _currentControlId = GUIUtility.GetControlID(ListViewControlIdHint, FocusType.Passive);
-            var type = evt.GetTypeForControl(_currentControlId);
-
-            switch(type) {
-                case EventType.DragUpdated:
-                    if(ValidateDragData == null) {
-                        type = EventType.Ignore;
-                    }
-                    break;
-                default:
-                break;
-            }
-            
-            return type;
-        }
         private void HandleDefaultEvents() {
+            _currentControlId = GUIUtility.GetControlID(ListViewControlIdHint, FocusType.Passive);
             var evt = Event.current;
-            switch (FilterCurrentEvent(evt)) {
+            var type = evt.GetTypeForControl(_currentControlId);
+            switch (type) {
                 // Selection, reordering & context click
                 case EventType.MouseDown:
                     HandleMouseDown(evt);
                     break;
                 // Drag and drop
                 case EventType.DragUpdated:
-                    HandleDragUpdated(evt);
+                    if(ValidateDragData != null) HandleDragUpdated(evt);
                     break;
                 case EventType.DragExited:
                     HandleDragExited(evt);
@@ -233,8 +219,10 @@ namespace SoftKata.UnityEditor.Controls {
             }
         }
         private void HandleReorderingEvents() {
+            _currentControlId = GUIUtility.GetControlID(ListViewControlIdHint, FocusType.Passive);
             var evt = Event.current;
-            switch (FilterCurrentEvent(evt)) {
+            var type = evt.GetTypeForControl(_currentControlId);
+            switch (type) {
                 // Selection & reordering
                 case EventType.MouseUp:
                     HandleMouseUp(evt);
@@ -325,6 +313,7 @@ namespace SoftKata.UnityEditor.Controls {
         }
         private void HandleDragPerform(Event evt) {
             AcceptDragData();
+            Root.MarkLayoutDirty();
             RebindDrawers();
 
             evt.Use();
