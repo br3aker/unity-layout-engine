@@ -6,10 +6,11 @@ using UnityEngine.Profiling;
 
 namespace SoftKata.UnityEditor {
     /*!
-        @brief Main static class providing automatic layout utility
-        @warning Layout functionality must be used only inside IMGUI loop
-        
+        @brief Main static class providing automatic layout utility.
+
         Such as layout groups management & rect querying. Rect querying works both inside and outside layout scopes.
+
+        @warning Layout functionality must be used only inside IMGUI loop.
     */
     public static partial class Layout {
         internal const float FlexibleWidth = -1;
@@ -17,7 +18,7 @@ namespace SoftKata.UnityEditor {
         internal static LayoutGroup _currentGroup;
 
         /*!
-            Current automatic content width
+            Current automatic content width.
             @return Width in pixels
         */
         public static float CurrentContentWidth {
@@ -35,15 +36,13 @@ namespace SoftKata.UnityEditor {
         }
 
         /*!
-            Begins layout scope
+            Begins layout scope.
             @param[in] group Target layout group
             @return bool flag if group and it's scope is valid
 
 
             Visible groups create "layout scope", each GetRect call belongs to currently active scope. 
             Not all groups are visible thus not all groups must be closed.
-
-            @warning All visible groups must be closed with EndLayoutGroup
 
             It's strongly advised to use Begin-End pair this way:
             @code
@@ -52,6 +51,8 @@ namespace SoftKata.UnityEditor {
                     Layout.EndCurrentScope();
                 }
             @endcode
+
+            @warning All visible groups must be closed with EndLayoutGroup
         */
         public static bool BeginLayoutScope(LayoutGroup group) {
             return 
@@ -60,8 +61,8 @@ namespace SoftKata.UnityEditor {
                 : group.BeginNonLayout();
         }
         /*!
-            Ends layout group
-            @throws System.NullReferenceException if called without appropriate opening BeginLayoutGroup(LayoutGroup group) call
+            Ends layout group.
+            @throws System.NullReferenceException if called without appropriate opening BeginLayoutScope(LayoutGroup group) call
         */
         public static void EndCurrentScope() {
             var group = _currentGroup;
@@ -75,7 +76,7 @@ namespace SoftKata.UnityEditor {
         }
     
         /*!
-            Main method to get rect from layout
+            Main method to get rect from layout system.
             @param[in] width Width
             @param[in] height Height
             @param[out] rect Initialized rect with requested size if true is returned, undefined otherwise
@@ -85,7 +86,7 @@ namespace SoftKata.UnityEditor {
 
             It's strongly advised to use it this way:
             @code
-                if(GetRect(width: 160, height: 18, out var rect)) {
+                if(Layout.GetRect(width: 160, height: 18, out var rect)) {
                     EditorGUI.DrawRect(rect, Color.Black);
                 }
             @endcode
@@ -102,6 +103,8 @@ namespace SoftKata.UnityEditor {
             @param[in] height Height
             @param[out] rect Initialized rect with requested size if true is returned, undefined otherwise
             @return bool flag if requested rect is valid
+
+            @warning Consider rect invalid if this method has returned false and **do not** use it in GUI methods
 
             Same as GetRect(float width, float height, out Rect rect) but uses automatic width.
         */
