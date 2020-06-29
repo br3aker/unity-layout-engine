@@ -115,14 +115,14 @@ namespace SoftKata.UnityEditor.Controls {
         // Core
         public void OnGUI() {
             var preScrollPos = Root.VerticalScroll;
-            if (Layout.BeginLayoutGroup(Root)) {
+            if (Layout.BeginLayoutScope(Root)) {
                 if(Count != 0) {
                     DoContent();
                 }
                 else {
                     DoEmptyContent();
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
 
             // if scroll pos changed => recalculate visible elements & rebind drawers if needed

@@ -18,14 +18,14 @@ namespace SoftKata.UnityEditor.Controls {
 
         public void OnGUI() {
             _root.Width = Layout.CurrentContentWidth;
-            if(Layout.BeginLayoutGroup(_root)) {
+            if(Layout.BeginLayoutScope(_root)) {
                 MainActionItem?.OnGUI();
                 _root.GetRect(0);
                 for(int i = 0; i < ActionItems.Length; i++) {
                     ActionItems[i].OnGUI();
                 }
 
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
         }
     
