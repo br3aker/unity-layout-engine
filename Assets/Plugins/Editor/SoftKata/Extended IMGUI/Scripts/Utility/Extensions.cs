@@ -27,5 +27,20 @@ namespace SoftKata.UnityEditor {
             rectOffset.top += source.top;
             rectOffset.bottom += source.bottom;
         }
+    
+        public static void DrawLeftSeparator(this LayoutGroup group, Color color) {
+            var contentRect = group.ContentRect;
+            var style = group.Style;
+
+            var padding = style.padding;
+            var width = style.border.left;
+            var separatorRect = new Rect(
+                contentRect.x - padding.left - width,
+                contentRect.y - padding.top,
+                width,
+                contentRect.height + padding.vertical
+            );
+            EditorGUI.DrawRect(separatorRect, color);
+        }
     }
 }
