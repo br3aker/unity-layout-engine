@@ -59,7 +59,7 @@ namespace SoftKata.UnityEditor.Controls {
             : this(initialTab, tabHeaders, contentDrawers, underlineColor, Resources.TabHeader) { }
 
         public void OnGUI() {
-            if(Layout.BeginLayoutGroup(_root)) {
+            if(Layout.BeginLayoutScope(_root)) {
                 int currentSelection = CurrentTab;
                 float currentAnimationPosition = _animator.Value / (_tabHeaders.Length - 1);
 
@@ -78,14 +78,14 @@ namespace SoftKata.UnityEditor.Controls {
                 // Content
                 if (_animator.IsAnimating) {
                     _scrollGroup.HorizontalScroll = currentAnimationPosition;
-                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
-                        if(Layout.BeginLayoutGroup(_horizontalGroup)) {
+                    if(Layout.BeginLayoutScope(_scrollGroup)) {
+                        if(Layout.BeginLayoutScope(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
                                 _contentDrawers[i].OnGUI();
                             }
-                            Layout.EndLayoutGroup();
+                            Layout.EndCurrentScope();
                         }
-                        Layout.EndLayoutGroup();
+                        Layout.EndCurrentScope();
                     }
                 }
                 else {
@@ -99,7 +99,7 @@ namespace SoftKata.UnityEditor.Controls {
                     _root.MarkLayoutDirty();
                 }
 
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
         }
     }

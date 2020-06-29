@@ -123,7 +123,7 @@ namespace Development {
 
         protected override void DrawContent() {
             _contentRoot.ContainerSize = new Vector2(position.size.x, position.size.y - 100);
-            if (Layout.BeginLayoutGroup(_contentRoot)) {
+            if (Layout.BeginLayoutScope(_contentRoot)) {
                 DrawServiceInfo();
 
                 // EditorGUI.DrawRect(Layout.GetRect(2000, 16), Color.red);
@@ -148,7 +148,7 @@ namespace Development {
 
                 // _inputFieldControlTest.OnGUI();
             
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
         }
 
@@ -244,24 +244,24 @@ namespace Development {
 
             public void OnGUI() {
                 // _fadeGroup.Expanded = EditorGUI.Foldout(Layout.GetRect(16), _fadeGroup.Expanded, "Fade group");
-                if(_fadeGroup.Visible && Layout.BeginLayoutGroup(_fadeGroup)) {
-                    if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                if(_fadeGroup.Visible && Layout.BeginLayoutScope(_fadeGroup)) {
+                    if(Layout.BeginLayoutScope(_scrollGroup)) {
                         for(int i = 0; i < _nestedHorizontalGroups.Length; i++) {
                             var group = _nestedHorizontalGroups[i];
-                            if(Layout.BeginLayoutGroup(group)) {
+                            if(Layout.BeginLayoutScope(group)) {
                                 var width = group.AutomaticWidth;
                                 for(int j = 0; j < _horizontalEntriesCount; j++) {
                                     if(group.GetRect(width, 30, out var rect)) {
                                         EditorGUI.DrawRect(rect, Color.black);
                                     }
                                 }
-                                Layout.EndLayoutGroup();
+                                Layout.EndCurrentScope();
                             }
                         }
-                        Layout.EndLayoutGroup();
+                        Layout.EndCurrentScope();
                     }
 
-                    Layout.EndLayoutGroup();
+                    Layout.EndCurrentScope();
                 }
             }
         }
@@ -278,13 +278,13 @@ namespace Development {
                 _contentSize.x = EditorGUI.IntField(Layout.GetRect(16), "X size", _contentSize.x);
                 _contentSize.y = EditorGUI.IntField(Layout.GetRect(16), "Y size", _contentSize.y);
 
-                if(Layout.BeginLayoutGroup(_scrollGroup)) {
+                if(Layout.BeginLayoutScope(_scrollGroup)) {
                     if(Layout.GetRect(_contentSize.x, _contentSize.y, out var rect)) {
                         EditorGUI.DrawRect(rect, Color.red);
                         EditorGUI.LabelField(rect, $"{rect.width} x {rect.height}");
                     }
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
         }
 
@@ -296,7 +296,7 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(_flexibleHorizontalGroup)) {
+                if(Layout.BeginLayoutScope(_flexibleHorizontalGroup)) {
                     Layout.GetRect(40, 55, out var fixedRect);
                     EditorGUI.DrawRect(fixedRect, Color.black);
                     EditorGUI.LabelField(fixedRect, fixedRect.width.ToString());
@@ -307,7 +307,7 @@ namespace Development {
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
                 }
-                Layout.EndLayoutGroup();
+                Layout.EndCurrentScope();
             }
         }
     
@@ -321,20 +321,20 @@ namespace Development {
             }
             
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(_treeViewGroup)) {
+                if(Layout.BeginLayoutScope(_treeViewGroup)) {
                     for(int i = 0; i < 3; i++) {
                         var rect = _treeViewGroup.GetLeafRect(40);
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
 
-                    if(Layout.BeginLayoutGroup(_treeViewChildGroup)) {
+                    if(Layout.BeginLayoutScope(_treeViewChildGroup)) {
                         for(int i = 0; i < 3; i++) {
                             var rect = _treeViewChildGroup.GetLeafRect(40);
                             EditorGUI.DrawRect(rect, Color.black);
                             EditorGUI.LabelField(rect, rect.width.ToString());
                         }
-                        Layout.EndLayoutGroup();
+                        Layout.EndCurrentScope();
                     }
 
                     for(int i = 0; i < 3; i++) {
@@ -342,7 +342,7 @@ namespace Development {
                         EditorGUI.DrawRect(rect, Color.black);
                         EditorGUI.LabelField(rect, rect.width.ToString());
                     }
-                    Layout.EndLayoutGroup();
+                    Layout.EndCurrentScope();
                 }
             }
         }
@@ -378,7 +378,7 @@ namespace Development {
             }
 
             public void OnGUI() {
-                if(Layout.BeginLayoutGroup(updateSubsContainer)) {
+                if(Layout.BeginLayoutScope(updateSubsContainer)) {
                     var subs = EditorApplication.update.GetInvocationList();
                     EditorGUI.LabelField(Layout.GetRect(16), $"Sub count: {subs.Length}");
                     for(int i = 0; i < subs.Length; i++) {
@@ -387,7 +387,7 @@ namespace Development {
                     }
 
                     updateSubsContainer.MarkLayoutDirty();
-                    Layout.EndLayoutGroup();
+                    Layout.EndCurrentScope();
                 }
 
                 if(GUI.Button(Layout.GetRect(16), "Launch")) {
@@ -396,14 +396,14 @@ namespace Development {
                     }
                 }
                 
-                if(Layout.BeginLayoutGroup(tweensContainer)) {
+                if(Layout.BeginLayoutScope(tweensContainer)) {
                     _floatTween.DebugGUI();
 
                     EditorGUI.LabelField(Layout.GetRect(16), "---------------------------------------");
 
                     _boolTween.DebugGUI();
 
-                    Layout.EndLayoutGroup();
+                    Layout.EndCurrentScope();
                 }
             }
         }
@@ -424,7 +424,7 @@ namespace Development {
 
                 Profiler.BeginSample($"[{Event.current.type}] InputFieldControlTest(Native) for {_data.Length} elements");
                 {
-                    if(Layout.BeginLayoutGroup(_rootNative)) {
+                    if(Layout.BeginLayoutScope(_rootNative)) {
                         for(int i = 0; i < _data.Length; i++) {
                             if(Layout.GetRect(18, out var rect)) {
                                 _data[i] = EditorGUI.DelayedIntField(rect, _data[i]);
@@ -432,7 +432,7 @@ namespace Development {
                             }
                         }
 
-                        Layout.EndLayoutGroup();
+                        Layout.EndCurrentScope();
                     }
                 }
                 Profiler.EndSample();
