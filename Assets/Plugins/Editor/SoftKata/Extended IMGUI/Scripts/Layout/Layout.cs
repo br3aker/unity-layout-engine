@@ -81,7 +81,7 @@ namespace SoftKata.UnityEditor {
             @param[out] rect Initialized rect with requested size if true is returned, undefined otherwise
             @return bool flag if requested rect is valid
 
-            @warning Consider rect is invalid if this method return false and **do not** use it in GUI methods
+            @warning Consider rect invalid if this method has returned false and **do not** use it in GUI methods
 
             It's strongly advised to use it this way:
             @code
