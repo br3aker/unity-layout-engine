@@ -314,7 +314,7 @@ namespace SoftKata.UnityEditor.Controls {
         private void HandleDragPerform(Event evt) {
             AcceptDragData();
             Root.MarkLayoutDirty();
-            RebindDrawers();
+            RebindAllDrawers();
 
             evt.Use();
         }
