@@ -75,4 +75,4 @@ crashlytics-build.properties
 Assets/Plugins/Editor/SoftKata/Extended IMGUI/Dark/Controls skin.guiskin
 
 # png textures
-*.png
+# *.png
