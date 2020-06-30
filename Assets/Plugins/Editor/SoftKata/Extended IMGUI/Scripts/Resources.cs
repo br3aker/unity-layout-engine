@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace SoftKata.UnityEditor {
     public static class Resources {
@@ -55,6 +54,7 @@ namespace SoftKata.UnityEditor {
             
             // Complex elements
             WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
+            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(skinTextureFolderPath + "empty_list_icon.png");
 
             // Utility
             ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(utilityTextureFolderPath + "elevation_shadow.png");

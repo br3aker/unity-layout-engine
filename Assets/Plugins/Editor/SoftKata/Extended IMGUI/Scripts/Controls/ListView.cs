@@ -12,11 +12,6 @@ namespace SoftKata.UnityEditor.Controls {
         // Generated with "ListViewControl" string with .net GetHashCode method
         private const int ListViewControlIdHint = 124860903;
 
-        // Constants
-        private const float EmptyListIconSize = 56;
-        private const string EmptyListLabel = "Empty list";
-
-
         // Layout
         public readonly ScrollGroup Root;
 
@@ -78,6 +73,8 @@ namespace SoftKata.UnityEditor.Controls {
         public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
 
         // Empty list default texture & label
+        private const float EmptyListIconSize = 56;
+        private const string EmptyListLabel = "List is empty";
         private readonly Texture _emptyListIcon = Resources.ListEmptyIcon;
         private readonly GUIStyle _labelStyle = Resources.CenteredGreyHeader;
         private readonly GUIContent _emptyListLabel = new GUIContent(EmptyListLabel);
@@ -509,6 +506,7 @@ namespace SoftKata.UnityEditor.Controls {
             ClearDataArray();
             _selectedIndices.Clear();
             _activeDataIndex = -1;
+            Root.MarkLayoutDirty();
         }
         public void GoTo(int index) {
             var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
