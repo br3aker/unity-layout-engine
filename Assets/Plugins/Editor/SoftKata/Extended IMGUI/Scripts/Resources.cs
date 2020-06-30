@@ -39,8 +39,7 @@ namespace SoftKata.UnityEditor {
             var controlsSkinPath = PluginPath + string.Format(ControlsSkinSubPathFormat, styleTypeString);
             var layoutSkinPath = PluginPath + string.Format(LayoutSkinSubPathFormat, styleTypeString);
 
-            var skinTextureFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
-            var utilityTextureFolderPath = PluginPath + "/Textures/";
+            var independentTexturesFolderPath = PluginPath + "/Textures/";
 
             var controlsSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(controlsSkinPath);
             var layoutSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(layoutSkinPath);
@@ -54,10 +53,10 @@ namespace SoftKata.UnityEditor {
             
             // Complex elements
             WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
-            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(skinTextureFolderPath + "empty_list_icon.png");
+            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "empty_list_icon.png");
 
             // Utility
-            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(utilityTextureFolderPath + "elevation_shadow.png");
+            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "elevation_shadow.png");
 
             // Empty style with default values
             DefaultVerticalStyle = layoutSkin.GetStyle("Vertical");
