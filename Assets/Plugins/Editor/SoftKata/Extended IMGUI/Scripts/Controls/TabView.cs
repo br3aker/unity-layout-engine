@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 
 using SoftKata.UnityEditor.Animations;
 
@@ -72,7 +73,7 @@ namespace SoftKata.UnityEditor.Controls {
                     var maximumOriginOffset = singleTabWidth * (_tabHeaders.Length - 1);
                     var underlinePosX = toolbarRect.x + maximumOriginOffset * currentAnimationPosition;
                     var underlineRect = new Rect(underlinePosX, toolbarRect.yMax - _underlineHeight, singleTabWidth, _underlineHeight);
-                    global::UnityEditor.EditorGUI.DrawRect(underlineRect, _underlineColor);
+                    EditorGUI.DrawRect(underlineRect, _underlineColor);
                 }
 
                 // Content
