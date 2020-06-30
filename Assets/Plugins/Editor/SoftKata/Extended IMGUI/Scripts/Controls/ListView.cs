@@ -127,7 +127,7 @@ namespace SoftKata.UnityEditor.Controls {
 
             // if scroll pos changed => recalculate visible elements & rebind drawers if needed
             if(!Mathf.Approximately(preScrollPos, Root.VerticalScroll) && Event.current.type != EventType.Layout) {
-                RebindDrawers();
+                RebindInvalidatedDrawers();
             }
         }
         private void DoContent() {
@@ -313,9 +313,8 @@ namespace SoftKata.UnityEditor.Controls {
         }
         private void HandleDragPerform(Event evt) {
             AcceptDragData();
-            Root.MarkLayoutDirty();
             RebindAllDrawers();
-
+            Root.MarkLayoutDirty();
             evt.Use();
         }
         private void HandleDragExited(Event evt) {
@@ -343,7 +342,7 @@ namespace SoftKata.UnityEditor.Controls {
                 visibleCount = lastIndex - firstVisibleIndex + 1;
             }
         }
-        protected void RebindDrawers() {
+        protected void RebindInvalidatedDrawers() {
             int initialIndex = _firstVisibleIndex;
             int initialCount = _visibleElementsCount;
             CalculateVisibleData(out int newIndex, out int newCount);
@@ -514,7 +513,7 @@ namespace SoftKata.UnityEditor.Controls {
         public void GoTo(int index) {
             var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
             Root.VerticalScroll = indexScrollPos;
-            RebindDrawers();
+            RebindInvalidatedDrawers();
         }
     }
     
