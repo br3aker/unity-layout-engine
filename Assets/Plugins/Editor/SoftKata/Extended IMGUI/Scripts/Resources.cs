@@ -53,10 +53,10 @@ namespace SoftKata.UnityEditor {
             
             // Complex elements
             WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
-            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "empty_list_icon.png");
+            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "empty_list.png");
 
             // Utility
-            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "elevation_shadow.png");
+            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "shadow.png");
 
             // Empty style with default values
             DefaultVerticalStyle = layoutSkin.GetStyle("Vertical");
