@@ -39,8 +39,8 @@ namespace SoftKata.UnityEditor.Controls {
             private const string DefaultSearchString = "Search...";
 
             private readonly GUIContent _searchButtonContent = EditorGUIUtility.IconContent("d_Search Icon");
-            private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("d_winbtn_win_close");
-
+            private readonly GUIContent _cancelButtonContent = EditorGUIUtility.IconContent("winbtn_win_close");
+            
             private readonly GUIStyle _buttonStyle;
             private readonly GUIStyle _searchBoxStyle;
 
