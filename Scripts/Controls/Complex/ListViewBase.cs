@@ -82,7 +82,7 @@ namespace SoftKata.UnityEditor.Controls {
 
 
         // ctor
-        public ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder dataBinder) {
+        internal ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder dataBinder) {
             _bindDataToDrawer = dataBinder;
 
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
@@ -106,7 +106,7 @@ namespace SoftKata.UnityEditor.Controls {
                 _drawers.Add(new TDrawer());
             }
         }
-        public ListViewBase(float height, float elementHeight, DataDrawerBinder bind)
+        internal ListViewBase(float height, float elementHeight, DataDrawerBinder bind)
             : this(new Vector2(-1, height), elementHeight, bind){}
 
         // Core
@@ -512,88 +512,6 @@ namespace SoftKata.UnityEditor.Controls {
             var indexScrollPos = Mathf.Clamp01(index * _elementHeightWithSpace / (_totalElementsHeight - _visibleHeight));
             Root.VerticalScroll = indexScrollPos;
             RebindInvalidatedDrawers();
-        }
-    }
-    
-    public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
-        // Data source
-        public SerializedObject _serializedObject;
-        public SerializedProperty _serializedArray;
-
-        // Data source indexers
-        public override int Count => _serializedArray.arraySize;
-        public override SerializedProperty this[int index] => _serializedArray.GetArrayElementAtIndex(index);
-
-        // Public delegates
-        public Action<SerializedProperty> AddDragDataToArray;
-
-        // ctor
-        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
-            _serializedObject = source.serializedObject;
-            _serializedArray = source;
-
-            RebindAllDrawers();
-        }
-        public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
-            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
-
-        // Implementation dependent overrides
-        protected override void ClearDataArray() {
-            _serializedArray.ClearArray();
-            _serializedObject.ApplyModifiedProperties();
-        }
-        protected override void MoveElement(int srcIndex, int dstIndex) {
-            _serializedArray.MoveArrayElement(srcIndex, dstIndex);
-            _serializedObject.ApplyModifiedProperties();
-        }
-        protected override void AcceptDragData() {
-            AddDragDataToArray(_serializedArray);
-            _serializedObject.ApplyModifiedProperties();
-        }
-        protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
-            foreach(var index in indices) {
-                _serializedArray.DeleteArrayElementAtIndex(index);
-            }
-            _serializedObject.ApplyModifiedProperties();
-        }
-    }
-    
-    public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
-        // Data source
-        private readonly IList<TData> _sourceList;
-
-        // Data source indexers
-        public override int Count => _sourceList.Count;
-        public override TData this[int index] => _sourceList[index];
-
-        // Public delegates
-        public Action<IList<TData>> AddDragDataToArray;
-
-        // ctor
-        public ListView(IList<TData> source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
-            _sourceList = source;
-
-            RebindAllDrawers();
-        }
-        public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
-            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
-
-        // Implementation dependent overrides
-        protected override void ClearDataArray() {
-            _sourceList.Clear();
-        }
-        protected override void MoveElement(int srcIndex, int dstIndex) {
-            TData item = _sourceList[srcIndex];
-            _sourceList.RemoveAt(srcIndex);
-            _sourceList.Insert(dstIndex, item);
-        }
-        protected override void AcceptDragData() {
-            AddDragDataToArray(_sourceList);
-        }
-        protected override void RemoveSelectedIndices(IOrderedEnumerable<int> indices) {
-            foreach(var index in indices) {
-                _sourceList.RemoveAt(index);
-            }
         }
     }
 }
