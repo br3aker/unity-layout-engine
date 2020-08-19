@@ -5,6 +5,9 @@ namespace SoftKata.UnityEditor {
     public static class Resources {
         public const string PluginPath = "Assets/Plugins/Editor/SoftKata/Extended IMGUI";
 
+        private const string DarkSubFolder = "Dark";
+        private const string LightSubFolder = "Light";
+
         private const string ControlsSkinSubPathFormat = "/{0}/Controls.guiskin";
         private const string LayoutSkinSubPathFormat = "/{0}/Layout.guiskin";
         private const string TextureFolderPathFormat = "/{0}/Textures/";
@@ -34,12 +37,13 @@ namespace SoftKata.UnityEditor {
         public static GUIStyle Treeview;
 
         static Resources() {
-            var styleTypeString = EditorGUIUtility.isProSkin ? "Dark" : "Light";
+            var styleTypeString = EditorGUIUtility.isProSkin ? DarkSubFolder : LightSubFolder;
 
             var controlsSkinPath = PluginPath + string.Format(ControlsSkinSubPathFormat, styleTypeString);
             var layoutSkinPath = PluginPath + string.Format(LayoutSkinSubPathFormat, styleTypeString);
 
-            var independentTexturesFolderPath = PluginPath + "/Textures/";
+            var texturesFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
+            
 
             var controlsSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(controlsSkinPath);
             var layoutSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(layoutSkinPath);
@@ -53,10 +57,10 @@ namespace SoftKata.UnityEditor {
             
             // Complex elements
             WindowHeader = new WindowHeaderResources(controlsSkin, layoutSkin);
-            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "empty_list.png");
+            ListEmptyIcon = AssetDatabase.LoadAssetAtPath<Texture>(texturesFolderPath + "empty_list.png");
 
             // Utility
-            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(independentTexturesFolderPath + "shadow.png");
+            ElevationShadow = AssetDatabase.LoadAssetAtPath<Texture>(texturesFolderPath + "shadow.png");
 
             // Empty style with default values
             DefaultVerticalStyle = layoutSkin.GetStyle("Vertical");
