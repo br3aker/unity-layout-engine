@@ -10,14 +10,14 @@ namespace SoftKata.UnityEditor {
 
         private const string ControlsSkinSubPathFormat = "/{0}/Controls.guiskin";
         private const string LayoutSkinSubPathFormat = "/{0}/Layout.guiskin";
-        private const string TextureFolderPathFormat = "/{0}/Textures/";
+        private const string TextureFolderPathFormat = "/Textures/";
 
         // Primitive elements styles
-        public static GUIStyle CenteredGreyHeader;
-        public static GUIStyle InputFieldPostfix;
-        public static GUIStyle Foldout;
+        public static readonly GUIStyle CenteredGreyHeader;
+        public static readonly GUIStyle InputFieldPostfix;
+        public static readonly GUIStyle Foldout;
 
-        public static GUIStyle TabHeader;
+        public static readonly GUIStyle TabHeader;
         
         // Complex elements resources
         public static readonly WindowHeaderResources WindowHeader;
@@ -27,14 +27,14 @@ namespace SoftKata.UnityEditor {
         public static readonly Texture ListEmptyIcon;
 
         // Styles with default margin/border/padding
-        public static GUIStyle DefaultVerticalStyle;
-        public static GUIStyle DefaultHorizontalStyle;
+        public static readonly GUIStyle DefaultVerticalStyle;
+        public static readonly GUIStyle DefaultHorizontalStyle;
 
         // Default styles for groups which require non-zero values in GUIStyle
-        public static GUIStyle ScrollGroup;
-        public static GUIStyle ScrollGroupThumb;
+        public static readonly GUIStyle ScrollGroup;
+        public static readonly GUIStyle ScrollGroupThumb;
 
-        public static GUIStyle Treeview;
+        public static readonly GUIStyle Treeview;
 
         static Resources() {
             var styleTypeString = EditorGUIUtility.isProSkin ? DarkSubFolder : LightSubFolder;
@@ -42,7 +42,7 @@ namespace SoftKata.UnityEditor {
             var controlsSkinPath = PluginPath + string.Format(ControlsSkinSubPathFormat, styleTypeString);
             var layoutSkinPath = PluginPath + string.Format(LayoutSkinSubPathFormat, styleTypeString);
 
-            var texturesFolderPath = PluginPath + string.Format(TextureFolderPathFormat, styleTypeString);
+            var texturesFolderPath = PluginPath + TextureFolderPathFormat;
             
 
             var controlsSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(controlsSkinPath);
