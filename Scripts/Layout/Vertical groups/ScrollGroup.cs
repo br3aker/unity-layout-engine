@@ -122,8 +122,6 @@ namespace SoftKata.UnityEditor {
                 _containerSize.y - ContentOffset.vertical
             );
 
-            _invisibleAreaSize = visibleAreaSize - RequestedSize;
-
             // 1st pass - checking if we actually need scrollbars
             if(!_scrollbarsDisabled) {
                 if(RequestedSize.x > visibleAreaSize.x) {
@@ -138,8 +136,11 @@ namespace SoftKata.UnityEditor {
                 }
             }
 
+            // Calculating invisible area size
+            _invisibleAreaSize = visibleAreaSize - RequestedSize;
+
             // 2nd pass - calculations based on 1st pass
-            if(_needsHorizontalScroll = RequestedSize.x > visibleAreaSize.x) {
+            if (_needsHorizontalScroll = RequestedSize.x > visibleAreaSize.x) {
                 var containerToContentRatio = visibleAreaSize.x / RequestedSize.x;
                 _horizontalScrollBarWidth = 
                     Mathf.Max(visibleAreaSize.x * containerToContentRatio, _minimalScrollBarSize);
@@ -153,6 +154,8 @@ namespace SoftKata.UnityEditor {
                 
                 RequestedSize.y = visibleAreaSize.y;
             }
+
+
 
             // Applying offsets to actual group rect
             RequestedSize.x += ContentOffset.horizontal;
