@@ -13,12 +13,12 @@ namespace SoftKata.UnityEditor {
         protected abstract void Initialize();
 
         public void RegisterRepaintRequest() {
-            if(_repaintRequestsCount++ == 0) {
+            if(0 == _repaintRequestsCount++) {
                 EditorApplication.update += Repaint;
             }
         }
         public void UnregisterRepaintRequest() {
-            if(--_repaintRequestsCount == 0) {
+            if(0 == --_repaintRequestsCount) {
                 EditorApplication.update -= Repaint;
             }
         }
