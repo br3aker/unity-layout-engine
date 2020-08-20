@@ -8,7 +8,9 @@ using UnityEngine.Events;
 
 
 namespace SoftKata.UnityEditor.Controls {
-    public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
+    public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> 
+        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<SerializedProperty>, new() 
+    {
         // Data source
         public SerializedObject _serializedObject;
         public SerializedProperty _serializedArray;
@@ -21,14 +23,16 @@ namespace SoftKata.UnityEditor.Controls {
         public Action<SerializedProperty> AddDragDataToArray;
 
         // ctor
-        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
+        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight) 
+            : base(container, elementHeight) 
+        {
             _serializedObject = source.serializedObject;
             _serializedArray = source;
 
             RebindAllDrawers();
         }
-        public SerializedListView(SerializedProperty source, float height, float elementHeight, DataDrawerBinder bind)
-            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
+        public SerializedListView(SerializedProperty source, float height, float elementHeight)
+            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight) { }
 
         // Implementation dependent overrides
         protected override void ClearDataArray() {

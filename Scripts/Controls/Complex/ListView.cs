@@ -8,7 +8,9 @@ using UnityEngine.Events;
 
 
 namespace SoftKata.UnityEditor.Controls {
-    public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> where TDrawer : IAbsoluteDrawableElement, new() {
+    public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> 
+        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<TData>, new() 
+    {
         // Data source
         private readonly IList<TData> _sourceList;
 
@@ -20,13 +22,15 @@ namespace SoftKata.UnityEditor.Controls {
         public Action<IList<TData>> AddDragDataToArray;
 
         // ctor
-        public ListView(IList<TData> source, Vector2 container, float elementHeight, DataDrawerBinder bind) : base(container, elementHeight, bind) {
+        public ListView(IList<TData> source, Vector2 container, float elementHeight) 
+            : base(container, elementHeight) 
+        {
             _sourceList = source;
 
             RebindAllDrawers();
         }
-        public ListView(IList<TData> source, float height, float elementHeight, DataDrawerBinder bind)
-            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, bind) { }
+        public ListView(IList<TData> source, float height, float elementHeight)
+            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight) { }
 
         // Implementation dependent overrides
         protected override void ClearDataArray() {

@@ -8,7 +8,9 @@ using UnityEngine.Events;
 
 
 namespace SoftKata.UnityEditor.Controls {
-    public abstract class ListViewBase<TData, TDrawer> : IDrawableElement where TDrawer : IAbsoluteDrawableElement, new() {
+    public abstract class ListViewBase<TData, TDrawer> : IDrawableElement 
+        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<TData>, new()
+    {
         // Generated with "ListViewControl" string with .net GetHashCode method
         private const int ListViewControlIdHint = 124860903;
 
@@ -29,8 +31,7 @@ namespace SoftKata.UnityEditor.Controls {
         }
 
         // Rendering
-        private readonly List<IAbsoluteDrawableElement> _drawers = new List<IAbsoluteDrawableElement>();
-        private readonly DataDrawerBinder _bindDataToDrawer;
+        private readonly List<TDrawer> _drawers = new List<TDrawer>();
 
         private readonly float _elementHeight;
         private readonly float _spaceBetweenElements;
@@ -69,7 +70,6 @@ namespace SoftKata.UnityEditor.Controls {
 
         public event Action<int, int> OnElementsReorder;
 
-        public delegate void DataDrawerBinder(int dataIndex, TData data, IAbsoluteDrawableElement drawer, bool isSelected);
         public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
 
         // Empty list default texture & label
@@ -82,9 +82,7 @@ namespace SoftKata.UnityEditor.Controls {
 
 
         // ctor
-        internal ListViewBase(Vector2 container, float elementHeight, DataDrawerBinder dataBinder) {
-            _bindDataToDrawer = dataBinder;
-
+        internal ListViewBase(Vector2 container, float elementHeight) {
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
 
             Root = new ScrollGroup(container, false);
@@ -106,8 +104,8 @@ namespace SoftKata.UnityEditor.Controls {
                 _drawers.Add(new TDrawer());
             }
         }
-        internal ListViewBase(float height, float elementHeight, DataDrawerBinder bind)
-            : this(new Vector2(-1, height), elementHeight, bind){}
+        internal ListViewBase(float height, float elementHeight)
+            : this(new Vector2(-1, height), elementHeight){}
 
         // Core
         public void OnGUI() {
@@ -356,7 +354,7 @@ namespace SoftKata.UnityEditor.Controls {
                 var newFirstDrawer = _drawers[lastDrawerIndex];
                 _drawers.RemoveAt(lastDrawerIndex);
                 _drawers.Insert(0, newFirstDrawer);
-                _bindDataToDrawer(newIndex, this[newIndex], newFirstDrawer, _selectedIndices.Contains(newIndex));
+                newFirstDrawer.Bind(this[newIndex], newIndex, _selectedIndices.Contains(newIndex));
 
                 lastBindedDrawerIndex += 1;
             }
@@ -364,7 +362,7 @@ namespace SoftKata.UnityEditor.Controls {
             int totalCountDiff = newCount - initialCount;
             for(int i = lastBindedDrawerIndex + 1; i < newCount; i++) {
                 var dataIndex = newIndex + i;
-                _bindDataToDrawer(dataIndex, this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                _drawers[i].Bind(this[dataIndex], dataIndex, _selectedIndices.Contains(dataIndex));
             }
 
             
@@ -376,7 +374,7 @@ namespace SoftKata.UnityEditor.Controls {
             int dataFirstVisibleIndex = _firstVisibleIndex;
             for(int i = 0; i < _visibleElementsCount; i++) {
                 var dataIndex = dataFirstVisibleIndex + i;
-                _bindDataToDrawer(dataIndex, this[dataIndex], _drawers[i], _selectedIndices.Contains(dataIndex));
+                _drawers[i].Bind(this[dataIndex], dataIndex, _selectedIndices.Contains(dataIndex));
             }
         }
         
@@ -385,7 +383,7 @@ namespace SoftKata.UnityEditor.Controls {
             var drawerIndexInVisibleRange = shiftedIndex >= 0 && shiftedIndex < _visibleElementsCount;
             return drawerIndexInVisibleRange ? shiftedIndex : -1;
         }
-        private IAbsoluteDrawableElement GetDataDrawer(int index) {
+        private TDrawer GetDataDrawer(int index) {
             var drawerIndex = GetDrawerIndexFromDataIndex(index);
             if(drawerIndex != -1) {
                 return _drawers[drawerIndex];
