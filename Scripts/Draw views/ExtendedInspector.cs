@@ -10,7 +10,7 @@ namespace SoftKata.UnityEditor {
             ExtendedEditor.CurrentView = this;
             Initialize();
         }
-        protected abstract void Initialize();
+        protected virtual void Initialize() { }
 
         public void RegisterRepaintRequest() {
             if(0 == _repaintRequestsCount++) {
