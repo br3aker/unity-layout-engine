@@ -12,7 +12,7 @@ namespace SoftKata.UnityEditor {
 
             Initialize(_headerBar = new WindowHeaderBar());
         }
-        protected abstract void Initialize(WindowHeaderBar headerBar);
+        protected virtual void Initialize(WindowHeaderBar headerBar) {}
     
         public void OnGUI() {
             _headerBar.OnGUI();
