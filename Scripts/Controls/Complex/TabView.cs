@@ -14,7 +14,7 @@ namespace SoftKata.UnityEditor.Controls {
 
         // Headers & content
         private readonly GUIContent[] _tabHeaders;
-        private readonly IDrawableElement[] _contentDrawers;
+        private readonly IDrawableElement[] _drawers;
 
         // Animators
         private readonly TweenFloat _animator;
@@ -31,13 +31,29 @@ namespace SoftKata.UnityEditor.Controls {
         private readonly LayoutGroup _horizontalGroup = new HorizontalGroup(true);
         private readonly ScrollGroup _scrollGroup;
 
-        public TabView(GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle, int initialTab = 0) {
+        public TabView(IDrawableElement[] drawers, int selectedTab = 0) {
             // Data
-            CurrentTab = initialTab;
+            CurrentTab = selectedTab;
 
             // GUI content & drawers
+            _drawers = drawers;
+
+            // Animators
+            _animator = new TweenFloat(selectedTab) {
+                Speed = 3.25f
+            };
+
+            var currentView = ExtendedEditor.CurrentView;
+            _animator.OnStart += currentView.RegisterRepaintRequest;
+            _animator.OnFinish += currentView.UnregisterRepaintRequest;
+            _animator.OnFinish += _root.MarkLayoutDirty;
+        }
+
+        public TabView(GUIContent[] tabHeaders, IDrawableElement[] drawers, Color underlineColor, GUIStyle tabHeaderStyle, int selectedTab = 0) 
+            : this(drawers, selectedTab)
+        {
+            // GUI content
             _tabHeaders = tabHeaders;
-            _contentDrawers = contentDrawers;
 
             // Styling
             _tabHeaderStyle = tabHeaderStyle;
@@ -48,17 +64,8 @@ namespace SoftKata.UnityEditor.Controls {
 
             // Layout groups
             _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
-                HorizontalScroll = initialTab / (tabHeaders.Length - 1)
+                HorizontalScroll = selectedTab / (tabHeaders.Length - 1)
             };
-
-            // Animators
-            _animator = new TweenFloat(initialTab) {
-                Speed = 3.25f
-            };
-
-            _animator.OnStart += ExtendedEditor.CurrentView.RegisterRepaintRequest;
-            _animator.OnFinish += ExtendedEditor.CurrentView.UnregisterRepaintRequest;
-            _animator.OnFinish += _root.MarkLayoutDirty;
         }
         public TabView(GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, int initialTab = 0)
             : this(tabHeaders, contentDrawers, underlineColor, Resources.TabHeader, initialTab) { }
@@ -66,7 +73,7 @@ namespace SoftKata.UnityEditor.Controls {
         public void OnGUI() {
             if(Layout.BeginLayoutScope(_root)) {
                 int currentSelection = CurrentTab;
-                float currentAnimationPosition = _animator.Value / (_tabHeaders.Length - 1);
+                float currentAnimationPosition = _animator.Value / (_drawers.Length - 1);
 
                 // Tabs
                 if (_tabHeaders != null && Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
@@ -86,7 +93,7 @@ namespace SoftKata.UnityEditor.Controls {
                     if(Layout.BeginLayoutScope(_scrollGroup)) {
                         if(Layout.BeginLayoutScope(_horizontalGroup)) {
                             for (int i = 0; i < _tabHeaders.Length; i++) {
-                                _contentDrawers[i].OnGUI();
+                                _drawers[i].OnGUI();
                             }
                             Layout.EndCurrentScope();
                         }
@@ -94,7 +101,7 @@ namespace SoftKata.UnityEditor.Controls {
                     }
                 }
                 else {
-                    _contentDrawers[CurrentTab].OnGUI();
+                    _drawers[CurrentTab].OnGUI();
                 }
 
                 // Change check
