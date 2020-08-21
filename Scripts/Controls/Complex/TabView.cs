@@ -7,6 +7,10 @@ using SoftKata.UnityEditor.Animations;
 namespace SoftKata.UnityEditor.Controls {
     public class TabView : IDrawableElement {
         public int CurrentTab { get; set; }
+        public float TransitionSpeed {
+            get => _animator.Speed;
+            set => _animator.Speed = value;
+        }
 
         // Headers & content
         private readonly GUIContent[] _tabHeaders;
@@ -27,7 +31,7 @@ namespace SoftKata.UnityEditor.Controls {
         private readonly LayoutGroup _horizontalGroup = new HorizontalGroup(true);
         private readonly ScrollGroup _scrollGroup;
 
-        public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle) {
+        public TabView(GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, GUIStyle tabHeaderStyle, int initialTab = 0) {
             // Data
             CurrentTab = initialTab;
 
@@ -56,8 +60,8 @@ namespace SoftKata.UnityEditor.Controls {
             _animator.OnFinish += ExtendedEditor.CurrentView.UnregisterRepaintRequest;
             _animator.OnFinish += _root.MarkLayoutDirty;
         }
-        public TabView(int initialTab, GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor)
-            : this(initialTab, tabHeaders, contentDrawers, underlineColor, Resources.TabHeader) { }
+        public TabView(GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, int initialTab = 0)
+            : this(tabHeaders, contentDrawers, underlineColor, Resources.TabHeader, initialTab) { }
 
         public void OnGUI() {
             if(Layout.BeginLayoutScope(_root)) {
@@ -65,7 +69,7 @@ namespace SoftKata.UnityEditor.Controls {
                 float currentAnimationPosition = _animator.Value / (_tabHeaders.Length - 1);
 
                 // Tabs
-                if (Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
+                if (_tabHeaders != null && Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
                     currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
 
                     // Underline
