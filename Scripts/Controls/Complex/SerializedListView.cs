@@ -12,8 +12,8 @@ namespace SoftKata.UnityEditor.Controls {
         where TDrawer : class, IAbsoluteDrawableElement, IListBindable<SerializedProperty>, new() 
     {
         // Data source
-        public SerializedObject _serializedObject;
-        public SerializedProperty _serializedArray;
+        private SerializedObject _serializedObject;
+        private SerializedProperty _serializedArray;
 
         // Data source indexers
         public override int Count => _serializedArray.arraySize;

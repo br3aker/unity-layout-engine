@@ -15,7 +15,7 @@ namespace SoftKata.UnityEditor.Controls {
         private const int ListViewControlIdHint = 124860903;
 
         // Layout
-        public readonly ScrollGroup Root;
+        private readonly ScrollGroup Root;
 
         // Behaviour
         private int _currentControlId;
