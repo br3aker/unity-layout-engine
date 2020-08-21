@@ -74,17 +74,14 @@ namespace SoftKata.UnityEditor.Controls {
 
         // Empty list default texture & label
         private const float EmptyListIconSize = 56;
-        private const string EmptyListLabel = "List is empty";
-        private readonly Texture _emptyListIcon = Resources.ListEmptyIcon;
-        private readonly GUIStyle _labelStyle = Resources.CenteredGreyHeader;
-        private readonly GUIContent _emptyListLabel = new GUIContent(EmptyListLabel);
-        private readonly float _emptyListLabelHeight;
+        private static readonly Texture EmptyListIcon = Resources.ListEmptyIcon;
+        private static readonly GUIStyle LabelStyle = Resources.CenteredGreyHeader;
+        private static readonly GUIContent EmptyListLabel = new GUIContent("List is empty");
+        private static readonly float EmptyListLabelHeight = Resources.CenteredGreyHeader.GetContentHeight(EmptyListLabel);
 
 
         // ctor
         protected ListViewBase(Vector2 container, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle) {
-            _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
-
             Root = new ScrollGroup(container, false, containerStyle, thumbStyle);
 
             _elementHeight = elementHeight;
@@ -186,10 +183,10 @@ namespace SoftKata.UnityEditor.Controls {
                 iconRect.x += (iconRect.width / 2) - EmptyListIconSize / 2;
                 iconRect.width = EmptyListIconSize;
 
-                GUI.DrawTexture(iconRect, _emptyListIcon);
+                GUI.DrawTexture(iconRect, EmptyListIcon);
             }
-            if(Root.GetRect(_emptyListLabelHeight, out var labelRect)) {
-                global::UnityEditor.EditorGUI.LabelField(labelRect, _emptyListLabel, _labelStyle);
+            if(Root.GetRect(EmptyListLabelHeight, out var labelRect)) {
+                global::UnityEditor.EditorGUI.LabelField(labelRect, EmptyListLabel, LabelStyle);
             }
 
             HandleDefaultEvents();
