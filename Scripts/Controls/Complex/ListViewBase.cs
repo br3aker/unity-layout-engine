@@ -82,10 +82,10 @@ namespace SoftKata.UnityEditor.Controls {
 
 
         // ctor
-        protected ListViewBase(Vector2 container, float elementHeight) {
+        protected ListViewBase(Vector2 container, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle) {
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
 
-            Root = new ScrollGroup(container, false);
+            Root = new ScrollGroup(container, false, containerStyle, thumbStyle);
 
             _elementHeight = elementHeight;
             _spaceBetweenElements = Root.SpaceBetweenEntries;
@@ -104,8 +104,12 @@ namespace SoftKata.UnityEditor.Controls {
                 _drawers.Add(new TDrawer());
             }
         }
+        protected ListViewBase(Vector2 container, float elementHeight) 
+            : this(container, elementHeight, Resources.ScrollGroup, Resources.ScrollGroupThumb) {}
+        protected ListViewBase(float height, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle)
+            : this(new Vector2(-1, height), elementHeight, containerStyle, thumbStyle){}
         protected ListViewBase(float height, float elementHeight)
-            : this(new Vector2(-1, height), elementHeight){}
+            : this(new Vector2(-1, height), elementHeight) { }
 
         // Core
         public void OnGUI() {
