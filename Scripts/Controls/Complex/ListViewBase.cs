@@ -478,6 +478,7 @@ namespace SoftKata.UnityEditor.Controls {
             _activeDataIndex = -1;
             _selectedIndices.Clear();
 
+            Root.MarkLayoutDirty();
             RebindAllDrawers();
         }
         private bool PositionToDataIndex(float position, out int index) {
