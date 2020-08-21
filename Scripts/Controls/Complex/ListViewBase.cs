@@ -82,7 +82,7 @@ namespace SoftKata.UnityEditor.Controls {
 
 
         // ctor
-        internal ListViewBase(Vector2 container, float elementHeight) {
+        protected ListViewBase(Vector2 container, float elementHeight) {
             _emptyListLabelHeight = _labelStyle.GetContentHeight(_emptyListLabel);
 
             Root = new ScrollGroup(container, false);
@@ -104,7 +104,7 @@ namespace SoftKata.UnityEditor.Controls {
                 _drawers.Add(new TDrawer());
             }
         }
-        internal ListViewBase(float height, float elementHeight)
+        protected ListViewBase(float height, float elementHeight)
             : this(new Vector2(-1, height), elementHeight){}
 
         // Core
