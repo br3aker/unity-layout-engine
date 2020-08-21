@@ -57,8 +57,12 @@ namespace SoftKata.UnityEditor.Controls {
             _animator.OnStart += currentView.RegisterRepaintRequest;
             _animator.OnFinish += currentView.UnregisterRepaintRequest;
             _animator.OnFinish += _root.MarkLayoutDirty;
-        }
 
+            // Layout groups
+            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
+                HorizontalScroll = selectedTab / (drawers.Length - 1)
+            };
+        }
         public TabView(GUIContent[] tabHeaders, IDrawableElement[] drawers, Color underlineColor, GUIStyle tabHeaderStyle, int selectedTab = 0) 
             : this(drawers, selectedTab)
         {
@@ -71,11 +75,6 @@ namespace SoftKata.UnityEditor.Controls {
 
             _underlineColor = underlineColor;
             _underlineHeight = tabHeaderStyle.margin.bottom;
-
-            // Layout groups
-            _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
-                HorizontalScroll = selectedTab / (tabHeaders.Length - 1)
-            };
         }
         public TabView(GUIContent[] tabHeaders, IDrawableElement[] contentDrawers, Color underlineColor, int initialTab = 0)
             : this(tabHeaders, contentDrawers, underlineColor, Resources.TabHeader, initialTab) { }
@@ -102,7 +101,7 @@ namespace SoftKata.UnityEditor.Controls {
                     _scrollGroup.HorizontalScroll = currentAnimationPosition;
                     if(Layout.BeginLayoutScope(_scrollGroup)) {
                         if(Layout.BeginLayoutScope(_horizontalGroup)) {
-                            for (int i = 0; i < _tabHeaders.Length; i++) {
+                            for (int i = 0; i < _drawers.Length; i++) {
                                 _drawers[i].OnGUI();
                             }
                             Layout.EndCurrentScope();

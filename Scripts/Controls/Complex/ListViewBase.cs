@@ -70,7 +70,7 @@ namespace SoftKata.UnityEditor.Controls {
 
         public event Action<int, int> OnElementsReorder;
 
-        public delegate void DrawerActionCallback(int dataIndex, TData data, IAbsoluteDrawableElement drawer);
+        public delegate void DrawerActionCallback(int dataIndex, TData data, TDrawer drawer);
 
         // Empty list default texture & label
         private const float EmptyListIconSize = 56;
