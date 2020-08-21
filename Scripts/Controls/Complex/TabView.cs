@@ -114,6 +114,8 @@ namespace SoftKata.UnityEditor.Controls {
                     _drawers[CurrentTab].OnGUI();
                 }
 
+                // Change check must be done after all internal layout groups
+                // So Dirtying layout won't cause errors to these internal groups
                 CurrentTab = currentSelection;
 
                 Layout.EndCurrentScope();
