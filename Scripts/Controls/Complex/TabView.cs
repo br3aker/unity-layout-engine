@@ -56,7 +56,6 @@ namespace SoftKata.UnityEditor.Controls {
             var currentView = ExtendedEditor.CurrentView;
             _animator.OnStart += currentView.RegisterRepaintRequest;
             _animator.OnFinish += currentView.UnregisterRepaintRequest;
-            _animator.OnFinish += _root.MarkLayoutDirty;
 
             // Layout groups
             _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
@@ -81,12 +80,11 @@ namespace SoftKata.UnityEditor.Controls {
 
         public void OnGUI() {
             if(Layout.BeginLayoutScope(_root)) {
-                int currentSelection = CurrentTab;
                 float currentAnimationPosition = _animator.Value / (_drawers.Length - 1);
 
                 // Tabs
                 if (_tabHeaders != null && Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
-                    currentSelection = GUI.Toolbar(toolbarRect, currentSelection, _tabHeaders, _tabHeaderStyle);
+                    CurrentTab = GUI.Toolbar(toolbarRect, CurrentTab, _tabHeaders, _tabHeaderStyle);
 
                     // Underline
                     var singleTabWidth = toolbarRect.width / _tabHeaders.Length;
@@ -112,10 +110,6 @@ namespace SoftKata.UnityEditor.Controls {
                 else {
                     _drawers[CurrentTab].OnGUI();
                 }
-
-                // Change check must be done after all internal layout groups
-                // So Dirtying layout won't cause errors to these internal groups
-                CurrentTab = currentSelection;
 
                 Layout.EndCurrentScope();
             }

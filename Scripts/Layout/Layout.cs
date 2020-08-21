@@ -22,10 +22,11 @@ namespace SoftKata.UnityEditor {
         }
 
         public static bool BeginLayoutScope(LayoutGroup group) {
-            return 
-                Event.current.type == EventType.Layout 
-                ? group.BeginLayout()
-                : group.BeginNonLayout();
+            var eventType = Event.current.type;
+            if (eventType == EventType.Used || eventType == EventType.Ignore) return false;
+            if (eventType == EventType.Layout)
+                return group.BeginLayout();
+            return group.BeginNonLayout();
         }
         public static void EndCurrentScope() {
             var group = _currentGroup;

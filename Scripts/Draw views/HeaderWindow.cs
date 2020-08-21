@@ -20,7 +20,7 @@ namespace SoftKata.UnityEditor {
             DrawContent();
 
             var shadowRect = new Rect(
-                0, WindowHeaderBar.HeaderHeight, 
+                0, WindowHeaderBar.HeaderHeight,
                 EditorGUIUtility.currentViewWidth - 2, WindowHeaderBar.WindowHeaderShadowHeight
             );
             GUI.DrawTexture(shadowRect, _dropdownShadow);

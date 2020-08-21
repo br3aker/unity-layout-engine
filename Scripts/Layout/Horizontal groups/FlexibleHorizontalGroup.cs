@@ -15,8 +15,8 @@ namespace SoftKata.UnityEditor {
             get => _containerWidth;
             set {
                 if(_containerWidth != value) {
-                    MarkLayoutDirty();
                     _containerWidth = value;
+                    MarkLayoutDirty();
                 }
             }
         }

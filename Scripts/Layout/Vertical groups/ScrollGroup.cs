@@ -78,7 +78,7 @@ namespace SoftKata.UnityEditor {
 
             Clip = true;
 
-            ContainerSize = containerSize;
+            _containerSize = containerSize;
 
             // Scroll settings
             var containerPadding = style.padding;
@@ -179,8 +179,8 @@ namespace SoftKata.UnityEditor {
             if(_isFirstLayoutBuild) {
                 _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
-                RepaintView();
-                return;
+                //RepaintView();
+                //return;
             }
 
             if(_scrollbarsDisabled) return;
