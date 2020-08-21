@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor.Controls {
     public class SerializedListView<TDrawer> : ListViewBase<SerializedProperty, TDrawer> 
-        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<SerializedProperty>, new() 
+        where TDrawer : class, IAbsoluteDrawableElement, IBindable<SerializedProperty>, new() 
     {
         // Data source
         private SerializedObject _serializedObject;

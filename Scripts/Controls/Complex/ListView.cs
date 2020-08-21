@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor.Controls {
     public class ListView<TData, TDrawer> : ListViewBase<TData, TDrawer> 
-        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<TData>, new() 
+        where TDrawer : class, IAbsoluteDrawableElement, IBindable<TData>, new() 
     {
         // Data source
         private readonly IList<TData> _sourceList;

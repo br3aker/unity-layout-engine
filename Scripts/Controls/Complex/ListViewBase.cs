@@ -9,7 +9,7 @@ using UnityEngine.Events;
 
 namespace SoftKata.UnityEditor.Controls {
     public abstract class ListViewBase<TData, TDrawer> : IDrawableElement 
-        where TDrawer : class, IAbsoluteDrawableElement, IListBindable<TData>, new()
+        where TDrawer : class, IAbsoluteDrawableElement, IBindable<TData>, new()
     {
         // Generated with "ListViewControl" string with .net GetHashCode method
         private const int ListViewControlIdHint = 124860903;

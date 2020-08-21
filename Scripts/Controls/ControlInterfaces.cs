@@ -10,7 +10,7 @@ namespace SoftKata.UnityEditor.Controls {
         void OnGUI(Rect position);
     }
 
-    public interface IListBindable<TData> {
+    public interface IBindable<TData> {
         void Bind(TData data, int index, bool selected);
     }
 }
