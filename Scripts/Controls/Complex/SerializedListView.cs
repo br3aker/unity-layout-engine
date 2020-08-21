@@ -23,9 +23,18 @@ namespace SoftKata.UnityEditor.Controls {
         public Action<SerializedProperty> AddDragDataToArray;
 
         // ctor
-        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight) 
-            : base(container, elementHeight) 
+        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle) 
+            : base(container, elementHeight, containerStyle, thumbStyle) 
         {
+            _serializedObject = source.serializedObject;
+            _serializedArray = source;
+
+            RebindAllDrawers();
+        }
+        public SerializedListView(SerializedProperty source, float height, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle)
+            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, containerStyle, thumbStyle) { }
+        public SerializedListView(SerializedProperty source, Vector2 container, float elementHeight)
+            : base(container, elementHeight) {
             _serializedObject = source.serializedObject;
             _serializedArray = source;
 

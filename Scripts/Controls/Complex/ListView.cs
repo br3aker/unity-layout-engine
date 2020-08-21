@@ -22,11 +22,17 @@ namespace SoftKata.UnityEditor.Controls {
         public Action<IList<TData>> AddDragDataToArray;
 
         // ctor
-        public ListView(IList<TData> source, Vector2 container, float elementHeight) 
-            : base(container, elementHeight) 
+        public ListView(IList<TData> source, Vector2 container, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle) 
+            : base(container, elementHeight, containerStyle, thumbStyle) 
         {
             _sourceList = source;
-
+            RebindAllDrawers();
+        }
+        public ListView(IList<TData> source, float height, float elementHeight, GUIStyle containerStyle, GUIStyle thumbStyle)
+            : this(source, new Vector2(Layout.FlexibleWidth, height), elementHeight, containerStyle, thumbStyle) { }
+        public ListView(IList<TData> source, Vector2 container, float elementHeight)
+            : base(container, elementHeight) {
+            _sourceList = source;
             RebindAllDrawers();
         }
         public ListView(IList<TData> source, float height, float elementHeight)
