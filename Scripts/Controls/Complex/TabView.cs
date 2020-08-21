@@ -6,7 +6,17 @@ using SoftKata.UnityEditor.Animations;
 
 namespace SoftKata.UnityEditor.Controls {
     public class TabView : IDrawableElement {
-        public int CurrentTab { get; set; }
+        private int _currentTab;
+        public int CurrentTab {
+            get => _currentTab;
+            set {
+                if (_currentTab != value) {
+                    _currentTab = value;
+                    _animator.Target = value;
+                    _root.MarkLayoutDirty();
+                }
+            }
+        }
         public float TransitionSpeed {
             get => _animator.Speed;
             set => _animator.Speed = value;
@@ -104,12 +114,7 @@ namespace SoftKata.UnityEditor.Controls {
                     _drawers[CurrentTab].OnGUI();
                 }
 
-                // Change check
-                if (currentSelection != CurrentTab) {
-                    CurrentTab = currentSelection;
-                    _animator.Target = currentSelection;
-                    _root.MarkLayoutDirty();
-                }
+                CurrentTab = currentSelection;
 
                 Layout.EndCurrentScope();
             }
