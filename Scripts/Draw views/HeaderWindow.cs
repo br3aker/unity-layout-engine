@@ -7,6 +7,7 @@ namespace SoftKata.UnityEditor {
         private WindowHeaderBar _headerBar;
         private Texture _dropdownShadow;
 
+        // Initialization
         protected sealed override void Initialize() {
             _dropdownShadow = Resources.ElevationShadow;
 
@@ -14,6 +15,7 @@ namespace SoftKata.UnityEditor {
         }
         protected virtual void Initialize(WindowHeaderBar headerBar) {}
     
+        // GUI
         public void OnGUI() {
             _headerBar.OnGUI();
 
