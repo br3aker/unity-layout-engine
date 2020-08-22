@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace SoftKata.UnityEditor {
     public static partial class ExtendedEditor {
-        public const float LabelHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
-
         // Elevation shadow
         private const float ElevationShadowheight = 5;
 
         // Postfix text
         private const float PostfixTextAreaWidth = 40;
 
-        // WARNING: No event type check
+        // WARNING: No event type check, only viable at [Repaint] event
         public static void DrawPostfixUnsafe(Rect controlRect, string postfix) {
             var postfixRect = new Rect(controlRect.xMax - PostfixTextAreaWidth, controlRect.y, PostfixTextAreaWidth, controlRect.height);
             Resources.InputFieldPostfix.Draw(postfixRect, postfix, false, false, false, false);

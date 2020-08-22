@@ -1,8 +1,11 @@
 ﻿using UnityEditor;
+using UnityEditor.WindowsStandalone;
 using UnityEngine;
 
 namespace SoftKata.UnityEditor {
     public static partial class Layout {
+        public const float UnityDefaultLineHeight = 18; // equal to EditorGUIUtility.singleLineHeight which is a getter, not constant
+
         internal const float FlexibleWidth = -1;
 
         internal static LayoutGroup _currentGroup;
@@ -53,10 +56,13 @@ namespace SoftKata.UnityEditor {
             rect = GetRectFromUnityLayout(height);
             return true;
         }
+        public static bool GetRect(out Rect rect) {
+            return GetRect(UnityDefaultLineHeight, out rect);
+        }
         public static Rect GetRect(float width, float height) {
             return _currentGroup?.GetRect(width, height) ?? GetRectFromUnityLayout(width, height);
         }
-        public static Rect GetRect(float height) {
+        public static Rect GetRect(float height = UnityDefaultLineHeight) {
             return _currentGroup?.GetRect(height) ?? GetRectFromUnityLayout(height);
         }
     }
