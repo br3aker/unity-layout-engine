@@ -56,6 +56,7 @@ namespace SoftKata.UnityEditor.Controls {
             var currentView = ExtendedEditor.CurrentView;
             _animator.OnStart += currentView.RegisterRepaintRequest;
             _animator.OnFinish += currentView.UnregisterRepaintRequest;
+            _animator.OnFinish += _root.MarkLayoutDirty;
 
             // Layout groups
             _scrollGroup = new ScrollGroup(new Vector2(-1, float.MaxValue), true, new GUIStyle(), Resources.ScrollGroupThumb, true) {
