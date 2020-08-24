@@ -17,17 +17,18 @@ namespace SoftKata.UnityEditor.Controls {
                 }
             }
         }
+
+
+        // Headers & content
+        public GUIContent[] Headers { get; }
+        public IDrawableElement[] Drawers { get; }
+
+        // Animators
+        private readonly TweenFloat _animator;
         public float TransitionSpeed {
             get => _animator.Speed;
             set => _animator.Speed = value;
         }
-
-        // Headers & content
-        private readonly GUIContent[] _tabHeaders;
-        private readonly IDrawableElement[] _drawers;
-
-        // Animators
-        private readonly TweenFloat _animator;
 
         // Styling
         private readonly GUIStyle _tabHeaderStyle;
@@ -46,7 +47,7 @@ namespace SoftKata.UnityEditor.Controls {
             CurrentTab = selectedTab;
 
             // GUI content & drawers
-            _drawers = drawers;
+            Drawers = drawers;
 
             // Animators
             _animator = new TweenFloat(selectedTab) {
@@ -67,7 +68,7 @@ namespace SoftKata.UnityEditor.Controls {
             : this(drawers, selectedTab)
         {
             // GUI content
-            _tabHeaders = tabHeaders;
+            Headers = tabHeaders;
 
             // Styling
             _tabHeaderStyle = tabHeaderStyle;
@@ -81,15 +82,15 @@ namespace SoftKata.UnityEditor.Controls {
 
         public void OnGUI() {
             if(Layout.BeginLayoutScope(_root)) {
-                float currentAnimationPosition = _animator.Value / (_drawers.Length - 1);
+                float currentAnimationPosition = _animator.Value / (Drawers.Length - 1);
 
                 // Tabs
-                if (_tabHeaders != null && Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
-                    CurrentTab = GUI.Toolbar(toolbarRect, CurrentTab, _tabHeaders, _tabHeaderStyle);
+                if (Headers != null && Layout.GetRect(_tabHeaderHeight, out var toolbarRect)) {
+                    CurrentTab = GUI.Toolbar(toolbarRect, CurrentTab, Headers, _tabHeaderStyle);
 
                     // Underline
-                    var singleTabWidth = toolbarRect.width / _tabHeaders.Length;
-                    var maximumOriginOffset = singleTabWidth * (_tabHeaders.Length - 1);
+                    var singleTabWidth = toolbarRect.width / Headers.Length;
+                    var maximumOriginOffset = singleTabWidth * (Headers.Length - 1);
                     var underlinePosX = toolbarRect.x + maximumOriginOffset * currentAnimationPosition;
                     var underlineRect = new Rect(underlinePosX, toolbarRect.yMax - _underlineHeight, singleTabWidth, _underlineHeight);
                     EditorGUI.DrawRect(underlineRect, _underlineColor);
@@ -100,8 +101,8 @@ namespace SoftKata.UnityEditor.Controls {
                     _scrollGroup.HorizontalScroll = currentAnimationPosition;
                     if(Layout.BeginLayoutScope(_scrollGroup)) {
                         if(Layout.BeginLayoutScope(_horizontalGroup)) {
-                            for (int i = 0; i < _drawers.Length; i++) {
-                                _drawers[i].OnGUI();
+                            for (int i = 0; i < Drawers.Length; i++) {
+                                Drawers[i].OnGUI();
                             }
                             Layout.EndCurrentScope();
                         }
@@ -109,7 +110,7 @@ namespace SoftKata.UnityEditor.Controls {
                     }
                 }
                 else {
-                    _drawers[CurrentTab].OnGUI();
+                    Drawers[CurrentTab].OnGUI();
                 }
 
                 Layout.EndCurrentScope();

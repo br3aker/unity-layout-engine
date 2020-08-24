@@ -13,14 +13,6 @@ namespace SoftKata.UnityEditor {
         }
         protected virtual void Initialize() { }
 
-        // Actual GUI
-        public override void OnInspectorGUI() {
-            DrawContent();
-
-            ExtendedEditor.DrawElevationShadow(Vector2.zero);
-        }
-        protected abstract void DrawContent();
-
         // Repaint requests
         public void RegisterRepaintRequest() {
             if(0 == _repaintRequestsCount++) {

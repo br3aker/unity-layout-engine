@@ -16,13 +16,16 @@ namespace SoftKata.UnityEditor {
             Resources.InputFieldPostfix.Draw(postfixRect, postfix, false, false, false, false);
         }
     
+        // Elevation shadow
         public static void DrawElevationShadow(Vector2 position, float width) {
             var rect = new Rect(position, new Vector2(width, ElevationShadowheight));
             GUI.DrawTexture(rect, Resources.ElevationShadow);
         }
-
         public static void DrawElevationShadow(Vector2 position) {
             DrawElevationShadow(position, Layout.CurrentContentWidth);
+        }
+        public static void DrawHeaderShadow() {
+            DrawElevationShadow(Vector2.zero);
         }
     }
 }
