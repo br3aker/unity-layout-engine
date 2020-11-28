@@ -70,14 +70,8 @@ namespace SoftKata.UnityEditor {
         private Vector2 _invisibleAreaSize;
         private Vector2 _scrollContentOffset;
 
-        private readonly UnityAction RepaintView;
-
 
         public ScrollGroup(Vector2 containerSize, bool disableScrollbars, GUIStyle style, GUIStyle thumbStyle, bool ignoreConstaints = false) : base(style, ignoreConstaints) {
-            RepaintView = ExtendedEditor.CurrentView.Repaint;
-
-            Clip = true;
-
             _containerSize = containerSize;
 
             // Scroll settings
@@ -155,6 +149,8 @@ namespace SoftKata.UnityEditor {
                 RequestedSize.y = visibleAreaSize.y;
             }
 
+            // Enabling clip space if needed
+            Clip = _needsHorizontalScroll | _needsVerticalScroll;
 
 
             // Applying offsets to actual group rect
@@ -174,13 +170,14 @@ namespace SoftKata.UnityEditor {
             return false;
         }
         internal override void EndNonLayout() {
-            base.EndNonLayout();
+            if (Clip) {
+                GUI.EndClip();
+                ContentRectInternal.position += ClipWorldPositionOffset;
+            }
 
-            if(_isFirstLayoutBuild) {
+            if (_isFirstLayoutBuild) {
                 _isFirstLayoutBuild = false;
                 MarkLayoutDirty();
-                //RepaintView();
-                //return;
             }
 
             if(_scrollbarsDisabled) return;

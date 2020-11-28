@@ -39,7 +39,7 @@ namespace SoftKata.UnityEditor {
             return false;
         }
         internal override void EndNonLayout() {
-            base.EndNonLayout();
+            if (Clip) GUI.EndClip();
 
             if(_notRepaintEvent) return;
             var verticalLineRect = new Rect(

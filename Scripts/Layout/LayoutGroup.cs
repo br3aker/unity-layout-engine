@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace SoftKata.UnityEditor {
 
         // Clip
         public bool Clip {get; set;}
-        private Vector2 _clipWorldPositionOffset;
+        protected Vector2 ClipWorldPositionOffset;
 
         // entries layout data
         protected int EntriesCount;
@@ -34,7 +35,7 @@ namespace SoftKata.UnityEditor {
 
         // Layout build flags
         protected bool IsLayoutEvent = true;
-        private bool _isLayoutDirty = true;
+        internal bool LayoutDirty = true;
 
 
         // Automatic width for entries
@@ -64,24 +65,13 @@ namespace SoftKata.UnityEditor {
 
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
-        internal bool BeginLayout() {
-            var parent = Layout._currentGroup;
-            if(parent == null) {
-                if(_isLayoutDirty) {
-                    BeginLayoutInternal(parent);
-                    Layout._currentGroup = this;
-                    return true;
-                }
-                Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
-                return false;
-            }
-            else if(parent._isLayoutDirty) {
-                _isLayoutDirty = true;
+        internal bool BeginLayout(LayoutGroup parent) {
+            if (parent?.LayoutDirty ?? LayoutDirty) {
+                LayoutDirty = true;
                 BeginLayoutInternal(parent);
-                Layout._currentGroup = this;
                 return true;
             }
-
+            Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
             return false;
         }
         internal void BeginLayoutInternal(LayoutGroup parent) {
@@ -107,7 +97,7 @@ namespace SoftKata.UnityEditor {
                 }
             }
         
-            _isLayoutDirty = false;
+            LayoutDirty = false;
         }
 
         // Non-Layout event
@@ -126,7 +116,7 @@ namespace SoftKata.UnityEditor {
             if(Clip) {
                 GUI.BeginClip(ContainerRectInternal);
                 // Clipspace changes world space to local space
-                _clipWorldPositionOffset = ContainerRectInternal.position;
+                ClipWorldPositionOffset = ContainerRectInternal.position;
                 ContentRectInternal.position -= ContainerRectInternal.position;
 
                 ContainerRectInternal.position = Vector2.zero;
@@ -151,14 +141,11 @@ namespace SoftKata.UnityEditor {
             }
 
             CalculateNonLayoutData();
-            Layout._currentGroup = this;
             return true;
         } 
         internal virtual void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
-                ContainerRectInternal.position = _clipWorldPositionOffset;
-                ContentRectInternal.position += _clipWorldPositionOffset;
             }
         }
 
@@ -206,7 +193,7 @@ namespace SoftKata.UnityEditor {
         }
     
         public void MarkLayoutDirty() {
-            _isLayoutDirty = true;
+            LayoutDirty = true;
             Parent?.MarkLayoutDirty();
         }
     }
