@@ -7,6 +7,7 @@ namespace SoftKata.UnityEditor {
         private WindowHeaderBar _headerBar;
         private Texture _dropdownShadow;
 
+        // Initialization
         protected sealed override void Initialize() {
             _dropdownShadow = Resources.ElevationShadow;
 
@@ -14,16 +15,13 @@ namespace SoftKata.UnityEditor {
         }
         protected virtual void Initialize(WindowHeaderBar headerBar) {}
     
+        // GUI
         public void OnGUI() {
             _headerBar.OnGUI();
 
             DrawContent();
 
-            var shadowRect = new Rect(
-                0, WindowHeaderBar.HeaderHeight,
-                EditorGUIUtility.currentViewWidth - 2, WindowHeaderBar.WindowHeaderShadowHeight
-            );
-            GUI.DrawTexture(shadowRect, _dropdownShadow);
+            ExtendedEditor.DrawElevationShadow(new Vector2(0, WindowHeaderBar.HeaderHeight));
         }
         protected abstract void DrawContent();
     }

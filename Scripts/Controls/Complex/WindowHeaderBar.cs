@@ -9,7 +9,6 @@ namespace SoftKata.UnityEditor.Controls {
     public class WindowHeaderBar {
         public const float HeaderHeight = 20;
         public const float HeaderContentHeight = HeaderHeight - 4;
-        public const float WindowHeaderShadowHeight = 5;
 
         internal readonly FlexibleHorizontalGroup _root = new FlexibleHorizontalGroup(FlexibleHorizontalGroup.FullScreenWidth, Resources.WindowHeader.Group);
 

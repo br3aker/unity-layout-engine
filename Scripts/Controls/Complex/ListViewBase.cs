@@ -262,6 +262,9 @@ namespace SoftKata.UnityEditor.Controls {
             }
         }
         private void HandleMouseDrag(Event evt) {
+            var dragArea = Root.ContentRect;
+            if (!dragArea.Contains(evt.mousePosition)) return;
+
             var draggableStartPos = _activeDataIndex * _elementHeightWithSpace;
             var movementDelta = evt.delta.y;
             _activeDrawerPosY += movementDelta;
@@ -282,6 +285,8 @@ namespace SoftKata.UnityEditor.Controls {
                     SwapDrawers(_activeDrawerIndex, ++_activeDrawerIndex);
                 }
             }
+
+            _activeDrawerPosY = Mathf.Clamp(_activeDrawerPosY, 0, dragArea.height - _elementHeight);
 
             _currentViewRepaint();
         }

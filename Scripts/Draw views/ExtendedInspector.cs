@@ -1,17 +1,19 @@
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace SoftKata.UnityEditor {
     public abstract class ExtendedInspector : Editor, IRepaintable {
-        [NonSerialized]
         private int _repaintRequestsCount;
 
+        // Initialization
         public void OnEnable() {
             ExtendedEditor.CurrentView = this;
             Initialize();
         }
         protected virtual void Initialize() { }
 
+        // Repaint requests
         public void RegisterRepaintRequest() {
             if(0 == _repaintRequestsCount++) {
                 EditorApplication.update += Repaint;
@@ -23,6 +25,7 @@ namespace SoftKata.UnityEditor {
             }
         }
     
+        // We can control margins via layout group and its' GUIStyle settings
         public override bool UseDefaultMargins() => false;
     }
 }
