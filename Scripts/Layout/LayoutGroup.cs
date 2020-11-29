@@ -73,8 +73,7 @@ namespace SoftKata.UnityEditor {
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
         internal bool BeginLayout(LayoutGroup parent) {
-            var hasParent = parent != null;
-            if(hasParent && parent.LayoutState == LayoutRebuildingOption.FullRebuild) {
+            if(parent.LayoutState == LayoutRebuildingOption.FullRebuild) {
                 LayoutState = LayoutRebuildingOption.FullRebuild;
             }
 
@@ -83,14 +82,10 @@ namespace SoftKata.UnityEditor {
                 return true;
             }
 
-            if(hasParent) {
-                Parent = parent;
-                ++parent.EntriesCount;
-                parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
-            }
-            else {
-                GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
-            }
+            Parent = parent;
+            ++parent.EntriesCount;
+            parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
+            parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             return false;
         }
         internal void BeginLayoutInternal(LayoutGroup parent) {
@@ -106,13 +101,8 @@ namespace SoftKata.UnityEditor {
             if (EntriesCount > 0) {
                 PreLayoutRequest();
 
-                if(Parent != null) {
-                    ++Parent.EntriesCount;
-                    Parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
-                }
-                else {
-                    GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
-                }
+                ++Parent.EntriesCount;
+                Parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             }
 
             LayoutState = LayoutRebuildingOption.Cached;
@@ -142,19 +132,12 @@ namespace SoftKata.UnityEditor {
             NextEntryPosition = ContentRectInternal.position;
         }
         internal virtual bool BeginNonLayout() {
-            if (Parent != null) {
-                var isGroupValid = Parent.QueryEntry(RequestedSize.x, RequestedSize.y, out Rect requestedRect);
-                if(!isGroupValid) return false;
-                
-                // Content & container rects
-                ContentRectInternal = ContentOffset.Remove(requestedRect);
-                ContainerRectInternal = ContentRectInternal.Intersection(Parent.ContainerRectInternal);
-            }
-            else {
-                // Content & container rects
-                ContainerRectInternal = ContentOffset.Remove(GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y));
-                ContentRectInternal = ContainerRectInternal;
-            }
+            var isGroupValid = Parent.QueryEntry(RequestedSize.x, RequestedSize.y, out Rect requestedRect);
+            if (!isGroupValid) return false;
+
+            // Content & container rects
+            ContentRectInternal = ContentOffset.Remove(requestedRect);
+            ContainerRectInternal = ContentRectInternal.Intersection(Parent.ContainerRectInternal);
 
             CalculateNonLayoutData();
             return true;
@@ -165,7 +148,7 @@ namespace SoftKata.UnityEditor {
             }
         }
 
-        // Control
+        // Scope control
         public bool BeginScope(LayoutGroup parent) {
             var eventType = Event.current.type;
             if (eventType == EventType.Used || eventType == EventType.Ignore) return false;
@@ -180,6 +163,47 @@ namespace SoftKata.UnityEditor {
                 EndNonLayout();
             }
         }
+
+        // Special layout root scope controls methods
+        public bool BeginRootScope() {
+            var eventType = Event.current.type;
+            if (eventType == EventType.Used || eventType == EventType.Ignore) return false;
+
+            IsLayoutEvent = eventType == EventType.Layout;
+            return IsLayoutEvent ? BeginRootLayout() : BeginRootContent();
+        }
+        public void EndRootScope() {
+            if (IsLayoutEvent) {
+                EndRootLayout();
+            }
+            else {
+                EndNonLayout();
+            }
+        }
+
+        private bool BeginRootLayout() {
+            if (LayoutState > LayoutRebuildingOption.Cached) {
+                BeginLayoutInternal(null);
+                return true;
+            }
+
+            GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
+            return false;
+        }
+        private void EndRootLayout() {
+            GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
+            LayoutState = LayoutRebuildingOption.Cached;
+        }
+
+        private bool BeginRootContent() {
+            // Content & container rects
+            ContainerRectInternal = ContentOffset.Remove(GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y));
+            ContentRectInternal = ContainerRectInternal;
+
+            NextEntryPosition = ContentRectInternal.position;
+            return true;
+        }
+
 
         // This prepares layout group for rect querying without actual layout stage
         public void BeginAbsoluteLayout(Rect rect) {

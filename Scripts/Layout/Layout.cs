@@ -33,29 +33,29 @@ namespace SoftKata.UnityEditor {
             CurrentGroup.EndScope();
             CurrentGroup = CurrentGroup.Parent;
         }
-    
+
+        public static bool BeginRootScope(LayoutGroup group) {
+            CurrentGroup = group;
+            return group.BeginRootScope();
+        }
+        public static void EndRootScope() {
+            CurrentGroup.EndRootScope();
+        }
+
         public static bool GetRect(float width, float height, out Rect rect) {
-            if(CurrentGroup != null) {
-                return CurrentGroup.GetRect(width, height, out rect);
-            }
-            rect = GetRectFromUnityLayout(width, height);
-            return true;
+            return CurrentGroup.GetRect(width, height, out rect);
         }
         public static bool GetRect(float height, out Rect rect) {
-            if(CurrentGroup != null) {
-                return CurrentGroup.GetRect(height, out rect);
-            }
-            rect = GetRectFromUnityLayout(height);
-            return true;
+            return CurrentGroup.GetRect(height, out rect);
         }
         public static bool GetRect(out Rect rect) {
             return GetRect(UnityDefaultLineHeight, out rect);
         }
         public static Rect GetRect(float width, float height) {
-            return CurrentGroup?.GetRect(width, height) ?? GetRectFromUnityLayout(width, height);
+            return CurrentGroup.GetRect(width, height);
         }
         public static Rect GetRect(float height = UnityDefaultLineHeight) {
-            return CurrentGroup?.GetRect(height) ?? GetRectFromUnityLayout(height);
+            return CurrentGroup.GetRect(height);
         }
     }
 }

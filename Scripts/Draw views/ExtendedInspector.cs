@@ -6,12 +6,25 @@ namespace SoftKata.UnityEditor {
     public abstract class ExtendedInspector : Editor, IRepaintable {
         private int _repaintRequestsCount;
 
+        private LayoutGroup LayoutRoot;
+
         // Initialization
         public void OnEnable() {
             ExtendedEditor.CurrentView = this;
+
+            LayoutRoot = new VerticalGroup(ignoreConstaints: true);
             Initialize();
         }
         protected virtual void Initialize() { }
+
+        public void OnGUI() {
+            if (Layout.BeginRootScope(LayoutRoot)) {
+                DrawContent();
+                Layout.EndRootScope();
+            }
+        }
+
+        protected abstract void DrawContent();
 
         // Repaint requests
         public void RegisterRepaintRequest() {
