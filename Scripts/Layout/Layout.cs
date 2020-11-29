@@ -8,10 +8,10 @@ namespace SoftKata.UnityEditor {
 
         internal const float FlexibleWidth = -1;
 
-        private static LayoutGroup _currentGroup;
+        internal static LayoutGroup CurrentGroup;
 
         public static float CurrentContentWidth {
-            get => _currentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
+            get => CurrentGroup?.AutomaticWidth ?? (EditorGUIUtility.currentViewWidth - 2);
         }
 
         // Native Unity layout system get rect call
@@ -25,36 +25,25 @@ namespace SoftKata.UnityEditor {
         }
 
         public static bool BeginLayoutScope(LayoutGroup group) {
-            var eventType = Event.current.type;
-            if (eventType == EventType.Used || eventType == EventType.Ignore) return false;
-
-            var isValid = eventType == EventType.Layout ? group.BeginLayout(_currentGroup) : group.BeginNonLayout();
-            if(isValid) {
-                _currentGroup = group;
-                return true;
-            }
-            return false;
+            var valid = group.BeginScope(CurrentGroup);
+            if (valid) CurrentGroup = group;
+            return valid;
         }
         public static void EndCurrentScope() {
-            if(Event.current.type == EventType.Layout) {
-                _currentGroup.EndLayout();
-            }
-            else {
-                _currentGroup.EndNonLayout();
-            }
-            _currentGroup = _currentGroup.Parent;
+            CurrentGroup.EndScope();
+            CurrentGroup = CurrentGroup.Parent;
         }
     
         public static bool GetRect(float width, float height, out Rect rect) {
-            if(_currentGroup != null) {
-                return _currentGroup.GetRect(width, height, out rect);
+            if(CurrentGroup != null) {
+                return CurrentGroup.GetRect(width, height, out rect);
             }
             rect = GetRectFromUnityLayout(width, height);
             return true;
         }
         public static bool GetRect(float height, out Rect rect) {
-            if(_currentGroup != null) {
-                return _currentGroup.GetRect(height, out rect);
+            if(CurrentGroup != null) {
+                return CurrentGroup.GetRect(height, out rect);
             }
             rect = GetRectFromUnityLayout(height);
             return true;
@@ -63,10 +52,10 @@ namespace SoftKata.UnityEditor {
             return GetRect(UnityDefaultLineHeight, out rect);
         }
         public static Rect GetRect(float width, float height) {
-            return _currentGroup?.GetRect(width, height) ?? GetRectFromUnityLayout(width, height);
+            return CurrentGroup?.GetRect(width, height) ?? GetRectFromUnityLayout(width, height);
         }
         public static Rect GetRect(float height = UnityDefaultLineHeight) {
-            return _currentGroup?.GetRect(height) ?? GetRectFromUnityLayout(height);
+            return CurrentGroup?.GetRect(height) ?? GetRectFromUnityLayout(height);
         }
     }
 }

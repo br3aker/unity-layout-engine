@@ -89,7 +89,7 @@ namespace SoftKata.UnityEditor {
                 parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             }
             else {
-                Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
+                GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
             }
             return false;
         }
@@ -99,7 +99,6 @@ namespace SoftKata.UnityEditor {
             EntriesCount = 0;
 
             Parent = parent;
-            IsLayoutEvent = true;
             
             AutomaticWidth = CalculateAutomaticContentWidth();
         }
@@ -112,7 +111,7 @@ namespace SoftKata.UnityEditor {
                     Parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
                 }
                 else {
-                    Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
+                    GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
                 }
             }
 
@@ -121,8 +120,6 @@ namespace SoftKata.UnityEditor {
 
         // Non-Layout event
         private void CalculateNonLayoutData() {
-            IsLayoutEvent = false;
-
             // Background image rendering
             if(Event.current.type == EventType.Repaint && _hasBackground) {
                 Style.Draw(
@@ -155,7 +152,7 @@ namespace SoftKata.UnityEditor {
             }
             else {
                 // Content & container rects
-                ContainerRectInternal = ContentOffset.Remove(Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y));
+                ContainerRectInternal = ContentOffset.Remove(GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y));
                 ContentRectInternal = ContainerRectInternal;
             }
 
@@ -165,6 +162,22 @@ namespace SoftKata.UnityEditor {
         internal virtual void EndNonLayout() {
             if(Clip) {
                 GUI.EndClip();
+            }
+        }
+
+        // Control
+        public bool BeginScope(LayoutGroup parent) {
+            var eventType = Event.current.type;
+            if (eventType == EventType.Used || eventType == EventType.Ignore) return false;
+
+            IsLayoutEvent = eventType == EventType.Layout;
+            return IsLayoutEvent ? BeginLayout(parent) : BeginNonLayout();
+        }
+        public void EndScope() {
+            if (IsLayoutEvent) {
+                EndLayout();
+            } else {
+                EndNonLayout();
             }
         }
 
