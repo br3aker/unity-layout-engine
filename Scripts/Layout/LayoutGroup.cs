@@ -35,7 +35,14 @@ namespace SoftKata.UnityEditor {
 
         // Layout build flags
         protected bool IsLayoutEvent = true;
-        internal bool LayoutDirty = true;
+
+        public enum LayoutRebuildingOption {
+            Cached,
+            NodeReduild,
+            FullRebuild
+        }
+
+        internal LayoutRebuildingOption LayoutState = LayoutRebuildingOption.FullRebuild;
 
 
         // Automatic width for entries
@@ -66,12 +73,24 @@ namespace SoftKata.UnityEditor {
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
         internal bool BeginLayout(LayoutGroup parent) {
-            if (parent?.LayoutDirty ?? LayoutDirty) {
-                LayoutDirty = true;
+            var hasParent = parent != null;
+            if(hasParent && parent.LayoutState == LayoutRebuildingOption.FullRebuild) {
+                LayoutState = LayoutRebuildingOption.FullRebuild;
+            }
+
+            if (LayoutState > LayoutRebuildingOption.Cached) {
                 BeginLayoutInternal(parent);
                 return true;
             }
-            Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
+
+            if(hasParent) {
+                Parent = parent;
+                ++parent.EntriesCount;
+                parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
+            }
+            else {
+                Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
+            }
             return false;
         }
         internal void BeginLayoutInternal(LayoutGroup parent) {
@@ -96,8 +115,8 @@ namespace SoftKata.UnityEditor {
                     Layout.GetRectFromUnityLayout(RequestedSize.x, RequestedSize.y);
                 }
             }
-        
-            LayoutDirty = false;
+
+            LayoutState = LayoutRebuildingOption.Cached;
         }
 
         // Non-Layout event
@@ -192,9 +211,13 @@ namespace SoftKata.UnityEditor {
             return GetRect(AutomaticWidth, height);
         }
     
+        private void MarkLayoutDirty(LayoutRebuildingOption option) {
+            LayoutState = option;
+            Parent?.MarkLayoutDirty(LayoutRebuildingOption.NodeReduild);
+        }
+
         public void MarkLayoutDirty() {
-            LayoutDirty = true;
-            Parent?.MarkLayoutDirty();
+            MarkLayoutDirty(LayoutRebuildingOption.FullRebuild);
         }
     }
 }
