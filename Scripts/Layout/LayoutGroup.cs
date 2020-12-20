@@ -36,13 +36,13 @@ namespace SoftKata.UnityEditor {
         // Layout build flags
         protected bool IsLayoutEvent = true;
 
-        public enum LayoutRebuildingOption {
+        public enum LayoutStateOptions {
             Cached,
             NodeReduild,
             FullRebuild
         }
 
-        internal LayoutRebuildingOption LayoutState = LayoutRebuildingOption.FullRebuild;
+        internal LayoutStateOptions LayoutState = LayoutStateOptions.FullRebuild;
 
 
         // Automatic width for entries
@@ -73,18 +73,17 @@ namespace SoftKata.UnityEditor {
         // Returns [true] if layout must be recalculated
         // Returns [false] if layout can be skipped
         internal bool BeginLayout(LayoutGroup parent) {
-            if(parent.LayoutState == LayoutRebuildingOption.FullRebuild) {
-                LayoutState = LayoutRebuildingOption.FullRebuild;
+            if(parent.LayoutState == LayoutStateOptions.FullRebuild) {
+                LayoutState = LayoutStateOptions.FullRebuild;
             }
 
-            if (LayoutState > LayoutRebuildingOption.Cached) {
+            if (LayoutState != LayoutStateOptions.Cached) {
                 BeginLayoutInternal(parent);
                 return true;
             }
 
             Parent = parent;
             ++parent.EntriesCount;
-            parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             return false;
         }
@@ -105,7 +104,7 @@ namespace SoftKata.UnityEditor {
                 Parent.RegisterEntry(RequestedSize.x, RequestedSize.y);
             }
 
-            LayoutState = LayoutRebuildingOption.Cached;
+            LayoutState = LayoutStateOptions.Cached;
         }
 
         // Non-Layout event
@@ -182,7 +181,7 @@ namespace SoftKata.UnityEditor {
         }
 
         private bool BeginRootLayout() {
-            if (LayoutState > LayoutRebuildingOption.Cached) {
+            if (LayoutState != LayoutStateOptions.Cached) {
                 BeginLayoutInternal(null);
                 return true;
             }
@@ -192,7 +191,7 @@ namespace SoftKata.UnityEditor {
         }
         private void EndRootLayout() {
             GUILayoutUtility.GetRect(RequestedSize.x, RequestedSize.y);
-            LayoutState = LayoutRebuildingOption.Cached;
+            LayoutState = LayoutStateOptions.Cached;
         }
 
         private bool BeginRootContent() {
@@ -248,13 +247,13 @@ namespace SoftKata.UnityEditor {
             return GetRect(AutomaticWidth, height);
         }
     
-        private void MarkLayoutDirty(LayoutRebuildingOption option) {
+        private void MarkLayoutDirty(LayoutStateOptions option) {
             LayoutState = option;
-            Parent?.MarkLayoutDirty(LayoutRebuildingOption.NodeReduild);
+            Parent?.MarkLayoutDirty(LayoutStateOptions.NodeReduild);
         }
 
         public void MarkLayoutDirty() {
-            MarkLayoutDirty(LayoutRebuildingOption.FullRebuild);
+            MarkLayoutDirty(LayoutStateOptions.FullRebuild);
         }
     }
 }
